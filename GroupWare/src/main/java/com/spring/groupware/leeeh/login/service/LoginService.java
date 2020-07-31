@@ -1,9 +1,9 @@
-package com.spring.leeeunhan.login.service;
+package com.spring.groupware.leeeh.login.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.leeeunhan.login.model.InterLoginDAO;
+import com.spring.groupware.leeeh.login.model.InterLoginDAO;
 
 @Service
 public class LoginService implements InterLoginService {

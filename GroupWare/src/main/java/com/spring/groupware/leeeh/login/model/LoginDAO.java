@@ -1,4 +1,4 @@
-package com.spring.leeeunhan.login.model;
+package com.spring.groupware.leeeh.login.model;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

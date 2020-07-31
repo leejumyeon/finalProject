@@ -1,4 +1,4 @@
-package com.spring.leeeunhan.login.controller;
+package com.spring.groupware.leeeh.login.controller;
 
 import java.util.HashMap;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.leeeunhan.login.service.InterLoginService;
+import com.spring.groupware.leeeh.login.service.InterLoginService;
 
 @Controller
 public class LoginController {
