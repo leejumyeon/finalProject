@@ -386,11 +386,51 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+-- 회의실 테이블(reservationRoom_table) --
+create table reservationRoom_table
+(roomNumber     number not null -- 회의실 번호
+,roomName       varchar2(300) not null -- 회의실이름
+,constraint pk_reservationRoom primary key(roomNumber)
+);
+insert into reservationRoom_table(roomNumber,roomName) values(1,'제1회의실');
+
 -- 예약관리 테이블(reservation_table) --
 create table reservation_table
 (reservation_seq    number not null -- 예약번호
 ,fk_employee_seq    number not null -- 예약 신청자
-,start  date not null -- 사용시작 시간(날짜 포함)
-,end    date not null -- 사용종료 시간(날짜 포함)
+,fk_roomNumber         number not null -- 예약 장소(회의실 번호)
+,startDate  date not null -- 사용시작 시간(날짜 포함)
+,endDate    date not null -- 사용종료 시간(날짜 포함)
+,head   varchar2(50) not null -- 예약 책임자
+,memberCount    number default 1 not null -- 사용 인원
+,reason varchar2(2000) not null -- 사유
+,status number default 0 not null -- 승인 상태
+,constraint pk_reservation_table primary key(reservation_seq)
+,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
 );
+create SEQUENCE reservation_table_seq
+start with 1 -- 시작값
+increment by 1 -- 증가값
+nomaxvalue -- 최대값 설정
+nominvalue -- 최소값 설정
+nocycle -- 반복 설정
+nocache;
+
+-- 출퇴근 테이블(attendance_table) --
+create table attendance_table
+(fk_employee_seq    number not null -- 사원번호
+,onTime     date default sysdate -- 출근시간(년-월-일 시-분-초)
+,offTime    date -- 퇴근시간(년-월-일 시-분-초)
+,constraint fk_attendance_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+);
+
+-- 게시판 항목 테이블(board_category) --
+create table board_category
+(category_seq   number not null -- 게시글 항목번호
+,category_name  varchar2(100) not null -- 게시글 항목명
+,constraint pk_board_category primary key(category_seq)
+);
+insert into board_category(category_seq, category_name) values(1,'자유');
+
 
