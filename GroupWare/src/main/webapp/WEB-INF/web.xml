@@ -6,9 +6,11 @@
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-value>
+		  /WEB-INF/spring/root-context.xml
+		</param-value>
 	</context-param>
-	
+
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -27,6 +29,7 @@
 		
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
+	<!-- === #13. URL 패턴에서 확장자 .top 인 것으로 요청을 하면 appServlet 서블릿이 받아서 처리를 해준다. === -->		
 		<url-pattern>*.top</url-pattern>
 	</servlet-mapping>
 	
