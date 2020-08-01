@@ -1,14 +1,14 @@
 -- sys계정 내용 --
 show user; -- USER이(가) "SYS"입니다.
- create user finalorauser3 identified by eclass
- default tablespace users;
+create user finalorauser3 identified by eclass
+default tablespace users;
  
- grant connect, resource, unlimited tablespace to finalorauser3;
- grant create view to finalorauser3;
- --------------------------------------------------------------------
- -- finalorauser3계정 내용 --
- show user; -- USER이(가) "FINALORAUSER3"입니다.
- 
+grant connect, resource, unlimited tablespace to finalorauser3;
+grant create view to finalorauser3;
+--------------------------------------------------------------------
+-- finalorauser3계정 내용 --
+show user; -- USER이(가) "FINALORAUSER3"입니다.
+
  -- 직책 테이블(position_table) --
 create table position_table
 (position_seq   number not null -- 직책번호
@@ -106,7 +106,8 @@ nocache;
 -- 퇴사사유 테이블(fire_date) --
 create table fire_table
 (fk_employee_seq    number
-,reason varchar2(4000)
+,reason varchar2(4000) -- 퇴사 사유
+,fk_
 ,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq)
 );
 
@@ -234,7 +235,7 @@ insert into document_category(document_category_seq, category_name)values(1,'');
 
 -- 문서결재 테이블(document_table) --
 create table document_table
-(document_seq   number not null -- 문서결재 글 번호
+(document_seq   varchar2(15) not null -- 문서결재 일련 번호
 ,fk_employee_seq    number not null -- 결재 신청자
 ,content    varchar2(4000) not null -- 결재문서 내용
 ,regDate    date default sysdate not null -- 결재 신청날짜
@@ -242,7 +243,6 @@ create table document_table
 ,parent_approver    varchar2(100) -- 상위 결재자
 ,status     number not null -- 결재 상태
 ,document_category  number not null -- 문서 항목
-,constraint pk_document_table primary key(document_seq)
 ,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq)
 ,constraint fk_document_category foreign key (document_category) references document_category(document_category_seq)
 );
