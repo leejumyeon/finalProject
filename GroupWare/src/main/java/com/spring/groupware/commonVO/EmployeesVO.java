@@ -15,6 +15,7 @@ public class EmployeesVO {
 	private String grade; // 권한등급
 	
 	// 사수 컬럼 필요?? //
+	// 개인정보(나이, 성별, 생년월일) 필요?? //
 	
 	// 생성자 //
 	public EmployeesVO() {}

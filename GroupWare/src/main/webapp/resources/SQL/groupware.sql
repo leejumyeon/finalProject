@@ -238,6 +238,7 @@ insert into document_category(document_category_seq, category_name)values(1,'');
 create table document_table
 (document_seq   varchar2(15) not null -- 문서결재 일련 번호
 ,fk_employee_seq    number not null -- 결재 신청자
+,subject    varchar2(1000) not null
 ,content    varchar2(4000) not null -- 결재문서 내용
 ,regDate    date default sysdate not null -- 결재 신청날짜
 ,approver   varchar2(100) not null -- 결재자
@@ -270,7 +271,6 @@ create table project_table
 ,completionPayment number -- 완료금
 ,constraint pk_project_table primary key(project_seq)
 );
-
 create SEQUENCE project_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -278,6 +278,16 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
+-- 프로젝트 명단 테이블(projectMember_table) --
+create table projectMember_table
+(projectMember_seq  number not null -- 프로젝트 명단 번호
+,fk_project_seq     number not null -- 프로젝트 번호(프로젝트 명, 진행상태 join요소)
+,fk_employee_seq    number not null -- 사원번호(사원명, 직책, 부서 join요소)
+,constraint pk_projectMember_table primary key(projectMember_seq)
+,constraint fk_projectMember_project foreign key(fk_project_seq) references project_table(project_seq)
+,constraint fk_projectMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+);
 
 -- 개인일정 테이블(personalCalendar_table) --
 create table personalCalendar_table
@@ -356,11 +366,10 @@ create table messengerLog_table
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 테이블(mail_table) --
+-- 메일 발송 테이블(mail_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,fk_employee_seq    number not null -- 사원 번호(F.K) = 보내는 사람
-,receiver           varchar2(100) not null -- 받는 사람
 ,subject            varchar2(1000) not null -- 제목
 ,content            varchar2(4000) not null -- 내용
 ,fileName1          varchar2(500) -- 파일첨부이름1
@@ -373,11 +382,9 @@ create table mail_table
 ,orgFileName3       varchar2(500) -- 파일첨부 원래 이름3
 ,fileSize3          varchar2(10) -- 파일사이즈3
 ,sendStatus         number default 0
-,receiveStatus      number default 0
-,readStatus         number default 0
 ,constraint PK_mail_table primary key(mail_seq)
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq)
-,constraint CK_mail_table CHECK(sendStatus in(0, 1) and receiveStatus in(0,1) and readStatus in(0,1))
+,constraint CK_mail_table CHECK(sendStatus in(0, 1))
 );
 create SEQUENCE mail_table_seq
 start with 1 -- 시작값
@@ -386,6 +393,17 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
+-- 메일 수신 테이블(mailReceive_table) --
+create table mailReceive_table
+(fk_mail_seq    number not null
+,receiver       number not null
+,receiveStatus  number default 0
+,readStatus     number default 0
+,constraint CK_mailReceive check(receiveStatus in(0,1) and readStatus in(0,1))
+,constraint fk_mailReceive_employee foreign key(receiver) references employees_table(employee_seq)
+);
+
 
 -- 회의실 테이블(reservationRoom_table) --
 create table reservationRoom_table
@@ -474,5 +492,9 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
+-- 댓글 테이블(comment_table) --
+
+
 
 -- 문의 테이블 왜 따로?? --
