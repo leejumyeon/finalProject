@@ -9,6 +9,62 @@ grant create view to finalorauser3;
 -- finalorauser3계정 내용 --
 show user; -- USER이(가) "FINALORAUSER3"입니다.
 
+
+-- 테이블 삭제 -- 
+drop table comment_table;
+drop sequence comment_table_seq;
+drop table attachFile_table;
+drop SEQUENCE attachFile_table_seq;
+drop table board_table;
+drop sequence board_table_seq;
+drop table board_category;
+drop table attendance_table;
+drop table reservation_table;
+drop sequence reservation_table_seq;
+drop table reservationRoom_table;
+drop table mailReceive_table;
+drop table mail_table;
+drop sequence mail_table_seq;
+drop table messengerLog_table;
+drop table messenger_table;
+drop sequence messenger_table_seq;
+drop table messengerRoom_table;
+drop sequence messengerRoom_table_seq;
+drop table companyCalendar_table;
+drop sequence companyCalendar_table_seq;
+drop table personalCalendar_table;
+drop sequence personalCalendar_table_seq;
+drop table projectMember_table;
+drop sequence projectMember_table_seq;
+drop table project_table;
+drop sequence project_table_seq;
+drop table document_table;
+drop sequence document_table_seq;
+drop table trip_table;
+drop sequence trip_table_seq;
+drop table trip_category;
+drop table grade_table;
+drop table TA_table;
+drop sequence ta_table_seq;
+drop table clubMember_table;
+drop sequence clubMember_table_seq;
+drop table club_table;
+drop sequence club_table_seq;
+drop table sales_table;
+drop sequence sales_table_seq;
+drop table fire_table;
+drop table album_table;
+drop sequence album_table_seq;
+drop table album_category;
+drop table employees_table;
+drop sequence employees_table_seq;
+drop table department_table;
+drop sequence department_table_seq;
+drop table employeeStatus_table;
+drop table position_table;
+
+
+
  -- 직책 테이블(position_table) --
 create table position_table
 (position_seq   number not null -- 직책번호
@@ -64,7 +120,7 @@ nocache;
 
 
 
- create SEQUENCE employee_table_seq
+ create SEQUENCE employees_table_seq
 start with 1
 increment by 1
 nomaxvalue
@@ -288,6 +344,14 @@ create table projectMember_table
 ,constraint fk_projectMember_project foreign key(fk_project_seq) references project_table(project_seq)
 ,constraint fk_projectMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
 );
+create SEQUENCE projectMember_table_seq
+start with 1 -- 시작값
+increment by 1 -- 증가값
+nomaxvalue -- 최대값 설정
+nominvalue -- 최소값 설정
+nocycle -- 반복 설정
+nocache;
+
 
 -- 개인일정 테이블(personalCalendar_table) --
 create table personalCalendar_table
@@ -396,7 +460,7 @@ nocache;
 
 -- 메일 수신 테이블(mailReceive_table) --
 create table mailReceive_table
-(fk_mail_seq    number not null
+(mail_seq    number not null
 ,receiver       number not null
 ,receiveStatus  number default 0
 ,readStatus     number default 0
@@ -494,7 +558,22 @@ nocycle -- 반복 설정
 nocache;
 
 -- 댓글 테이블(comment_table) --
-
-
-
+create table comment_table
+(commnet_seq    number not null -- 댓글번호
+,fk_board_seq   number not null -- 게시글 번호(그룹번호)
+,fk_employee_seq    number -- 작성자 사원번호
+,readCnt    number default 0 not null -- 조회수
+,content    varchar2(2000) -- 내용
+,status     number default 1 -- 글상태(1:보존, 0:삭제)
+,regDate    date default sysdate not null -- 작성날짜
+,parent_seq number -- 상위 댓글(계층형)
+,depthno    number default 0 -- 
+);
+create sequence comment_table_seq
+start with 1 -- 시작값
+increment by 1 -- 증가값
+nomaxvalue -- 최대값 설정
+nominvalue -- 최소값 설정
+nocycle -- 반복 설정
+nocache;
 -- 문의 테이블 왜 따로?? --
