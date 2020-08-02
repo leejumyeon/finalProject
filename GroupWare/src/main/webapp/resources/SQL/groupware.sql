@@ -45,6 +45,7 @@ nocache;
  -- 사원테이블(employees_table)--
  create table employees_table
 (employee_seq   number -- 사원번호
+,employee_name  varchar2(10) not null -- 사원명
 ,employee_id    varchar2(100) not null -- 사원ID
 ,employee_pw    varchar2(500) not null -- 사원PW
 ,email          varchar2(500) not null -- 사내 이메일
@@ -88,7 +89,7 @@ create table album_table
 ,fk_employee_seq    number  -- 게시글 작성자 번호
 ,subject    varchar2(500) not null -- 게시글 제목
 ,content    varchar2(4000) not null -- 게시글 내용
-,representativ_img  varchar2(2000) -- 게시글 대표 이미지
+,representative_img  varchar2(2000) -- 게시글 대표 이미지
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
@@ -105,10 +106,9 @@ nocache;
 
 -- 퇴사사유 테이블(fire_date) --
 create table fire_table
-(fk_employee_seq    number
+(fk_employee_seq    number not null
 ,reason varchar2(4000) -- 퇴사 사유
-,fk_
-,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
 -- 매출 테이블(sales_table) --
@@ -116,7 +116,7 @@ create table sales_table
 (sales_seq  number not null -- 매출번호
 ,sales_title    varchar2(500) not null -- 매출제목
 ,sales_price    number  not null -- 매출 가격
-,sales_count    number not null -- 매출 내용
+,sales_count    number not null -- 매출 개수
 ,reason     varchar2(4000) -- 매출 사유
 ,fk_department_seq  number -- 매출 부서
 ,regDate    date default sysdate not null
@@ -136,8 +136,9 @@ nocache;
 create table club_table
 (club_seq   number not null -- 동호회 번호
 ,club_name  varchar2(100) not null -- 동호회 이름
+,club_info  varchar2(2000) -- 동호회 설명
 ,regDate    date default sysdate not null -- 동호회 생성날짜
-,representativ_img  varchar2(500) -- 동호회 대표 이미지
+,representative_img  varchar2(500) -- 동호회 대표 이미지
 ,constraint pk_club_table primary key(club_seq)
 );
 
@@ -433,4 +434,45 @@ create table board_category
 );
 insert into board_category(category_seq, category_name) values(1,'자유');
 
+-- 게시판 테이블(board_table) --
+create table board_table
+(board_seq  number not null -- 글번호
+,fk_category_num    number not null -- 항목번호
+,subject    varchar2(50) not null -- 제목
+,content    varchar2(4000) not null
+,readCnt    number default 0 -- 조회수
+,regDate    date default sysdate not null -- 등록날짜
+,fk_employee_seq    number not null -- 작성자 번호
+,status     number default 1 not null -- 글 상태
+,commentCnt number default 0 not null -- 댓글 수
+,constraint pk_board_table primary key(board_seq)
+,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq) on delete set null
+,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
+);
+create SEQUENCE board_table_seq
+start with 1 -- 시작값
+increment by 1 -- 증가값
+nomaxvalue -- 최대값 설정
+nominvalue -- 최소값 설정
+nocycle -- 반복 설정
+nocache;
 
+-- 게시판 첨부파일 테이블(attachFile_table) --
+create table attachFile_table
+(file_seq   number not null -- 파일번호
+,fk_board_seq   number not null -- 게시글 번호
+,fileName   varchar2(500) -- 업로드 파일명
+,orgFileName    varchar2(500) -- 원래 파일명
+,fileSize   varchar2(10) -- 파일크기
+,constraint pk_attachFile_table primary key(file_seq)
+,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
+);
+create SEQUENCE attachFile_table_seq
+start with 1 -- 시작값
+increment by 1 -- 증가값
+nomaxvalue -- 최대값 설정
+nominvalue -- 최소값 설정
+nocycle -- 반복 설정
+nocache;
+
+-- 문의 테이블 왜 따로?? --
