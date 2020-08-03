@@ -1,6 +1,6 @@
 package com.spring.groupware.commonVO;
 
-public class ProjectMemberVO {
+public class ProjectMemberVO { //프로젝트 명단VO
 	private String projectMember_seq; // 프로젝트 명단 번호
 	private String fk_project_seq; // 프로젝트 번호
 	private String project_name; // 프로젝트 명

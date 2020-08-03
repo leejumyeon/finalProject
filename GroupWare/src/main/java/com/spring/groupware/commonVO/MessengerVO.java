@@ -1,6 +1,6 @@
 package com.spring.groupware.commonVO;
 
-public class MessengerVO {
+public class MessengerVO {//메신저 내용VO
 	private String message_seq; // 대화번호
 	private String content; // 대화 내용
 	private String regDate; // 작성날짜
