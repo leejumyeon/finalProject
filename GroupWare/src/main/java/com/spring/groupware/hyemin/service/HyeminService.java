@@ -1,9 +1,9 @@
-package com.spring.groupware.junghm.service;
+package com.spring.groupware.hyemin.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.groupware.junghm.model.InterHyeminDAO;
+import com.spring.groupware.hyemin.model.InterHyeminDAO;
 
 // === #31. Service 선언 ===
 @Service
