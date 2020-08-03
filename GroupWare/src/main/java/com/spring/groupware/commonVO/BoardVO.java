@@ -1,6 +1,6 @@
 package com.spring.groupware.commonVO;
 
-public class BoardVO {
+public class BoardVO { //게시글 VO
 	private String board_seq; //게시글 번호
 	private String fk_category_num; //게시글 카테고리 번호
 	private String category_name; //게시글 카테고리 명
