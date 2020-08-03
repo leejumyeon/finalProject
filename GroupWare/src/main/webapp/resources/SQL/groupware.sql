@@ -315,6 +315,9 @@ create table document_table
 ,regDate    date default sysdate not null -- 결재 신청날짜
 ,approver_seq   number not null -- 결재자 사원번호
 ,approveDate    date -- 결재날짜
+,fileName   varchar2(500) -- 파일첨부(업로드 파일명)
+,orgFileName    varchar2(500) -- 파일첨부(기존 파일명)
+,fileSize   number -- 파일크기
 ,parent_approver    varchar2(100) -- 상위 결재자
 ,status     number not null -- 결재 상태(승인, 미승인, 반려)
 ,reason     varchar2(4000) -- 결재 사유( 반려 사유 )
@@ -467,6 +470,7 @@ create table messengerLog_table
 -- 메일 테이블(mail_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
+,main_groupno       number -- 송신/수신 그룹번호
 ,fk_employee_seq    number not null -- 사원 번호(F.K) = 보내는 사람
 ,subject            varchar2(1000) not null -- 제목
 ,content            varchar2(4000) not null -- 내용
