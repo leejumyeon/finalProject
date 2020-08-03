@@ -1,4 +1,4 @@
-package com.spring.groupware.junghm.model;
+package com.spring.groupware.hyemin.model;
 
 import javax.annotation.Resource;
 

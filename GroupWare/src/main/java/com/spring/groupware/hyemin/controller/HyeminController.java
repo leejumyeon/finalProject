@@ -1,10 +1,10 @@
-package com.spring.groupware.junghm.controller;
+package com.spring.groupware.hyemin.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import com.spring.groupware.junghm.service.InterHyeminService;
+import com.spring.groupware.hyemin.service.InterHyeminService;
 
 // === #30. 컨트롤러 선언 ===
 @Component
