@@ -31,11 +31,15 @@
 		<div id="myheader">
 			<tiles:insertAttribute name="header" />
 		</div>
-		
-		<div id="mycontent">
-			<tiles:insertAttribute name="content" />
+		<div id="mysession">
+			<div id="mysideinfo">
+				<tiles:insertAttribute name="sideinfo" />
+			</div>
+			
+			<div id="mycontent">
+				<tiles:insertAttribute name="content" />
+			</div>
 		</div>
-		
 		<div id="myfooter">
 			<tiles:insertAttribute name="footer" />
 		</div>
