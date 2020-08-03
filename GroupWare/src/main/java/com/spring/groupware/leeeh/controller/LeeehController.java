@@ -29,6 +29,14 @@ public class LeeehController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/idIssued.top", method= {RequestMethod.GET})
+	public ModelAndView idIssued(ModelAndView mav) {
+		
+		mav.setViewName("idIssued.tiles2");
+		
+		return mav;
+	}
+	
 	// === 로그인 페이지에서 적은 ID와 비밀번호를 통해 유저가 존재하는지 검사하기 === //
 	@RequestMapping(value="/login.top", method= {RequestMethod.POST})
 	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) {
@@ -57,7 +65,7 @@ public class LeeehController {
 			}
 			else {
 				
-				mav.setViewName("twoChoice.notiles");
+				mav.setViewName("redirect:/twoChoice.top");
 			}
 		}
 		else {
@@ -69,11 +77,20 @@ public class LeeehController {
 		return mav;
 	}
 	
+	// === 선택 페이지 보여주기 === //
+	@RequestMapping(value="/twoChoice.top")
+	public ModelAndView twoChoice(ModelAndView mav) {
+		
+		mav.setViewName("twoChoice.notiles");
+		
+		return mav;
+	}
+	
 	// === 메인 페이지 보여주기 === //
 	@RequestMapping(value="/main.top")
 	public ModelAndView main(ModelAndView mav) {
 		
-		mav.setViewName("main.notiles");
+		mav.setViewName("main.tiles1");
 		
 		return mav;
 	}
@@ -82,7 +99,7 @@ public class LeeehController {
 	@RequestMapping(value="/adminMain.top")
 	public ModelAndView adminMain(ModelAndView mav) {
 		
-		mav.setViewName("adminMain.notiles");
+		mav.setViewName("adminMain.tiles1");
 		
 		return mav;
 	}
@@ -101,6 +118,15 @@ public class LeeehController {
 	public ModelAndView writeDocument(ModelAndView mav) {
 		
 		mav.setViewName("documentWrite.tiles1");
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping(value="/vacation.top", method = {RequestMethod.GET})
+	public ModelAndView vacation(ModelAndView mav) {
+		
+		mav.setViewName("vacationDocument.notiles");
 		
 		return mav;
 	}
