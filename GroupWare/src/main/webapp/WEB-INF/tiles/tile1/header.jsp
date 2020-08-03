@@ -30,6 +30,7 @@
 %>
 <div align="center">
 	<ul class="nav nav-tabs mynav">
+		<li id="logoArea"></li>
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
 			<ul class="dropdown-menu">
