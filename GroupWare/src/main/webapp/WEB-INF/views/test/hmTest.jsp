@@ -23,7 +23,7 @@
 		margin: 0 auto;
 	}
 	
-	#sRooms, #bRooms {
+	#sbRooms, #mRooms {
 		border: solid 0px maroon;
 		display: inline-block;
 		width: 90%;
@@ -32,54 +32,79 @@
 	
 	.small {
 		display: inline-block;
-		width: 195px;
-		height: 120px;
+		width: 180px;
+		height: 150px;
+	}
+	
+	.medium {
+		display: inline-block;
+		width: 325px;
+		height: 150px;
 	}
 	
 	.big {
 		display: inline-block;
-		width: 330px;
+		width: 425px;
 		height: 150px;
 	}
 	
-	#room_one {
-		border: solid 1px red;
-	}
-	
-	#room_two {
-		border: solid 1px orange;
-	}
-
-	#room_three {
-		border: solid 1px green;
-	}
-
-	#room_four {
-		border: solid 1px blue;
-	}
-	
-	#room_five {
-		border: solid 1px purple;
+	.room {
+		border: solid 1px #1187cf;
 	}
 	
 	#road {
 		border: solid 1px olive;
 		height: 80px;
-	}	
+	}		
 	
-	#room_six {
-		border: solid 1px pink;
-	}
-
-	#room_seven {
-		border: solid 1px lime;
+	#dateAndTime {
+		border: solid 1px red;
+		display: inline-block;
+		width: 40%;
+		margin: 10px 0 0 10%;
 	}
 	
-	#room_eight {
-		border: solid 1px cyan;
+	#info {
+		border: solid 1px red;
+		display: inline-block;
+		width: 39%;
+		margin: 10px 10% 0 0;
+	}
+	
+	.rChioce {
+		background-color: #eee;
+	}
+	
+	.text {
+		text-align: center;
+		margin-top: 30px;
+	}
+	
+	#dateAndTime {
+		text-align: center;
+	}
+	
+	#time, .th_time, .td_time {
+		border: solid 1px gray;
+		border-collapse: collapse;
+		padding: 10px 15px;
+	}
+	
+	.th_time {
+		background-color: #d1eefc;
+	}
+	
+	.times {
+		width: 50%;
+	}
+	
+	.ability {
+		width: 50%;
 	}
 	
 </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
@@ -103,12 +128,17 @@
 			,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']	// 달력의 월 부분 Tooltip 텍스트
 			,dayNamesMin: ['일','월','화','수','목','금','토']										// 달력의 요일 부분 텍스트
 			,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']						// 달력의 요일 부분 Tooltip 텍스트
-		//	,minDate: "-1M"				// 최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-		//	,maxDate: "+1M"				// 최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
+			,minDate: "+1D"				// 최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
+		//	,maxDate: "+3Y"				// 최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
         });                    
         
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+		
+		$(".room").click(function(event){
+			$(".room").removeClass("rChioce");
+			$(this).addClass("rChioce");
+		});
 		
 	});
 
@@ -120,48 +150,124 @@
 	
 		<div id="map">			
 			<h3>회의실 위치</h3>
-			<div id="sRooms">
-				<div class="small" id="room_one">
-					1번
+			<div id="sbRooms">
+				<div class="small room" id="room_one">
+					<div class="text">소회의실1</div>
+					<div class="text">5~10인</div>
 				</div>
-				<div class="small" id="room_two">
-					2번
+				<div class="small room" id="room_two">
+					<div class="text">소회의실2</div>
+					<div class="text">5~10인</div>
 				</div>
-				<div class="small" id="room_three">
-					3번
+				<div class="small room" id="room_three">
+					<div class="text">소회의실3</div>
+					<div class="text">5~10인</div>
 				</div>
-				<div class="small" id="room_four">
-					4번
-				</div>
-				<div class="small" id="room_five">
-					5번
+				<div class="big room" id="room_four">
+					<div class="text">대회의실</div>
+					<div class="text">15~30인</div>
 				</div>
 			</div>
 			
 			<div id="road">
-						
+				복도		
 			</div>
 			
-			<div id="bRooms">
-				<div class="big" id="room_six">
-					6번
+			<div id="mRooms">
+				<div class="medium room" id="room_five">
+					<div class="text">중회의실A</div>
+					<div class="text">10~15인</div>
 				</div>
-				<div class="big" id="room_seven">
-					7번
+				<div class="medium room" id="room_six">
+					<div class="text">중회의실B</div>
+					<div class="text">10~15인</div>					
 				</div>
-				<div class="big" id="room_eight">
-					8번
+				<div class="medium room" id="room_seven">
+					<div class="text">중회의실C</div>
+					<div class="text">10~15인</div>					
 				</div>
 			</div>			
 		</div>
 		
 		<div id="dateAndTime">
+			<table id="date">
+				<tr>
+					<td style="width: 10%;">날짜</td>
+					<td style="width: 50%; text-align: left;">
+						<input type="text" id="datepicker">
+					</td>
+				</tr>
+			</table>
+			
+			<br/>
+			
+			<table id="time">
+				<tr>
+					<th class="th_time times">시간</th>
+					<th class="th_time ability">가능여부</th>
+				</tr>
+				<tr>
+					<td class="td_time times">9:00 - 10:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">10:00 - 11:00</td>
+					<td class="td_time ability">
+						<div>승인 대기중</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">11:00 - 12:00</td>
+					<td class="td_time ability">
+						<div>예약 불가</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">12:00 - 13:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">13:00 - 14:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">14:00 - 15:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">15:00 - 16:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">16:00 - 17:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="td_time times">17:00 - 18:00</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="info">
 			<table>
 				<tr>
-					<td style="width: 20%; font-weight: bold;">날짜</td>
-					<td style="width: 80%; text-align: left;">
-					   <input type="text" id="datepicker">
-					</td>
+					<th>회의실명</th>
+					<td><span></span></td>
 				</tr>
 			</table>
 		</div>				
