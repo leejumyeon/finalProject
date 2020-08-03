@@ -7,9 +7,10 @@
 <style>
 
 	#loginContainer {
-		width: 450px;
+		width: 500px;
 		min-height: 600px;
-		background-color: white;
+/* 		border: solid 2px #0099ff; */
+/* 		background-color: #cceeff; */
 		margin: 0 auto;
 		margin-top: 250px;
 		text-align: center;
@@ -19,17 +20,19 @@
 	input {
 		margin: 10px 0;
 		width: 400px;
-		height: 35px;
+		height: 40px;
+		border-radius: 10px;
 	}
 	
 	label {
+		color: #ffffff;
 		font-size: 15pt;
 		font-style: italic;
 		font-weight: bold;
 	}
 	
 	.snip1535 {
-	  background-color: #c47135;
+	  background-color: #0099ff;
 	  border: none;
 	  color: #ffffff;
 	  cursor: pointer;
@@ -60,7 +63,7 @@
 	}
 	
 	.snip1535:before {
-	  border-color: #c47135;
+	  border-color: #0099ff;
 	  border-right-width: 2px;
 	  border-top-width: 2px;
 	  right: -5px;
@@ -69,20 +72,18 @@
 	
 	.snip1535:after {
 	  border-bottom-width: 2px;
-	  border-color: #c47135;
+	  border-color: #0099ff;
 	  border-left-width: 2px;
 	  bottom: -5px;
 	  left: -5px;
 	}
 	
-	.snip1535:hover,
-	.snip1535.hover {
-	  background-color: #c47135;
+	.snip1535:hover {
+	  background-color: #0099ff;
 	}
+	
 	.snip1535:hover:before,
-	.snip1535.hover:before,
-	.snip1535:hover:after,
-	.snip1535.hover:after {
+	.snip1535:hover:after {
 	  height: 100%;
 	  width: 100%;
 	}
@@ -102,7 +103,7 @@
 		
 	});
 </script>
-</head>
+
 <body background="<%= request.getContextPath()%>/resources/images/backgroundImage.png">
 
 	<div id="loginContainer">
@@ -120,4 +121,3 @@
 	</div>
 	
 </body>
-</html>
