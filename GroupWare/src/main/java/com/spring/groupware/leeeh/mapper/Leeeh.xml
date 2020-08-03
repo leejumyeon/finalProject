@@ -4,4 +4,8 @@
 
 <mapper namespace="leeeh">
 
+	<!-- === 로그인 페이지에서 적은 ID와 비밀번호를 통해 유저가 존재하는지 검사하기 === -->
+	<select id="isUserExist">
+		select employee_seq, employee_name, employee_id, employee_pw, 
+	</select>
 </mapper>

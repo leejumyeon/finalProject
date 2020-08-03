@@ -1,6 +1,6 @@
 package com.spring.groupware.commonVO;
 
-public class MailVO {
+public class MailVO {//메일함 VO
 	private String mail_seq; // 메일 번호
 	private String fk_employee_seq; // 수신 또는 발신 사원 번호
 	private String email; // 수신 또는 발신 사원 이메일(employees_table이랑 join)
@@ -15,6 +15,9 @@ public class MailVO {
 	private String fileName3; // 메일 첨부파일명3
 	private String orgFileName3; // 메일 첨부파일 원래파일명3
 	private String fileSize3; // 첨부파일 크기3
+	private String status; //발신 / 수신 상태(1:발신 0:수신)
+	private String readStatus; //읽은 상태 유무(0:미독, 1:기독)
+	private String mailStatus; //삭제유무상태(1:보존, 0:삭제)
 	
 	// 보낸 메일함, 받은 메일함 모두 제목 내용 보여주는것은 똑같고 수신 발신 이메일만 다르게 적용)
 }

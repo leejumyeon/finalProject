@@ -112,6 +112,11 @@ nocache;
 ,fk_position    number default 1 -- 사원직책
 ,fk_department  number -- 부서
 ,grade          number default 1 not null-- 권한
+,gender         varchar2(1) -- 성별
+,birthday       varchar2(8)-- 생년월일
+,address        varchar2(300)-- 주소
+,postcode       varchar2(300)-- 우편번호
+,detailaddress  varchar2(500)-- 상세주소
 ,constraint pk_employees_table primary key(employee_seq)
 ,constraint fk_employees_status foreign key (fk_status) REFERENCES employeeStatus_table(status_seq)
 ,constraint fk_employees_position foreign key(fk_position) references position_table(position_seq) on DELETE SET null
@@ -145,7 +150,6 @@ create table album_table
 ,fk_employee_seq    number  -- 게시글 작성자 번호
 ,subject    varchar2(500) not null -- 게시글 제목
 ,content    varchar2(4000) not null -- 게시글 내용
-,representative_img  varchar2(2000) -- 게시글 대표 이미지
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
@@ -163,19 +167,23 @@ nocache;
 -- 퇴사사유 테이블(fire_date) --
 create table fire_table
 (fk_employee_seq    number not null
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,reason varchar2(4000) -- 퇴사 사유
+,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
 -- 매출 테이블(sales_table) --
 create table sales_table
 (sales_seq  number not null -- 매출번호
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,sales_title    varchar2(500) not null -- 매출제목
 ,sales_price    number  not null -- 매출 가격
 ,sales_count    number not null -- 매출 개수
 ,reason     varchar2(4000) -- 매출 사유
 ,fk_department_seq  number -- 매출 부서
-,regDate    date default sysdate not null
+,regDate    date default sysdate not null -- 매출 기록 날짜
+,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_sales_approval primary key(sales_seq)
 ,constraint fk_sales_department foreign key(fk_department_seq) REFERENCES department_table(department_seq) on delete set null
 );
@@ -210,10 +218,12 @@ nocache;
 -- 동호회명단 테이블(clubMember_table)
 create table clubMember_table
 (member_seq number not null -- 명단번호
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,fk_club    number not null -- 가입한 동호회
 ,status     number  default 0 not null -- 상태(0:일반, 1:회장)
 ,regDate    date default sysdate not null -- 가입날짜
-,fk_employee_seq    number not null
+,fk_employee_seq    number not null -- 가입한 사원번호
+,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_clubMember_table primary key(member_seq)
 ,constraint fk_clubMember_club foreign key (fk_club) references club_table(club_seq)
 ,constraint fk_clubMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
@@ -230,12 +240,15 @@ nocache;
 -- 근태관리 테이블(TA_table) --
 create table TA_table
 (ta_seq     number not null -- 근태관리 행 번호
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,fk_employee_seq    number not null -- 대상 사원 번호
 ,attendance     varchar2(50) not null -- 출결점수
 ,attitude       varchar2(50) not null -- 태도점수
 ,performance    varchar2(50) not null -- 업무성과 점수
-,managerPhone   varchar2(100) not null -- 사수 번호
+,manager    varchar2(100) not null -- 기안자(이름)
+,reason     varchar2(4000) not null -- 점수를 준 사유(전체)
 ,regDate    date default sysdate not null -- 근태관리 등록 날짜
+,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_ta_table primary key(ta_seq)
 ,constraint fk_ta_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
 );
@@ -265,11 +278,13 @@ create table trip_category
 -- 휴가/출장 테이블(trip_table) --
 create table trip_table
 (trip_seq   number not null -- 번호
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,trip_category  number not null -- 휴가/출장 항목번호
 ,reason     varchar2(4000) -- 사유
 ,trip_start date not null -- 휴가/출장 시작 날짜
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
 ,fk_employee_seq    number not null -- 신청자
+,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_trip_table primary key (trip_seq)
 ,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)
 );
@@ -292,14 +307,17 @@ insert into document_category(document_category_seq, category_name)values(1,'');
 
 -- 문서결재 테이블(document_table) --
 create table document_table
-(document_seq   varchar2(15) not null -- 문서결재 일련 번호
+(document_seq   number not null -- 문서결재 고유 번호
+,groupno        varchar2(50) not null -- 문서 일련번호(각각의 결과 테이블에 사용할 번호)
 ,fk_employee_seq    number not null -- 결재 신청자
 ,subject    varchar2(1000) not null
 ,content    varchar2(4000) not null -- 결재문서 내용
 ,regDate    date default sysdate not null -- 결재 신청날짜
-,approver   varchar2(100) not null -- 결재자
+,approver_seq   number not null -- 결재자 사원번호
+,approveDate    date -- 결재날짜
 ,parent_approver    varchar2(100) -- 상위 결재자
-,status     number not null -- 결재 상태
+,status     number not null -- 결재 상태(승인, 미승인, 반려)
+,reason     varchar2(4000) -- 결재 사유( 반려 사유 )
 ,document_category  number not null -- 문서 항목
 ,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq)
 ,constraint fk_document_category foreign key (document_category) references document_category(document_category_seq)
@@ -316,6 +334,7 @@ nocache;
 -- 프로젝트 테이블(project_table) --
 create table project_table
 (project_seq    number not null -- 프로젝트 번호
+,groupno        varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,project_name   varchar2(500) not null -- 프로젝트 이름
 ,content    varchar2(4000) not null -- 프로젝트 내용
 ,term   number not null -- 프로젝트 기간
@@ -325,6 +344,7 @@ create table project_table
 ,dwonPayment    number -- 계약금
 ,middlePayment  number -- 중도금
 ,completionPayment number -- 완료금
+,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??(0:결재 진행중, 1:결재완료, 삭제:결재반려)
 ,constraint pk_project_table primary key(project_seq)
 );
 create SEQUENCE project_table_seq
@@ -357,10 +377,12 @@ nocache;
 create table personalCalendar_table
 (calendar_seq   number not null -- 일정번호
 ,fk_employee_seq    number not null -- 사원번호
+,title      varchar2(500) not null -- 일정 타이틀
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 색상(분류)
+,color      varchar2(100) -- 배경색
+,type       
 ,constraint pk_personalCalendar primary key(calendar_seq)
 );
 create SEQUENCE personalCalendar_table_seq
@@ -371,14 +393,24 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+create table companyCalendar_category
+(category_num   number not null
+,category_name  varchar2(50) not null
+);
+
 -- 회사일정 테이블(companyCalendar_table) --
 create table companyCalendar_table
 (calendar_seq   number not null -- 일정번호
+,title      varchar2(500) not null -- 일정 타이틀
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 색상(분류)
+,color      varchar2(100) -- 배경색
+,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
+,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
 ,constraint pk_companyCalendar primary key(calendar_seq)
+,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)
+,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
@@ -387,6 +419,8 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
+
 
 -- 메신저 그룹 테이블(messengerRoom_table) --
 create table messengerRoom_table
@@ -426,11 +460,11 @@ nocache;
 -- 대화로그 테이블(messengerLog_table) --
 create table messengerLog_table
 (fk_message_seq     number not null -- 대화번호 (foreign key)
-,msg_receiver       varchar2(100) not null -- 읽을 사람
+,msg_receiver       number not null -- 읽을 사람 사원번호
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 발송 테이블(mail_table) --
+-- 메일 테이블(mail_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,fk_employee_seq    number not null -- 사원 번호(F.K) = 보내는 사람
@@ -445,10 +479,11 @@ create table mail_table
 ,fileName3          varchar2(500) -- 파일첨부이름3
 ,orgFileName3       varchar2(500) -- 파일첨부 원래 이름3
 ,fileSize3          varchar2(10) -- 파일사이즈3
-,sendStatus         number default 0
-,constraint PK_mail_table primary key(mail_seq)
+,status         number default 0 -- 발송/수신 상태
+,readStatus     number default 0
+,mailStatus     number default 1 -- 삭제유무 상태
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq)
-,constraint CK_mail_table CHECK(sendStatus in(0, 1))
+,constraint CK_mail_table CHECK(status in(0, 1)and readStatus in(0,1))
 );
 create SEQUENCE mail_table_seq
 start with 1 -- 시작값
@@ -457,16 +492,6 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
-
--- 메일 수신 테이블(mailReceive_table) --
-create table mailReceive_table
-(mail_seq    number not null
-,receiver       number not null
-,receiveStatus  number default 0
-,readStatus     number default 0
-,constraint CK_mailReceive check(receiveStatus in(0,1) and readStatus in(0,1))
-,constraint fk_mailReceive_employee foreign key(receiver) references employees_table(employee_seq)
-);
 
 
 -- 회의실 테이블(reservationRoom_table) --
@@ -481,10 +506,10 @@ insert into reservationRoom_table(roomNumber,roomName) values(1,'제1회의실')
 create table reservation_table
 (reservation_seq    number not null -- 예약번호
 ,fk_employee_seq    number not null -- 예약 신청자
-,fk_roomNumber         number not null -- 예약 장소(회의실 번호)
+,fk_roomNumber      number not null -- 예약 장소(회의실 번호)
 ,startDate  date not null -- 사용시작 시간(날짜 포함)
 ,endDate    date not null -- 사용종료 시간(날짜 포함)
-,head   varchar2(50) not null -- 예약 책임자
+,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
 ,status number default 0 not null -- 승인 상태
@@ -576,4 +601,3 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
--- 문의 테이블 왜 따로?? --
