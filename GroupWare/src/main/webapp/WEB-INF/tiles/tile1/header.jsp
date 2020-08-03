@@ -28,19 +28,21 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
-<div align="center">
-	<ul class="nav nav-tabs mynav">
+<div style="display: inline-block; border:solid 0px red; float:left;">
+	<a href="#"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" width:150px; height:40px;"/></a>
+</div>
+<div style="display: inline-block; border:solid 0px blue; width:1500px;" align="center">
+	<ul class="mynav" style="float:left;">
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
+			data-toggle="dropdown" href="#">사내공지<span class="caret"></span></a>
 			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/index.action">Home</a></li>
-				<li><a href="<%=ctxPath%>/deliciousStore.action">전국맛집</a></li>
-				<li><a href="<%= serverName%><%=ctxPath%>/chatting/multichat.action">웹채팅</a></li>
+				<li><a href="<%=ctxPath%>/index.action">공지사항</a></li>
+				<li><a href="<%=ctxPath%>/deliciousStore.action">자주하는 질문</a></li>
 			</ul>
 		</li>
 			
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">게시판 <span class="caret"></span></a>
+		<li class="dropdown"><a class=""
+			data-toggle="dropdown" href="#">문서결재 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/list.action">목록보기</a></li>
 								
@@ -53,7 +55,7 @@
 		</li>
 		
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">로그인 <span class="caret"></span></a>
+			data-toggle="dropdown" href="#">메일 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<c:if test="${sessionScope.loginuser == null}">
 					<li><a href="#">회원가입</a></li>
@@ -67,27 +69,34 @@
 			</ul>
 		</li>
 		
-		<!-- === #169. 제품등록(다중파일첨부)및 제품정보 메뉴 추가하기 === -->		
-		<c:if test="${sessionScope.loginuser.gradelevel == 10 }">
-			<li class="dropdown"><a class="dropdown-toggle"
-				data-toggle="dropdown" href="#">제품등록(다중파일첨부) <span class="caret"></span></a>
-				<ul class="dropdown-menu">
-				    <li><a href="<%=ctxPath%>/product/addProduct.action">제품등록</a></li>
-					<li><a href="<%=ctxPath%>/product/storeProduct.action">제품입고</a></li>
-				</ul>
-			</li>
-		</c:if>
 		
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">인사관리 <span class="caret"></span></a>
+			data-toggle="dropdown" href="#">커뮤니티 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+			    <li><a href="<%=ctxPath%>/product/addProduct.action">제품등록</a></li>
+				<li><a href="<%=ctxPath%>/product/storeProduct.action">제품입고</a></li>
+			</ul>
+		</li>
+		
+		
+		<li class="dropdown"><a class="dropdown-toggle"
+			data-toggle="dropdown" href="#">회사정보 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/emp/empList.action">직원목록</a></li>
 				<li><a href="<%=ctxPath%>/emp/chart.action">통계차트</a></li>
 			</ul>
 		</li>
+	</ul>
+	<ul class="mynav" style="float:right;">
+		<li class="dropdown"><a class="dropdown-toggle"
+			data-toggle="dropdown" href="#">마이페이지 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
+			</ul>
+		</li>
 		
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">제품정보 <span class="caret"></span></a>
+			data-toggle="dropdown" href="#">메신저 아이콘 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
 			</ul>
@@ -103,3 +112,4 @@
 	
 	</ul>
 </div>
+<div style="clear:both;"></div>
