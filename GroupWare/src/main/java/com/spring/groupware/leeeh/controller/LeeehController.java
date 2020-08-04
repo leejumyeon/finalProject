@@ -123,10 +123,10 @@ public class LeeehController {
 	}
 	
 	
-	@RequestMapping(value="/vacation.top", method = {RequestMethod.GET})
+	@RequestMapping(value="/equipmentDocument.top", method = {RequestMethod.GET})
 	public ModelAndView vacation(ModelAndView mav) {
 		
-		mav.setViewName("vacationDocument.notiles");
+		mav.setViewName("documentList/equipmentDocument");
 		
 		return mav;
 	}
