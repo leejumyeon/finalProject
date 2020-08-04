@@ -135,12 +135,23 @@
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 		
+		// 회의실 클릭했을 때
 		$(".room").click(function(event){
+			
+			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChioce");
 			$(this).addClass("rChioce");
-		});
+						
+		//	alert($(this).children('.roomName').text());
+			
+			
+			$("#roomName").val($(this).children('.roomName').text());			
+			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());
+			
+			
+		});// end of $(".room").click(function(event){})----------------------------
 		
-	});
+	});// end of $(document).ready(function(){})------------------------------------------------
 
 </script>
 
@@ -152,20 +163,24 @@
 			<h3>회의실 위치</h3>
 			<div id="sbRooms">
 				<div class="small room" id="room_one">
-					<div class="text">소회의실1</div>
+					<div class="text roomName">소회의실1</div>				
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="5" />
 				</div>
 				<div class="small room" id="room_two">
-					<div class="text">소회의실2</div>
+					<div class="text roomName">소회의실2</div>
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="6" />					
 				</div>
 				<div class="small room" id="room_three">
-					<div class="text">소회의실3</div>
+					<div class="text roomName">소회의실3</div>
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="7" />
 				</div>
 				<div class="big room" id="room_four">
-					<div class="text">대회의실</div>
+					<div class="text roomName">대회의실</div>
 					<div class="text">15~30인</div>
+					<input class="fk_roomNumber" type="hidden" value="1" />					
 				</div>
 			</div>
 			
@@ -175,16 +190,19 @@
 			
 			<div id="mRooms">
 				<div class="medium room" id="room_five">
-					<div class="text">중회의실A</div>
+					<div class="text roomName">중회의실A</div>
 					<div class="text">10~15인</div>
+					<input class="fk_roomNumber" type="hidden" value="2" />						
 				</div>
 				<div class="medium room" id="room_six">
-					<div class="text">중회의실B</div>
-					<div class="text">10~15인</div>					
+					<div class="text roomName">중회의실B</div>
+					<div class="text">10~15인</div>	
+					<input class="fk_roomNumber" type="hidden" value="3" />										
 				</div>
 				<div class="medium room" id="room_seven">
-					<div class="text">중회의실C</div>
-					<div class="text">10~15인</div>					
+					<div class="text roomName">중회의실C</div>
+					<div class="text">10~15인</div>	
+					<input class="fk_roomNumber" type="hidden" value="4" />										
 				</div>
 			</div>			
 		</div>
@@ -192,7 +210,7 @@
 		<div id="dateAndTime">
 			<table id="date">
 				<tr>
-					<td style="width: 10%;">날짜</td>
+					<td style="width: 10%;">예약일</td>
 					<td style="width: 50%; text-align: left;">
 						<input type="text" id="datepicker">
 					</td>
@@ -264,11 +282,49 @@
 		</div>
 		
 		<div id="info">
+			<h4>예약하기</h4>
 			<table>
 				<tr>
-					<th>회의실명</th>
-					<td><span></span></td>
+					<th>회의실</th>
+					<td>
+						<input type="text" id="roomName" name="roomName" readonly="readonly"/>
+						<input type="text" id="fk_roomNumber" name="fk_roomNumber"/>
+						</td>
 				</tr>
+				<tr>
+					<th>예약일</th>
+					<td><input type="text" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<th>시간</th>
+					<td><input type="text" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<th>신청자</th>
+					<td>
+						<input type="text" readonly="readonly"/>
+						<input type="text" value="fk_employee_seq"/><!-- hidden -->
+					</td>
+				</tr>
+				<tr>
+					<th>예약 대표자</th>
+					<td>
+						<input type="text" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<th>사용 인원</th>
+					<td>
+						<input type="text" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<th>사유</th>
+					<td>
+						<input type="text" readonly="readonly"/>
+					</td>
+				</tr>							
+
 			</table>
 		</div>				
 		
