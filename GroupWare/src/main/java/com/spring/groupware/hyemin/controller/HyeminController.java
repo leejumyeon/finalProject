@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.groupware.commonVO.ReservationRoomVO;
+import com.spring.groupware.commonVO.ReservationVO;
 import com.spring.groupware.hyemin.service.InterHyeminService;
 
 // === #30. 컨트롤러 선언 ===
@@ -25,38 +27,44 @@ public class HyeminController {
 	@Autowired
 	private InterHyeminService service;
 	
-	@RequestMapping(value = "/test/hmTest.top")
-	public String hmTest() {
-
-		return "test/hmTest";
-		// /WEB-INF/views/test/hmTest.jsp 페이지를 만들어야 한다.
+	@RequestMapping(value = "/rsvt/rsvtRoom.top")
+	public ModelAndView hmTest(ModelAndView mav) {
+		
+		mav.setViewName("rsvt/rsvtRoom.tiles1");
+		// /WEB-INF/views/rsvt/rsvtRoom.jsp 페이지를 만들어야 한다.
+		
+		return mav;
 	}
 	
+	// === 예약 가능한 시간 조회(Ajax) ===
 	@ResponseBody
-	@RequestMapping(value = "/possibleTimeShow.top", produces = "text/plain;charset=UTF-8")
-	public String possibleTimeShow(HttpServletRequest request) {
-		
-		String searchType = request.getParameter("searchType");
-		String searchWord = request.getParameter("searchWord");
+	@RequestMapping(value = "/showPossibleTime.top", produces = "text/plain;charset=UTF-8")
+	public String select_possibleTime(HttpServletRequest request) {
+
+		String fk_roomNumber = request.getParameter("fk_roomNumber");
+		String RsvtDate = request.getParameter("RsvtDate");
 		
 		HashMap<String, String> paraMap = new HashMap<>();
-		paraMap.put("searchType", searchType);
-		paraMap.put("searchWord", searchWord);
+		paraMap.put("fk_roomNumber", fk_roomNumber);
+		paraMap.put("RsvtDate", RsvtDate);
 		
-	//	List<String> wordList = service.wordSearchShow(paraMap);
-		
-		JSONArray jsonArr = new JSONArray();		
-		
-	/*	if (wordList != null) {
-			for(String word : wordList) {
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("word", word);
-				
-				jsonArr.put(jsonObj);
-			}
-		}*/
-		
+		List<ReservationVO> rsvtvoList = service.select_possibleTime(paraMap);
+
+		JSONArray jsonArr = new JSONArray();
+
+		for (ReservationVO vo : rsvtvoList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("fk_roomNumber", vo.getFk_roomNumber());
+			jsonObj.put("startDate", vo.getStartDate());
+			jsonObj.put("endDate", vo.getEndDate());
+			jsonObj.put("status", vo.getStatus());
+
+			jsonArr.put(jsonObj);
+		}
+
 		return jsonArr.toString();
+
 	}
+
 	
 }

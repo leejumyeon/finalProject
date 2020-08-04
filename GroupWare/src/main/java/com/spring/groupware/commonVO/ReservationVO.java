@@ -16,7 +16,7 @@ public class ReservationVO { // 예약 신청VO
 	private String head_department;		// 예약 대표자 부서
 	private String memberCount;			// 사용 인원
 	private String reason;				// 사유
-	private String status;				// 승인상태
+	private String status;				// 승인상태(0: 승인대기중, 1: 승인완료)
 	
 	
 	// 생성자
@@ -166,8 +166,11 @@ public class ReservationVO { // 예약 신청VO
 		this.reason = reason;
 	}
 	
-	public String getStatus() {
-		return status;
+	public String getStatus() {			
+		if("0".equals(status))
+			return "승인대기중";
+		else
+			return "예약불가";
 	}
 	
 	public void setStatus(String status) {

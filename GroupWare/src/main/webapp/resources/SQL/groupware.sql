@@ -519,7 +519,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
@@ -684,4 +684,13 @@ commit;
 insert into board_category(category_seq, category_name) values(1,'공지사항');
 insert into board_category(category_seq, category_name) values(2,'FAQ');
 insert into board_category(category_seq, category_name) values(3,'자유');
+commit;
+
+insert into reservationRoom_table(roomNumber, roomName) values(1,'대회의실');
+insert into reservationRoom_table(roomNumber, roomName) values(2,'중회의실A');
+insert into reservationRoom_table(roomNumber, roomName) values(3,'중회의실B');
+insert into reservationRoom_table(roomNumber, roomName) values(4,'중회의실C');
+insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1');
+insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
+insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
