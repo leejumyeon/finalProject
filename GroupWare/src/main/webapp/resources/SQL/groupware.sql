@@ -200,9 +200,11 @@ nocache;
  -- 동호회 테이블(club_table) --
 create table club_table
 (club_seq   number not null -- 동호회 번호
+,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,club_name  varchar2(100) not null -- 동호회 이름
 ,club_info  varchar2(2000) -- 동호회 소개
 ,regDate    date default sysdate not null -- 동호회 생성날짜
+,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,representative_img  varchar2(500) not null -- 동호회 대표 이미지
 ,constraint pk_club_table primary key(club_seq)
 );
@@ -284,6 +286,7 @@ create table trip_table
 ,reason     varchar2(4000) not null -- 사유
 ,trip_start date not null -- 휴가/출장 시작 날짜
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
+,triplocatioin      varchar2(1000) -- 출장지
 ,fk_employee_seq    number  -- 신청자
 ,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_trip_table primary key (trip_seq)
@@ -519,7 +522,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
@@ -684,4 +687,13 @@ commit;
 insert into board_category(category_seq, category_name) values(1,'공지사항');
 insert into board_category(category_seq, category_name) values(2,'FAQ');
 insert into board_category(category_seq, category_name) values(3,'자유');
+commit;
+
+insert into reservationRoom_table(roomNumber, roomName) values(1,'대회의실');
+insert into reservationRoom_table(roomNumber, roomName) values(2,'중회의실A');
+insert into reservationRoom_table(roomNumber, roomName) values(3,'중회의실B');
+insert into reservationRoom_table(roomNumber, roomName) values(4,'중회의실C');
+insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1');
+insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
+insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
