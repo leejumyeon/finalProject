@@ -65,14 +65,14 @@ drop table position_table;
 
 
 
- -- 직책 테이블(position_table) --
+ -- 직급 테이블(position_table) --
 create table position_table
 (position_seq   number not null -- 직책번호
 ,position_name  varchar2(50) not null -- 직책명
 ,position_salary    number not null -- 직책 급여
 ,constraint pk_position_seq primary key(position_seq)
 ); 
-insert into position_table(position_seq, position_name, position_salary) values(1,'사원',2200);
+
 
  -- 사원상태 테이블(employeeStatus_table) --
 create table employeeStatus_table
@@ -80,12 +80,12 @@ create table employeeStatus_table
 ,status_name    varchar2(50) not null -- 사원 상태명
 ,constraint pk_employeeStatus primary key(status_seq)
 );
-insert into employeeStatus_table(status_seq, status_name) values (1,'일반');
+
 
  -- 부서테이블(department_table) --
 create table department_table
 (department_seq number not null
-,department_name    varchar2(100)
+,department_name    varchar2(100) not null
 ,constraint pk_department_table primary key(department_seq)
 );
 
@@ -111,11 +111,11 @@ nocache;
 ,fire_date      date -- 퇴사날짜
 ,fk_position    number default 1 -- 사원직책
 ,fk_department  number -- 부서
-,grade          number default 1 not null-- 권한
-,gender         varchar2(1) -- 성별
-,birthday       varchar2(8)-- 생년월일
-,address        varchar2(300)-- 주소
-,postcode       varchar2(300)-- 우편번호
+,grade          number default 1 not null -- 권한
+,gender         number(1) not null -- 성별(1:남 , 2:여)
+,birthday       varchar2(8) not null -- 생년월일
+,address        varchar2(300) not null -- 주소
+,postcode       varchar2(300) not null -- 우편번호
 ,detailaddress  varchar2(500)-- 상세주소
 ,constraint pk_employees_table primary key(employee_seq)
 ,constraint fk_employees_status foreign key (fk_status) REFERENCES employeeStatus_table(status_seq)
@@ -136,10 +136,9 @@ nocache;
  -- album 카테고리 테이블(album_category) --
  create table album_category
 (category_num   number not null -- 엘범 게시글의 항목번호(회사행사, 동호회, 봉사)
-,category_name  varchar2(50) -- 항목이름
+,category_name  varchar2(50) not null -- 항목이름
 ,constraint pk_album_category primary key (category_num)
 );
-insert into album_category(category_num, category_name) values(1,'동호회album');
 
 
 
@@ -166,10 +165,12 @@ nocache;
 
 -- 퇴사사유 테이블(fire_date) --
 create table fire_table
-(fk_employee_seq    number not null
+(fk_employee_seq    number
 ,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
 ,reason varchar2(4000) -- 퇴사 사유
-,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,interviewer_seq    number not null -- 면담자 사원번호
+,interview_content  varchar2(4000) not null -- 면담내용
+,documentStatus     number default 0 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
@@ -180,10 +181,10 @@ create table sales_table
 ,sales_title    varchar2(500) not null -- 매출제목
 ,sales_price    number  not null -- 매출 가격
 ,sales_count    number not null -- 매출 개수
-,reason     varchar2(4000) -- 매출 사유
+,reason     varchar2(4000) not null -- 매출 사유
 ,fk_department_seq  number -- 매출 부서
 ,regDate    date default sysdate not null -- 매출 기록 날짜
-,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_sales_approval primary key(sales_seq)
 ,constraint fk_sales_department foreign key(fk_department_seq) REFERENCES department_table(department_seq) on delete set null
 );
@@ -200,9 +201,9 @@ nocache;
 create table club_table
 (club_seq   number not null -- 동호회 번호
 ,club_name  varchar2(100) not null -- 동호회 이름
-,club_info  varchar2(2000) -- 동호회 설명
+,club_info  varchar2(2000) -- 동호회 소개
 ,regDate    date default sysdate not null -- 동호회 생성날짜
-,representative_img  varchar2(500) -- 동호회 대표 이미지
+,representative_img  varchar2(500) not null -- 동호회 대표 이미지
 ,constraint pk_club_table primary key(club_seq)
 );
 
@@ -222,11 +223,11 @@ create table clubMember_table
 ,fk_club    number not null -- 가입한 동호회
 ,status     number  default 0 not null -- 상태(0:일반, 1:회장)
 ,regDate    date default sysdate not null -- 가입날짜
-,fk_employee_seq    number not null -- 가입한 사원번호
+,fk_employee_seq    number  -- 가입한 사원번호
 ,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_clubMember_table primary key(member_seq)
-,constraint fk_clubMember_club foreign key (fk_club) references club_table(club_seq)
-,constraint fk_clubMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_clubMember_club foreign key (fk_club) references club_table(club_seq) on delete cascade
+,constraint fk_clubMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 );
 
 create SEQUENCE clubMember_table_seq
@@ -241,7 +242,7 @@ nocache;
 create table TA_table
 (ta_seq     number not null -- 근태관리 행 번호
 ,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
-,fk_employee_seq    number not null -- 대상 사원 번호
+,fk_employee_seq    number -- 대상 사원 번호
 ,attendance     varchar2(50) not null -- 출결점수
 ,attitude       varchar2(50) not null -- 태도점수
 ,performance    varchar2(50) not null -- 업무성과 점수
@@ -250,7 +251,7 @@ create table TA_table
 ,regDate    date default sysdate not null -- 근태관리 등록 날짜
 ,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_ta_table primary key(ta_seq)
-,constraint fk_ta_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_ta_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 );
 
 create SEQUENCE ta_table_seq
@@ -279,14 +280,15 @@ create table trip_category
 create table trip_table
 (trip_seq   number not null -- 번호
 ,groupno    varchar2(50) not null -- 문서결재 테이블과 연동하도록 하는 컬럼
-,trip_category  number not null -- 휴가/출장 항목번호
-,reason     varchar2(4000) -- 사유
+,trip_category  number -- 휴가/출장 항목번호
+,reason     varchar2(4000) not null -- 사유
 ,trip_start date not null -- 휴가/출장 시작 날짜
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
-,fk_employee_seq    number not null -- 신청자
-,documentStatus     number default 1 -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,fk_employee_seq    number  -- 신청자
+,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_trip_table primary key (trip_seq)
-,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)
+,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)on delete set null
+,constraint fk_trip_category foreign key (trip_category) references trip_category(category_num) on delete set null
 );
 
 create SEQUENCE trip_table_seq
@@ -303,14 +305,13 @@ create table document_category
 ,category_name  varchar2(100) not null -- 항목이름
 ,constraint pk_document_category primary key(document_category_seq)
 );
-insert into document_category(document_category_seq, category_name)values(1,'');
 
 -- 문서결재 테이블(document_table) --
 create table document_table
 (document_seq   number not null -- 문서결재 고유 번호
 ,groupno        varchar2(50) not null -- 문서 일련번호(각각의 결과 테이블에 사용할 번호)
 ,fk_employee_seq    number not null -- 결재 신청자
-,subject    varchar2(1000) not null
+,subject    varchar2(1000) not null -- 결재문서 제목
 ,content    varchar2(4000) not null -- 결재문서 내용
 ,regDate    date default sysdate not null -- 결재 신청날짜
 ,approver_seq   number not null -- 결재자 사원번호
@@ -322,7 +323,7 @@ create table document_table
 ,status     number not null -- 결재 상태(승인, 미승인, 반려)
 ,reason     varchar2(4000) -- 결재 사유( 반려 사유 )
 ,document_category  number not null -- 문서 항목
-,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq) on delete set null
 ,constraint fk_document_category foreign key (document_category) references document_category(document_category_seq)
 );
 
@@ -362,10 +363,10 @@ nocache;
 create table projectMember_table
 (projectMember_seq  number not null -- 프로젝트 명단 번호
 ,fk_project_seq     number not null -- 프로젝트 번호(프로젝트 명, 진행상태 join요소)
-,fk_employee_seq    number not null -- 사원번호(사원명, 직책, 부서 join요소)
+,fk_employee_seq    number -- 사원번호(사원명, 직책, 부서 join요소)
 ,constraint pk_projectMember_table primary key(projectMember_seq)
-,constraint fk_projectMember_project foreign key(fk_project_seq) references project_table(project_seq)
-,constraint fk_projectMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_projectMember_project foreign key(fk_project_seq) references project_table(project_seq) on delete cascade
+,constraint fk_projectMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create SEQUENCE projectMember_table_seq
 start with 1 -- 시작값
@@ -384,9 +385,9 @@ create table personalCalendar_table
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색
-,type       
+,color      varchar2(100) -- 배경색     
 ,constraint pk_personalCalendar primary key(calendar_seq)
+,constraint fk_personalcalendar_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 create SEQUENCE personalCalendar_table_seq
 start with 1 -- 시작값
@@ -397,8 +398,9 @@ nocycle -- 반복 설정
 nocache;
 
 create table companyCalendar_category
-(category_num   number not null
-,category_name  varchar2(50) not null
+(category_num   number not null -- 항목번호
+,category_name  varchar2(50) not null -- 항목명
+,constraint pk_companyCalendar_category primary key(category_num)
 );
 
 -- 회사일정 테이블(companyCalendar_table) --
@@ -412,7 +414,7 @@ create table companyCalendar_table
 ,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
 ,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
 ,constraint pk_companyCalendar primary key(calendar_seq)
-,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)
+,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
 create SEQUENCE companyCalendar_table_seq
@@ -431,6 +433,7 @@ create table messengerRoom_table
 ,fk_employee_seq   number not null -- 참가자 번호
 ,regDate    date default sysdate not null -- 참가날짜
 ,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
+,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 
 create SEQUENCE messengerRoom_table_seq
@@ -447,10 +450,11 @@ create table messenger_table
 ,content    varchar2(4000) not null -- 대화내용
 ,regDate    date default sysdate not null -- 대화날짜
 ,status     number default 1 not null -- 대화상태
-,fk_roomNumber      number not null -- 메신저 그룹번호
-,fk_employee_seq    number not null -- 발신자
+,fk_roomNumber      number -- 메신저 그룹번호
+,fk_employee_seq    number  -- 발신자
 ,constraint pk_messenger_table primary key(message_seq)
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
+on delete set null
 );
 create SEQUENCE messenger_table_seq
 start with 1 -- 시작값
@@ -470,7 +474,7 @@ create table messengerLog_table
 -- 메일 테이블(mail_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
-,main_groupno       number -- 송신/수신 그룹번호
+,mail_groupno       number -- 송신/수신 그룹번호 (null=임시저장?)
 ,fk_employee_seq    number not null -- 사원 번호(F.K) = 보내는 사람
 ,subject            varchar2(1000) not null -- 제목
 ,content            varchar2(4000) not null -- 내용
@@ -483,11 +487,11 @@ create table mail_table
 ,fileName3          varchar2(500) -- 파일첨부이름3
 ,orgFileName3       varchar2(500) -- 파일첨부 원래 이름3
 ,fileSize3          varchar2(10) -- 파일사이즈3
-,status         number default 0 -- 발송/수신 상태
-,readStatus     number default 0
-,mailStatus     number default 1 -- 삭제유무 상태
-,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq)
-,constraint CK_mail_table CHECK(status in(0, 1)and readStatus in(0,1))
+,status         number default 0 not null-- 발송/수신 상태
+,readStatus     number default 0 not null -- 기독 유무
+,mailStatus     number default 1 not null-- 삭제유무 상태
+,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
+,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
 );
 create SEQUENCE mail_table_seq
 start with 1 -- 시작값
@@ -504,7 +508,6 @@ create table reservationRoom_table
 ,roomName       varchar2(300) not null -- 회의실이름
 ,constraint pk_reservationRoom primary key(roomNumber)
 );
-insert into reservationRoom_table(roomNumber,roomName) values(1,'제1회의실');
 
 -- 예약관리 테이블(reservation_table) --
 create table reservation_table
@@ -518,7 +521,7 @@ create table reservation_table
 ,reason varchar2(2000) not null -- 사유
 ,status number default 0 not null -- 승인 상태
 ,constraint pk_reservation_table primary key(reservation_seq)
-,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
 );
 create SEQUENCE reservation_table_seq
@@ -532,9 +535,9 @@ nocache;
 -- 출퇴근 테이블(attendance_table) --
 create table attendance_table
 (fk_employee_seq    number not null -- 사원번호
-,onTime     date default sysdate -- 출근시간(년-월-일 시-분-초)
+,onTime     date default sysdate not null -- 출근시간(년-월-일 시-분-초)
 ,offTime    date -- 퇴근시간(년-월-일 시-분-초)
-,constraint fk_attendance_employee foreign key(fk_employee_seq) references employees_table(employee_seq)
+,constraint fk_attendance_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete cascade
 );
 
 -- 게시판 항목 테이블(board_category) --
@@ -543,7 +546,6 @@ create table board_category
 ,category_name  varchar2(100) not null -- 게시글 항목명
 ,constraint pk_board_category primary key(category_seq)
 );
-insert into board_category(category_seq, category_name) values(1,'자유');
 
 -- 게시판 테이블(board_table) --
 create table board_table
@@ -553,11 +555,11 @@ create table board_table
 ,content    varchar2(4000) not null
 ,readCnt    number default 0 -- 조회수
 ,regDate    date default sysdate not null -- 등록날짜
-,fk_employee_seq    number not null -- 작성자 번호
+,fk_employee_seq    number -- 작성자 번호
 ,status     number default 1 not null -- 글 상태
 ,commentCnt number default 0 not null -- 댓글 수
 ,constraint pk_board_table primary key(board_seq)
-,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq) on delete set null
+,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq)
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create SEQUENCE board_table_seq
@@ -592,11 +594,14 @@ create table comment_table
 ,fk_board_seq   number not null -- 게시글 번호(그룹번호)
 ,fk_employee_seq    number -- 작성자 사원번호
 ,readCnt    number default 0 not null -- 조회수
-,content    varchar2(2000) -- 내용
-,status     number default 1 -- 글상태(1:보존, 0:삭제)
+,content    varchar2(2000) not null -- 내용
+,status     number default 1 not null -- 글상태(1:보존, 0:삭제)
 ,regDate    date default sysdate not null -- 작성날짜
 ,parent_seq number -- 상위 댓글(계층형)
-,depthno    number default 0 -- 
+,depthno    number default 0 not null
+,constraint pk_comment_seq primary key(commnet_seq)
+,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
+,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create sequence comment_table_seq
 start with 1 -- 시작값
@@ -609,14 +614,74 @@ nocache;
 -- 비품관련 테이블(equipment_table) --
 create table equipment_table
 (equipment_seq  number not null -- 비품 구입번호
-,fk_department_seq  number not null -- 비품 구매한 부서
+,fk_department_seq  number -- 비품 구매한 부서
 ,equipment_name     varchar2(500) not null -- 비품목록 이름
 ,unit      number not null -- 비품 단위
 ,equipment_price    number not null -- 비품 가격(단위)
 ,equipment_count    number not null -- 비품 구매 수
 ,reason     varchar2(4000) -- 구매 사유
-,purchaseDate   date -- 구입날짜
+,purchaseDate   date not null-- 구입날짜
+,groupno    varchar2(50) not null
+,documentStatus number default 0 not null
 ,constraint pk_equipment_table primary key(equipment_seq)
-,constraint fk_equipment_department foreign key(fk_department_seq) references department_table(department_seq)
+,constraint fk_equipment_department foreign key(fk_department_seq) references department_table(department_seq) on delete set null
 );
 
+
+-- 항목(카테고리) 데이터 입력 --
+insert into position_table(position_seq, position_name, position_salary) values(1,'사원',2500);
+insert into position_table(position_seq, position_name, position_salary) values(2,'대리',3400);
+insert into position_table(position_seq, position_name, position_salary) values(3,'과장',4100);
+insert into position_table(position_seq, position_name, position_salary) values(4,'부장',5090);
+insert into position_table(position_seq, position_name, position_salary) values(5,'이사',6400);
+insert into position_table(position_seq, position_name, position_salary) values(6,'사장',10000);
+commit;
+
+insert into employeeStatus_table(status_seq, status_name) values (1,'일반');
+insert into employeeStatus_table(status_seq, status_name) values (2,'퇴사');
+insert into employeeStatus_table(status_seq, status_name) values (3,'휴가');
+insert into employeeStatus_table(status_seq, status_name) values (4,'출장');
+commit;
+
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'디자인팀');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'개발팀');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'영업팀');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'인사팀');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'경영지원팀');
+commit;
+
+insert into album_category(category_num, category_name) values(1,'사내활동');
+insert into album_category(category_num, category_name) values(2,'동호회');
+insert into album_category(category_num, category_name) values(3,'봉사');
+commit;
+
+insert into grade_table(grade_level, grade_name) values(1,'일반');
+insert into grade_table(grade_level, grade_name) values(2,'인사관리');
+insert into grade_table(grade_level, grade_name) values(3,'예약관리');
+insert into grade_table(grade_level, grade_name) values(4,'매출관리');
+insert into grade_table(grade_level, grade_name) values(5,'전체');
+commit;
+
+insert into trip_category(category_num, category_name) values(1,'연차');
+insert into trip_category(category_num, category_name) values(2,'월차');
+insert into trip_category(category_num, category_name) values(3,'반차');
+insert into trip_category(category_num, category_name) values(4,'여름휴가');
+insert into trip_category(category_num, category_name) values(5,'출산휴가');
+insert into trip_category(category_num, category_name) values(6,'단기출장');
+insert into trip_category(category_num, category_name) values(7,'장기출장');
+insert into trip_category(category_num, category_name) values(8,'해외출장');
+commit;
+
+insert into document_category(document_category_seq, category_name)values(1,'휴가/출장');
+insert into document_category(document_category_seq, category_name)values(2,'매출');
+insert into document_category(document_category_seq, category_name)values(3,'프로젝트');
+insert into document_category(document_category_seq, category_name)values(4,'퇴사');
+insert into document_category(document_category_seq, category_name)values(5,'인사고과');
+insert into document_category(document_category_seq, category_name)values(6,'동호회 가입');
+commit;
+
+
+insert into board_category(category_seq, category_name) values(1,'공지사항');
+insert into board_category(category_seq, category_name) values(2,'FAQ');
+insert into board_category(category_seq, category_name) values(3,'자유');
+commit;
