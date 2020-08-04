@@ -605,3 +605,18 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
+-- 비품관련 테이블(equipment_table) --
+create table equipment_table
+(equipment_seq  number not null -- 비품 구입번호
+,fk_department_seq  number not null -- 비품 구매한 부서
+,equipment_name     varchar2(500) not null -- 비품목록 이름
+,unit      number not null -- 비품 단위
+,equipment_price    number not null -- 비품 가격(단위)
+,equipment_count    number not null -- 비품 구매 수
+,reason     varchar2(4000) -- 구매 사유
+,purchaseDate   date -- 구입날짜
+,constraint pk_equipment_table primary key(equipment_seq)
+,constraint fk_equipment_department foreign key(fk_department_seq) references department_table(department_seq)
+);
+
