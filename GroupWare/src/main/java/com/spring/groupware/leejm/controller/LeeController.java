@@ -14,8 +14,8 @@ public class LeeController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		System.out.println("테스트 확인");
-		mav.setViewName("home.tiles2");
+		mav.setViewName("mail/mailWrite.tiles2");
+		//mav.setViewName("home.tiles1");
 		return mav;
 	}
 }
