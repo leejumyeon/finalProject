@@ -4,4 +4,8 @@
 
 <mapper namespace="cha">
 
+	<select id="fullCalendar">
+		
+	</select>
+
 </mapper>
