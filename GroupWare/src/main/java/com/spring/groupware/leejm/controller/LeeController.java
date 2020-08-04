@@ -14,7 +14,7 @@ public class LeeController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("mail/mailWrite.tiles2");
+		mav.setViewName("mail/mailRead.tiles2");
 		//mav.setViewName("home.tiles1");
 		return mav;
 	}
