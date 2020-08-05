@@ -1,6 +1,8 @@
 package com.spring.groupware.leeeh.controller;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,10 +31,64 @@ public class LeeehController {
 		return mav;
 	}
 	
+	// === 사원발급 페이지 보여주기 === //
 	@RequestMapping(value="/idIssued.top", method= {RequestMethod.GET})
 	public ModelAndView idIssued(ModelAndView mav) {
 		
-		mav.setViewName("idIssued.tiles2");
+		String employee_id = "";
+		
+		Calendar currentDate = Calendar.getInstance();
+		int year = currentDate.get(Calendar.YEAR);
+		int month = (currentDate.get(Calendar.MONTH) + 1);
+		String strMonth = (month < 10) ? "0" + month : String.valueOf(month);
+		
+		int day = currentDate.get(Calendar.DATE);
+		String strDay = day < 10 ? "0" + day : String.valueOf(day);
+		
+		String hireDate = String.valueOf(year) + strMonth + strDay;
+		String max = service.getMaxOfEmployeeId(hireDate);
+		
+		int intMax = (Integer.parseInt(max)) + 1;
+		max = (intMax < 10)? "0" + intMax : String.valueOf(intMax);
+
+		employee_id = "TOP-" + hireDate + "-" + max;
+		
+		Random rnd = new Random();
+		
+		String employee_pw= "";
+		
+		char randchar = ' ';
+		for(int i=0; i<1; i++) {
+			randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
+			employee_pw += randchar;
+		}
+		
+		int randnum = 0;
+		for(int i=0; i<3; i++) {
+			randnum = rnd.nextInt(9 - 0 + 1) + 0;
+			employee_pw += randnum;
+		}
+		
+		randchar = ' ';
+		for(int i=0; i<1; i++) {
+			randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
+			employee_pw += randchar;
+		}
+		
+		randnum = 0;
+		for(int i=0; i<3; i++) {
+			randnum = rnd.nextInt(9 - 0 + 1) + 0;
+			employee_pw += randnum;
+		}
+		
+		String email = "";
+		
+		email = employee_id + "@topgroupware.com";
+		
+		mav.addObject("employee_id", employee_id);
+		mav.addObject("employee_pw", employee_pw);
+		mav.addObject("email", email);
+		mav.setViewName("idIssued.notiles");
 		
 		return mav;
 	}
@@ -86,24 +142,6 @@ public class LeeehController {
 		return mav;
 	}
 	
-	// === 메인 페이지 보여주기 === //
-	@RequestMapping(value="/main.top")
-	public ModelAndView main(ModelAndView mav) {
-		
-		mav.setViewName("main.tiles1");
-		
-		return mav;
-	}
-	
-	// === 관리자 메인 페이지 보여주기 === //
-	@RequestMapping(value="/adminMain.top")
-	public ModelAndView adminMain(ModelAndView mav) {
-		
-		mav.setViewName("adminMain.tiles1");
-		
-		return mav;
-	}
-	
 	// === 문서 결재 페이지로 이동하기 === //
 	@RequestMapping(value="/documentPayment.top")
 	public ModelAndView goDocumentPayment(ModelAndView mav) {
@@ -118,15 +156,6 @@ public class LeeehController {
 	public ModelAndView writeDocument(ModelAndView mav) {
 		
 		mav.setViewName("documentWrite.tiles1");
-		
-		return mav;
-	}
-	
-	
-	@RequestMapping(value="/equipmentDocument.top", method = {RequestMethod.GET})
-	public ModelAndView vacation(ModelAndView mav) {
-		
-		mav.setViewName("documentList/equipmentDocument");
 		
 		return mav;
 	}

@@ -315,7 +315,7 @@ create table document_table
 ,groupno        varchar2(50) not null -- 문서 일련번호(각각의 결과 테이블에 사용할 번호)
 ,fk_employee_seq    number not null -- 결재 신청자
 ,subject    varchar2(1000) not null -- 결재문서 제목
-,content    varchar2(4000) not null -- 결재문서 내용
+,content    varchar2(4000) not null -- 결재문서 내용 (.jpg 파일)
 ,regDate    date default sysdate not null -- 결재 신청날짜
 ,approver_seq   number not null -- 결재자 사원번호
 ,approveDate    date -- 결재날짜
