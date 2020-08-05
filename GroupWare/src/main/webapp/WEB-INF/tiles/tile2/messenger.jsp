@@ -16,5 +16,5 @@
 	
 </script>
 <div>
-	<h3 style="color:white">메신저 영역</h3>
+	<h3 style="color:white">${sessionScope.test}</h3>
 </div>
