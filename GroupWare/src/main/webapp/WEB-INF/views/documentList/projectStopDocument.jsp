@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-
 <style>
 #divCustomWrapper { word-break: break-all; font-family: malgun gothic, dotum, arial, tahoma; width:802px !important; }
 #divCustomWrapper * { max-width: 800px !important; }
@@ -26,7 +25,7 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 
 <div id="divCustomWrapper" style="font-family: &quot;맑은 고딕&quot;; font-size: 10pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;">
 
-	<div class="titleSection">출장 결재서</div>
+	<div class="titleSection">프로젝트 신청 기안서</div>
 	
 	<div class="partition">
 		
@@ -69,103 +68,75 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 		</table>
 	</div>
 
+<h3>1. 일반사항</h3>
 <table class="detailSection">
 	<tbody>
 		<tr>
 			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">문서 제목</span>
+			</td>
+			<td class="BCel" colspan="3">
+				<span style="font-size: 10pt;"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="ACel" style="width: 150px;">
 				<span style="font-weight: bold; font-size: 11pt;">프로젝트명</span>
 			</td>
-			<td class="BCel" colspan="6">
+			<td class="BCel">
+				<span style="font-size: 10pt;"></span>
+			</td>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">거래처명</span>
+			</td>
+			<td class="BCel">
 				<span style="font-size: 10pt;"></span>
 			</td>
 		</tr>
 		<tr>
-			<td class="BCel" colspan="8" style="font-style: italic; font-weight: bold; text-align: center;">
-				<span style="font-size: 10pt;">아래와 같이 출장계를 제출합니다.</span>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">프로젝트 시작날짜</span>
 			</td>
-		</tr>
-	</tbody>
-	<tbody id="dynamic_table1">
-		<tr>
-			<td class="ACel" rowspan="2">
-				<span style="font-weight: bold; font-size: 11pt;">출장자</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">부서</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">직위</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">성명</span>
-			</td>
-		</tr>
-		<tr class="copyRow1">
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-		</tr>
-	</tbody>
-	<tbody id="dynamic_table2">
-		<tr>
-			<td class="ACel" rowspan="2">
-				<span style="font-weight: bold; font-size: 11pt;">동행자</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">부서</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">직위</span>
-			</td>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">성명</span>
-			</td>
-		</tr>
-		<tr class="copyRow2">
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-			<td class="BCel">
-				<span style="font-size: 10pt;"></span>
-			</td>
-		</tr>
-	</tbody>
-	<tbody id="dynamic_table3">
-		<tr>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">출장기간</span>
-			</td>
-			<td class="BCel" colspan="3" style="text-align: center;">
+			<td class="BCel" style="text-align: left;">
 				<input style="width: 80px; height: 20px; font-size: 9pt;" type="text" id="date1" class="datepicker" size="20" placeholder="기간선택" maxlength="10" required />
-				<span>&nbsp;~&nbsp;</span>
-				<input style="width: 80px; height: 20px; font-size: 9pt;" type="text" id="date2" class="datepicker" size="20" placeholder="기간선택" maxlength="10" required />
+			</td>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">프로젝트 기간</span>
+			</td>
+			<td class="BCel">
+				<span style="font-size: 10pt;"></span>
 			</td>
 		</tr>
 		<tr>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">출장지</span>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">관리자</span>
+			</td>
+			<td class="BCel" style="text-align: left;">
+				<span style="font-size: 10pt;"></span>
+			</td>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">인원수</span>
+			</td>
+			<td class="BCel">
+				<span style="font-size: 10pt;"></span>
+			</td>
+		</tr>
+		<tr>
+			<td class="ACel" style="width: 150px;">
+				<span style="font-weight: bold; font-size: 11pt;">프로젝트 중단 사유</span>
 			</td>
 			<td class="BCel" colspan="3">
 				<span style="font-size: 10pt;"></span>
 			</td>
 		</tr>
 		<tr>
-			<td class="ACel">
-				<span style="font-weight: bold; font-size: 11pt;">출장목적</span>
-			</td>
-			<td class="BCel" colspan="3">
-				<span style="font-size: 10pt;"></span>
+			<td class="BCel" colspan="4" style="text-align: center;">
+				<span style="font-size: 12pt; font-style: italic; font-weight: bold;">위와 같은 사유로 프로젝트가 중단 되었음을 보고합니다.</span>
+				<br>
+				<span style="font-size: 10pt;">날짜</span>
 			</td>
 		</tr>
 	</tbody>
 </table>
+
 </div>
