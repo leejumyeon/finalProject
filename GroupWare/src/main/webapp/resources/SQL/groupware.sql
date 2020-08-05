@@ -9,6 +9,8 @@ grant create view to finalorauser3;
 -- finalorauser3°èÁ¤ ³»¿ë --
 show user; -- USERÀÌ(°¡) "FINALORAUSER3"ÀÔ´Ï´Ù.
 
+select * from tab;
+select * from seq;
 
 -- Å×ÀÌºí »èÁ¦ -- 
 drop table comment_table purge;
@@ -431,39 +433,70 @@ nocache;
 
 -- ¸Ş½ÅÀú ±×·ì Å×ÀÌºí(messengerRoom_table) --
 create table messengerRoom_table
+<<<<<<< HEAD
+(roomNumber         number not null                 -- ê·¸ë£¹ ë²ˆí˜¸
+,fk_employee_seq    number not null                 -- ì°¸ê°€ì ë²ˆí˜¸
+,regDate            date default sysdate not null   -- ì°¸ê°€ë‚ ì§œ
+=======
 (roomNumber     number not null -- ±×·ì ¹øÈ£
 ,fk_employee_seq   number not null -- Âü°¡ÀÚ ¹øÈ£
 ,regDate    date default sysdate not null -- Âü°¡³¯Â¥
+>>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 
 create SEQUENCE messengerRoom_table_seq
+<<<<<<< HEAD
+start with 1    -- ì‹œì‘ê°’
+increment by 1  -- ì¦ê°€ê°’
+nomaxvalue      -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue      -- ìµœì†Œê°’ ì„¤ì •
+nocycle         -- ë°˜ë³µ ì„¤ì •
+=======
 start with 1 -- ½ÃÀÛ°ª
 increment by 1 -- Áõ°¡°ª
 nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
 nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
 nocycle -- ¹İº¹ ¼³Á¤
+>>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
 -- ¸Ş½ÅÀú ´ëÈ­ Å×ÀÌºí(messenger_table) --
 create table messenger_table
+<<<<<<< HEAD
+(message_seq        number not null                 -- ëŒ€í™” ë²ˆí˜¸
+,content            varchar2(4000) not null         -- ëŒ€í™”ë‚´ìš©
+,regDate            date default sysdate not null   -- ëŒ€í™”ë‚ ì§œ
+,status             number default 1 not null       -- ëŒ€í™”ìƒíƒœ
+,fk_roomNumber      number                          -- ë©”ì‹ ì € ê·¸ë£¹ë²ˆí˜¸
+,fk_employee_seq    number                          -- ë°œì‹ ì
+=======
 (message_seq    number not null -- ´ëÈ­ ¹øÈ£
 ,content    varchar2(4000) not null -- ´ëÈ­³»¿ë
 ,regDate    date default sysdate not null -- ´ëÈ­³¯Â¥
 ,status     number default 1 not null -- ´ëÈ­»óÅÂ
 ,fk_roomNumber      number -- ¸Ş½ÅÀú ±×·ì¹øÈ£
 ,fk_employee_seq    number  -- ¹ß½ÅÀÚ
+>>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messenger_table primary key(message_seq)
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
 create SEQUENCE messenger_table_seq
+<<<<<<< HEAD
+start with 1    -- ì‹œì‘ê°’
+increment by 1  -- ì¦ê°€ê°’
+nomaxvalue      -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue      -- ìµœì†Œê°’ ì„¤ì •
+nocycle         -- ë°˜ë³µ ì„¤ì •
+=======
 start with 1 -- ½ÃÀÛ°ª
 increment by 1 -- Áõ°¡°ª
 nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
 nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
 nocycle -- ¹İº¹ ¼³Á¤
+>>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
 -- ´ëÈ­·Î±× Å×ÀÌºí(messengerLog_table) --
