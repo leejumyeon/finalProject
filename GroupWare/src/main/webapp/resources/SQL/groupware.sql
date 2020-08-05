@@ -695,6 +695,7 @@ insert into grade_table(grade_level, grade_name) values(4,'매출관리');
 insert into grade_table(grade_level, grade_name) values(5,'전체');
 commit;
 
+
 insert into trip_category(category_num, category_name) values(1,'연차');
 insert into trip_category(category_num, category_name) values(2,'월차');
 insert into trip_category(category_num, category_name) values(3,'반차');
