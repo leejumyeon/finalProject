@@ -710,6 +710,7 @@ insert into employeeStatus_table(status_seq, status_name) values (3,'휴가');
 insert into employeeStatus_table(status_seq, status_name) values (4,'출장');
 commit;
 
+
 insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'디자인팀');
 insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'개발팀');
 insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'영업팀');
