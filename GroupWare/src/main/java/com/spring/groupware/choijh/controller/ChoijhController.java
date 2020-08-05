@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.groupware.choijh.service.InterChoijhService;
+import com.spring.groupware.commonVO.EmployeesVO;
 
 @Controller
 public class ChoijhController {
@@ -19,10 +20,10 @@ public class ChoijhController {
 	@RequestMapping(value="/messenger/view.top")
 	public ModelAndView messengerView(ModelAndView mav, HttpServletRequest request) {
 		
-	//	HttpSession session = request.getSession();
-	//	session.getAttribute("");
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
 		
-	//	mav.addObject("", attributeValue)
+		mav.addObject("loginEmployee", loginEmployee);
 		mav.setViewName("messenger/messenger.tiles1");
 		
 		return mav;

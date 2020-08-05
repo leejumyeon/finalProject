@@ -1,14 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-    
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Messenger</title>
-
 <style type="text/css">
 
 /* -----------------bootstrap-------------------- */
@@ -150,7 +142,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
-		alert("하하");	
+		
 		$("#message").hide();
 	
 		// 대화상대 클릭시 메시지 숨기기
@@ -177,7 +169,9 @@
 	
 	// 채팅 방 생성과 채팅하기 
 	function goChatting() {
-		alert("${sessionScope.loginEmployee.department_name}");	
+		alert("채팅하기");
+		
+		
 		
 		$("#message").click();
 		$("#message").show();
@@ -185,8 +179,6 @@
 	
 </script>
 
-</head>
-<body>
 	<div id="msgcontainer">
   		<img src="/groupware/resources/msg_images/logo.png">
 
@@ -197,7 +189,7 @@
   		</ul>
 
   		<div class="tab-content">
-  			<%-- ===###profile start###=== --%>
+  			<!-- ===###profile start###=== -->
     		<div id="home" class="tab-pane fade in active"><br/>
       			<table id="myProfileTBL" style="margin-bottom: 20px;">
       				<tr>
@@ -208,8 +200,8 @@
       						<img src="/groupware/resources/msg_images/user1.png" width="40px;" height="40px;" />
       					</td>
       					<td>
-      						<div class="divText name">이주명</div>
-      						<div class="divText departmentName">&nbsp;┕&nbsp;${sessionScope.loginEmployee.department_name}</div>
+      						<div class="divText name">홍길동</div>
+      						<div class="divText departmentName">&nbsp;┕&nbsp;영업팀</div>
       					</td>
       				</tr>
       			</table>
@@ -240,10 +232,10 @@
       				</tr>
       			</table>	
     		</div>
-    		<%-- ===###profile end###=== --%>
+    		<!-- ===###profile end###=== -->
     		
     		
-    		<%-- ===###msglist start###=== --%>
+    		<!-- ===###msglist start###=== -->
     		<div id="menu1" class="tab-pane fade"><br/>
       			<table id="msglistTBL">
       				<tr>
@@ -278,10 +270,10 @@
       				</tr>
       			</table>
     		</div>
-    		<%-- ===###msglist end###=== --%>
+    		<!-- ===###msglist end###=== -->
     		
     		
-    		<%-- ===###msg start###=== --%>
+    		<!-- ===###msg start###=== -->
     		<div id="menu2" class="tab-pane fade">
 				<div class="msgcontainer" style="border-color: #e6f5ff; background-color: white; border-radius: 10px;">
 				  <figure>
@@ -317,9 +309,7 @@
      			</form>
      			
    			</div>
-   			<%-- ===###msg end###=== --%>
+   			<!-- ===###msg end###=== -->
    			
   	    </div>
    </div>
-</body>
-</html>

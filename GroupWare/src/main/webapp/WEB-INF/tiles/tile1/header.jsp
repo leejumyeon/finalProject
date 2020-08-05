@@ -28,10 +28,25 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
-<div style="display: inline-block; border:solid 0px red; float:left;">
-	<a href="#"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" width:150px; height:40px;"/></a>
+
+<script type="text/javascript">
+	function click_messenger(){
+		if($("#mymessenger").hasClass("messengerClose")){
+			$("#mymessenger").removeClass("messengerClose");
+			$("#mymessenger").addClass("messengerOpen");
+			
+		}
+		else {
+			$("#mymessenger").addClass("messengerClose");
+			$("#mymessenger").removeClass("messengerOpen");
+		}
+	}
+</script>
+
+<div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
+	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
-<div style="display: inline-block; border:solid 0px blue; width:1500px;" align="center">
+<div style="display: inline-block; border:solid 0px blue; width:1130px;" align="center">
 	<ul class="mynav" style="float:left;">
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="#">사내공지<span class="caret"></span></a>
@@ -82,22 +97,10 @@
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
 			</ul>
+		</li>	
+		<li class="dropdown">
+			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
-		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">메신저 아이콘 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
-			</ul>
-		</li>
-	
-	
-	<!-- === #49. 로그인이 성공되면 로그인된 사용자의 이메일 주소를 출력하기 === -->
-	<c:if test="${sessionScope.loginuser != null}">
-		<div style="float: right; margin-top: 0.5%; border: solid 0px red;">
-		  <span style="color: navy; font-weight: bold; font-size: 10pt;">${sessionScope.loginuser.email}</span> 님 로그인중.. <!-- 복호화해야함 -->							
-		</div>
-	</c:if>
 	
 	</ul>
 </div>
