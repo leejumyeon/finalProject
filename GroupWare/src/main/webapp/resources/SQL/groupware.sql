@@ -12,7 +12,9 @@ show user; -- USER이(가) "FINALORAUSER3"입니다.
 select * from tab;
 select * from seq;
 
--- 테이블 삭제 -- 
+-- 테이블 삭제 --
+drop table companycalendar_category purge;
+drop table EQUIPMENT_TABLE purge;
 drop table comment_table purge;
 drop sequence comment_table_seq;
 drop table attachFile_table purge;
@@ -64,6 +66,7 @@ drop table department_table purge;
 drop sequence department_table_seq;
 drop table employeeStatus_table purge;
 drop table position_table purge;
+drop table document_category purge;
 
  -- 직급 테이블(position_table) --
 create table position_table
@@ -97,11 +100,6 @@ nominvalue
 nocycle
 nocache;
 
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
  -- 사원테이블(employees_table)--
  create table employees_table
 (employee_seq   number -- 사원번호
@@ -435,100 +433,39 @@ nocache;
 
 -- 메신저 그룹 테이블(messengerRoom_table) --
 create table messengerRoom_table
-<<<<<<< HEAD
-(roomNumber         number not null                 -- 洹몃９ 踰덊샇
-<<<<<<< HEAD
-,fk_employee_seq    number not null                 -- 李멸  옄 踰덊샇
-,regDate            date default sysdate not null   -- 李멸  궇吏 
-=======
-,fk_employee_seq    number not null                 -- 李멸��옄 踰덊샇
-,regDate            date default sysdate not null   -- 李멸��궇吏�
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
-=======
 (roomNumber     number not null -- 그룹 번호
 ,fk_employee_seq   number not null -- 참가자 번호
 ,regDate    date default sysdate not null -- 참가날짜
->>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 
 create SEQUENCE messengerRoom_table_seq
-<<<<<<< HEAD
-<<<<<<< HEAD
-start with 1    --  떆 옉媛 
-increment by 1  -- 利앷 媛 
-nomaxvalue      -- 理쒕 媛   꽕 젙
-nominvalue      -- 理쒖냼媛   꽕 젙
-nocycle         -- 諛섎났  꽕 젙
-=======
-start with 1    -- �떆�옉媛�
-increment by 1  -- 利앷�媛�
-nomaxvalue      -- 理쒕�媛� �꽕�젙
-nominvalue      -- 理쒖냼媛� �꽕�젙
-nocycle         -- 諛섎났 �꽕�젙
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
-=======
 start with 1 -- 시작값
 increment by 1 -- 증가값
 nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
->>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
 -- 메신저 대화 테이블(messenger_table) --
 create table messenger_table
-<<<<<<< HEAD
-<<<<<<< HEAD
-(message_seq        number not null                 --    솕 踰덊샇
-,content            varchar2(4000) not null         --    솕 궡 슜
-,regDate            date default sysdate not null   --    솕 궇吏 
-,status             number default 1 not null       --    솕 긽 깭
-,fk_roomNumber      number                          -- 硫붿떊   洹몃９踰덊샇
-,fk_employee_seq    number                          -- 諛쒖떊 옄
-=======
-(message_seq        number not null                 -- ���솕 踰덊샇
-,content            varchar2(4000) not null         -- ���솕�궡�슜
-,regDate            date default sysdate not null   -- ���솕�궇吏�
-,status             number default 1 not null       -- ���솕�긽�깭
-,fk_roomNumber      number                          -- 硫붿떊�� 洹몃９踰덊샇
-,fk_employee_seq    number                          -- 諛쒖떊�옄
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
-=======
 (message_seq    number not null -- 대화 번호
 ,content    varchar2(4000) not null -- 대화내용
 ,regDate    date default sysdate not null -- 대화날짜
 ,status     number default 1 not null -- 대화상태
 ,fk_roomNumber      number -- 메신저 그룹번호
 ,fk_employee_seq    number  -- 발신자
->>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messenger_table primary key(message_seq)
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
 create SEQUENCE messenger_table_seq
-<<<<<<< HEAD
-<<<<<<< HEAD
-start with 1    --  떆 옉媛 
-increment by 1  -- 利앷 媛 
-nomaxvalue      -- 理쒕 媛   꽕 젙
-nominvalue      -- 理쒖냼媛   꽕 젙
-nocycle         -- 諛섎났  꽕 젙
-=======
-start with 1    -- �떆�옉媛�
-increment by 1  -- 利앷�媛�
-nomaxvalue      -- 理쒕�媛� �꽕�젙
-nominvalue      -- 理쒖냼媛� �꽕�젙
-nocycle         -- 諛섎났 �꽕�젙
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
-=======
 start with 1 -- 시작값
 increment by 1 -- 증가값
 nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
->>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
 -- 대화로그 테이블(messengerLog_table) --
@@ -749,10 +686,6 @@ insert into document_category(document_category_seq, category_name)values(5,'인
 insert into document_category(document_category_seq, category_name)values(6,'동호회 가입');
 commit;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 insert into board_category(category_seq, category_name) values(1,'공지사항');
 insert into board_category(category_seq, category_name) values(2,'FAQ');
 insert into board_category(category_seq, category_name) values(3,'자유');
