@@ -4,6 +4,7 @@
 <%-- ======= #28. tile2 중 sideinfo 페이지 만들기  ======= --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
 	.mailBtn{
@@ -23,11 +24,24 @@
 	
 	#mailhamList{
 		list-style: none; 
-		padding:0 0 0 10px;
+		padding:0;
 	}
 	
 	#mailhamList > li{
 		line-height: 50px;
+		color:white;
+	}
+	
+	#mailhamList > li > div{
+		padding-left: 5px;
+	}
+	
+	#mailhamList > li:hover{
+		cursor: pointer;
+		background-color: white;
+		font-size: 12pt;
+		font-weight: bold;
+		color: black;
 	}
 </style>
 
@@ -36,7 +50,7 @@
 </script>
 <div style="margin: 0 auto;" align="center">
 	<div id="mailBtnArea">
-		<span class="mailBtn">메일쓰기</span>
+		<span class="mailBtn" onclick="javascript:location.href='<%=ctxPath%>/mail/write.top?type=normal'">메일쓰기</span>
 		<span class="mailBtn">내게쓰기</span>
 		<br>
 	</div>
@@ -57,11 +71,11 @@
 	</div>
 	<div id="mailhamArea" align="left">
 		<ul id="mailhamList">
-			<li>전체메일</li>
-			<li>받은메일함</li>
-			<li>보낸메일함</li>
-			<li>내게쓴메일함</li>
-			<li>휴지통<div style="display: inline-block; float:right; margin-right:30px;">비우기</div></li>
+			<li><div>전체메일</div></li>
+			<li><div>받은메일함</div></li>
+			<li><div>보낸메일함</div></li>
+			<li><div>내게쓴메일함</div></li>
+			<li><div>휴지통<div style="display: inline-block; float:right; margin-right:30px; color:black;">비우기</div></div></li>
 		</ul>
 	</div>
 </div>

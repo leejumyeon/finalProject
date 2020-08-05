@@ -42,5 +42,9 @@
 			<tiles:insertAttribute name="content" />
 		</div>
 	</div>
+	<div id="mymessenger" class="myhide">
+		<tiles:insertAttribute name="messenger" />
+	</div>
+	<div style="clear:both;"></div>
 </body>
 </html>
