@@ -13,7 +13,8 @@
 	
 	#hm_container {
 		border: solid 1px gray;
-		width: 80%;
+		background-color: white;
+		width: 90%;
 		margin: 0 auto;
 	}
 	
@@ -102,6 +103,10 @@
 		width: 50%;
 	}
 	
+	#reason {
+		resize: none;
+	}
+	
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -134,13 +139,84 @@
         
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+		$('#RsvtDate').val($('#datepicker').val());
 		
+		// 회의실 클릭했을 때
 		$(".room").click(function(event){
+			
+			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChioce");
 			$(this).addClass("rChioce");
+						
+		//	alert($(this).children('.roomName').text());
+						
+			$("#roomName").val($(this).children('.roomName').text());			
+			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());
+			
+			possibleTime();
+			
+		});// end of $(".room").click(function(event){})----------------------------
+		
+		
+		// 날짜 변경했을 때
+		$("#datepicker").change(function(event){
+			
+			$("#RsvtDate").val($("#datepicker").val());
+			
 		});
 		
-	});
+		
+		var cnt = 0;		
+		// 시간 클릭했을 때
+		$(".tr_time").click(function(event){
+		
+			if($(this).hasClass("rChioce")) {
+				$(this).removeClass("rChioce");
+				cnt=cnt-1;
+			}
+			else{
+				if(cnt < 2) {				
+					// 클릭한 시간의 배경색이 바뀜
+					$(this).addClass("rChioce");
+					cnt=cnt+1;
+				}
+			}
+			
+		//	alert(cnt);
+			
+		});	
+		
+	});// end of $(document).ready(function(){})------------------------------------------------
+	
+<%-- 	function showPossibleTime() {		
+		
+		var fk_roomNumber = $("#fk_roomNumber").val();
+		var RsvtDate = $("#RsvtDate").val();
+		
+		$.ajax({
+			url:"<%=request.getContextPath()%>/showPossibleTime.top",
+			data : {"fk_roomNumber":fk_roomNumber,
+					"RsvtDate":RsvtDate},
+			dataType : "JSON",
+			success:function(json){
+				var html = "";
+				$.each(json, function(index, item) {
+					html += '<tr class="tr_time">';
+					html += 	'<td class="td_time times">'+(index + 9)+':00 - '+(index + 10)+':00';
+					html += 		'<input type="text" id="startTime" name="fk_roomNumber" value="09:00" />';
+					html += 		'<input type="text" id="endTime" name="fk_roomNumber" value="10:00" />';
+					html += 	'</td>';
+					html += 	'<td class="td_time ability">';
+					html += 		'<div>'+item.status+'</div>';
+					html +=		'</td>';
+					html +=	'</tr>';
+				}
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		})		
+	} --%>
 
 </script>
 
@@ -152,20 +228,24 @@
 			<h3>회의실 위치</h3>
 			<div id="sbRooms">
 				<div class="small room" id="room_one">
-					<div class="text">소회의실1</div>
+					<div class="text roomName">소회의실1</div>				
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="5" />
 				</div>
 				<div class="small room" id="room_two">
-					<div class="text">소회의실2</div>
+					<div class="text roomName">소회의실2</div>
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="6" />					
 				</div>
 				<div class="small room" id="room_three">
-					<div class="text">소회의실3</div>
+					<div class="text roomName">소회의실3</div>
 					<div class="text">5~10인</div>
+					<input class="fk_roomNumber" type="hidden" value="7" />
 				</div>
 				<div class="big room" id="room_four">
-					<div class="text">대회의실</div>
+					<div class="text roomName">대회의실</div>
 					<div class="text">15~30인</div>
+					<input class="fk_roomNumber" type="hidden" value="1" />					
 				</div>
 			</div>
 			
@@ -175,16 +255,19 @@
 			
 			<div id="mRooms">
 				<div class="medium room" id="room_five">
-					<div class="text">중회의실A</div>
+					<div class="text roomName">중회의실A</div>
 					<div class="text">10~15인</div>
+					<input class="fk_roomNumber" type="hidden" value="2" />						
 				</div>
 				<div class="medium room" id="room_six">
-					<div class="text">중회의실B</div>
-					<div class="text">10~15인</div>					
+					<div class="text roomName">중회의실B</div>
+					<div class="text">10~15인</div>	
+					<input class="fk_roomNumber" type="hidden" value="3" />										
 				</div>
 				<div class="medium room" id="room_seven">
-					<div class="text">중회의실C</div>
-					<div class="text">10~15인</div>					
+					<div class="text roomName">중회의실C</div>
+					<div class="text">10~15인</div>	
+					<input class="fk_roomNumber" type="hidden" value="4" />										
 				</div>
 			</div>			
 		</div>
@@ -192,7 +275,7 @@
 		<div id="dateAndTime">
 			<table id="date">
 				<tr>
-					<td style="width: 10%;">날짜</td>
+					<td style="width: 10%;">예약일</td>
 					<td style="width: 50%; text-align: left;">
 						<input type="text" id="datepicker">
 					</td>
@@ -206,55 +289,55 @@
 					<th class="th_time times">시간</th>
 					<th class="th_time ability">가능여부</th>
 				</tr>
-				<tr>
-					<td class="td_time times">9:00 - 10:00</td>
+				<tr class="tr_time">
+					<td class="td_time times">9:00 - 10:00
+						<input type="hidden" id="startTime" name="fk_roomNumber" value="09:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
+					</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
 				</tr>
-				<tr>
-					<td class="td_time times">10:00 - 11:00</td>
+				<tr class="tr_time">
+					<td class="td_time times">10:00 - 11:00
+						<input type="hidden" id="startTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="fk_roomNumber" value="11:00" /><!-- hidden -->
+					</td>
 					<td class="td_time ability">
 						<div>승인 대기중</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">11:00 - 12:00</td>
 					<td class="td_time ability">
 						<div>예약 불가</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">12:00 - 13:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
 				</tr>
-				<tr>
-					<td class="td_time times">13:00 - 14:00</td>
-					<td class="td_time ability">
-						<div>예약 가능</div>
-					</td>
-				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">14:00 - 15:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">15:00 - 16:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">16:00 - 17:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
 				</tr>
-				<tr>
+				<tr class="tr_time">
 					<td class="td_time times">17:00 - 18:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
@@ -264,11 +347,49 @@
 		</div>
 		
 		<div id="info">
+			<h4>예약하기</h4>
 			<table>
 				<tr>
-					<th>회의실명</th>
-					<td><span></span></td>
+					<th>회의실</th>
+					<td>
+						<input type="text" id="roomName" name="roomName" readonly="readonly"/>
+						<input type="text" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						</td>
 				</tr>
+				<tr>
+					<th>예약일</th>
+					<td><input type="text" id="RsvtDate" name="RsvtDate" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<th>시간</th>
+					<td><input type="text" readonly="readonly"/>-<input type="text" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<th>신청자</th>
+					<td>
+						<input type="text" readonly="readonly"/>
+						<input type="text" value="fk_employee_seq"/><!-- hidden -->
+					</td>
+				</tr>
+				<tr>
+					<th>예약 대표자</th>
+					<td>
+						<input type="text" />
+					</td>
+				</tr>
+				<tr>
+					<th>사용 인원</th>
+					<td>
+						<input type="text" maxlength="2"/>
+					</td>
+				</tr>
+				<tr>
+					<th>사유</th>
+					<td>
+						<textarea id="reason" name="reason" cols="40" rows="10"></textarea>
+					</td>
+				</tr>							
+
 			</table>
 		</div>				
 		
