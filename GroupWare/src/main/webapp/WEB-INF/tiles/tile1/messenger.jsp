@@ -145,6 +145,19 @@
 		
 		$("#message").hide();
 	
+		// 모든사원정보 불러오기
+		$.ajax({
+			
+			url:"/groupware/allEmployeeView.top",
+			type:"GET"
+			dataType:"JSON",
+			success:function(json){
+				
+			},
+			
+			
+		});
+		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
 			$("#message").hide();
@@ -200,8 +213,8 @@
       						<img src="/groupware/resources/msg_images/user1.png" width="40px;" height="40px;" />
       					</td>
       					<td>
-      						<div class="divText name">홍길동</div>
-      						<div class="divText departmentName">&nbsp;┕&nbsp;영업팀</div>
+      						<div class="divText name">${sessionScope.loginEmployee.employee_name}</div>
+      						<div class="divText departmentName">&nbsp;┕&nbsp;${sessionScope.loginEmployee.department_name}</div>
       					</td>
       				</tr>
       			</table>
