@@ -18,10 +18,33 @@
 		margin: 0 auto;
 	}
 	
+	#title {
+		font-size: 20px;	
+		display: block;
+	}
+	
+	#choice_container {
+		width: 60%;
+		height: 630px;
+		display: inline-block;
+		float: left;
+		border: solid 0px green;
+	}
+	
+	#info {
+		border: solid 1px #ddd;
+		border-radius: 10px 10px;
+		display: inline-block;
+		margin-left: 50px;
+		width: 30%;
+		height: 630px;
+	}
+	
 	#map {
-		border: solid 1px blue;
-		width: 80%;
-		margin: 0 auto;
+		border: solid 0px blue;
+		display: inline-block;
+		width: 90%;
+		margin-left: 5%;
 	}
 	
 	#sbRooms, #mRooms {
@@ -33,52 +56,46 @@
 	
 	.small {
 		display: inline-block;
-		width: 180px;
-		height: 150px;
+		width: 120px;
+		height: 110px;
 	}
 	
 	.medium {
 		display: inline-block;
-		width: 325px;
-		height: 150px;
+		width: 220px;
+		height: 110px;
 	}
 	
 	.big {
 		display: inline-block;
-		width: 425px;
-		height: 150px;
+		width: 300px;
+		height: 110px;
 	}
 	
 	.room {
 		border: solid 1px #1187cf;
+		background-color: #e7f5fd;
 	}
 	
 	#road {
-		border: solid 1px olive;
-		height: 80px;
+		border-top: solid 1px olive;
+		border-bottom: solid 1px olive;
+		height: 50px;		
 	}		
 	
 	#dateAndTime {
-		border: solid 1px red;
-		display: inline-block;
-		width: 40%;
-		margin: 10px 0 0 10%;
-	}
-	
-	#info {
-		border: solid 1px red;
-		display: inline-block;
-		width: 39%;
-		margin: 10px 10% 0 0;
-	}
+		border: solid 0px red;
+		margin: 25px 0 0 13%;
+	}	
 	
 	.rChioce {
-		background-color: #eee;
+		background-color: #a1d8f7;
 	}
 	
 	.text {
 		text-align: center;
-		margin-top: 30px;
+		font-size: 13px;
+		margin-top: 25px;
 	}
 	
 	#dateAndTime {
@@ -88,7 +105,8 @@
 	#time, .th_time, .td_time {
 		border: solid 1px gray;
 		border-collapse: collapse;
-		padding: 10px 15px;
+		padding: 8px 15px;
+		text-align: center;
 	}
 	
 	.th_time {
@@ -96,11 +114,30 @@
 	}
 	
 	.times {
-		width: 50%;
+		width: 130px;
 	}
 	
 	.ability {
-		width: 50%;
+		width: 130px;
+		height: 80px;
+	}
+	
+	#info_tb, #info_th, #info_td {
+		border: solid 1px gray;
+		border-collapse: collapse;
+		padding: 3px 5px;
+		text-align: center;
+		margin: 0 auto;
+	}
+	
+	#info_th {
+		width: 100px;
+		height: 50px;		
+	}
+	
+	#info_td {
+		width: 300px;
+		height: 50px;	
 	}
 	
 	#reason {
@@ -139,7 +176,7 @@
         
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-		$('#RsvtDate').val($('#datepicker').val());
+		$('#RsvtDate').text($('#datepicker').val());
 		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
@@ -150,18 +187,18 @@
 						
 		//	alert($(this).children('.roomName').text());
 						
-			$("#roomName").val($(this).children('.roomName').text());			
+			$("#roomName").text($(this).children('.roomName').text());			
 			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());
 			
 			possibleTime();
 			
-		});// end of $(".room").click(function(event){})----------------------------
+		}); // end of $(".room").click(function(event){})----------------------------
 		
 		
 		// 날짜 변경했을 때
 		$("#datepicker").change(function(event){
 			
-			$("#RsvtDate").val($("#datepicker").val());
+			$("#RsvtDate").text($("#datepicker").val());
 			
 		});
 		
@@ -186,7 +223,7 @@
 			
 		});	
 		
-	});// end of $(document).ready(function(){})------------------------------------------------
+	}); // end of $(document).ready(function(){})------------------------------------------------
 	
 <%-- 	function showPossibleTime() {		
 		
@@ -223,9 +260,11 @@
 </head>
 <body>
 	<div id="hm_container">
-	
-		<div id="map">			
-			<h3>회의실 위치</h3>
+		<span id="title">회의실 예약</span>
+		
+		<div id="choice_container">
+		<div id="map">					
+			<h4 style="margin-bottom: 20px;">회의실 선택</h4>
 			<div id="sbRooms">
 				<div class="small room" id="room_one">
 					<div class="text roomName">소회의실1</div>				
@@ -275,7 +314,7 @@
 		<div id="dateAndTime">
 			<table id="date">
 				<tr>
-					<td style="width: 10%;">예약일</td>
+					<td style="width: 10%;">예약일 선택</td>
 					<td style="width: 50%; text-align: left;">
 						<input type="text" id="datepicker">
 					</td>
@@ -287,111 +326,106 @@
 			<table id="time">
 				<tr>
 					<th class="th_time times">시간</th>
-					<th class="th_time ability">가능여부</th>
-				</tr>
-				<tr class="tr_time">
 					<td class="td_time times">9:00 - 10:00
 						<input type="hidden" id="startTime" name="fk_roomNumber" value="09:00" /><!-- hidden -->
 						<input type="hidden" id="endTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability">
-						<div>예약 가능</div>
-					</td>
-				</tr>
-				<tr class="tr_time">
 					<td class="td_time times">10:00 - 11:00
 						<input type="hidden" id="startTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
 						<input type="hidden" id="endTime" name="fk_roomNumber" value="11:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability">
-						<div>승인 대기중</div>
-					</td>
-				</tr>
-				<tr class="tr_time">
 					<td class="td_time times">11:00 - 12:00</td>
-					<td class="td_time ability">
-						<div>예약 불가</div>
-					</td>
+					<td class="td_time times">12:00 - 13:00</td>									
 				</tr>
-				<tr class="tr_time">
-					<td class="td_time times">12:00 - 13:00</td>
+				<tr>
+					<th class="th_time ability">가능여부</th>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>								
 				</tr>
-				<tr class="tr_time">
+				
+				<tr>
+					<th class="th_time times">시간</th>
 					<td class="td_time times">14:00 - 15:00</td>
-					<td class="td_time ability">
-						<div>예약 가능</div>
-					</td>
-				</tr>
-				<tr class="tr_time">
 					<td class="td_time times">15:00 - 16:00</td>
-					<td class="td_time ability">
-						<div>예약 가능</div>
-					</td>
-				</tr>
-				<tr class="tr_time">
 					<td class="td_time times">16:00 - 17:00</td>
+					<td class="td_time times">17:00 - 18:00</td>									
+				</tr>
+				<tr>
+					<th class="th_time ability">가능여부</th>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
-				</tr>
-				<tr class="tr_time">
-					<td class="td_time times">17:00 - 18:00</td>
 					<td class="td_time ability">
 						<div>예약 가능</div>
 					</td>
-				</tr>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>
+					<td class="td_time ability">
+						<div>예약 가능</div>
+					</td>								
+				</tr>				
 			</table>
+		</div>
 		</div>
 		
 		<div id="info">
 			<h4>예약하기</h4>
-			<table>
-				<tr>
-					<th>회의실</th>
-					<td>
-						<input type="text" id="roomName" name="roomName" readonly="readonly"/>
-						<input type="text" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
-						</td>
+			<table id="info_tb">
+				<tr id="info_tr">
+					<th id="info_th">회의실</th>
+					<td id="info_td">
+						<span id="roomName"></span>
+						<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+					</td>
 				</tr>
-				<tr>
-					<th>예약일</th>
-					<td><input type="text" id="RsvtDate" name="RsvtDate" readonly="readonly"/></td>
+				<tr id="info_tr">
+					<th id="info_th">예약일</th>
+					<td id="info_td"><span id="RsvtDate"></span></td>
 				</tr>
-				<tr>
-					<th>시간</th>
-					<td><input type="text" readonly="readonly"/>-<input type="text" readonly="readonly"/></td>
+				<tr id="info_tr">
+					<th id="info_th">시간</th>
+					<td id="info_td"><input type="text" readonly="readonly"/>-<input type="text" readonly="readonly"/></td>
 				</tr>
-				<tr>
-					<th>신청자</th>
-					<td>
+				<tr id="info_tr">
+					<th id="info_th">예약 신청자</th>
+					<td id="info_td">
 						<input type="text" readonly="readonly"/>
 						<input type="text" value="fk_employee_seq"/><!-- hidden -->
 					</td>
 				</tr>
-				<tr>
-					<th>예약 대표자</th>
-					<td>
+				<tr id="info_tr">
+					<th id="info_th">예약 대표자</th>
+					<td id="info_td">
 						<input type="text" />
 					</td>
 				</tr>
-				<tr>
-					<th>사용 인원</th>
-					<td>
+				<tr id="info_tr">
+					<th id="info_th">사용 인원</th>
+					<td id="info_td">
 						<input type="text" maxlength="2"/>
 					</td>
 				</tr>
-				<tr>
-					<th>사유</th>
-					<td>
-						<textarea id="reason" name="reason" cols="40" rows="10"></textarea>
+				<tr id="info_tr">
+					<th id="info_th">사유</th>
+					<td id="info_td">
+						<textarea id="reason" name="reason" cols="40" rows="10" style="border: none"></textarea>
 					</td>
 				</tr>							
 
 			</table>
 		</div>				
+		<div style="clear: both;"></div>
 		
 	</div>
 </body>
