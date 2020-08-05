@@ -131,6 +131,7 @@ nocycle
 nocache;
 
 
+
  -- album 카테고리 테이블(album_category) --
  create table album_category
 (category_num   number not null -- 엘범 게시글의 항목번호(회사행사, 동호회, 봉사)
