@@ -1,18 +1,18 @@
--- sys°èÁ¤ ³»¿ë --
-show user; -- USERÀÌ(°¡) "SYS"ÀÔ´Ï´Ù.
+-- sysê³„ì • ë‚´ìš© --
+show user; -- USERì´(ê°€) "SYS"ì…ë‹ˆë‹¤.
 create user finalorauser3 identified by eclass
 default tablespace users;
  
 grant connect, resource, unlimited tablespace to finalorauser3;
 grant create view to finalorauser3;
 --------------------------------------------------------------------
--- finalorauser3°èÁ¤ ³»¿ë --
-show user; -- USERÀÌ(°¡) "FINALORAUSER3"ÀÔ´Ï´Ù.
+-- finalorauser3ê³„ì • ë‚´ìš© --
+show user; -- USERì´(ê°€) "FINALORAUSER3"ì…ë‹ˆë‹¤.
 
 select * from tab;
 select * from seq;
 
--- Å×ÀÌºí »èÁ¦ -- 
+-- í…Œì´ë¸” ì‚­ì œ -- 
 drop table comment_table purge;
 drop sequence comment_table_seq;
 drop table attachFile_table purge;
@@ -65,24 +65,24 @@ drop sequence department_table_seq;
 drop table employeeStatus_table purge;
 drop table position_table purge;
 
- -- Á÷±Ş Å×ÀÌºí(position_table) --
+ -- ì§ê¸‰ í…Œì´ë¸”(position_table) --
 create table position_table
-(position_seq   number not null -- Á÷Ã¥¹øÈ£
-,position_name  varchar2(50) not null -- Á÷Ã¥¸í
-,position_salary    number not null -- Á÷Ã¥ ±Ş¿©
+(position_seq   number not null -- ì§ì±…ë²ˆí˜¸
+,position_name  varchar2(50) not null -- ì§ì±…ëª…
+,position_salary    number not null -- ì§ì±… ê¸‰ì—¬
 ,constraint pk_position_seq primary key(position_seq)
 ); 
 
 
- -- »ç¿ø»óÅÂ Å×ÀÌºí(employeeStatus_table) --
+ -- ì‚¬ì›ìƒíƒœ í…Œì´ë¸”(employeeStatus_table) --
 create table employeeStatus_table
-(status_seq     number not null -- »ç¿ø »óÅÂ¹øÈ£
-,status_name    varchar2(50) not null -- »ç¿ø »óÅÂ¸í
+(status_seq     number not null -- ì‚¬ì› ìƒíƒœë²ˆí˜¸
+,status_name    varchar2(50) not null -- ì‚¬ì› ìƒíƒœëª…
 ,constraint pk_employeeStatus primary key(status_seq)
 );
 
 
- -- ºÎ¼­Å×ÀÌºí(department_table) --
+ -- ë¶€ì„œí…Œì´ë¸”(department_table) --
 create table department_table
 (department_seq number not null
 ,department_name    varchar2(100) not null
@@ -97,27 +97,27 @@ nominvalue
 nocycle
 nocache;
 
- 
- -- »ç¿øÅ×ÀÌºí(employees_table)--
+
+ -- ì‚¬ì›í…Œì´ë¸”(employees_table)--
  create table employees_table
-(employee_seq   number -- »ç¿ø¹øÈ£
-,employee_name  varchar2(10) not null -- »ç¿ø¸í
-,employee_id    varchar2(100) not null -- »ç¿øID
-,employee_pw    varchar2(500) not null -- »ç¿øPW
-,email          varchar2(500) not null -- »ç³» ÀÌ¸ŞÀÏ
-,phone          varchar2(500) not null -- ÇÚµåÆù¹øÈ£
-,fk_status      number default 1 not null -- »ç¿ø»óÅÂ
-,hire_date      date default sysdate not null -- ÀÔ»ç³¯Â¥
-,fire_date      date -- Åğ»ç³¯Â¥
-,fk_position    number default 1 -- »ç¿øÁ÷Ã¥
-,fk_department  number -- ºÎ¼­
-,grade          number default 1 not null -- ±ÇÇÑ
-,gender         number(1) not null -- ¼ºº°(1:³² , 2:¿©)
-,birthday       varchar2(8) not null -- »ı³â¿ùÀÏ
-,address        varchar2(300) not null -- ÁÖ¼Ò
-,postcode       varchar2(300) not null -- ¿ìÆí¹øÈ£
-,detailaddress  varchar2(500)-- »ó¼¼ÁÖ¼Ò
-,extraaddress  varchar2(500)-- Âü°íÇ×¸ñ
+(employee_seq   number -- ì‚¬ì›ë²ˆí˜¸
+,employee_name  varchar2(10) not null -- ì‚¬ì›ëª…
+,employee_id    varchar2(100) not null -- ì‚¬ì›ID
+,employee_pw    varchar2(500) not null -- ì‚¬ì›PW
+,email          varchar2(500) not null -- ì‚¬ë‚´ ì´ë©”ì¼
+,phone          varchar2(500) not null -- í•¸ë“œí°ë²ˆí˜¸
+,fk_status      number default 1 not null -- ì‚¬ì›ìƒíƒœ
+,hire_date      date default sysdate not null -- ì…ì‚¬ë‚ ì§œ
+,fire_date      date -- í‡´ì‚¬ë‚ ì§œ
+,fk_position    number default 1 -- ì‚¬ì›ì§ì±…
+,fk_department  number -- ë¶€ì„œ
+,grade          number default 1 not null -- ê¶Œí•œ
+,gender         number(1) not null -- ì„±ë³„(1:ë‚¨ , 2:ì—¬)
+,birthday       varchar2(8) not null -- ìƒë…„ì›”ì¼
+,address        varchar2(300) not null -- ì£¼ì†Œ
+,postcode       varchar2(300) not null -- ìš°í¸ë²ˆí˜¸
+,detailaddress  varchar2(500)-- ìƒì„¸ì£¼ì†Œ
+,extraaddress  varchar2(500)-- ì°¸ê³ í•­ëª©
 ,constraint pk_employees_table primary key(employee_seq)
 ,constraint fk_employees_status foreign key (fk_status) REFERENCES employeeStatus_table(status_seq)
 ,constraint fk_employees_position foreign key(fk_position) references position_table(position_seq) on DELETE SET null
@@ -132,24 +132,22 @@ nominvalue
 nocycle
 nocache;
 
-
-
- -- album Ä«Å×°í¸® Å×ÀÌºí(album_category) --
+ -- album ì¹´í…Œê³ ë¦¬ í…Œì´ë¸”(album_category) --
  create table album_category
-(category_num   number not null -- ¿¤¹ü °Ô½Ã±ÛÀÇ Ç×¸ñ¹øÈ£(È¸»çÇà»ç, µ¿È£È¸, ºÀ»ç)
-,category_name  varchar2(50) not null -- Ç×¸ñÀÌ¸§
+(category_num   number not null -- ì—˜ë²” ê²Œì‹œê¸€ì˜ í•­ëª©ë²ˆí˜¸(íšŒì‚¬í–‰ì‚¬, ë™í˜¸íšŒ, ë´‰ì‚¬)
+,category_name  varchar2(50) not null -- í•­ëª©ì´ë¦„
 ,constraint pk_album_category primary key (category_num)
 );
 
 
 
- -- album Å×ÀÌºí(album_table) --
+ -- album í…Œì´ë¸”(album_table) --
 create table album_table
-(album_seq  number not null -- album°Ô½Ã±Û ¹øÈ£
-,album_category number -- album°Ô½Ã±Û Ç×¸ñ
-,fk_employee_seq    number  -- °Ô½Ã±Û ÀÛ¼ºÀÚ ¹øÈ£
-,subject    varchar2(500) not null -- °Ô½Ã±Û Á¦¸ñ
-,content    varchar2(4000) not null -- °Ô½Ã±Û ³»¿ë
+(album_seq  number not null -- albumê²Œì‹œê¸€ ë²ˆí˜¸
+,album_category number -- albumê²Œì‹œê¸€ í•­ëª©
+,fk_employee_seq    number  -- ê²Œì‹œê¸€ ì‘ì„±ì ë²ˆí˜¸
+,subject    varchar2(500) not null -- ê²Œì‹œê¸€ ì œëª©
+,content    varchar2(4000) not null -- ê²Œì‹œê¸€ ë‚´ìš©
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
@@ -164,283 +162,283 @@ nocycle
 nocache;
 
 
--- Åğ»ç»çÀ¯ Å×ÀÌºí(fire_date) --
+-- í‡´ì‚¬ì‚¬ìœ  í…Œì´ë¸”(fire_date) --
 create table fire_table
 (fk_employee_seq    number
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,reason varchar2(4000) -- Åğ»ç »çÀ¯
-,interviewer_seq    number not null -- ¸é´ãÀÚ »ç¿ø¹øÈ£
-,interview_content  varchar2(4000) not null -- ¸é´ã³»¿ë
-,documentStatus     number default 0 not null -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,reason varchar2(4000) -- í‡´ì‚¬ ì‚¬ìœ 
+,interviewer_seq    number not null -- ë©´ë‹´ì ì‚¬ì›ë²ˆí˜¸
+,interview_content  varchar2(4000) not null -- ë©´ë‹´ë‚´ìš©
+,documentStatus     number default 0 not null -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
 ,constraint fk_fire_employees foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
--- ¸ÅÃâ Å×ÀÌºí(sales_table) --
+-- ë§¤ì¶œ í…Œì´ë¸”(sales_table) --
 create table sales_table
-(sales_seq  number not null -- ¸ÅÃâ¹øÈ£
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,sales_title    varchar2(500) not null -- ¸ÅÃâÁ¦¸ñ
-,sales_price    number  not null -- ¸ÅÃâ °¡°İ
-,sales_count    number not null -- ¸ÅÃâ °³¼ö
-,reason     varchar2(4000) not null -- ¸ÅÃâ »çÀ¯
-,fk_department_seq  number -- ¸ÅÃâ ºÎ¼­
-,regDate    date default sysdate not null -- ¸ÅÃâ ±â·Ï ³¯Â¥
-,documentStatus     number default 1 not null -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
+(sales_seq  number not null -- ë§¤ì¶œë²ˆí˜¸
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,sales_title    varchar2(500) not null -- ë§¤ì¶œì œëª©
+,sales_price    number  not null -- ë§¤ì¶œ ê°€ê²©
+,sales_count    number not null -- ë§¤ì¶œ ê°œìˆ˜
+,reason     varchar2(4000) not null -- ë§¤ì¶œ ì‚¬ìœ 
+,fk_department_seq  number -- ë§¤ì¶œ ë¶€ì„œ
+,regDate    date default sysdate not null -- ë§¤ì¶œ ê¸°ë¡ ë‚ ì§œ
+,documentStatus     number default 1 not null -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
 ,constraint pk_sales_approval primary key(sales_seq)
 ,constraint fk_sales_department foreign key(fk_department_seq) REFERENCES department_table(department_seq) on delete set null
 );
 
 create SEQUENCE sales_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
- -- µ¿È£È¸ Å×ÀÌºí(club_table) --
+ -- ë™í˜¸íšŒ í…Œì´ë¸”(club_table) --
 create table club_table
-(club_seq   number not null -- µ¿È£È¸ ¹øÈ£
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,club_name  varchar2(100) not null -- µ¿È£È¸ ÀÌ¸§
-,club_info  varchar2(2000) -- µ¿È£È¸ ¼Ò°³
-,regDate    date default sysdate not null -- µ¿È£È¸ »ı¼º³¯Â¥
-,documentStatus     number default 1 not null -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
-,representative_img  varchar2(500) not null -- µ¿È£È¸ ´ëÇ¥ ÀÌ¹ÌÁö
+(club_seq   number not null -- ë™í˜¸íšŒ ë²ˆí˜¸
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,club_name  varchar2(100) not null -- ë™í˜¸íšŒ ì´ë¦„
+,club_info  varchar2(2000) -- ë™í˜¸íšŒ ì†Œê°œ
+,regDate    date default sysdate not null -- ë™í˜¸íšŒ ìƒì„±ë‚ ì§œ
+,documentStatus     number default 1 not null -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
+,representative_img  varchar2(500) not null -- ë™í˜¸íšŒ ëŒ€í‘œ ì´ë¯¸ì§€
 ,constraint pk_club_table primary key(club_seq)
 );
 
 create SEQUENCE club_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
  
  
--- µ¿È£È¸¸í´Ü Å×ÀÌºí(clubMember_table)
+-- ë™í˜¸íšŒëª…ë‹¨ í…Œì´ë¸”(clubMember_table)
 create table clubMember_table
-(member_seq number not null -- ¸í´Ü¹øÈ£
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,fk_club    number not null -- °¡ÀÔÇÑ µ¿È£È¸
-,status     number  default 0 not null -- »óÅÂ(0:ÀÏ¹İ, 1:È¸Àå)
-,regDate    date default sysdate not null -- °¡ÀÔ³¯Â¥
-,fk_employee_seq    number  -- °¡ÀÔÇÑ »ç¿ø¹øÈ£
-,documentStatus     number default 1 -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
+(member_seq number not null -- ëª…ë‹¨ë²ˆí˜¸
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,fk_club    number not null -- ê°€ì…í•œ ë™í˜¸íšŒ
+,status     number  default 0 not null -- ìƒíƒœ(0:ì¼ë°˜, 1:íšŒì¥)
+,regDate    date default sysdate not null -- ê°€ì…ë‚ ì§œ
+,fk_employee_seq    number  -- ê°€ì…í•œ ì‚¬ì›ë²ˆí˜¸
+,documentStatus     number default 1 -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
 ,constraint pk_clubMember_table primary key(member_seq)
 ,constraint fk_clubMember_club foreign key (fk_club) references club_table(club_seq) on delete cascade
 ,constraint fk_clubMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 );
 
 create SEQUENCE clubMember_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ±ÙÅÂ°ü¸® Å×ÀÌºí(TA_table) --
+-- ê·¼íƒœê´€ë¦¬ í…Œì´ë¸”(TA_table) --
 create table TA_table
-(ta_seq     number not null -- ±ÙÅÂ°ü¸® Çà ¹øÈ£
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,fk_employee_seq    number -- ´ë»ó »ç¿ø ¹øÈ£
-,attendance     varchar2(50) not null -- Ãâ°áÁ¡¼ö
-,attitude       varchar2(50) not null -- ÅÂµµÁ¡¼ö
-,performance    varchar2(50) not null -- ¾÷¹«¼º°ú Á¡¼ö
-,manager    varchar2(100) not null -- ±â¾ÈÀÚ(ÀÌ¸§)
-,reason     varchar2(4000) not null -- Á¡¼ö¸¦ ÁØ »çÀ¯(ÀüÃ¼)
-,regDate    date default sysdate not null -- ±ÙÅÂ°ü¸® µî·Ï ³¯Â¥
-,documentStatus     number default 1 -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
+(ta_seq     number not null -- ê·¼íƒœê´€ë¦¬ í–‰ ë²ˆí˜¸
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,fk_employee_seq    number -- ëŒ€ìƒ ì‚¬ì› ë²ˆí˜¸
+,attendance     varchar2(50) not null -- ì¶œê²°ì ìˆ˜
+,attitude       varchar2(50) not null -- íƒœë„ì ìˆ˜
+,performance    varchar2(50) not null -- ì—…ë¬´ì„±ê³¼ ì ìˆ˜
+,manager    varchar2(100) not null -- ê¸°ì•ˆì(ì´ë¦„)
+,reason     varchar2(4000) not null -- ì ìˆ˜ë¥¼ ì¤€ ì‚¬ìœ (ì „ì²´)
+,regDate    date default sysdate not null -- ê·¼íƒœê´€ë¦¬ ë“±ë¡ ë‚ ì§œ
+,documentStatus     number default 1 -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
 ,constraint pk_ta_table primary key(ta_seq)
 ,constraint fk_ta_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 );
 
 create SEQUENCE ta_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ±ÇÇÑ Ç×¸ñ Å×ÀÌºí(grade_table) --
+-- ê¶Œí•œ í•­ëª© í…Œì´ë¸”(grade_table) --
 create table grade_table
 (grade_level    number not null
 ,grade_name     varchar2(50)
 ,constraint pk_grade_table primary key(grade_level)
 );
 
--- ÈŞ°¡/ÃâÀå Ç×¸ñ Å×ÀÌºí(trip_category)--
+-- íœ´ê°€/ì¶œì¥ í•­ëª© í…Œì´ë¸”(trip_category)--
 create table trip_category
-(category_num   number not null -- ÈŞ°¡/ÃâÀå Ç×¸ñ ¹øÈ£
-,category_name  varchar2(50) not null -- Ç×¸ñ ÀÌ¸§
+(category_num   number not null -- íœ´ê°€/ì¶œì¥ í•­ëª© ë²ˆí˜¸
+,category_name  varchar2(50) not null -- í•­ëª© ì´ë¦„
 ,constraint pk_trip_category primary key(category_num)
 );
 
--- ÈŞ°¡/ÃâÀå Å×ÀÌºí(trip_table) --
+-- íœ´ê°€/ì¶œì¥ í…Œì´ë¸”(trip_table) --
 create table trip_table
-(trip_seq   number not null -- ¹øÈ£
-,groupno    varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,trip_category  number -- ÈŞ°¡/ÃâÀå Ç×¸ñ¹øÈ£
-,reason     varchar2(4000) not null -- »çÀ¯
-,trip_start date not null -- ÈŞ°¡/ÃâÀå ½ÃÀÛ ³¯Â¥
-,trip_end   date not null -- ÈŞ°¡/ÃâÀå º¹±Í ³¯Â¥
-,triplocatioin      varchar2(1000) -- ÃâÀåÁö
-,fk_employee_seq    number  -- ½ÅÃ»ÀÚ
-,documentStatus     number default 1 not null -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??
+(trip_seq   number not null -- ë²ˆí˜¸
+,groupno    varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,trip_category  number -- íœ´ê°€/ì¶œì¥ í•­ëª©ë²ˆí˜¸
+,reason     varchar2(4000) not null -- ì‚¬ìœ 
+,trip_start date not null -- íœ´ê°€/ì¶œì¥ ì‹œì‘ ë‚ ì§œ
+,trip_end   date not null -- íœ´ê°€/ì¶œì¥ ë³µê·€ ë‚ ì§œ
+,triplocatioin      varchar2(1000) -- ì¶œì¥ì§€
+,fk_employee_seq    number  -- ì‹ ì²­ì
+,documentStatus     number default 1 not null -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??
 ,constraint pk_trip_table primary key (trip_seq)
 ,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)on delete set null
 ,constraint fk_trip_category foreign key (trip_category) references trip_category(category_num) on delete set null
 );
 
 create SEQUENCE trip_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ¹®¼­°áÀç Ç×¸ñÅ×ÀÌºí(document_category) --
+-- ë¬¸ì„œê²°ì¬ í•­ëª©í…Œì´ë¸”(document_category) --
 create table document_category
-(document_category_seq  number not null -- ¹®¼­°áÀç Ç×¸ñ¹øÈ£
-,category_name  varchar2(100) not null -- Ç×¸ñÀÌ¸§
+(document_category_seq  number not null -- ë¬¸ì„œê²°ì¬ í•­ëª©ë²ˆí˜¸
+,category_name  varchar2(100) not null -- í•­ëª©ì´ë¦„
 ,constraint pk_document_category primary key(document_category_seq)
 );
 
--- ¹®¼­°áÀç Å×ÀÌºí(document_table) --
+-- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”(document_table) --
 create table document_table
-(document_seq   number not null -- ¹®¼­°áÀç °íÀ¯ ¹øÈ£
-,groupno        varchar2(50) not null -- ¹®¼­ ÀÏ·Ã¹øÈ£(°¢°¢ÀÇ °á°ú Å×ÀÌºí¿¡ »ç¿ëÇÒ ¹øÈ£)
-,fk_employee_seq    number not null -- °áÀç ½ÅÃ»ÀÚ
-,subject    varchar2(1000) not null -- °áÀç¹®¼­ Á¦¸ñ
-,content    varchar2(4000) not null -- °áÀç¹®¼­ ³»¿ë (.jpg ÆÄÀÏ)
-,regDate    date default sysdate not null -- °áÀç ½ÅÃ»³¯Â¥
-,approver_seq   number not null -- °áÀçÀÚ »ç¿ø¹øÈ£
-,approveDate    date -- °áÀç³¯Â¥
-,fileName   varchar2(500) -- ÆÄÀÏÃ·ºÎ(¾÷·Îµå ÆÄÀÏ¸í)
-,orgFileName    varchar2(500) -- ÆÄÀÏÃ·ºÎ(±âÁ¸ ÆÄÀÏ¸í)
-,fileSize   number -- ÆÄÀÏÅ©±â
-,parent_approver    varchar2(100) -- »óÀ§ °áÀçÀÚ
-,status     number not null -- °áÀç »óÅÂ(½ÂÀÎ, ¹Ì½ÂÀÎ, ¹İ·Á)
-,reason     varchar2(4000) -- °áÀç »çÀ¯( ¹İ·Á »çÀ¯ )
-,document_category  number not null -- ¹®¼­ Ç×¸ñ
+(document_seq   number not null -- ë¬¸ì„œê²°ì¬ ê³ ìœ  ë²ˆí˜¸
+,groupno        varchar2(50) not null -- ë¬¸ì„œ ì¼ë ¨ë²ˆí˜¸(ê°ê°ì˜ ê²°ê³¼ í…Œì´ë¸”ì— ì‚¬ìš©í•  ë²ˆí˜¸)
+,fk_employee_seq    number not null -- ê²°ì¬ ì‹ ì²­ì
+,subject    varchar2(1000) not null -- ê²°ì¬ë¬¸ì„œ ì œëª©
+,content    varchar2(4000) not null -- ê²°ì¬ë¬¸ì„œ ë‚´ìš© (.jpg íŒŒì¼)
+,regDate    date default sysdate not null -- ê²°ì¬ ì‹ ì²­ë‚ ì§œ
+,approver_seq   number not null -- ê²°ì¬ì ì‚¬ì›ë²ˆí˜¸
+,approveDate    date -- ê²°ì¬ë‚ ì§œ
+,fileName   varchar2(500) -- íŒŒì¼ì²¨ë¶€(ì—…ë¡œë“œ íŒŒì¼ëª…)
+,orgFileName    varchar2(500) -- íŒŒì¼ì²¨ë¶€(ê¸°ì¡´ íŒŒì¼ëª…)
+,fileSize   number -- íŒŒì¼í¬ê¸°
+,parent_approver    varchar2(100) -- ìƒìœ„ ê²°ì¬ì
+,status     number not null -- ê²°ì¬ ìƒíƒœ(ìŠ¹ì¸, ë¯¸ìŠ¹ì¸, ë°˜ë ¤)
+,reason     varchar2(4000) -- ê²°ì¬ ì‚¬ìœ ( ë°˜ë ¤ ì‚¬ìœ  )
+,document_category  number not null -- ë¬¸ì„œ í•­ëª©
 ,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq) on delete set null
 ,constraint fk_document_category foreign key (document_category) references document_category(document_category_seq)
 );
 
 create SEQUENCE document_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ÇÁ·ÎÁ§Æ® Å×ÀÌºí(project_table) --
+-- í”„ë¡œì íŠ¸ í…Œì´ë¸”(project_table) --
 create table project_table
-(project_seq    number not null -- ÇÁ·ÎÁ§Æ® ¹øÈ£
-,groupno        varchar2(50) not null -- ¹®¼­°áÀç Å×ÀÌºí°ú ¿¬µ¿ÇÏµµ·Ï ÇÏ´Â ÄÃ·³
-,project_name   varchar2(500) not null -- ÇÁ·ÎÁ§Æ® ÀÌ¸§
-,content    varchar2(4000) not null -- ÇÁ·ÎÁ§Æ® ³»¿ë
-,term   number not null -- ÇÁ·ÎÁ§Æ® ±â°£
-,startDate  date not null -- ÇÁ·ÎÁ§Æ® ½ÃÀÛ³¯Â¥
-,manager    varchar2(50) not null -- ÇÁ·ÎÁ§Æ® Ã¥ÀÓÀÚ
-,memberCount    number not null -- ÇÁ·ÎÁ§Æ® Âü°¡ ÀÎ¿ø¼ö
-,dwonPayment    number -- °è¾à±İ
-,middlePayment  number -- Áßµµ±İ
-,completionPayment number -- ¿Ï·á±İ
-,documentStatus     number default 0 -- ¿¬°áµÇ¾îÀÖ´Â °áÀç¹®¼­ÀÇ ½ÂÀÎ»óÅÂ °ª°ú ¿¬µ¿??(0:°áÀç ÁøÇàÁß, 1:°áÀç¿Ï·á, »èÁ¦:°áÀç¹İ·Á)
+(project_seq    number not null -- í”„ë¡œì íŠ¸ ë²ˆí˜¸
+,groupno        varchar2(50) not null -- ë¬¸ì„œê²°ì¬ í…Œì´ë¸”ê³¼ ì—°ë™í•˜ë„ë¡ í•˜ëŠ” ì»¬ëŸ¼
+,project_name   varchar2(500) not null -- í”„ë¡œì íŠ¸ ì´ë¦„
+,content    varchar2(4000) not null -- í”„ë¡œì íŠ¸ ë‚´ìš©
+,term   number not null -- í”„ë¡œì íŠ¸ ê¸°ê°„
+,startDate  date not null -- í”„ë¡œì íŠ¸ ì‹œì‘ë‚ ì§œ
+,manager    varchar2(50) not null -- í”„ë¡œì íŠ¸ ì±…ì„ì
+,memberCount    number not null -- í”„ë¡œì íŠ¸ ì°¸ê°€ ì¸ì›ìˆ˜
+,dwonPayment    number -- ê³„ì•½ê¸ˆ
+,middlePayment  number -- ì¤‘ë„ê¸ˆ
+,completionPayment number -- ì™„ë£Œê¸ˆ
+,documentStatus     number default 0 -- ì—°ê²°ë˜ì–´ìˆëŠ” ê²°ì¬ë¬¸ì„œì˜ ìŠ¹ì¸ìƒíƒœ ê°’ê³¼ ì—°ë™??(0:ê²°ì¬ ì§„í–‰ì¤‘, 1:ê²°ì¬ì™„ë£Œ, ì‚­ì œ:ê²°ì¬ë°˜ë ¤)
 ,constraint pk_project_table primary key(project_seq)
 );
 create SEQUENCE project_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ÇÁ·ÎÁ§Æ® ¸í´Ü Å×ÀÌºí(projectMember_table) --
+-- í”„ë¡œì íŠ¸ ëª…ë‹¨ í…Œì´ë¸”(projectMember_table) --
 create table projectMember_table
-(projectMember_seq  number not null -- ÇÁ·ÎÁ§Æ® ¸í´Ü ¹øÈ£
-,fk_project_seq     number not null -- ÇÁ·ÎÁ§Æ® ¹øÈ£(ÇÁ·ÎÁ§Æ® ¸í, ÁøÇà»óÅÂ join¿ä¼Ò)
-,fk_employee_seq    number -- »ç¿ø¹øÈ£(»ç¿ø¸í, Á÷Ã¥, ºÎ¼­ join¿ä¼Ò)
+(projectMember_seq  number not null -- í”„ë¡œì íŠ¸ ëª…ë‹¨ ë²ˆí˜¸
+,fk_project_seq     number not null -- í”„ë¡œì íŠ¸ ë²ˆí˜¸(í”„ë¡œì íŠ¸ ëª…, ì§„í–‰ìƒíƒœ joinìš”ì†Œ)
+,fk_employee_seq    number -- ì‚¬ì›ë²ˆí˜¸(ì‚¬ì›ëª…, ì§ì±…, ë¶€ì„œ joinìš”ì†Œ)
 ,constraint pk_projectMember_table primary key(projectMember_seq)
 ,constraint fk_projectMember_project foreign key(fk_project_seq) references project_table(project_seq) on delete cascade
 ,constraint fk_projectMember_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create SEQUENCE projectMember_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
 
--- °³ÀÎÀÏÁ¤ Å×ÀÌºí(personalCalendar_table) --
+-- ê°œì¸ì¼ì • í…Œì´ë¸”(personalCalendar_table) --
 create table personalCalendar_table
-(calendar_seq   number not null -- ÀÏÁ¤¹øÈ£
-,fk_employee_seq    number not null -- »ç¿ø¹øÈ£
-,title      varchar2(500) not null -- ÀÏÁ¤ Å¸ÀÌÆ²
-,content    varchar2(2000) not null -- ÀÏÁ¤³»¿ë
-,startDate  date not null -- ÀÏÁ¤½ÃÀÛ ³¯Â¥
-,endDate    date not null -- ÀÏÁ¤Á¾·á ³¯Â¥
-,color      varchar2(100) -- ¹è°æ»ö     
+(calendar_seq   number not null -- ì¼ì •ë²ˆí˜¸
+,fk_employee_seq    number not null -- ì‚¬ì›ë²ˆí˜¸
+,title      varchar2(500) not null -- ì¼ì • íƒ€ì´í‹€
+,content    varchar2(2000) not null -- ì¼ì •ë‚´ìš©
+,startDate  date not null -- ì¼ì •ì‹œì‘ ë‚ ì§œ
+,endDate    date not null -- ì¼ì •ì¢…ë£Œ ë‚ ì§œ
+,color      varchar2(100) -- ë°°ê²½ìƒ‰     
 ,constraint pk_personalCalendar primary key(calendar_seq)
 ,constraint fk_personalcalendar_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 create SEQUENCE personalCalendar_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
 create table companyCalendar_category
-(category_num   number not null -- Ç×¸ñ¹øÈ£
-,category_name  varchar2(50) not null -- Ç×¸ñ¸í
+(category_num   number not null -- í•­ëª©ë²ˆí˜¸
+,category_name  varchar2(50) not null -- í•­ëª©ëª…
 ,constraint pk_companyCalendar_category primary key(category_num)
 );
 
--- È¸»çÀÏÁ¤ Å×ÀÌºí(companyCalendar_table) --
+-- íšŒì‚¬ì¼ì • í…Œì´ë¸”(companyCalendar_table) --
 create table companyCalendar_table
-(calendar_seq   number not null -- ÀÏÁ¤¹øÈ£
-,title      varchar2(500) not null -- ÀÏÁ¤ Å¸ÀÌÆ²
-,content    varchar2(2000) not null -- ÀÏÁ¤³»¿ë
-,startDate  date not null -- ÀÏÁ¤½ÃÀÛ ³¯Â¥
-,endDate    date not null -- ÀÏÁ¤Á¾·á ³¯Â¥
-,color      varchar2(100) -- ¹è°æ»ö
-,fk_department_seq number -- ºÎ¼­ÀÏÁ¤ÀÎ °æ¿ì »ç¿ëÇÏ´Â ÄÃ·³
-,calendar_category  number not null -- ÀÏÁ¤ Ä«Å×°í¸®(°æÁ¶»ç, Çù·ÂÀÏÁ¤, ´Üµ¶ÀÏÁ¤...µî)
+(calendar_seq   number not null -- ì¼ì •ë²ˆí˜¸
+,title      varchar2(500) not null -- ì¼ì • íƒ€ì´í‹€
+,content    varchar2(2000) not null -- ì¼ì •ë‚´ìš©
+,startDate  date not null -- ì¼ì •ì‹œì‘ ë‚ ì§œ
+,endDate    date not null -- ì¼ì •ì¢…ë£Œ ë‚ ì§œ
+,color      varchar2(100) -- ë°°ê²½ìƒ‰
+,fk_department_seq number -- ë¶€ì„œì¼ì •ì¸ ê²½ìš° ì‚¬ìš©í•˜ëŠ” ì»¬ëŸ¼
+,calendar_category  number not null -- ì¼ì • ì¹´í…Œê³ ë¦¬(ê²½ì¡°ì‚¬, í˜‘ë ¥ì¼ì •, ë‹¨ë…ì¼ì •...ë“±)
 ,constraint pk_companyCalendar primary key(calendar_seq)
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
 create SEQUENCE companyCalendar_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
 
 
--- ¸Ş½ÅÀú ±×·ì Å×ÀÌºí(messengerRoom_table) --
+-- ë©”ì‹ ì € ê·¸ë£¹ í…Œì´ë¸”(messengerRoom_table) --
 create table messengerRoom_table
 <<<<<<< HEAD
-(roomNumber         number not null                 -- ê·¸ë£¹ ë²ˆí˜¸
-,fk_employee_seq    number not null                 -- ì°¸ê°€ì ë²ˆí˜¸
-,regDate            date default sysdate not null   -- ì°¸ê°€ë‚ ì§œ
+(roomNumber         number not null                 -- æ´¹ëªƒï¼™ è¸°ëŠìƒ‡
+,fk_employee_seq    number not null                 -- ï§¡ë©¸ï¿½ï¿½ì˜„ è¸°ëŠìƒ‡
+,regDate            date default sysdate not null   -- ï§¡ë©¸ï¿½ï¿½ê¶‡ï§ï¿½
 =======
-(roomNumber     number not null -- ±×·ì ¹øÈ£
-,fk_employee_seq   number not null -- Âü°¡ÀÚ ¹øÈ£
-,regDate    date default sysdate not null -- Âü°¡³¯Â¥
+(roomNumber     number not null -- ê·¸ë£¹ ë²ˆí˜¸
+,fk_employee_seq   number not null -- ì°¸ê°€ì ë²ˆí˜¸
+,regDate    date default sysdate not null -- ì°¸ê°€ë‚ ì§œ
 >>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
@@ -448,36 +446,36 @@ create table messengerRoom_table
 
 create SEQUENCE messengerRoom_table_seq
 <<<<<<< HEAD
-start with 1    -- ì‹œì‘ê°’
-increment by 1  -- ì¦ê°€ê°’
-nomaxvalue      -- ìµœëŒ€ê°’ ì„¤ì •
-nominvalue      -- ìµœì†Œê°’ ì„¤ì •
-nocycle         -- ë°˜ë³µ ì„¤ì •
+start with 1    -- ï¿½ë–†ï¿½ì˜‰åª›ï¿½
+increment by 1  -- ï§ì•·ï¿½åª›ï¿½
+nomaxvalue      -- ï§¤ì’•ï¿½åª›ï¿½ ï¿½ê½•ï¿½ì ™
+nominvalue      -- ï§¤ì’–ëƒ¼åª›ï¿½ ï¿½ê½•ï¿½ì ™
+nocycle         -- è«›ì„ë‚¬ ï¿½ê½•ï¿½ì ™
 =======
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 >>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
--- ¸Ş½ÅÀú ´ëÈ­ Å×ÀÌºí(messenger_table) --
+-- ë©”ì‹ ì € ëŒ€í™” í…Œì´ë¸”(messenger_table) --
 create table messenger_table
 <<<<<<< HEAD
-(message_seq        number not null                 -- ëŒ€í™” ë²ˆí˜¸
-,content            varchar2(4000) not null         -- ëŒ€í™”ë‚´ìš©
-,regDate            date default sysdate not null   -- ëŒ€í™”ë‚ ì§œ
-,status             number default 1 not null       -- ëŒ€í™”ìƒíƒœ
-,fk_roomNumber      number                          -- ë©”ì‹ ì € ê·¸ë£¹ë²ˆí˜¸
-,fk_employee_seq    number                          -- ë°œì‹ ì
+(message_seq        number not null                 -- ï¿½ï¿½ï¿½ì†• è¸°ëŠìƒ‡
+,content            varchar2(4000) not null         -- ï¿½ï¿½ï¿½ì†•ï¿½ê¶¡ï¿½ìŠœ
+,regDate            date default sysdate not null   -- ï¿½ï¿½ï¿½ì†•ï¿½ê¶‡ï§ï¿½
+,status             number default 1 not null       -- ï¿½ï¿½ï¿½ì†•ï¿½ê¸½ï¿½ê¹­
+,fk_roomNumber      number                          -- ï§ë¶¿ë–Šï¿½ï¿½ æ´¹ëªƒï¼™è¸°ëŠìƒ‡
+,fk_employee_seq    number                          -- è«›ì’–ë–Šï¿½ì˜„
 =======
-(message_seq    number not null -- ´ëÈ­ ¹øÈ£
-,content    varchar2(4000) not null -- ´ëÈ­³»¿ë
-,regDate    date default sysdate not null -- ´ëÈ­³¯Â¥
-,status     number default 1 not null -- ´ëÈ­»óÅÂ
-,fk_roomNumber      number -- ¸Ş½ÅÀú ±×·ì¹øÈ£
-,fk_employee_seq    number  -- ¹ß½ÅÀÚ
+(message_seq    number not null -- ëŒ€í™” ë²ˆí˜¸
+,content    varchar2(4000) not null -- ëŒ€í™”ë‚´ìš©
+,regDate    date default sysdate not null -- ëŒ€í™”ë‚ ì§œ
+,status     number default 1 not null -- ëŒ€í™”ìƒíƒœ
+,fk_roomNumber      number -- ë©”ì‹ ì € ê·¸ë£¹ë²ˆí˜¸
+,fk_employee_seq    number  -- ë°œì‹ ì
 >>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 ,constraint pk_messenger_table primary key(message_seq)
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
@@ -485,177 +483,177 @@ on delete set null
 );
 create SEQUENCE messenger_table_seq
 <<<<<<< HEAD
-start with 1    -- ì‹œì‘ê°’
-increment by 1  -- ì¦ê°€ê°’
-nomaxvalue      -- ìµœëŒ€ê°’ ì„¤ì •
-nominvalue      -- ìµœì†Œê°’ ì„¤ì •
-nocycle         -- ë°˜ë³µ ì„¤ì •
+start with 1    -- ï¿½ë–†ï¿½ì˜‰åª›ï¿½
+increment by 1  -- ï§ì•·ï¿½åª›ï¿½
+nomaxvalue      -- ï§¤ì’•ï¿½åª›ï¿½ ï¿½ê½•ï¿½ì ™
+nominvalue      -- ï§¤ì’–ëƒ¼åª›ï¿½ ï¿½ê½•ï¿½ì ™
+nocycle         -- è«›ì„ë‚¬ ï¿½ê½•ï¿½ì ™
 =======
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 >>>>>>> 7370937c5bc06870e685bf15f97b25f11e19cb9f
 nocache;
 
--- ´ëÈ­·Î±× Å×ÀÌºí(messengerLog_table) --
+-- ëŒ€í™”ë¡œê·¸ í…Œì´ë¸”(messengerLog_table) --
 create table messengerLog_table
-(fk_message_seq     number not null -- ´ëÈ­¹øÈ£ (foreign key)
-,msg_receiver       number not null -- ÀĞÀ» »ç¶÷ »ç¿ø¹øÈ£
+(fk_message_seq     number not null -- ëŒ€í™”ë²ˆí˜¸ (foreign key)
+,msg_receiver       number not null -- ì½ì„ ì‚¬ëŒ ì‚¬ì›ë²ˆí˜¸
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- ¸ŞÀÏ Å×ÀÌºí(mail_table) --
+-- ë©”ì¼ í…Œì´ë¸”(mail_table) --
 create table mail_table
-(mail_seq           number not null -- ¸ŞÀÏ ¹øÈ£(P.K)
-,mail_groupno       number -- ¼Û½Å/¼ö½Å ±×·ì¹øÈ£ (null=ÀÓ½ÃÀúÀå?)
-,fk_employee_seq    number not null -- »ç¿ø ¹øÈ£(F.K) = º¸³»´Â »ç¶÷
-,subject            varchar2(1000) not null -- Á¦¸ñ
-,content            varchar2(4000) not null -- ³»¿ë
-,fileName1          varchar2(500) -- ÆÄÀÏÃ·ºÎÀÌ¸§1
-,orgFileName1       varchar2(500) -- ÆÄÀÏÃ·ºÎ ¿ø·¡ ÀÌ¸§1
-,fileSize1          varchar2(10) -- ÆÄÀÏ»çÀÌÁî1
-,fileName2          varchar2(500) -- ÆÄÀÏÃ·ºÎÀÌ¸§2
-,orgFileName2       varchar2(500) -- ÆÄÀÏÃ·ºÎ ¿ø·¡ ÀÌ¸§2
-,fileSize2          varchar2(10) -- ÆÄÀÏ»çÀÌÁî2
-,fileName3          varchar2(500) -- ÆÄÀÏÃ·ºÎÀÌ¸§3
-,orgFileName3       varchar2(500) -- ÆÄÀÏÃ·ºÎ ¿ø·¡ ÀÌ¸§3
-,fileSize3          varchar2(10) -- ÆÄÀÏ»çÀÌÁî3
-,status         number default 0 not null-- ¹ß¼Û/¼ö½Å »óÅÂ
-,readStatus     number default 0 not null -- ±âµ¶ À¯¹«
-,mailStatus     number default 1 not null-- »èÁ¦À¯¹« »óÅÂ
+(mail_seq           number not null -- ë©”ì¼ ë²ˆí˜¸(P.K)
+,mail_groupno       number -- ì†¡ì‹ /ìˆ˜ì‹  ê·¸ë£¹ë²ˆí˜¸ (null=ì„ì‹œì €ì¥?)
+,fk_employee_seq    number not null -- ì‚¬ì› ë²ˆí˜¸(F.K) = ë³´ë‚´ëŠ” ì‚¬ëŒ
+,subject            varchar2(1000) not null -- ì œëª©
+,content            varchar2(4000) not null -- ë‚´ìš©
+,fileName1          varchar2(500) -- íŒŒì¼ì²¨ë¶€ì´ë¦„1
+,orgFileName1       varchar2(500) -- íŒŒì¼ì²¨ë¶€ ì›ë˜ ì´ë¦„1
+,fileSize1          varchar2(10) -- íŒŒì¼ì‚¬ì´ì¦ˆ1
+,fileName2          varchar2(500) -- íŒŒì¼ì²¨ë¶€ì´ë¦„2
+,orgFileName2       varchar2(500) -- íŒŒì¼ì²¨ë¶€ ì›ë˜ ì´ë¦„2
+,fileSize2          varchar2(10) -- íŒŒì¼ì‚¬ì´ì¦ˆ2
+,fileName3          varchar2(500) -- íŒŒì¼ì²¨ë¶€ì´ë¦„3
+,orgFileName3       varchar2(500) -- íŒŒì¼ì²¨ë¶€ ì›ë˜ ì´ë¦„3
+,fileSize3          varchar2(10) -- íŒŒì¼ì‚¬ì´ì¦ˆ3
+,status         number default 0 not null-- ë°œì†¡/ìˆ˜ì‹  ìƒíƒœ
+,readStatus     number default 0 not null -- ê¸°ë… ìœ ë¬´
+,mailStatus     number default 1 not null-- ì‚­ì œìœ ë¬´ ìƒíƒœ
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 ,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
 );
 create SEQUENCE mail_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
 
--- È¸ÀÇ½Ç Å×ÀÌºí(reservationRoom_table) --
+-- íšŒì˜ì‹¤ í…Œì´ë¸”(reservationRoom_table) --
 create table reservationRoom_table
-(roomNumber     number not null -- È¸ÀÇ½Ç ¹øÈ£
-,roomName       varchar2(300) not null -- È¸ÀÇ½ÇÀÌ¸§
+(roomNumber     number not null -- íšŒì˜ì‹¤ ë²ˆí˜¸
+,roomName       varchar2(300) not null -- íšŒì˜ì‹¤ì´ë¦„
 ,constraint pk_reservationRoom primary key(roomNumber)
 );
 
--- ¿¹¾à°ü¸® Å×ÀÌºí(reservation_table) --
+-- ì˜ˆì•½ê´€ë¦¬ í…Œì´ë¸”(reservation_table) --
 create table reservation_table
-(reservation_seq    number not null -- ¿¹¾à¹øÈ£
-,fk_employee_seq    number not null -- ¿¹¾à ½ÅÃ»ÀÚ
-,fk_roomNumber      number not null -- ¿¹¾à Àå¼Ò(È¸ÀÇ½Ç ¹øÈ£)
-,startDate  date not null -- »ç¿ë½ÃÀÛ ½Ã°£(³¯Â¥ Æ÷ÇÔ)
-,endDate    date not null -- »ç¿ëÁ¾·á ½Ã°£(³¯Â¥ Æ÷ÇÔ)
-,head_seq   number not null -- ¿¹¾à Ã¥ÀÓÀÚ »ç¿ø¹øÈ£
-,memberCount    number default 1 not null -- »ç¿ë ÀÎ¿ø
-,reason varchar2(2000) not null -- »çÀ¯
-,status number default 0 not null -- ½ÂÀÎ »óÅÂ(0: ½ÂÀÎ´ë±âÁß, 1: ½ÂÀÎ¿Ï·á)
+(reservation_seq    number not null -- ì˜ˆì•½ë²ˆí˜¸
+,fk_employee_seq    number not null -- ì˜ˆì•½ ì‹ ì²­ì
+,fk_roomNumber      number not null -- ì˜ˆì•½ ì¥ì†Œ(íšŒì˜ì‹¤ ë²ˆí˜¸)
+,startDate  date not null -- ì‚¬ìš©ì‹œì‘ ì‹œê°„(ë‚ ì§œ í¬í•¨)
+,endDate    date not null -- ì‚¬ìš©ì¢…ë£Œ ì‹œê°„(ë‚ ì§œ í¬í•¨)
+,head_seq   number not null -- ì˜ˆì•½ ì±…ì„ì ì‚¬ì›ë²ˆí˜¸
+,memberCount    number default 1 not null -- ì‚¬ìš© ì¸ì›
+,reason varchar2(2000) not null -- ì‚¬ìœ 
+,status number default 0 not null -- ìŠ¹ì¸ ìƒíƒœ(0: ìŠ¹ì¸ëŒ€ê¸°ì¤‘, 1: ìŠ¹ì¸ì™„ë£Œ)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
 );
 create SEQUENCE reservation_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ÃâÅğ±Ù Å×ÀÌºí(attendance_table) --
+-- ì¶œí‡´ê·¼ í…Œì´ë¸”(attendance_table) --
 create table attendance_table
-(fk_employee_seq    number not null -- »ç¿ø¹øÈ£
-,onTime     date default sysdate not null -- Ãâ±Ù½Ã°£(³â-¿ù-ÀÏ ½Ã-ºĞ-ÃÊ)
-,offTime    date -- Åğ±Ù½Ã°£(³â-¿ù-ÀÏ ½Ã-ºĞ-ÃÊ)
+(fk_employee_seq    number not null -- ì‚¬ì›ë²ˆí˜¸
+,onTime     date default sysdate not null -- ì¶œê·¼ì‹œê°„(ë…„-ì›”-ì¼ ì‹œ-ë¶„-ì´ˆ)
+,offTime    date -- í‡´ê·¼ì‹œê°„(ë…„-ì›”-ì¼ ì‹œ-ë¶„-ì´ˆ)
 ,constraint fk_attendance_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete cascade
 );
 
--- °Ô½ÃÆÇ Ç×¸ñ Å×ÀÌºí(board_category) --
+-- ê²Œì‹œíŒ í•­ëª© í…Œì´ë¸”(board_category) --
 create table board_category
-(category_seq   number not null -- °Ô½Ã±Û Ç×¸ñ¹øÈ£
-,category_name  varchar2(100) not null -- °Ô½Ã±Û Ç×¸ñ¸í
+(category_seq   number not null -- ê²Œì‹œê¸€ í•­ëª©ë²ˆí˜¸
+,category_name  varchar2(100) not null -- ê²Œì‹œê¸€ í•­ëª©ëª…
 ,constraint pk_board_category primary key(category_seq)
 );
 
--- °Ô½ÃÆÇ Å×ÀÌºí(board_table) --
+-- ê²Œì‹œíŒ í…Œì´ë¸”(board_table) --
 create table board_table
-(board_seq  number not null -- ±Û¹øÈ£
-,fk_category_num    number not null -- Ç×¸ñ¹øÈ£
-,subject    varchar2(50) not null -- Á¦¸ñ
+(board_seq  number not null -- ê¸€ë²ˆí˜¸
+,fk_category_num    number not null -- í•­ëª©ë²ˆí˜¸
+,subject    varchar2(50) not null -- ì œëª©
 ,content    varchar2(4000) not null
-,readCnt    number default 0 -- Á¶È¸¼ö
-,regDate    date default sysdate not null -- µî·Ï³¯Â¥
-,fk_employee_seq    number -- ÀÛ¼ºÀÚ ¹øÈ£
-,status     number default 1 not null -- ±Û »óÅÂ
-,commentCnt number default 0 not null -- ´ñ±Û ¼ö
+,readCnt    number default 0 -- ì¡°íšŒìˆ˜
+,regDate    date default sysdate not null -- ë“±ë¡ë‚ ì§œ
+,fk_employee_seq    number -- ì‘ì„±ì ë²ˆí˜¸
+,status     number default 1 not null -- ê¸€ ìƒíƒœ
+,commentCnt number default 0 not null -- ëŒ“ê¸€ ìˆ˜
 ,constraint pk_board_table primary key(board_seq)
 ,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq)
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create SEQUENCE board_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- °Ô½ÃÆÇ Ã·ºÎÆÄÀÏ Å×ÀÌºí(attachFile_table) --
+-- ê²Œì‹œíŒ ì²¨ë¶€íŒŒì¼ í…Œì´ë¸”(attachFile_table) --
 create table attachFile_table
-(file_seq   number not null -- ÆÄÀÏ¹øÈ£
-,fk_board_seq   number not null -- °Ô½Ã±Û ¹øÈ£
-,fileName   varchar2(500) -- ¾÷·Îµå ÆÄÀÏ¸í
-,orgFileName    varchar2(500) -- ¿ø·¡ ÆÄÀÏ¸í
-,fileSize   varchar2(10) -- ÆÄÀÏÅ©±â
+(file_seq   number not null -- íŒŒì¼ë²ˆí˜¸
+,fk_board_seq   number not null -- ê²Œì‹œê¸€ ë²ˆí˜¸
+,fileName   varchar2(500) -- ì—…ë¡œë“œ íŒŒì¼ëª…
+,orgFileName    varchar2(500) -- ì›ë˜ íŒŒì¼ëª…
+,fileSize   varchar2(10) -- íŒŒì¼í¬ê¸°
 ,constraint pk_attachFile_table primary key(file_seq)
 ,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 );
 create SEQUENCE attachFile_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ´ñ±Û Å×ÀÌºí(comment_table) --
+-- ëŒ“ê¸€ í…Œì´ë¸”(comment_table) --
 create table comment_table
-(commnet_seq    number not null -- ´ñ±Û¹øÈ£
-,fk_board_seq   number not null -- °Ô½Ã±Û ¹øÈ£(±×·ì¹øÈ£)
-,fk_employee_seq    number -- ÀÛ¼ºÀÚ »ç¿ø¹øÈ£
-,readCnt    number default 0 not null -- Á¶È¸¼ö
-,content    varchar2(2000) not null -- ³»¿ë
-,status     number default 1 not null -- ±Û»óÅÂ(1:º¸Á¸, 0:»èÁ¦)
-,regDate    date default sysdate not null -- ÀÛ¼º³¯Â¥
-,parent_seq number -- »óÀ§ ´ñ±Û(°èÃşÇü)
+(commnet_seq    number not null -- ëŒ“ê¸€ë²ˆí˜¸
+,fk_board_seq   number not null -- ê²Œì‹œê¸€ ë²ˆí˜¸(ê·¸ë£¹ë²ˆí˜¸)
+,fk_employee_seq    number -- ì‘ì„±ì ì‚¬ì›ë²ˆí˜¸
+,readCnt    number default 0 not null -- ì¡°íšŒìˆ˜
+,content    varchar2(2000) not null -- ë‚´ìš©
+,status     number default 1 not null -- ê¸€ìƒíƒœ(1:ë³´ì¡´, 0:ì‚­ì œ)
+,regDate    date default sysdate not null -- ì‘ì„±ë‚ ì§œ
+,parent_seq number -- ìƒìœ„ ëŒ“ê¸€(ê³„ì¸µí˜•)
 ,depthno    number default 0 not null
 ,constraint pk_comment_seq primary key(commnet_seq)
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 create sequence comment_table_seq
-start with 1 -- ½ÃÀÛ°ª
-increment by 1 -- Áõ°¡°ª
-nomaxvalue -- ÃÖ´ë°ª ¼³Á¤
-nominvalue -- ÃÖ¼Ò°ª ¼³Á¤
-nocycle -- ¹İº¹ ¼³Á¤
+start with 1 -- ì‹œì‘ê°’
+increment by 1 -- ì¦ê°€ê°’
+nomaxvalue -- ìµœëŒ€ê°’ ì„¤ì •
+nominvalue -- ìµœì†Œê°’ ì„¤ì •
+nocycle -- ë°˜ë³µ ì„¤ì •
 nocache;
 
--- ºñÇ°°ü·Ã Å×ÀÌºí(equipment_table) --
+-- ë¹„í’ˆê´€ë ¨ í…Œì´ë¸”(equipment_table) --
 create table equipment_table
-(equipment_seq  number not null -- ºñÇ° ±¸ÀÔ¹øÈ£
-,fk_department_seq  number -- ºñÇ° ±¸¸ÅÇÑ ºÎ¼­
-,equipment_name     varchar2(500) not null -- ºñÇ°¸ñ·Ï ÀÌ¸§
-,unit      number not null -- ºñÇ° ´ÜÀ§
-,equipment_price    number not null -- ºñÇ° °¡°İ(´ÜÀ§)
-,equipment_count    number not null -- ºñÇ° ±¸¸Å ¼ö
-,reason     varchar2(4000) -- ±¸¸Å »çÀ¯
-,purchaseDate   date not null-- ±¸ÀÔ³¯Â¥
+(equipment_seq  number not null -- ë¹„í’ˆ êµ¬ì…ë²ˆí˜¸
+,fk_department_seq  number -- ë¹„í’ˆ êµ¬ë§¤í•œ ë¶€ì„œ
+,equipment_name     varchar2(500) not null -- ë¹„í’ˆëª©ë¡ ì´ë¦„
+,unit      number not null -- ë¹„í’ˆ ë‹¨ìœ„
+,equipment_price    number not null -- ë¹„í’ˆ ê°€ê²©(ë‹¨ìœ„)
+,equipment_count    number not null -- ë¹„í’ˆ êµ¬ë§¤ ìˆ˜
+,reason     varchar2(4000) -- êµ¬ë§¤ ì‚¬ìœ 
+,purchaseDate   date not null-- êµ¬ì…ë‚ ì§œ
 ,groupno    varchar2(50) not null
 ,documentStatus number default 0 not null
 ,constraint pk_equipment_table primary key(equipment_seq)
@@ -663,69 +661,68 @@ create table equipment_table
 );
 
 
--- Ç×¸ñ(Ä«Å×°í¸®) µ¥ÀÌÅÍ ÀÔ·Â --
-insert into position_table(position_seq, position_name, position_salary) values(1,'»ç¿ø',2500);
-insert into position_table(position_seq, position_name, position_salary) values(2,'´ë¸®',3400);
-insert into position_table(position_seq, position_name, position_salary) values(3,'°úÀå',4100);
-insert into position_table(position_seq, position_name, position_salary) values(4,'ºÎÀå',5090);
-insert into position_table(position_seq, position_name, position_salary) values(5,'ÀÌ»ç',6400);
-insert into position_table(position_seq, position_name, position_salary) values(6,'»çÀå',10000);
+-- í•­ëª©(ì¹´í…Œê³ ë¦¬) ë°ì´í„° ì…ë ¥ --
+insert into position_table(position_seq, position_name, position_salary) values(1,'ì‚¬ì›',2500);
+insert into position_table(position_seq, position_name, position_salary) values(2,'ëŒ€ë¦¬',3400);
+insert into position_table(position_seq, position_name, position_salary) values(3,'ê³¼ì¥',4100);
+insert into position_table(position_seq, position_name, position_salary) values(4,'ë¶€ì¥',5090);
+insert into position_table(position_seq, position_name, position_salary) values(5,'ì´ì‚¬',6400);
+insert into position_table(position_seq, position_name, position_salary) values(6,'ì‚¬ì¥',10000);
 commit;
 
-insert into employeeStatus_table(status_seq, status_name) values (1,'ÀÏ¹İ');
-insert into employeeStatus_table(status_seq, status_name) values (2,'Åğ»ç');
-insert into employeeStatus_table(status_seq, status_name) values (3,'ÈŞ°¡');
-insert into employeeStatus_table(status_seq, status_name) values (4,'ÃâÀå');
+insert into employeeStatus_table(status_seq, status_name) values (1,'ì¼ë°˜');
+insert into employeeStatus_table(status_seq, status_name) values (2,'í‡´ì‚¬');
+insert into employeeStatus_table(status_seq, status_name) values (3,'íœ´ê°€');
+insert into employeeStatus_table(status_seq, status_name) values (4,'ì¶œì¥');
 commit;
 
-insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'µğÀÚÀÎÆÀ');
-insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'°³¹ßÆÀ');
-insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'¿µ¾÷ÆÀ');
-insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ÀÎ»çÆÀ');
-insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'°æ¿µÁö¿øÆÀ');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ë””ìì¸íŒ€');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ê°œë°œíŒ€');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ì˜ì—…íŒ€');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ì¸ì‚¬íŒ€');
+insert into department_table(department_seq, department_name) values (department_table_seq.nextval,'ê²½ì˜ì§€ì›íŒ€');
 commit;
 
-insert into album_category(category_num, category_name) values(1,'»ç³»È°µ¿');
-insert into album_category(category_num, category_name) values(2,'µ¿È£È¸');
-insert into album_category(category_num, category_name) values(3,'ºÀ»ç');
+insert into album_category(category_num, category_name) values(1,'ì‚¬ë‚´í™œë™');
+insert into album_category(category_num, category_name) values(2,'ë™í˜¸íšŒ');
+insert into album_category(category_num, category_name) values(3,'ë´‰ì‚¬');
 commit;
 
-insert into grade_table(grade_level, grade_name) values(1,'ÀÏ¹İ');
-insert into grade_table(grade_level, grade_name) values(2,'ÀÎ»ç°ü¸®');
-insert into grade_table(grade_level, grade_name) values(3,'¿¹¾à°ü¸®');
-insert into grade_table(grade_level, grade_name) values(4,'¸ÅÃâ°ü¸®');
-insert into grade_table(grade_level, grade_name) values(5,'ÀüÃ¼');
+insert into grade_table(grade_level, grade_name) values(1,'ì¼ë°˜');
+insert into grade_table(grade_level, grade_name) values(2,'ì¸ì‚¬ê´€ë¦¬');
+insert into grade_table(grade_level, grade_name) values(3,'ì˜ˆì•½ê´€ë¦¬');
+insert into grade_table(grade_level, grade_name) values(4,'ë§¤ì¶œê´€ë¦¬');
+insert into grade_table(grade_level, grade_name) values(5,'ì „ì²´');
 commit;
 
-insert into trip_category(category_num, category_name) values(1,'¿¬Â÷');
-insert into trip_category(category_num, category_name) values(2,'¿ùÂ÷');
-insert into trip_category(category_num, category_name) values(3,'¹İÂ÷');
-insert into trip_category(category_num, category_name) values(4,'¿©¸§ÈŞ°¡');
-insert into trip_category(category_num, category_name) values(5,'Ãâ»êÈŞ°¡');
-insert into trip_category(category_num, category_name) values(6,'´Ü±âÃâÀå');
-insert into trip_category(category_num, category_name) values(7,'Àå±âÃâÀå');
-insert into trip_category(category_num, category_name) values(8,'ÇØ¿ÜÃâÀå');
+insert into trip_category(category_num, category_name) values(1,'ì—°ì°¨');
+insert into trip_category(category_num, category_name) values(2,'ì›”ì°¨');
+insert into trip_category(category_num, category_name) values(3,'ë°˜ì°¨');
+insert into trip_category(category_num, category_name) values(4,'ì—¬ë¦„íœ´ê°€');
+insert into trip_category(category_num, category_name) values(5,'ì¶œì‚°íœ´ê°€');
+insert into trip_category(category_num, category_name) values(6,'ë‹¨ê¸°ì¶œì¥');
+insert into trip_category(category_num, category_name) values(7,'ì¥ê¸°ì¶œì¥');
+insert into trip_category(category_num, category_name) values(8,'í•´ì™¸ì¶œì¥');
 commit;
 
-insert into document_category(document_category_seq, category_name)values(1,'ÈŞ°¡/ÃâÀå');
-insert into document_category(document_category_seq, category_name)values(2,'¸ÅÃâ');
-insert into document_category(document_category_seq, category_name)values(3,'ÇÁ·ÎÁ§Æ®');
-insert into document_category(document_category_seq, category_name)values(4,'Åğ»ç');
-insert into document_category(document_category_seq, category_name)values(5,'ÀÎ»ç°í°ú');
-insert into document_category(document_category_seq, category_name)values(6,'µ¿È£È¸ °¡ÀÔ');
+insert into document_category(document_category_seq, category_name)values(1,'íœ´ê°€/ì¶œì¥');
+insert into document_category(document_category_seq, category_name)values(2,'ë§¤ì¶œ');
+insert into document_category(document_category_seq, category_name)values(3,'í”„ë¡œì íŠ¸');
+insert into document_category(document_category_seq, category_name)values(4,'í‡´ì‚¬');
+insert into document_category(document_category_seq, category_name)values(5,'ì¸ì‚¬ê³ ê³¼');
+insert into document_category(document_category_seq, category_name)values(6,'ë™í˜¸íšŒ ê°€ì…');
 commit;
 
-
-insert into board_category(category_seq, category_name) values(1,'°øÁö»çÇ×');
+insert into board_category(category_seq, category_name) values(1,'ê³µì§€ì‚¬í•­');
 insert into board_category(category_seq, category_name) values(2,'FAQ');
-insert into board_category(category_seq, category_name) values(3,'ÀÚÀ¯');
+insert into board_category(category_seq, category_name) values(3,'ììœ ');
 commit;
 
-insert into reservationRoom_table(roomNumber, roomName) values(1,'´ëÈ¸ÀÇ½Ç');
-insert into reservationRoom_table(roomNumber, roomName) values(2,'ÁßÈ¸ÀÇ½ÇA');
-insert into reservationRoom_table(roomNumber, roomName) values(3,'ÁßÈ¸ÀÇ½ÇB');
-insert into reservationRoom_table(roomNumber, roomName) values(4,'ÁßÈ¸ÀÇ½ÇC');
-insert into reservationRoom_table(roomNumber, roomName) values(5,'¼ÒÈ¸ÀÇ½Ç1');
-insert into reservationRoom_table(roomNumber, roomName) values(6,'¼ÒÈ¸ÀÇ½Ç2');
-insert into reservationRoom_table(roomNumber, roomName) values(7,'¼ÒÈ¸ÀÇ½Ç3');
+insert into reservationRoom_table(roomNumber, roomName) values(1,'ëŒ€íšŒì˜ì‹¤');
+insert into reservationRoom_table(roomNumber, roomName) values(2,'ì¤‘íšŒì˜ì‹¤A');
+insert into reservationRoom_table(roomNumber, roomName) values(3,'ì¤‘íšŒì˜ì‹¤B');
+insert into reservationRoom_table(roomNumber, roomName) values(4,'ì¤‘íšŒì˜ì‹¤C');
+insert into reservationRoom_table(roomNumber, roomName) values(5,'ì†ŒíšŒì˜ì‹¤1');
+insert into reservationRoom_table(roomNumber, roomName) values(6,'ì†ŒíšŒì˜ì‹¤2');
+insert into reservationRoom_table(roomNumber, roomName) values(7,'ì†ŒíšŒì˜ì‹¤3');
 commit;
