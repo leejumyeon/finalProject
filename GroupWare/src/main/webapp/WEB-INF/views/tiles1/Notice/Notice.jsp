@@ -1,19 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+
+
 <title>공지사항</title>
 
 <style type="text/css">
 	
-	body {
 	
-		font:14px/1.8 Arial, Helvetica, sans-serif;
-		
-	
-	}
 	
 	.frame{
 	
@@ -76,8 +70,7 @@
 
 </style>
 
-</head>
-<body>
+
 	
 <div class="fralme">
 	<div class="container">
@@ -100,5 +93,3 @@
 	
 </div>
 
-</body>
-</html>

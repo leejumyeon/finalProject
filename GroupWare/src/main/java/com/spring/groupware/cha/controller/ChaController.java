@@ -23,7 +23,14 @@ public class ChaController {
 	@Autowired
 	private ChaInterService service; // 의존객체
 	
-	// 개인 일정 캘린더
+	// 마이페이지(개인 일정 캘린더 & 책검색) - 뷰페이지
+	@RequestMapping(value="/viewFullCalendar.top", produces="text/plain;charset=UTF-8")
+	public String viewFullCalendar() {
+		
+		return "fullCalendarKakaoBook/fullCalendar.tiles1";
+	}
+	
+	// 마이페이지(개인 일정 캘린더 & 책검색) - 뿌리기
 	@ResponseBody
 	@RequestMapping(value="/fullCalendar.top", produces="text/plain;charset=UTF-8")
 	public String fullCalendar() {
@@ -55,14 +62,7 @@ public class ChaController {
 		
 	}
 	
-	// 캘린더 뷰페이지
-	@RequestMapping(value="/viewFullCalendar.top", produces="text/plain;charset=UTF-8")
-	public String viewFullCalendar() {
-		
-		return "fullCalendarKakaoBook/fullCalendar";
-	}
-	
-	// 캘린더 일정 추가
+	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정추가
 	@RequestMapping(value="/insertCalendar.top")
 	public String insertCalendar(HttpServletRequest request) {
 		
@@ -75,25 +75,39 @@ public class ChaController {
 		return jsObj.toString();
 	}
 	
-	// ------------------------------선을 중심으로 윗 부분 캘린더 모음 ----------------------------------------------
-	
-	// 카카오북
-	@RequestMapping(value="/kakaoBook.top", produces="text/plain;charset=UTF-8")
-	public String kakaoBook() {
+	// ------------------------------선을 중심으로 윗 부분 마이페이지(개인 일정 캘린더 & 책검색) 모음 ----------------------------------------------
 		
-		return "fullCalendarKakaoBook/kakaoBook";
-		
-	}
-	
-	// ------------------------------선을 중심으로 윗 부분 책검색 모음 ----------------------------------------------
-	
 	// 공지 사항
 	@RequestMapping(value="/Notice.top", produces="text/plain;charset=UTF-8")
 	public String Notice() {
 		
-		return "Notice/Notice";
+		return "Notice/Notice.tiles1";
 		
 	}
+			
+	// ------------------------------선을 중심으로 윗 부분 공지사항 & 마이페이지 모음 ----------------------------------------------
+	
+	// 동호회	
+	@RequestMapping(value="/clup.top")
+	public String clup() {
+		
+		return "clup/clup.tiles1";
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }
