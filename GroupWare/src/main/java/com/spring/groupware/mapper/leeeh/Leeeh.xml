@@ -29,14 +29,14 @@
 		     , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade
 		from
 		(
-		select E.employee_seq, E.employee_name, E.employee_id, E.email, E.phone, E.hire_date, P.position_name, E.fk_department, E.gender
-		     , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade
+		select E.employee_seq, E.employee_name, E.employee_id, E.employee_pw, E.email, E.phone, E.hire_date, P.position_name, E.fk_department, E.gender
+		     , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade, E.fk_status
 		from employees_table E join position_table P
 		on E.fk_position = P.position_seq
 		) V join department_table D
 		on V.fk_department = D.department_seq
-		where fk_status != 2 and fk_status != 3
-		      and employee_id = #{employee_id}
-		      and employee_pw = #{employee_pw}
+		where V.fk_status != 2 and V.fk_status != 3
+		      and V.employee_id = #{employee_id}
+		      and V.employee_pw = #{employee_pw}
 	</select>
 </mapper>
