@@ -11,59 +11,57 @@ show user; -- USER이(가) "FINALORAUSER3"입니다.
 
 
 -- 테이블 삭제 -- 
-drop table comment_table;
+drop table comment_table purge;
 drop sequence comment_table_seq;
-drop table attachFile_table;
+drop table attachFile_table purge;
 drop SEQUENCE attachFile_table_seq;
-drop table board_table;
+drop table board_table purge;
 drop sequence board_table_seq;
-drop table board_category;
-drop table attendance_table;
-drop table reservation_table;
+drop table board_category purge;
+drop table attendance_table purge;
+drop table reservation_table purge;
 drop sequence reservation_table_seq;
-drop table reservationRoom_table;
-drop table mailReceive_table;
-drop table mail_table;
+drop table reservationRoom_table purge;
+drop table mailReceive_table purge;
+drop table mail_table purge;
 drop sequence mail_table_seq;
-drop table messengerLog_table;
-drop table messenger_table;
+drop table messengerLog_table purge;
+drop table messenger_table purge;
 drop sequence messenger_table_seq;
-drop table messengerRoom_table;
+drop table messengerRoom_table purge;
 drop sequence messengerRoom_table_seq;
-drop table companyCalendar_table;
+drop table companyCalendar_table purge;
 drop sequence companyCalendar_table_seq;
-drop table personalCalendar_table;
+drop table personalCalendar_table purge;
 drop sequence personalCalendar_table_seq;
-drop table projectMember_table;
+drop table projectMember_table purge;
 drop sequence projectMember_table_seq;
-drop table project_table;
+drop table project_table purge;
 drop sequence project_table_seq;
-drop table document_table;
+drop table document_table purge;
 drop sequence document_table_seq;
-drop table trip_table;
+drop table trip_table purge;
 drop sequence trip_table_seq;
-drop table trip_category;
-drop table grade_table;
-drop table TA_table;
+drop table trip_category purge;
+drop table grade_table purge;
+drop table TA_table purge;
 drop sequence ta_table_seq;
-drop table clubMember_table;
+drop table clubMember_table purge;
 drop sequence clubMember_table_seq;
-drop table club_table;
+drop table club_table purge;
 drop sequence club_table_seq;
-drop table sales_table;
+drop table sales_table purge;
 drop sequence sales_table_seq;
-drop table fire_table;
-drop table album_table;
+drop table fire_table purge;
+drop table album_table purge;
 drop sequence album_table_seq;
-drop table album_category;
-drop table employees_table;
+drop table album_category purge;
+drop table employees_table purge;
 drop sequence employees_table_seq;
-drop table department_table;
+drop table department_table purge;
 drop sequence department_table_seq;
-drop table employeeStatus_table;
-drop table position_table;
-
-
+drop table employeeStatus_table purge;
+drop table position_table purge;
 
  -- 직급 테이블(position_table) --
 create table position_table
@@ -105,8 +103,8 @@ nocache;
 ,employee_id    varchar2(100) not null -- 사원ID
 ,employee_pw    varchar2(500) not null -- 사원PW
 ,email          varchar2(500) not null -- 사내 이메일
-,phone          varchar2(100) not null -- 핸드폰번호
-,fk_status      number not null -- 사원상태
+,phone          varchar2(500) not null -- 핸드폰번호
+,fk_status      number default 1 not null -- 사원상태
 ,hire_date      date default sysdate not null -- 입사날짜
 ,fire_date      date -- 퇴사날짜
 ,fk_position    number default 1 -- 사원직책
@@ -117,13 +115,12 @@ nocache;
 ,address        varchar2(300) not null -- 주소
 ,postcode       varchar2(300) not null -- 우편번호
 ,detailaddress  varchar2(500)-- 상세주소
+,extraaddress  varchar2(500)-- 참고항목
 ,constraint pk_employees_table primary key(employee_seq)
 ,constraint fk_employees_status foreign key (fk_status) REFERENCES employeeStatus_table(status_seq)
 ,constraint fk_employees_position foreign key(fk_position) references position_table(position_seq) on DELETE SET null
 ,constraint fk_employees_department foreign key(fk_department) references department_table(department_seq) on delete set null
 );
-
-
 
  create SEQUENCE employees_table_seq
 start with 1

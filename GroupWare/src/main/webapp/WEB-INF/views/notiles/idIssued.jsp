@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core"%>
+
 <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
 <style>
 	
@@ -127,6 +129,13 @@
 		
 		$(".datepicker").datepicker({});
 		
+		$("#btnIssued").click(function() {
+			
+			var frm = document.registerFrm;
+			frm.method="POST";
+			frm.action="<%= request.getContextPath()%>/idIssued.top";
+			frm.submit();
+		});
 	});
 </script>
 <div class="row" id="divRegisterFrm">
@@ -185,7 +194,7 @@
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">주소</td>
 					<td style="width: 80%; text-align: left;">
 					   <input type="text" id="address" name="address" size="40" placeholder="주소" autocomplete="off" /><br/>
-					   <input type="text" id="detailAddress" name="detailAddress" size="40" placeholder="상세주소" style="width: 200px;" autocomplete="off" />&nbsp;<input type="text" id="extraAddress" name="extraAddress" size="40" placeholder="참고항목" style="width: 200px;" autocomplete="off"/> 
+					   <input type="text" id="detailAddress" name="detailaddress" size="40" placeholder="상세주소" style="width: 200px;" autocomplete="off" />&nbsp;<input type="text" id="extraAddress" name="extraaddress" size="40" placeholder="참고항목" style="width: 200px;" autocomplete="off"/> 
 					</td>
 				</tr>
 
@@ -200,7 +209,7 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">생년월일</td>
 					<td style="width: 80%; text-align: left;">
-					   <input type="text" name="birthday" class="datepicker" style="width: 150px;">
+					   <input type="text" name="birthday" class="datepicker" style="width: 150px;" autocomplete="off">
 					</td>
 				</tr>
 				
@@ -215,14 +224,19 @@
 						</select>
 					</td>
 				</tr>
-
+				
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">경력기간</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">직책명</td>
 					<td style="width: 80%; text-align: left;">
-						From: <input type="text" name="fromDate" class="datepicker" style="width: 150px;">&nbsp;&nbsp;
-						To: <input type="text" name="toDate" class="datepicker" style="width: 150px;">
+						<select name="department_seq" style="width: 170px; height: 30px;">
+							<option value="" selected>==부서를 선택하세요==</option>
+							<c:forEach var="departVO" items="${departmentList}">
+								<option value="${departVO.department_seq}">${departVO.department_name}</option>
+							</c:forEach>
+						</select>
 					</td>
 				</tr>
+
 			</tbody>
 		</table>
 		

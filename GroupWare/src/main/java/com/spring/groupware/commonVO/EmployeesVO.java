@@ -17,6 +17,7 @@ public class EmployeesVO { // 사원정보VO
 	private String address; //주소
 	private String postcode; //우편번호
 	private String detailaddress; //상세주소
+	private String extraaddress; //참고항목
 	private String grade; // 권한등급
 	private String club_name; //가입한 동호회 명( ex.동호회1, 동호회2)
 	
@@ -116,7 +117,6 @@ public class EmployeesVO { // 사원정보VO
 		this.gender = gender;
 	}
 	
-	
 	public String getBirthday() {
 		return birthday;
 	}
@@ -149,6 +149,14 @@ public class EmployeesVO { // 사원정보VO
 		this.detailaddress = detailaddress;
 	}
 	
+	public String getExtraaddress() {
+		return extraaddress;
+	}
+
+	public void setExtraaddress(String extraaddress) {
+		this.extraaddress = extraaddress;
+	}
+
 	public String getGrade() {
 		return grade;
 	}
