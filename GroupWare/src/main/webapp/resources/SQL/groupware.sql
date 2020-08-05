@@ -97,7 +97,11 @@ nominvalue
 nocycle
 nocache;
 
+<<<<<<< HEAD
+ 
+=======
 
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
  -- 사원테이블(employees_table)--
  create table employees_table
 (employee_seq   number -- 사원번호
@@ -433,8 +437,13 @@ nocache;
 create table messengerRoom_table
 <<<<<<< HEAD
 (roomNumber         number not null                 -- 洹몃９ 踰덊샇
+<<<<<<< HEAD
+,fk_employee_seq    number not null                 -- 李멸  옄 踰덊샇
+,regDate            date default sysdate not null   -- 李멸  궇吏 
+=======
 ,fk_employee_seq    number not null                 -- 李멸��옄 踰덊샇
 ,regDate            date default sysdate not null   -- 李멸��궇吏�
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 =======
 (roomNumber     number not null -- 그룹 번호
 ,fk_employee_seq   number not null -- 참가자 번호
@@ -446,11 +455,19 @@ create table messengerRoom_table
 
 create SEQUENCE messengerRoom_table_seq
 <<<<<<< HEAD
+<<<<<<< HEAD
+start with 1    --  떆 옉媛 
+increment by 1  -- 利앷 媛 
+nomaxvalue      -- 理쒕 媛   꽕 젙
+nominvalue      -- 理쒖냼媛   꽕 젙
+nocycle         -- 諛섎났  꽕 젙
+=======
 start with 1    -- �떆�옉媛�
 increment by 1  -- 利앷�媛�
 nomaxvalue      -- 理쒕�媛� �꽕�젙
 nominvalue      -- 理쒖냼媛� �꽕�젙
 nocycle         -- 諛섎났 �꽕�젙
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 =======
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -463,12 +480,21 @@ nocache;
 -- 메신저 대화 테이블(messenger_table) --
 create table messenger_table
 <<<<<<< HEAD
+<<<<<<< HEAD
+(message_seq        number not null                 --    솕 踰덊샇
+,content            varchar2(4000) not null         --    솕 궡 슜
+,regDate            date default sysdate not null   --    솕 궇吏 
+,status             number default 1 not null       --    솕 긽 깭
+,fk_roomNumber      number                          -- 硫붿떊   洹몃９踰덊샇
+,fk_employee_seq    number                          -- 諛쒖떊 옄
+=======
 (message_seq        number not null                 -- ���솕 踰덊샇
 ,content            varchar2(4000) not null         -- ���솕�궡�슜
 ,regDate            date default sysdate not null   -- ���솕�궇吏�
 ,status             number default 1 not null       -- ���솕�긽�깭
 ,fk_roomNumber      number                          -- 硫붿떊�� 洹몃９踰덊샇
 ,fk_employee_seq    number                          -- 諛쒖떊�옄
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 =======
 (message_seq    number not null -- 대화 번호
 ,content    varchar2(4000) not null -- 대화내용
@@ -483,11 +509,19 @@ on delete set null
 );
 create SEQUENCE messenger_table_seq
 <<<<<<< HEAD
+<<<<<<< HEAD
+start with 1    --  떆 옉媛 
+increment by 1  -- 利앷 媛 
+nomaxvalue      -- 理쒕 媛   꽕 젙
+nominvalue      -- 理쒖냼媛   꽕 젙
+nocycle         -- 諛섎났  꽕 젙
+=======
 start with 1    -- �떆�옉媛�
 increment by 1  -- 利앷�媛�
 nomaxvalue      -- 理쒕�媛� �꽕�젙
 nominvalue      -- 理쒖냼媛� �꽕�젙
 nocycle         -- 諛섎났 �꽕�젙
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 =======
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -714,6 +748,10 @@ insert into document_category(document_category_seq, category_name)values(5,'인
 insert into document_category(document_category_seq, category_name)values(6,'동호회 가입');
 commit;
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> ea76cc8494f0535145db4e52f5bc09a81cc544ef
 insert into board_category(category_seq, category_name) values(1,'공지사항');
 insert into board_category(category_seq, category_name) values(2,'FAQ');
 insert into board_category(category_seq, category_name) values(3,'자유');
