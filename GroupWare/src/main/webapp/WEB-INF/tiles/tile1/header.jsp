@@ -54,19 +54,8 @@
 			</ul>
 		</li>
 		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">메일 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<c:if test="${sessionScope.loginuser == null}">
-					<li><a href="#">회원가입</a></li>
-					<li><a href="<%=ctxPath%>/login.action">로그인</a></li>
-				</c:if>
-				
-				<c:if test="${sessionScope.loginuser != null}">
-					<li><a href="<%=ctxPath%>/myinfo.action">나의정보</a></li>
-					<li><a href="<%=ctxPath%>/logout.action">로그아웃</a></li>
-				</c:if>
-			</ul>
+		<li class="dropdown">
+			<a class="dropdown-toggle" href="<%=ctxPath%>/mail/list.top?type=receive">메일</a>
 		</li>
 		
 		
