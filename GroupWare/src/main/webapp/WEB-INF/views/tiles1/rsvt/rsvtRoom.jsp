@@ -32,7 +32,7 @@
 		display: inline-block;
 		margin-left: 50px;
 		width: 30%;
-		height: 630px;
+		height: 640px;
 	}
 	
 	#map {
@@ -139,39 +139,30 @@
 		resize: none;
 	}
 	
+	#rsvt_btn {
+		padding: 10px 20px 8px 20px;
+		margin: 10px 0 0 320px; 
+		background-color: #eee;
+		border: solid 1px gray;
+		border-radius: 5px 5px;
+		outline: 0;
+	}
+	
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.css" />
-<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
 <script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
 <script type="text/javascript">
 
-	$(document).ready(function(){
-		
-		// === jQuery UI 의 datepicker === //
+	$(document).ready(function(){		                    
+
 		$("#datepicker").datepicker({
-			 dateFormat: 'yy-mm-dd'		// Input Display Format 변경
-			,showOtherMonths: true		// 빈 공간에 현재월의 앞뒤월의 날짜를 표시
-			,showMonthAfterYear: true	// 년도 먼저 나오고, 뒤에 월 표시
-			,changeYear: true			// 콤보박스에서 년 선택 가능
-			,changeMonth: true			// 콤보박스에서 월 선택 가능                
-			,showOn: "both"				// button:버튼을 표시하고, 버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고, 버튼을 누르거나 input을 클릭하면 달력 표시  
-			,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif"	//버튼 이미지 경로
-			,buttonImageOnly: true		// 기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-			,buttonText: "선택"			// 버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-			,yearSuffix: "년"			// 달력의 년도 부분 뒤에 붙는 텍스트
-			,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12']				// 달력의 월 부분 텍스트
-			,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']	// 달력의 월 부분 Tooltip 텍스트
-			,dayNamesMin: ['일','월','화','수','목','금','토']										// 달력의 요일 부분 텍스트
-			,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일']						// 달력의 요일 부분 Tooltip 텍스트
-			,minDate: "+1D"				// 최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-		//	,maxDate: "+3Y"				// 최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
-        });                    
-        
+			
+		});
+		
 		// 초기값을 오늘 날짜로 설정
-		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+		$('#datepicker').datepicker('setDate', '+1D');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 		$('#RsvtDateH').text($('#datepicker').val());
 		$('#RsvtDate').val($('#datepicker').val());
 		
@@ -201,21 +192,64 @@
 		});
 		
 		
-		var cnt = 0;		
-		// 시간 선택하기
-		$(".ability").click(function(event){	// 가능여부 부분 클릭했을 때
-			// 배경색이 바뀌어 있나
-			if($(this).hasClass("rChoice")) {	// 배경색이 바뀌어있다
+		// 시간 선택하기	
+		var cnt = 0;
+		var start = "";
+		var end = "";		
+
+		$(".ability").click(function(event){	// 가능여부 부분 클릭했을 경우
+			if(!$(this).hasClass("rChoice")) {	// 배경색이 없을 경우
+				$(this).addClass("rChoice");	// 배경색을 바꿈
+				start = $(this).children(".startTime").val();	// start에 this의 startTime 값을 넣음
+				end = $(this).children(".endTime").val();		// end에 this의  endTime 값을 넣음
+			}
+			else {		// 배경색이 있을 경우
+				start = "";
+				end = "";
+				console.log("취소");
 				$(this).removeClass("rChoice");	// 배경색을 없앰
-				cnt=cnt-1;	// cnt-1
-			}
-			else{	// 배경색이 없다
-				$(this).addClass("rChoice"); // 배경색 바꿈
-				cnt=cnt+1;	// cnt+1
 			}
 			
-			//alert(cnt);
+		//	alert(cnt);
 			
+			var prev = $(this).prev();			
+			var prStartTime = prev.children(".startTime").val();
+			var prEndTime = prev.children(".endTime").val();
+			
+			var next = $(this).next();
+			var neStartTime = next.children(".startTime").val();
+			var neEndTime = next.children(".endTime").val();
+			
+		//	console.log(prStartTime+", "+prEndTime);
+		//	console.log(neStartTime+", "+neEndTime);
+			
+			if(prev.hasClass("rChoice")) {	// prev에 배경색이 있을 경우
+				if(start != null && start != "") {	// start가 공백이 아닐 경우
+					start = prStartTime;	// start에 prev의 startTime 값을 넣음
+				}
+				else {	// start가 공백일 경우
+					start = prStartTime;	// start에 prev의 startTime 값을 넣음
+					end = prEndTime;		// end에 prev의 endTime 값을 넣음
+				}
+			}
+			else if(next.hasClass("rChoice")) { // next에 배경색이 있을 경우
+				if(end != null && end != "") {	// end가 공백이 아닐 경우
+					end = neEndTime		// end에 next의 endTime 값을 넣음
+				}
+				else {	// end가 공백일 경우
+					start = neStartTime	// start에 next의 startTime 값을 넣음
+					end = neEndTime		// end에 next의 endTime 값을 넣음
+				}
+			}
+			
+			console.log(start+", "+end);
+			
+			$("#startTimeH").val(start);
+			$('#startTime').text(start);
+			
+			$("#endTimeH").val(end);
+			$('#endTime').text(end);
+					
 		});	
 		
 	}); // end of $(document).ready(function(){})------------------------------------------------
@@ -333,26 +367,26 @@
 					<td class="td_time times time12">12:00 - 13:00</td>									
 				</tr>
 				<tr>
-					<th class="th_time ability">가능여부</th>
-					<td class="td_time ability tdone time9">
+					<th class="th_time">가능여부</th>
+					<td class="td_time ability tdOne time9">
 						<div>예약 가능</div>
-						<input type="hidden" id="startTime" name="startTime" value="09:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="endTime" value="10:00" /><!-- hidden -->
+						<input type="hidden" class="startTime" name="startTime" value="09:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="10:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability time10">
+					<td class="td_time ability tdOne time10">
 						<div>예약 가능</div>
-						<input type="hidden" id="startTime" name="startTime" value="10:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="endTime" value="11:00" /><!-- hidden -->
+						<input type="hidden" class="startTime" name="startTime" value="10:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="11:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability time11">
+					<td class="td_time ability tdOne time11">
 						<div>예약 가능</div>
-						<input type="hidden" id="startTime" name="startTime" value="11:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="endTime" value="12:00" /><!-- hidden -->						
+						<input type="hidden" class="startTime" name="startTime" value="11:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="12:00" /><!-- hidden -->						
 					</td>
-					<td class="td_time ability time12">
+					<td class="td_time ability tdOne time12">
 						<div>예약 가능</div>
-						<input type="hidden" id="startTime" name="startTime" value="12:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="endTime" value="13:00" /><!-- hidden -->						
+						<input type="hidden" class="startTime" name="startTime" value="12:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="13:00" /><!-- hidden -->						
 					</td>								
 				</tr>
 				
@@ -364,18 +398,26 @@
 					<td class="td_time times time17">17:00 - 18:00</td>									
 				</tr>
 				<tr>
-					<th class="th_time ability">가능여부</th>
-					<td class="td_time ability tdtwo time14">
+					<th class="th_time">가능여부</th>
+					<td class="td_time ability tdTwo time14">
 						<div>예약 가능</div>
+						<input type="hidden" class="startTime" name="startTime" value="14:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="15:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability time15">
+					<td class="td_time ability tdTwo time15">
 						<div>예약 가능</div>
+						<input type="hidden" class="startTime" name="startTime" value="15:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="16:00" /><!-- hidden -->						
 					</td>
-					<td class="td_time ability time16">
+					<td class="td_time ability tdTwo time16">
 						<div>예약 가능</div>
+						<input type="hidden" class="startTime" name="startTime" value="16:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="17:00" /><!-- hidden -->						
 					</td>
-					<td class="td_time ability time17">
+					<td class="td_time ability tdTwo time17">
 						<div>예약 가능</div>
+						<input type="hidden" class="startTime" name="startTime" value="17:00" /><!-- hidden -->
+						<input type="hidden" class="endTime" name="endTime" value="18:00" /><!-- hidden -->						
 					</td>								
 				</tr>				
 			</table>
@@ -383,7 +425,7 @@
 		</div>
 		
 		<div id="info">
-			<h4>예약하기</h4>
+			<h4 style="margin: 20px 10px 20px 185px;">예약하기</h4>
 			<table id="info_tb">
 				<tr id="info_tr">
 					<th id="info_th">회의실</th>
@@ -402,7 +444,7 @@
 				<tr id="info_tr">
 					<th id="info_th">시간</th>
 					<td id="info_td">
-						<span id="startTime"></span>-<span id="endTime"></span>
+						<span id="startTime"></span> - <span id="endTime"></span>
 						<input type="text" id="startTimeH" name="startTimeH"><!-- hidden -->
 						<input type="text" id="endTimeH" name="endTimeH"><!-- hidden -->
 					</td>
@@ -434,6 +476,9 @@
 				</tr>							
 
 			</table>
+			
+			<input type="button" id="rsvt_btn" value="예약 신청"/>
+			
 		</div>				
 		<div style="clear: both;"></div>
 		
