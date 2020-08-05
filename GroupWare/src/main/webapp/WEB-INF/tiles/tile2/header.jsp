@@ -28,10 +28,10 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
-<div style="display: inline-block; border:solid 0px red; float:left;">
-	<a href="#"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" width:150px; height:40px;"/></a>
+<div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
+	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
-<div style="display: inline-block; border:solid 0px blue; width:1500px;" align="center">
+<div style="display: inline-block; border:solid 0px blue; width:1130px;" align="center">
 	<ul class="mynav" style="float:left;">
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="#">사내공지<span class="caret"></span></a>
@@ -54,19 +54,8 @@
 			</ul>
 		</li>
 		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">메일 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<c:if test="${sessionScope.loginuser == null}">
-					<li><a href="#">회원가입</a></li>
-					<li><a href="<%=ctxPath%>/login.action">로그인</a></li>
-				</c:if>
-				
-				<c:if test="${sessionScope.loginuser != null}">
-					<li><a href="<%=ctxPath%>/myinfo.action">나의정보</a></li>
-					<li><a href="<%=ctxPath%>/logout.action">로그아웃</a></li>
-				</c:if>
-			</ul>
+		<li class="dropdown">
+			<a class="dropdown-toggle" href="<%=ctxPath%>/mail/list.top?type=receive">메일</a>
 		</li>
 		
 		
@@ -95,11 +84,7 @@
 			</ul>
 		</li>
 		
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">메신저 아이콘 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
-			</ul>
+		<li class="dropdown"><a href="#" onclick = "open_messenger()">메신저 아이콘 </a>
 		</li>
 	
 	

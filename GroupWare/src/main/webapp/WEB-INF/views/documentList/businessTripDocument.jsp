@@ -68,7 +68,7 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 			</tr>
 		</table>
 	</div>
-    
+
 <table class="detailSection">
 	<tbody>
 		<tr>

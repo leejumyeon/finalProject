@@ -165,7 +165,7 @@
 	<div id="searchArea">
 		<div style="position: relative; display: inline;">
 			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" style="border: none;"/><span style="background-color: white">아이콘</span></div>
-			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>
+			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>&nbsp;&nbsp;<span style="font-weight: bold;">${mailhamType}</span>
 			<div id="searchTypetArea"></div>
 		</div>
 		<div id="termSearch" class="hide">

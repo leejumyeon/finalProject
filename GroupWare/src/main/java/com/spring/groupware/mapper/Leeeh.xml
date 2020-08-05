@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="leeeh">
+
+	<!-- === 사원 발급을 하기위해 사원 ID에서 max값을 가져오기 === -->
+	<select id="getMaxOfEmployeeId" parameterType="String" resultType="String">
+		select nvl(max(substr(employee_id, 14)), '00')
+		from employees_table
+		where substr(employee_id, 5, 8) = #{hireDate}
+	</select>
+	
+	<!-- === 사원 발급을 하기 위해 부서리스트를 가져오기 === -->
+	<select id="departmentList" resultType="com.spring.groupware.commonVO.DepartmentVO">
+		select department_seq, department_name
+		from department_table
+	</select>
+	
+	<!-- === 사원발급에서 테이블에 집어 넣기 === -->
+	<insert id="insertEmployeeTable" parameterType="HashMap">
+		insert into employees_table(employee_seq, employee_name, employee_id, employee_pw, email, phone, fk_position, fk_department, gender, birthday, address, postcode, detailaddress, extraaddress)
+		values(employees_table_seq.nextval, #{employee_name}, #{employee_id}, #{employee_pw}, #{email}, #{phone}, #{position_seq}, #{department_seq}, #{gender}, #{birthday}, #{address}, #{postcode}, #{detailaddress}, #{extraaddress})
+	</insert>
+	
+	<!-- === 로그인 페이지에서 적은 ID와 비밀번호를 통해 유저가 존재하는지 검사하기 === -->
+	<select id="isUserExist" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.position_name, D.department_name, V.gender
+		     , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade
+		from
+		(
+		select E.employee_seq, E.employee_name, E.employee_id, E.email, E.phone, E.hire_date, P.position_name, E.fk_department, E.gender
+		     , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade
+		from employees_table E join position_table P
+		on E.fk_position = P.position_seq
+		) V join department_table D
+		on V.fk_department = D.department_seq
+		where fk_status != 2 and fk_status != 3
+		      and employee_id = #{employee_id}
+		      and employee_pw = #{employee_pw}
+	</select>
+</mapper>
