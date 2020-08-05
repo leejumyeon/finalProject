@@ -26,13 +26,13 @@
             
            	for(var i = 0; i<10 ; i++) {
            		
-           		html += "<img src='" + msg.documents[i].thumbnail + "'><br />";
-           		html += "<strong>" + msg.documents[i].title + "</strong><br />";
-       			html +=	"<strong>" + msg.documents[i].authors + "</strong><br />";
-     			html += "<strong>" + msg.documents[i].price + "</strong><br />";
-           		html += "<strong>" + msg.documents[i].status + "</strong><br />";
-           		html += "<strong>" + msg.documents[i].datetime + "</strong><br />";
-           		html += "<strong>" + msg.documents[i].isbn + "</strong><br />";
+           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
+           		html += "제목&nbsp;:&nbsp;<strong>" + msg.documents[i].title + "</strong><br />";
+       			html +=	"저자&nbsp;:&nbsp;<strong>" + msg.documents[i].authors + "</strong><br />";
+     			html += "판매가&nbsp;:&nbsp;<strong>" + msg.documents[i].price + "</strong><br />";
+           		html += "판매현황&nbsp;:&nbsp;<strong>" + msg.documents[i].status + "</strong><br />";
+           		html += "출간일자&nbsp;:&nbsp;<strong>" + msg.documents[i].datetime + "</strong><br />";
+           		html += "바코드&nbsp;:&nbsp;<strong>" + msg.documents[i].isbn + "</strong><br />";
            							          		                         
            	}
            	

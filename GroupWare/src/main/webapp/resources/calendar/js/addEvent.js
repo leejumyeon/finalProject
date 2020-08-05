@@ -38,7 +38,7 @@ var newEvent = function (start, end, eventType) {
     //새로운 일정 저장버튼 클릭
     $('#save-event').unbind();
     $('#save-event').on('click', function () {
-
+    	
         var eventData = {
             _id: eventId,
             title: editTitle.val(),
@@ -51,6 +51,8 @@ var newEvent = function (start, end, eventType) {
             textColor: '#ffffff',
             allDay: false
         };
+        
+        alert(eventData.start);
 
         if (eventData.start > eventData.end) {
             alert('끝나는 날짜가 앞설 수 없습니다.');
@@ -82,11 +84,12 @@ var newEvent = function (start, end, eventType) {
         //새로운 일정 저장
         $.ajax({
             type: "get",
-            url: "",
+            url: "/groupware/insertCalendar.top",
             data: {
-                //.....
+            	"_id":eventData._id
             },
-            success: function (response) {
+            dataType:"JSON",
+            success: function (json) {
                 //DB연동시 중복이벤트 방지를 위한
                 //$('#calendar').fullCalendar('removeEvents');
                 //$('#calendar').fullCalendar('refetchEvents');
