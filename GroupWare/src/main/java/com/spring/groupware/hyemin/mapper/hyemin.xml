@@ -5,12 +5,5 @@
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="hyemin">
-
-	<select id="select_possibleTime" parameterType="HashMap" resultType="String">
-		select startDate, endDate, status
-		from reservation_table
-		where fk_roomNumber = ${fk_roomNumber}
-			and to_char(startDate, 'yyyy-mm-dd') = to_char(${RsvtDate}, 'yyyy-mm-dd')
-	</select>
 	
 </mapper>

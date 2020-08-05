@@ -2,17 +2,12 @@
     pageEncoding="UTF-8"%>
     
 <%	String ctxPath = request.getContextPath();	%>    
-    
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>자원 예약</title>
 
+<link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
 <style type="text/css">
 	
 	#hm_container {
-		border: solid 1px gray;
+		border: solid 0px gray;
 		background-color: white;
 		width: 90%;
 		margin: 0 auto;
@@ -88,7 +83,7 @@
 		margin: 25px 0 0 13%;
 	}	
 	
-	.rChioce {
+	.rChoice {
 		background-color: #a1d8f7;
 	}
 	
@@ -110,7 +105,7 @@
 	}
 	
 	.th_time {
-		background-color: #d1eefc;
+		background-color: #eee;
 	}
 	
 	.times {
@@ -131,12 +126,12 @@
 	}
 	
 	#info_th {
-		width: 100px;
+		width: 120px;
 		height: 50px;		
 	}
 	
 	#info_td {
-		width: 300px;
+		width: 270px;
 		height: 50px;	
 	}
 	
@@ -150,6 +145,7 @@
 
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+<script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -176,14 +172,15 @@
         
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-		$('#RsvtDate').text($('#datepicker').val());
+		$('#RsvtDateH').text($('#datepicker').val());
+		$('#RsvtDate').val($('#datepicker').val());
 		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
 			
 			// 클릭한 회의실의 배경색이 바뀜
-			$(".room").removeClass("rChioce");
-			$(this).addClass("rChioce");
+			$(".room").removeClass("rChoice");
+			$(this).addClass("rChoice");
 						
 		//	alert($(this).children('.roomName').text());
 						
@@ -198,28 +195,26 @@
 		// 날짜 변경했을 때
 		$("#datepicker").change(function(event){
 			
-			$("#RsvtDate").text($("#datepicker").val());
+			$("#RsvtDateH").text($("#datepicker").val());
+			$('#RsvtDate').val($('#datepicker').val());
 			
 		});
 		
 		
 		var cnt = 0;		
-		// 시간 클릭했을 때
-		$(".tr_time").click(function(event){
-		
-			if($(this).hasClass("rChioce")) {
-				$(this).removeClass("rChioce");
-				cnt=cnt-1;
+		// 시간 선택하기
+		$(".ability").click(function(event){	// 가능여부 부분 클릭했을 때
+			// 배경색이 바뀌어 있나
+			if($(this).hasClass("rChoice")) {	// 배경색이 바뀌어있다
+				$(this).removeClass("rChoice");	// 배경색을 없앰
+				cnt=cnt-1;	// cnt-1
 			}
-			else{
-				if(cnt < 2) {				
-					// 클릭한 시간의 배경색이 바뀜
-					$(this).addClass("rChioce");
-					cnt=cnt+1;
-				}
+			else{	// 배경색이 없다
+				$(this).addClass("rChoice"); // 배경색 바꿈
+				cnt=cnt+1;	// cnt+1
 			}
 			
-		//	alert(cnt);
+			//alert(cnt);
 			
 		});	
 		
@@ -255,6 +250,12 @@
 		})		
 	} --%>
 
+	  function maxLengthCheck(object){
+		    if (object.value.length > object.maxLength){
+		      object.value = object.value.slice(0, object.maxLength);
+		    }    
+		  }
+	
 </script>
 
 </head>
@@ -268,17 +269,17 @@
 			<div id="sbRooms">
 				<div class="small room" id="room_one">
 					<div class="text roomName">소회의실1</div>				
-					<div class="text">5~10인</div>
+					<div class="text">3~10인</div>
 					<input class="fk_roomNumber" type="hidden" value="5" />
 				</div>
 				<div class="small room" id="room_two">
 					<div class="text roomName">소회의실2</div>
-					<div class="text">5~10인</div>
+					<div class="text">3~10인</div>
 					<input class="fk_roomNumber" type="hidden" value="6" />					
 				</div>
 				<div class="small room" id="room_three">
 					<div class="text roomName">소회의실3</div>
-					<div class="text">5~10인</div>
+					<div class="text">3~10인</div>
 					<input class="fk_roomNumber" type="hidden" value="7" />
 				</div>
 				<div class="big room" id="room_four">
@@ -316,7 +317,7 @@
 				<tr>
 					<td style="width: 10%;">예약일 선택</td>
 					<td style="width: 50%; text-align: left;">
-						<input type="text" id="datepicker">
+						<input type="text" id="datepicker" readonly="readonly">
 					</td>
 				</tr>
 			</table>
@@ -326,52 +327,54 @@
 			<table id="time">
 				<tr>
 					<th class="th_time times">시간</th>
-					<td class="td_time times">9:00 - 10:00
-						<input type="hidden" id="startTime" name="fk_roomNumber" value="09:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
-					</td>
-					<td class="td_time times">10:00 - 11:00
-						<input type="hidden" id="startTime" name="fk_roomNumber" value="10:00" /><!-- hidden -->
-						<input type="hidden" id="endTime" name="fk_roomNumber" value="11:00" /><!-- hidden -->
-					</td>
-					<td class="td_time times">11:00 - 12:00</td>
-					<td class="td_time times">12:00 - 13:00</td>									
+					<td class="td_time times time9">9:00 - 10:00</td>
+					<td class="td_time times time10">10:00 - 11:00</td>
+					<td class="td_time times time11">11:00 - 12:00</td>
+					<td class="td_time times time12">12:00 - 13:00</td>									
 				</tr>
 				<tr>
 					<th class="th_time ability">가능여부</th>
-					<td class="td_time ability">
+					<td class="td_time ability tdone time9">
 						<div>예약 가능</div>
+						<input type="hidden" id="startTime" name="startTime" value="09:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="endTime" value="10:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time10">
 						<div>예약 가능</div>
+						<input type="hidden" id="startTime" name="startTime" value="10:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="endTime" value="11:00" /><!-- hidden -->
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time11">
 						<div>예약 가능</div>
+						<input type="hidden" id="startTime" name="startTime" value="11:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="endTime" value="12:00" /><!-- hidden -->						
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time12">
 						<div>예약 가능</div>
+						<input type="hidden" id="startTime" name="startTime" value="12:00" /><!-- hidden -->
+						<input type="hidden" id="endTime" name="endTime" value="13:00" /><!-- hidden -->						
 					</td>								
 				</tr>
 				
 				<tr>
 					<th class="th_time times">시간</th>
-					<td class="td_time times">14:00 - 15:00</td>
-					<td class="td_time times">15:00 - 16:00</td>
-					<td class="td_time times">16:00 - 17:00</td>
-					<td class="td_time times">17:00 - 18:00</td>									
+					<td class="td_time times time14">14:00 - 15:00</td>
+					<td class="td_time times time15">15:00 - 16:00</td>
+					<td class="td_time times time16">16:00 - 17:00</td>
+					<td class="td_time times time17">17:00 - 18:00</td>									
 				</tr>
 				<tr>
 					<th class="th_time ability">가능여부</th>
-					<td class="td_time ability">
+					<td class="td_time ability tdtwo time14">
 						<div>예약 가능</div>
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time15">
 						<div>예약 가능</div>
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time16">
 						<div>예약 가능</div>
 					</td>
-					<td class="td_time ability">
+					<td class="td_time ability time17">
 						<div>예약 가능</div>
 					</td>								
 				</tr>				
@@ -391,11 +394,18 @@
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">예약일</th>
-					<td id="info_td"><span id="RsvtDate"></span></td>
+					<td id="info_td">
+						<span id="RsvtDateH"></span>
+						<input type="hidden" id="RsvtDate" name="RsvtDate"/><!-- hidden -->
+					</td>
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">시간</th>
-					<td id="info_td"><input type="text" readonly="readonly"/>-<input type="text" readonly="readonly"/></td>
+					<td id="info_td">
+						<span id="startTime"></span>-<span id="endTime"></span>
+						<input type="text" id="startTimeH" name="startTimeH"><!-- hidden -->
+						<input type="text" id="endTimeH" name="endTimeH"><!-- hidden -->
+					</td>
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">예약 신청자</th>
@@ -413,13 +423,13 @@
 				<tr id="info_tr">
 					<th id="info_th">사용 인원</th>
 					<td id="info_td">
-						<input type="text" maxlength="2"/>
+						<input type="number" maxlength="2" min="3" max="30" value="3" oninput="maxLengthCheck(this)"/>
 					</td>
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">사유</th>
 					<td id="info_td">
-						<textarea id="reason" name="reason" cols="40" rows="10" style="border: none"></textarea>
+						<textarea id="reason" name="reason" cols="40" rows="10"></textarea>
 					</td>
 				</tr>							
 
@@ -429,4 +439,3 @@
 		
 	</div>
 </body>
-</html>
