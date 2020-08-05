@@ -23,5 +23,14 @@ public class LeeehService implements InterLeeehService {
 		return loginEmployee;
 	}
 
+	// === 사원 발급을 하기위해 사원 ID에서 max값을 가져오기 === //
+	@Override
+	public String getMaxOfEmployeeId(String hireDate) {
+
+		String max = dao.getMaxOfEmployeeId(hireDate);
+		
+		return max;
+	}
+
 
 }
