@@ -9,6 +9,8 @@ grant create view to finalorauser3;
 -- finalorauser3계정 내용 --
 show user; -- USER이(가) "FINALORAUSER3"입니다.
 
+select * from tab;
+select * from seq;
 
 -- 테이블 삭제 -- 
 drop table comment_table;
@@ -432,39 +434,39 @@ nocache;
 
 -- 메신저 그룹 테이블(messengerRoom_table) --
 create table messengerRoom_table
-(roomNumber     number not null -- 그룹 번호
-,fk_employee_seq   number not null -- 참가자 번호
-,regDate    date default sysdate not null -- 참가날짜
+(roomNumber         number not null                 -- 그룹 번호
+,fk_employee_seq    number not null                 -- 참가자 번호
+,regDate            date default sysdate not null   -- 참가날짜
 ,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 
 create SEQUENCE messengerRoom_table_seq
-start with 1 -- 시작값
-increment by 1 -- 증가값
-nomaxvalue -- 최대값 설정
-nominvalue -- 최소값 설정
-nocycle -- 반복 설정
+start with 1    -- 시작값
+increment by 1  -- 증가값
+nomaxvalue      -- 최대값 설정
+nominvalue      -- 최소값 설정
+nocycle         -- 반복 설정
 nocache;
 
 -- 메신저 대화 테이블(messenger_table) --
 create table messenger_table
-(message_seq    number not null -- 대화 번호
-,content    varchar2(4000) not null -- 대화내용
-,regDate    date default sysdate not null -- 대화날짜
-,status     number default 1 not null -- 대화상태
-,fk_roomNumber      number -- 메신저 그룹번호
-,fk_employee_seq    number  -- 발신자
+(message_seq        number not null                 -- 대화 번호
+,content            varchar2(4000) not null         -- 대화내용
+,regDate            date default sysdate not null   -- 대화날짜
+,status             number default 1 not null       -- 대화상태
+,fk_roomNumber      number                          -- 메신저 그룹번호
+,fk_employee_seq    number                          -- 발신자
 ,constraint pk_messenger_table primary key(message_seq)
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
 create SEQUENCE messenger_table_seq
-start with 1 -- 시작값
-increment by 1 -- 증가값
-nomaxvalue -- 최대값 설정
-nominvalue -- 최소값 설정
-nocycle -- 반복 설정
+start with 1    -- 시작값
+increment by 1  -- 증가값
+nomaxvalue      -- 최대값 설정
+nominvalue      -- 최소값 설정
+nocycle         -- 반복 설정
 nocache;
 
 -- 대화로그 테이블(messengerLog_table) --
