@@ -1,10 +1,12 @@
 package com.spring.groupware.leeeh.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.leeeh.model.InterLeeehDAO;
 
@@ -30,6 +32,22 @@ public class LeeehService implements InterLeeehService {
 		String max = dao.getMaxOfEmployeeId(hireDate);
 		
 		return max;
+	}
+
+	// === 사원 발급을 하기 위해 부서리스트를 가져오기 === //
+	@Override
+	public List<DepartmentVO> departmentList() {
+
+		List<DepartmentVO> departmentList = dao.departmentList();
+		
+		return departmentList;
+	}
+
+	// === 사원발급에서 테이블에 집어 넣기 == //
+	@Override
+	public void insertEmployeeTable(HashMap<String, String> paraMap) {
+
+		dao.insertEmployeeTable(paraMap);
 	}
 
 
