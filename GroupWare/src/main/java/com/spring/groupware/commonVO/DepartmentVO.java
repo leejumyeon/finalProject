@@ -16,6 +16,7 @@ public class DepartmentVO {
 	public String getDepartment_seq() {
 		return department_seq;
 	}
+	
 	public void setDepartment_seq(String department_seq) {
 		this.department_seq = department_seq;
 	}
@@ -24,10 +25,9 @@ public class DepartmentVO {
 	public String getDepartment_name() {
 		return department_name;
 	}
+	
 	public void setDepartment_name(String department_name) {
 		this.department_name = department_name;
 	}
-	
-	
-	
+
 }

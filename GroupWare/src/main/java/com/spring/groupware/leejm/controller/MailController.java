@@ -1,6 +1,7 @@
 package com.spring.groupware.leejm.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class MailController {
 	@RequestMapping(value="/mail/list.top")
 	public ModelAndView mailList(ModelAndView mav, HttpServletRequest request) {
 		String type = request.getParameter("type");
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("test", "yes");
 		
 		if("receive".equals(type)) {
 			mav.addObject("mailhamType","받은메일함");
