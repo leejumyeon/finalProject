@@ -27,10 +27,10 @@ public class ChaController {
 	@RequestMapping(value="/viewFullCalendar.top", produces="text/plain;charset=UTF-8")
 	public String viewFullCalendar() {
 		
-		return "fullCalendarKakaoBook/fullCalendar.tiles1";
+		return "fullCalendarKakaoBook/fullCalendar.tiles2";
 	}
 	
-	// 마이페이지(개인 일정 캘린더 & 책검색) - 뿌리기
+	// 마이페이지(개인 일정 캘린더) - 뿌리기
 	@ResponseBody
 	@RequestMapping(value="/fullCalendar.top", produces="text/plain;charset=UTF-8")
 	public String fullCalendar() {
@@ -85,7 +85,7 @@ public class ChaController {
 		
 	}
 			
-	// ------------------------------선을 중심으로 윗 부분 공지사항 & 마이페이지 모음 ----------------------------------------------
+	// ------------------------------선을 중심으로 윗 부분 공지사항  ----------------------------------------------
 	
 	// 동호회	
 	@RequestMapping(value="/clup.top")

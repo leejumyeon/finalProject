@@ -28,6 +28,21 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
+
+<script type="text/javascript">
+	function click_messenger(){
+		if($("#mymessenger").hasClass("messengerClose")){
+			$("#mymessenger").removeClass("messengerClose");
+			$("#mymessenger").addClass("messengerOpen");
+			
+		}
+		else {
+			$("#mymessenger").addClass("messengerClose");
+			$("#mymessenger").removeClass("messengerOpen");
+		}
+	}
+</script>
+
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
 	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
@@ -84,7 +99,7 @@
 			</ul>
 		</li>
 		
-		<li class="dropdown"><a href="#" onclick = "open_messenger()">메신저 아이콘 </a>
+		<li class="dropdown"><a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
 	
 	
