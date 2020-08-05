@@ -68,7 +68,7 @@ public class LeeehController {
 			
 			if("1".equals(grade)) {
 				
-				mav.setViewName("redirect:/main.top");
+				mav.setViewName("redirect:/viewFullCalendar.top");
 			}
 			else {
 				
