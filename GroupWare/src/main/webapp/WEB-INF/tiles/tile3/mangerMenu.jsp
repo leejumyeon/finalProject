@@ -77,9 +77,9 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>결재현황</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/approvalList.top'">결재현황</li>
 					<li>문서함</li>
-					<li>휴지통</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/garbage.top'">휴지통</li>
 				</ul>
 			</td>
 		</tr>
@@ -90,9 +90,10 @@
 			<td>
 				<ul class="secondCategory">
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">공지사항</li>
-					<li>FAQ</li>
-					<li>신고글 확인</li>
-					<li>공지글 작성</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/faqList.top'">FAQ</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardOut.top'">신고글 확인</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardWrite.top'">공지글 작성</li>
+					
 				</ul>
 			</td>
 		</tr>
