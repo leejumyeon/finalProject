@@ -12,6 +12,9 @@ show user; -- USER이(가) "FINALORAUSER3"입니다.
 select * from tab;
 select * from seq;
 
+select *
+from employees_table;
+
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
 drop table EQUIPMENT_TABLE purge;
@@ -133,6 +136,9 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+
+
 
  -- album 카테고리 테이블(album_category) --
  create table album_category
@@ -421,6 +427,7 @@ create table companyCalendar_table
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
+
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -460,6 +467,7 @@ create table messenger_table
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
+
 create SEQUENCE messenger_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
