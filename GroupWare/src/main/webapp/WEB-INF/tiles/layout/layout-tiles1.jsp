@@ -40,9 +40,11 @@
 				<tiles:insertAttribute name="content" />
 			</div>
 		</div>
-		<div id="myfooter">
-			<tiles:insertAttribute name="footer" />
-		</div>
 	</div>
+
+	<div id="mymessenger" class="messengerClose">
+		<tiles:insertAttribute name="messenger" />
+	</div>
+	<div style="clear:both;"></div>
 </body>
 </html>

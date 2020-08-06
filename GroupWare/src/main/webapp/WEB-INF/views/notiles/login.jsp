@@ -114,7 +114,7 @@
 			<label for="employee_pw">사원비밀번호</label><br/>
 			<input type="password" id="employee_pw" name="employee_pw" />
 		</form>
-		<c:if test="${not empty isLogin && islogin == false}">
+		<c:if test="${not empty isLogin && islogin == '0'}">
 			<div style="color: red; font-style: italic;">사원ID나 사원비밀번호를 잘못 입력하셨습니다.</div>
 		</c:if>
 		<button type="button" id="btnLogin" class="snip1535">로그인</button>

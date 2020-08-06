@@ -27,7 +27,7 @@ public class ChaController {
 	@RequestMapping(value="/viewFullCalendar.top", produces="text/plain;charset=UTF-8")
 	public String viewFullCalendar() {
 		
-		return "fullCalendarKakaoBook/fullCalendar.tiles2";
+		return "fullCalendarKakaoBook/fullCalendar.tiles1";
 	}
 	
 	// 마이페이지(개인 일정 캘린더) - 뿌리기

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.groupware.commonVO.DepartmentVO;
+import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.leeeh.model.InterLeeehDAO;
 
@@ -48,6 +49,24 @@ public class LeeehService implements InterLeeehService {
 	public void insertEmployeeTable(HashMap<String, String> paraMap) {
 
 		dao.insertEmployeeTable(paraMap);
+	}
+
+	// === 문서 결재 카테고리 알아오기 === //
+	@Override
+	public List<DocumentCategoryVO> documentCategoryList() {
+
+		List<DocumentCategoryVO> documentCategoryList = dao.documentCategoryList();
+		
+		return documentCategoryList;
+	}
+
+	// === 문서 결재를 하기위해 문서번호에서 max값을 가져오기 === //
+	@Override
+	public String getMaxOfGroupno(String regDate) {
+
+		String max = dao.getMaxOfGroupno(regDate);
+		
+		return max;
 	}
 
 

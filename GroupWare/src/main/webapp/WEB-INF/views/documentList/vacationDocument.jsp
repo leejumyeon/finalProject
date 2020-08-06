@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core" %>
+
 <style>
 #divCustomWrapper { word-break: break-all; font-family: malgun gothic, dotum, arial, tahoma; width:802px !important; }
 #divCustomWrapper * { max-width: 800px !important; }
@@ -25,7 +27,7 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 
 <div id="divCustomWrapper" style="font-family: &quot;맑은 고딕&quot;; font-size: 10pt;">
 
-	<div class="titleSection">비품 구매서</div>
+	<div class="titleSection">휴가 신청 기안서</div>
 	
 	<div class="partition">
 		
@@ -33,15 +35,15 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 			<table style="width:230px; height:131px;">
 				<colgroup><col width="65"><col width="270"></colgroup>
 				<tbody>
-					<tr><td class="ACel">문서번호</td><td class="BCel"><span data-dsl="{{label:docNo}}"></span></td></tr>
-					<tr><td class="ACel">기안일</td><td class="BCel"><span data-dsl="{{label:draftDate}}"></span></td></tr>
-					<tr><td class="ACel">기안자 부서</td><td class="BCel"><span data-dsl="{{label:draftDept}}"></span></td></tr>
-					<tr><td class="ACel">기안자</td><td class="BCel"><span data-dsl="{{label:draftUser}}"></span></td></tr>
+					<tr><td class="ACel">문서번호</td><td class="BCel">${groupno}</td></tr>
+					<tr><td class="ACel">기안일</td><td class="BCel">${regDate}</td></tr>
+					<tr><td class="ACel">기안자 부서</td><td class="BCel">${sessionScope.loginEmployee.department_name}</td></tr>
+					<tr><td class="ACel">기안자</td><td class="BCel">${sessionScope.loginEmployee.employee_name}</td></tr>
 				</tbody>
 			</table>
 		</div>
 		
-		<table width="644" style="border-collapse:collapse; margin-bottom: 15px;" class="form2" align="center">
+		<table width="570" style="border-collapse:collapse; margin-bottom: 15px;" class="form2" align="center">
 			<tr>
 				<td align="right">
 					<table border="1" style="border-collapse: collapse;">
@@ -50,12 +52,13 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 							<br>
 							<br>
 							재</td>
-							<td width="80" height="25" style="text-align: center; font-size: 10pt; font-style: italic; font-weight: bold;">
+							<td width="100" height="25" style="text-align: center; font-size: 10pt; font-style: italic; font-weight: bold;">
 								기안자
 							</td>
 						</tr>
 						<tr>
 							<td height="25" style="text-align: center; font-size: 8pt;">
+								${sessionScope.loginEmployee.position_name}&nbsp;${sessionScope.loginEmployee.employee_name}
 							</td>
 						</tr>
 						<tr>
@@ -68,7 +71,7 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 		</table>
 	</div>
 	
-<table style="border: 0px solid rgb(0, 0, 0); width: 800px; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 10px; border-collapse: collapse;"><!-- 품의서 --><colgroup><col width="200"><col width="350"><col width="200"><col width="200"></colgroup>
+<table style="border: 0px solid rgb(0, 0, 0); width: 800px; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 10px; border-collapse: collapse;">
 	<tbody>
 		<tr>
 			<td class="ACel" colspan="4">
@@ -77,34 +80,36 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 		</tr>
 		<tr>
 			<td class="ACel" >
-				<span style="font-weight: bold; font-size: 11pt;">소속</span>
+				<span style="font-weight: bold; font-size: 11pt;">소속 부서</span>
 			</td>
 			<td class="BCel" colspan="3">
-				<span style="font-size: 10pt;"></span>
+				<select name="department_seq" style="width: 170px; height: 30px;">
+					<option value="" selected>==부서를 선택하세요==</option>
+					<c:forEach var="departVO" items="${departmentList}">
+						<option value="${departVO.department_seq}">${departVO.department_name}</option>
+					</c:forEach>
+				</select>
 			</td>
 		</tr>
 		<tr>
 			<td class="ACel" >
 				<span style="font-weight: bold; font-size: 11pt;">직책</span>
 			</td>
-			<td class="BCel" colspan="3">
+			<td class="BCel">
 				<span style="font-size: 10pt;"></span>
 			</td>
-		</tr>
-		<tr>
 			<td class="ACel" >
 				<span style="font-weight: bold; font-size: 11pt;">성명</span>
 			</td>
-			<td class="BCel" colspan="3">
+			<td class="BCel">
 				<span style="font-size: 10pt;"></span>
 			</td>
 		</tr>
+	</tbody>
+</table>
 		
-		<tr>
-			<td class="BCel" colspan="4">
-			</td>
-		</tr>
-		
+<table style="border: 0px solid rgb(0, 0, 0); width: 800px; font-family: malgun gothic, dotum, arial, tahoma; margin-top: 10px; border-collapse: collapse;">
+	<tbody>
 		<tr>
 			<td class="ACel" >
 				<span style="font-weight: bold; font-size: 11pt;">휴가종류</span>
@@ -130,7 +135,7 @@ p.freeP{font-weight: normal; font-size: 9pt; margin: 3px 1px 3px 5px;}
 				<span style="font-weight: bold; font-size: 11pt;">휴가종류</span>
 			</td>
 			<td class="BCel" colspan="3">
-				<textarea rows="5" cols="75"></textarea>
+				<textarea rows="5" cols="95" name="contents"></textarea>
 			</td>
 		</tr>
 		

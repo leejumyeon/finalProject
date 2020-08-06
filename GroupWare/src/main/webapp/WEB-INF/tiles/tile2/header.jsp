@@ -97,18 +97,10 @@
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
 			</ul>
+		</li>	
+		<li class="dropdown">
+			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
-		
-		<li class="dropdown"><a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
-		</li>
-	
-	
-	<!-- === #49. 로그인이 성공되면 로그인된 사용자의 이메일 주소를 출력하기 === -->
-	<c:if test="${sessionScope.loginuser != null}">
-		<div style="float: right; margin-top: 0.5%; border: solid 0px red;">
-		  <span style="color: navy; font-weight: bold; font-size: 10pt;">${sessionScope.loginuser.email}</span> 님 로그인중.. <!-- 복호화해야함 -->							
-		</div>
-	</c:if>
 	
 	</ul>
 </div>
