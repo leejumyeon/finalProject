@@ -142,9 +142,12 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<<<<<<< HEAD
+=======
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+>>>>>>> 963cff0e929a50f0045f89d40e1a118bcd49a683
 
 <script type="text/javascript">
 
@@ -152,6 +155,10 @@
 		
 		$("#message").hide();
 	
+<<<<<<< HEAD
+		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
+		allEmployeeView();
+=======
 		// 모든사원정보 불러오기
 /* 		$.ajax({
 			
@@ -164,6 +171,7 @@
 			
 			
 		}); */
+>>>>>>> 963cff0e929a50f0045f89d40e1a118bcd49a683
 		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
@@ -174,9 +182,86 @@
 			$("#message").hide();
 		});
 		
-		
-		
 	});// end of $(document).ready()----------------------
+
+	
+	// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
+	function allEmployeeView() {
+		
+		$.ajax({
+				
+				url:"/groupware/allEmployeeView.top",
+				type:"GET",
+				dataType:"JSON",
+				success:function(json){
+					
+					if(json.length > 0 ){
+						var html = "";
+						$.each(json,function(index, item){
+							
+							html += "<tr>" +
+			            				"<td align='center' style='width: 60px;'>" +
+			            					"<img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' />" +
+			            				"</td>" +
+			            				"<td>" +
+			            					"<div class='divText name'>"+item.employee_name+"("+item.position_name+")</div>" +
+			            					"<div class='divText departmentName'>&nbsp;┕&nbsp;"+item.department_name+"</div>" +
+			            				"</td>" +
+			            				"<td align='right' style='padding: 10px;'>"+
+			            					"<img src='/groupware/resources/msg_images/chat-box.png' width='30px;' height='30px;' style='cursor: pointer;' onclick='goChatting("+item.employee_seq+");' />" +
+			            				"</td>" +
+			            			"</tr>";
+							
+						});
+						$("#allEmpInfo").html(html);
+					}
+					
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				}
+				
+		});
+	}// end of function allEmployeeView()---------------------
+	
+	
+	// 채팅 방 생성하기
+	function goChatting(rEmployee_seq) {
+		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
+		alert("보내는이 : " + sEmployee_seq + " 받는이 : " + rEmployee_seq);
+		
+		$.ajax({
+			
+			url:"/groupware/goChatting.top",
+			data:{"rEmployee_seq":rEmployee_seq,"sEmployee_seq":sEmployee_seq},
+			type:"POST",
+			dataType:"JSON",
+			succes:function(json){
+				
+				var roomNumber = json.roomNumber;
+				
+				// 채팅방 내용 읽어오기
+				contentView(roomNumber, rEmployee_seq, sEmployee_seq);
+							
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		
+		});
+		
+		$("#message").click();
+		$("#message").show();
+	}
+	
+	
+	// 채팅방 내용 읽어오기 
+	function contentView(roomNumber, rEmployee_seq, sEmployee_seq) {
+		$.ajax({
+			url:"/groupware/goChatting.top",
+			data
+		});
+	}
 
 	
 	// 채팅 방 삭제하기
@@ -184,17 +269,6 @@
 		
 		alert("삭제하시겠습니까?");
 		
-	}
-	
-	
-	// 채팅 방 생성과 채팅하기 
-	function goChatting() {
-		alert("채팅하기");
-		
-		
-		
-		$("#message").click();
-		$("#message").show();
 	}
 	
 </script>
@@ -230,26 +304,9 @@
       				<tr>
       					<th style="color: #1aa3ff">대화 상대</th>			
       				</tr>
-      				<tr>
-      					<td align="center" style="width: 60px;">
-      						<img src="/groupware/resources/msg_images/user2.png" width="40px;" height="40px;" />
-      					</td>
-      					<td>
-      						<div class="divText name">이순신</div>
-      						<div class="divText departmentName">&nbsp;┕&nbsp;개발팀</div>
-      					</td>
-      					<td align="right" style="padding: 10px;"><img src="/groupware/resources/msg_images/chat-box.png" width="30px;" height="30px;" style="cursor: pointer;" onclick="goChatting();" /></td>
-      				</tr>
-      				<tr>
-      					<td align="center" style="width: 60px;">
-      						<img src="/groupware/resources/msg_images/user2.png" width="40px;" height="40px;" />
-      					</td>
-      					<td>
-      						<div class="divText name">엄정화</div>
-      						<div class="divText departmentName">&nbsp;┕&nbsp;경영팀</div>
-      					</td>
-      					<td align="right" style="padding: 10px;"><img src="/groupware/resources/msg_images/chat-box.png" width="30px;" height="30px;" style="cursor: pointer;" onclick="goChatting();" /></td>
-      				</tr>
+      				<tbody id="allEmpInfo">
+      				
+      				</tbody>
       			</table>	
     		</div>
     		<!-- ===###profile end###=== -->

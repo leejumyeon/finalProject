@@ -19,7 +19,7 @@
     
    
 
-	 <div class="container" style="width: 700px; display: inline-block; float: left;">
+	<div class="container" style="width: 700px; display: inline-block; float: left;">
 				
 	        <!-- 일자 클릭시 메뉴오픈 -->
 	        <div id="contextMenu" class="dropdown clearfix">
@@ -130,7 +130,7 @@
 	        </div><!-- /.modal -->        
         
 
-        <!-- <div class="panel panel-default">
+         <div class="panel panel-default" id="hideAll">
 
             <div class="panel-heading">
                 <h3 class="panel-title">필터</h3>
@@ -154,20 +154,20 @@
                     <label for="calendar_view">등록자별</label>
                     <div class="input-group">
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
-                                checked>정연</label>
+                                checked>개발팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
-                                checked>다현</label>
+                                checked>디자인팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
-                                checked>사나</label>
+                                checked>영업팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
-                                checked>나연</label>
+                                checked>인사팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
-                                checked>지효</label>
+                                checked>경영지원팀</label>
                     </div>
                 </div>
 
             </div>
-        </div> -->
+        </div> 
         <!-- /.filter panel -->
                                    
     </div>
@@ -244,4 +244,7 @@
     <script src="./resources/calendar/js/addEvent.js"></script>
     <script src="./resources/calendar/js/editEvent.js"></script>
     <script src="./resources/calendar/js/etcSetting.js"></script>
-    
+  	<script type="text/javascript">
+		
+  		$("#hideAll").hide();
+	</script>
