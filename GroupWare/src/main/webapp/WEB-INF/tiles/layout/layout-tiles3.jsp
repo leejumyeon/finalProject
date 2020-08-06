@@ -19,29 +19,18 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
   <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
-  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style2.css" />
+  <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style3.css" />
   <script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
 </head>
 <body>
 	<div id="mycontainer">
-		<div id="myheader">
-			<tiles:insertAttribute name="header" />
-		</div>
-		
 		<div id="mysideinfo">
 			<tiles:insertAttribute name="sideinfo" />
-		</div>
-		
-		<div id="mysidemail">
-			<tiles:insertAttribute name="sidemail" />
 		</div>
 		
 		<div id="mycontent">
 			<tiles:insertAttribute name="content" />
 		</div>
-	</div>
-	<div id="mymessenger" class="messengerClose">
-		<tiles:insertAttribute name="messenger" />
 	</div>
 	<div style="clear:both;"></div>
 </body>

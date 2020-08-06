@@ -17,7 +17,7 @@ public class MailController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("home.tiles1");
+		mav.setViewName("home.tiles3");
 		return mav;
 	}
 	
@@ -53,6 +53,13 @@ public class MailController {
 		}
 		
 		mav.setViewName("mail/mailWrite.tiles2");
+		return mav;
+	}
+	
+	// 메일 읽기 페이지 이동
+	@RequestMapping(value="/mail/read.top")
+	public ModelAndView mailRead(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
 	}
 }

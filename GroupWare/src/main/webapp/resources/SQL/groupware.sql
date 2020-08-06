@@ -705,3 +705,5 @@ insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1'
 insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
+
+desc employees_table;
