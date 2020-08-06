@@ -91,5 +91,12 @@ public class ManagerController {
 		mav.setViewName("admin/approval/garbage.tiles3");
 		return mav;
 	}
+	// 관리자-결재 관리(문서함)페이지 이동
+	@RequestMapping(value="/manager/approval/documentList.top")
+	public ModelAndView managerDocumentList(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/approval/documentList.tiles3");
+		return mav;
+	}
+	
 	
 }

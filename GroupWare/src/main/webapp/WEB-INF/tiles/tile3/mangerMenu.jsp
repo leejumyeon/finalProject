@@ -78,7 +78,7 @@
 			<td>
 				<ul class="secondCategory">
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/approvalList.top'">결재현황</li>
-					<li>문서함</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/documentList.top'">문서함</li>
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/garbage.top'">휴지통</li>
 				</ul>
 			</td>

@@ -142,12 +142,10 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
-=======
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
->>>>>>> 963cff0e929a50f0045f89d40e1a118bcd49a683
+
 
 <script type="text/javascript">
 
@@ -155,23 +153,9 @@
 		
 		$("#message").hide();
 	
-<<<<<<< HEAD
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
-		allEmployeeView();
-=======
-		// 모든사원정보 불러오기
-/* 		$.ajax({
-			
-			url:"/groupware/allEmployeeView.top",
-			type:"GET",
-			dataType:"JSON",
-			success:function(json){
-				
-			},
-			
-			
-		}); */
->>>>>>> 963cff0e929a50f0045f89d40e1a118bcd49a683
+		//allEmployeeView();
+
 		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
