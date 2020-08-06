@@ -33,33 +33,21 @@
 <body>
    <div id="container">
       <div style="float: left;">
-         <div style="width: 350px; height: 300px; border: 1px solid red;">
-            <p>공지사항</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
+         <div style="width: 300px; height: 300px; border: 1px solid red;">
          </div>
-         <div class="mt" style="width: 350px; height: 300px; border: 1px solid red;">
-            <p>자유게시판</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
+         <div class="mt" style="width: 300px; height: 300px; border: 1px solid red;">
          </div>
       </div>
-      <div style="clear: both; display: inline-block; margin-left: 195px;">
-         <div style="width: 600px; height: 630px; border: 1px solid red;">
-            <p>사내일정</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>                  
+      <div style="clear: both; display: inline-block; margin-left: 25px;">
+         <div style="width: 600px; height: 630px; border: 1px solid red;">                
          </div>
       </div>
       <div style="float: right;">
-         <div style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>사내앨범</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
+         <div style="width: 250px; height: 190px; border: 1px solid red;">
          </div>
-         <div class="mt" style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>동호회앨범</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
+         <div class="mt" style="width: 250px; height: 190px; border: 1px solid red;">
          </div>
-         <div class="mt" style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>봉사활동앨범</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
+         <div class="mt" style="width: 250px; height: 190px; border: 1px solid red;">
          </div>
       </div>
    </div>      
