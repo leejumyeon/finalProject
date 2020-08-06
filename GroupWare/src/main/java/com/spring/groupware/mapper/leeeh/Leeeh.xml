@@ -39,4 +39,17 @@
 		      and V.employee_id = #{employee_id}
 		      and V.employee_pw = #{employee_pw}
 	</select>
+	
+	<!-- === 문서 결재 카테고리 알아오기 === -->
+	<select id="documentCategoryList" resultType="com.spring.groupware.commonVO.DocumentCategoryVO">
+		select document_category_seq, category_name
+		from document_category
+	</select>
+	
+	<!-- === 문서 결재를 하기위해 문서번호에서 max값을 가져오기 === -->
+	<select id="getMaxOfGroupno" parameterType="String" resultType="String">
+		select nvl(max(substr(groupno, 11)), '00')
+		from document_table
+		where substr(groupno, 4, 8) = #{regDate}
+	</select>
 </mapper>
