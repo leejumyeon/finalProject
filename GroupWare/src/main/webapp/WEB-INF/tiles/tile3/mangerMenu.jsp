@@ -46,7 +46,7 @@
 <div style="width:100%;">
 	<table style="width:100%;">
 		<tr class="firstCategory">
-			<td>1.메인</td>
+			<td onclick="javascript:location.href='<%=request.getContextPath()%>/adminMain.top'">1.메인</td>
 		</tr>
 		<tr class="firstCategory accodion">
 			<td>2.인사<span class="caret"></span></td>
@@ -89,7 +89,7 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>공지사항</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">공지사항</li>
 					<li>FAQ</li>
 					<li>신고글 확인</li>
 					<li>공지글 작성</li>
@@ -97,7 +97,7 @@
 			</td>
 		</tr>
 		<tr class="firstCategory">
-			<td>6.예약</td>
+			<td onclick="javascript:location.href='<%=request.getContextPath()%>/manager/reservation.top'">6.예약</td>
 		</tr>
 	</table>
 </div>
