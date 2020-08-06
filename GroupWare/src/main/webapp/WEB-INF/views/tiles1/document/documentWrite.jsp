@@ -6,7 +6,7 @@
 <style type="text/css">
 
 	#mainContainer {
-		width: 1260px;
+		width: 1200px;
 		margin-left: 40px;
 	}
 	
@@ -184,7 +184,7 @@
 			<table>
 				<thead>
 					<tr>
-						<th style="text-align: center; width:1200px; height: 30px; background-color: #0099ff; color: white;">문서 종류 결정하기</th>
+						<th style="text-align: center; width:1130px; height: 30px; background-color: #0099ff; color: white;">문서 종류 결정하기</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -205,7 +205,7 @@
 			<table class="documentChoiced">
 				<thead>
 					<tr>
-						<th style="text-align: center; width:300px; height: 30px; background-color: #0099ff; color: white; ">결재선 결정하기</th>
+						<th style="text-align: center; width:230px; height: 30px; background-color: #0099ff; color: white; ">결재선 결정하기</th>
 					</tr>
 				</thead>
 				<tbody>

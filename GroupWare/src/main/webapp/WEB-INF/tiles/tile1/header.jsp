@@ -28,8 +28,6 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
-<<<<<<< HEAD
-=======
 
 <script type="text/javascript">
 	function click_messenger(){
@@ -45,7 +43,6 @@
 	}
 </script>
 
->>>>>>> 168195ce91a28b024704083c74c9efbe33cb3b29
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
 	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
@@ -104,21 +101,9 @@
 		<li class="dropdown">
 			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
-<<<<<<< HEAD
-		
 		<li class="dropdown"><a href="#" onclick = "open_messenger()">메신저 아이콘 </a>
 		</li>
-	
-	
-	<!-- === #49. 로그인이 성공되면 로그인된 사용자의 이메일 주소를 출력하기 === -->
-	<c:if test="${sessionScope.loginuser != null}">
-		<div style="float: right; margin-top: 0.5%; border: solid 0px red;">
-		  <span style="color: navy; font-weight: bold; font-size: 10pt;">${sessionScope.loginuser.email}</span> 님 로그인중.. <!-- 복호화해야함 -->							
-		</div>
-	</c:if>
-=======
->>>>>>> 168195ce91a28b024704083c74c9efbe33cb3b29
-	
 	</ul>
+	
 </div>
 <div style="clear:both;"></div>
