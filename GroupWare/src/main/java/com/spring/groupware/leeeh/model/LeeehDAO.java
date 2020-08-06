@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.DepartmentVO;
+import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 
 @Repository
@@ -49,6 +50,24 @@ public class LeeehDAO implements InterLeeehDAO {
 	public void insertEmployeeTable(HashMap<String, String> paraMap) {
 
 		sqlsession.insert("leeeh.insertEmployeeTable", paraMap);
+	}
+
+	// === 문서 결재 카테고리 알아오기 === //
+	@Override
+	public List<DocumentCategoryVO> documentCategoryList() {
+
+		List<DocumentCategoryVO> documentCategoryList = sqlsession.selectList("leeeh.documentCategoryList");
+		
+		return documentCategoryList;
+	}
+
+	// === 문서 결재를 하기위해 문서번호에서 max값을 가져오기 === //
+	@Override
+	public String getMaxOfGroupno(String regDate) {
+
+		String max = sqlsession.selectOne("leeeh.getMaxOfGroupno", regDate);
+		
+		return max;
 	}
 
 }
