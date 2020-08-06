@@ -146,7 +146,7 @@
 		$("#message").hide();
 	
 		// 모든사원정보 불러오기
-		$.ajax({
+		/* $.ajax({
 			
 			url:"/groupware/allEmployeeView.top",
 			type:"GET"
@@ -156,7 +156,7 @@
 			},
 			
 			
-		});
+		}); */
 		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){

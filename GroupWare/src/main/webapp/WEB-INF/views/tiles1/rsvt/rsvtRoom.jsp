@@ -2,20 +2,22 @@
     pageEncoding="UTF-8"%>
     
 <%	String ctxPath = request.getContextPath();	%>    
-
 <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
+
 <style type="text/css">
 	
 	#hm_container {
 		border: solid 0px gray;
 		background-color: white;
-		width: 90%;
 		margin: 0 auto;
+		width: 95%;
 	}
 	
 	#title {
 		font-size: 20px;	
 		display: block;
+		padding: 0 0 20px 20px;
+		font-weight: bold;
 	}
 	
 	#choice_container {
@@ -30,41 +32,42 @@
 		border: solid 1px #ddd;
 		border-radius: 10px 10px;
 		display: inline-block;
-		margin-left: 50px;
-		width: 30%;
-		height: 640px;
+		width: 40%;
+		height: 669px;
 	}
 	
 	#map {
-		border: solid 0px blue;
+		border: solid 1px #ddd;
 		display: inline-block;
 		width: 90%;
-		margin-left: 5%;
+		margin-left: 3%;
+		padding: 10px 20px 20px 20px;
+		border-radius: 10px 10px;
 	}
 	
 	#sbRooms, #mRooms {
 		border: solid 0px maroon;
 		display: inline-block;
-		width: 90%;
+		width: 500px;
 		margin-left: 60px;
 	}
 	
 	.small {
 		display: inline-block;
-		width: 120px;
-		height: 110px;
+		width: 90px;
+		height: 100px;
 	}
 	
 	.medium {
 		display: inline-block;
-		width: 220px;
-		height: 110px;
+		width: 130px;
+		height: 100px;
 	}
 	
 	.big {
 		display: inline-block;
-		width: 300px;
-		height: 110px;
+		width: 190px;
+		height: 100px;
 	}
 	
 	.room {
@@ -75,12 +78,16 @@
 	#road {
 		border-top: solid 1px olive;
 		border-bottom: solid 1px olive;
-		height: 50px;		
+		height: 50px;	
+		padding: 15px 0 0 10px;	
 	}		
 	
 	#dateAndTime {
-		border: solid 0px red;
-		margin: 25px 0 0 13%;
+		border: solid 1px #ddd;
+		width: 90%;
+		margin: 25px 0 0 3%;
+		padding: 10px 20px 20px 20px;
+		border-radius: 10px 10px;
 	}	
 	
 	.rChoice {
@@ -90,7 +97,7 @@
 	.text {
 		text-align: center;
 		font-size: 13px;
-		margin-top: 25px;
+		margin-top: 20px;
 	}
 	
 	#dateAndTime {
@@ -100,7 +107,7 @@
 	#time, .th_time, .td_time {
 		border: solid 1px gray;
 		border-collapse: collapse;
-		padding: 8px 15px;
+		padding: 5px 10px;
 		text-align: center;
 	}
 	
@@ -109,12 +116,12 @@
 	}
 	
 	.times {
-		width: 130px;
+		width: 110px;
 	}
 	
 	.ability {
-		width: 130px;
-		height: 80px;
+		width: 110px;
+		height: 50px;
 	}
 	
 	#info_tb, #info_th, #info_td {
@@ -141,7 +148,7 @@
 	
 	#rsvt_btn {
 		padding: 10px 20px 8px 20px;
-		margin: 10px 0 0 320px; 
+		margin: 20px 0 0 330px; 
 		background-color: #eee;
 		border: solid 1px gray;
 		border-radius: 5px 5px;
@@ -151,18 +158,16 @@
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 <script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
+
 <script type="text/javascript">
 
 	$(document).ready(function(){		                    
-
-		$("#datepicker").datepicker({
-			
-		});
+		
+		$("#datepicker").datepicker({ });
 		
 		// 초기값을 오늘 날짜로 설정
-		$('#datepicker').datepicker('setDate', '+1D');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
+		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 		$('#RsvtDateH').text($('#datepicker').val());
 		$('#RsvtDate').val($('#datepicker').val());
 		
@@ -198,8 +203,8 @@
 		var end = "";		
 
 		$(".ability").click(function(event){	// 가능여부 부분 클릭했을 경우
-			if(!$(this).hasClass("rChoice")) {	// 배경색이 없을 경우
-				$(this).addClass("rChoice");	// 배경색을 바꿈
+			if(!$(this).hasClass("rChoice")) {		// 배경색이 없을 경우
+				$(this).addClass("rChoice");				// 배경색을 바꿈
 				start = $(this).children(".startTime").val();	// start에 this의 startTime 값을 넣음
 				end = $(this).children(".endTime").val();		// end에 this의  endTime 값을 넣음
 			}
@@ -299,7 +304,7 @@
 		
 		<div id="choice_container">
 		<div id="map">					
-			<h4 style="margin-bottom: 20px;">회의실 선택</h4>
+			<h4 style="margin-bottom: 20px;">1. 회의실 선택</h4>
 			<div id="sbRooms">
 				<div class="small room" id="room_one">
 					<div class="text roomName">소회의실1</div>				
@@ -347,18 +352,20 @@
 		</div>
 		
 		<div id="dateAndTime">
+		<h4 style="margin-bottom: 20px; text-align: left;">2. 예약일시 선택</h4>
 			<table id="date">
 				<tr>
-					<td style="width: 10%;">예약일 선택</td>
-					<td style="width: 50%; text-align: left;">
+					<td style="text-align: left; padding-left: 20px; width: 120px;">- 예약일 선택 : </td>
+					<td style="text-align: left;">
 						<input type="text" id="datepicker" readonly="readonly">
 					</td>
 				</tr>
 			</table>
 			
 			<br/>
-			
-			<table id="time">
+			<span style="margin: 0 0 10px 20px; float: left;">- 예약시간 선택</span>
+			<div style="clear: both;"></div>
+			<table id="time" style=" margin-left: 30px;">
 				<tr>
 					<th class="th_time times">시간</th>
 					<td class="td_time times time9">9:00 - 10:00</td>
@@ -422,10 +429,11 @@
 				</tr>				
 			</table>
 		</div>
-		</div>
+		<div style="clear: both;"></div>
+		</div>		
 		
 		<div id="info">
-			<h4 style="margin: 20px 10px 20px 185px;">예약하기</h4>
+			<h4 style="margin: 25px 10px 20px 25px;">3. 예약하기</h4>
 			<table id="info_tb">
 				<tr id="info_tr">
 					<th id="info_th">회의실</th>
