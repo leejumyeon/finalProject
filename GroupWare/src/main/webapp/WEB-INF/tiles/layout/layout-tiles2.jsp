@@ -42,7 +42,7 @@
 			<tiles:insertAttribute name="content" />
 		</div>
 	</div>
-	<div id="mymessenger" class="myhide">
+	<div id="mymessenger" class="messengerClose">
 		<tiles:insertAttribute name="messenger" />
 	</div>
 	<div style="clear:both;"></div>

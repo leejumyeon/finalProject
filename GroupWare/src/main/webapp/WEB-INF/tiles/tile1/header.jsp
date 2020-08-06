@@ -28,6 +28,24 @@
 	//System.out.println("serverName : " + serverName);
 	//serverName : http://192.168.50.65:9090 
 %>
+<<<<<<< HEAD
+=======
+
+<script type="text/javascript">
+	function click_messenger(){
+		if($("#mymessenger").hasClass("messengerClose")){
+			$("#mymessenger").removeClass("messengerClose");
+			$("#mymessenger").addClass("messengerOpen");
+			
+		}
+		else {
+			$("#mymessenger").addClass("messengerClose");
+			$("#mymessenger").removeClass("messengerOpen");
+		}
+	}
+</script>
+
+>>>>>>> 168195ce91a28b024704083c74c9efbe33cb3b29
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
 	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
@@ -82,7 +100,11 @@
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
 			</ul>
+		</li>	
+		<li class="dropdown">
+			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
+<<<<<<< HEAD
 		
 		<li class="dropdown"><a href="#" onclick = "open_messenger()">메신저 아이콘 </a>
 		</li>
@@ -94,6 +116,8 @@
 		  <span style="color: navy; font-weight: bold; font-size: 10pt;">${sessionScope.loginuser.email}</span> 님 로그인중.. <!-- 복호화해야함 -->							
 		</div>
 	</c:if>
+=======
+>>>>>>> 168195ce91a28b024704083c74c9efbe33cb3b29
 	
 	</ul>
 </div>

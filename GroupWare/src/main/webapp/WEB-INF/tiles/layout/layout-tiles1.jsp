@@ -41,7 +41,11 @@
 			</div>
 		</div>
 	</div>
+<<<<<<< HEAD
 	<div id="mymessenger" class="myhide">
+=======
+	<div id="mymessenger" class="messengerClose">
+>>>>>>> 168195ce91a28b024704083c74c9efbe33cb3b29
 		<tiles:insertAttribute name="messenger" />
 	</div>
 	<div style="clear:both;"></div>
