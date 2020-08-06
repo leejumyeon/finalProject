@@ -523,7 +523,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
