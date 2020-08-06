@@ -87,11 +87,11 @@ public class ChaController {
 			
 	// ------------------------------선을 중심으로 윗 부분 공지사항  ----------------------------------------------
 	
-	// 동호회	
-	@RequestMapping(value="/clup.top")
+	// 관리자 메인페이지
+	@RequestMapping(value="/adminMain.top")
 	public String clup() {
 		
-		return "clup/clup.tiles1";
+		return "admin/adminMain.tiles3";
 		
 	}
 	
