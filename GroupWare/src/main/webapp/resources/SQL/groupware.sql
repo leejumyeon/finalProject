@@ -103,7 +103,7 @@ nocache;
  -- 사원테이블(employees_table)--
  create table employees_table
 (employee_seq   number -- 사원번호
-,employee_name  varchar2(10) not null -- 사원명
+,employee_name  varchar2(50) not null -- 사원명
 ,employee_id    varchar2(100) not null -- 사원ID
 ,employee_pw    varchar2(500) not null -- 사원PW
 ,email          varchar2(500) not null -- 사내 이메일
@@ -699,3 +699,5 @@ insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1'
 insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
+
+desc employees_table;
