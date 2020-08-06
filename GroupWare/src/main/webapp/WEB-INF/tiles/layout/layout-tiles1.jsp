@@ -41,6 +41,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div id="mymessenger" class="messengerClose">
 		<tiles:insertAttribute name="messenger" />
 	</div>

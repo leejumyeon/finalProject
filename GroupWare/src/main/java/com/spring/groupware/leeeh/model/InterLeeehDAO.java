@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.spring.groupware.commonVO.DepartmentVO;
+import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 
 public interface InterLeeehDAO {
@@ -15,5 +16,9 @@ public interface InterLeeehDAO {
 	List<DepartmentVO> departmentList();	// 사원 발급을 하기 위해 부서리스트를 가져오기
 
 	void insertEmployeeTable(HashMap<String, String> paraMap);	// 사원발급에서 테이블에 집어 넣기
+
+	List<DocumentCategoryVO> documentCategoryList();	// 문서 결재 카테고리 알아오기
+
+	String getMaxOfGroupno(String regDate);	// 문서 결재를 하기위해 문서번호에서 max값을 가져오기
 	
 }

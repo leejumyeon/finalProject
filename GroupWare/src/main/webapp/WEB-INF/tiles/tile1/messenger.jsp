@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ page import="java.net.InetAddress"%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+<% String ctxPath = request.getContextPath(); %>
+
 <style type="text/css">
 
 /* -----------------bootstrap-------------------- */
@@ -146,10 +153,10 @@
 		$("#message").hide();
 	
 		// 모든사원정보 불러오기
-		/* $.ajax({
+/* 		$.ajax({
 			
 			url:"/groupware/allEmployeeView.top",
-			type:"GET"
+			type:"GET",
 			dataType:"JSON",
 			success:function(json){
 				
