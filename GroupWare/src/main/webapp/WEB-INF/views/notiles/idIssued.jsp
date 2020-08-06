@@ -127,9 +127,20 @@
 
 		});
 		
-		$(".datepicker").datepicker({});
+		$(".datepicker").datepicker({
+			minDate: +1
+		});
 		
 		$("#btnIssued").click(function() {
+			
+			$(".required").each(function() {
+				
+				if($(this).val().trim() == "") {
+					
+					alert("모두 입력하셔야 발급이 가능합니다!!");
+					return false;
+				}
+			});
 			
 			var frm = document.registerFrm;
 			frm.method="POST";
@@ -150,7 +161,7 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">성명</td>
 					<td style="width: 80%; text-align: left;">
-					    <input type="text" name="employee_name" required autocomplete="off" /> 
+					    <input type="text" name="employee_name" class="required" autocomplete="off" /> 
 					</td>
 				</tr>
 
@@ -178,7 +189,7 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">핸드폰 번호</td>
 					<td style="width: 80%; text-align: left;">
-					    <input type="text" name="phone" placeholder="핸드폰 번호는 - 없이 작성해주십시요" autocomplete="off" />
+					    <input type="text" name="phone" class="required" placeholder="핸드폰 번호는 - 없이 작성해주십시요" autocomplete="off" />
 					</td>
 				</tr>
 
@@ -209,7 +220,7 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">생년월일</td>
 					<td style="width: 80%; text-align: left;">
-					   <input type="text" name="birthday" class="datepicker" style="width: 150px;" autocomplete="off">
+					   <input type="text" name="birthday" class="datepicker" style="width: 150px;" class="required" autocomplete="off">
 					</td>
 				</tr>
 				

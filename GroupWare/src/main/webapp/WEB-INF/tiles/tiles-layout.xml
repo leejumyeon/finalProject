@@ -28,13 +28,13 @@
 	<!-- ==== tiles 를 사용하는 레이아웃 설정 끝 ==== -->    
     
     
-    <!-- ==== tiles 를 사용하는 레이아웃 설정 시작 ==== -->
+    <!-- ==== 메일 전용tiles 를 사용하는 레이아웃 설정 시작 ==== -->
 	<definition name="layout-tiles2" template="/WEB-INF/tiles/layout/layout-tiles2.jsp"> 
-		<put-attribute name="header" value="/WEB-INF/tiles/tile2/header.jsp" />
+		<put-attribute name="header" value="/WEB-INF/tiles/tile1/header.jsp" />
 		<put-attribute name="content" value="" />
-		<put-attribute name="sideinfo" value="/WEB-INF/tiles/tile2/sideinfo.jsp" />
+		<put-attribute name="sideinfo" value="/WEB-INF/tiles/tile1/sideinfo.jsp" />
 		<put-attribute name="sidemail" value="/WEB-INF/tiles/tile2/sidemail.jsp" />
-		<put-attribute name="messenger" value="/WEB-INF/tiles/tile2/messenger.jsp" />
+		<put-attribute name="messenger" value="/WEB-INF/tiles/tile1/messenger.jsp" />
 	</definition>
 	
 	<definition name="*.tiles2" extends="layout-tiles2">
@@ -46,7 +46,25 @@
 	<definition name="*/*/*.tiles2" extends="layout-tiles2">
 		<put-attribute name="content" value="/WEB-INF/views/tiles2/{1}/{2}/{3}.jsp"/>
 	</definition>
-	<!-- ==== tiles 를 사용하는 레이아웃 설정 끝 ==== -->
+	<!-- ==== 메일 전용tiles 를 사용하는 레이아웃 설정 끝 ==== -->
+	
+	<!-- ==== 관리자 전용tiles 를 사용하는 레이아웃 설정 시작 ==== -->
+	<definition name="layout-tiles3" template="/WEB-INF/tiles/layout/layout-tiles3.jsp"> 
+		<put-attribute name="content" value="" />
+		<put-attribute name="sideinfo" value="/WEB-INF/tiles/tile3/mangerMenu.jsp" />
+	</definition>
+	
+	<definition name="*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="*/*/*.tiles3" extends="layout-tiles3">
+		<put-attribute name="content" value="/WEB-INF/views/tiles3/{1}/{2}/{3}.jsp"/>
+	</definition>
+	<!-- ==== 메일 전용tiles 를 사용하는 레이아웃 설정 끝 ==== -->
+	
 	
 	
 	<!-- ==== tiles 를 사용하지 않는 레이아웃 설정 시작 ==== -->

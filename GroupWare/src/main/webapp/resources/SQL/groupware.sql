@@ -17,7 +17,7 @@ from employees_table;
 
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
-drop table EQUIPMENT_TABLE purge;
+drop table equipment_table purge;
 drop table comment_table purge;
 drop sequence comment_table_seq;
 drop table attachFile_table purge;
@@ -106,7 +106,7 @@ nocache;
  -- 사원테이블(employees_table)--
  create table employees_table
 (employee_seq   number -- 사원번호
-,employee_name  varchar2(10) not null -- 사원명
+,employee_name  varchar2(50) not null -- 사원명
 ,employee_id    varchar2(100) not null -- 사원ID
 ,employee_pw    varchar2(500) not null -- 사원PW
 ,email          varchar2(500) not null -- 사내 이메일
@@ -129,7 +129,7 @@ nocache;
 ,constraint fk_employees_department foreign key(fk_department) references department_table(department_seq) on delete set null
 );
 
- create SEQUENCE employees_table_seq
+create SEQUENCE employees_table_seq
 start with 1
 increment by 1
 nomaxvalue
@@ -531,7 +531,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
@@ -686,12 +686,18 @@ insert into trip_category(category_num, category_name) values(7,'장기출장');
 insert into trip_category(category_num, category_name) values(8,'해외출장');
 commit;
 
-insert into document_category(document_category_seq, category_name)values(1,'휴가/출장');
-insert into document_category(document_category_seq, category_name)values(2,'매출');
-insert into document_category(document_category_seq, category_name)values(3,'프로젝트');
-insert into document_category(document_category_seq, category_name)values(4,'퇴사');
-insert into document_category(document_category_seq, category_name)values(5,'인사고과');
-insert into document_category(document_category_seq, category_name)values(6,'동호회 가입');
+insert into document_category(document_category_seq, category_name)values(1,'휴가신청');
+insert into document_category(document_category_seq, category_name)values(2,'출장신청');
+insert into document_category(document_category_seq, category_name)values(3,'매출');
+insert into document_category(document_category_seq, category_name)values(4,'비품구매');
+insert into document_category(document_category_seq, category_name)values(5,'프로젝트 시작');
+insert into document_category(document_category_seq, category_name)values(6,'프로젝트 중단');
+insert into document_category(document_category_seq, category_name)values(7,'프로젝트 완료');
+insert into document_category(document_category_seq, category_name)values(8,'퇴사');
+insert into document_category(document_category_seq, category_name)values(9,'인사고과');
+insert into document_category(document_category_seq, category_name)values(10,'동호회 신청');
+insert into document_category(document_category_seq, category_name)values(11,'동호회 가입');
+insert into document_category(document_category_seq, category_name)values(12,'동호회 해체');
 commit;
 
 insert into board_category(category_seq, category_name) values(1,'공지사항');
@@ -707,3 +713,5 @@ insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1'
 insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
+
+desc employees_table;

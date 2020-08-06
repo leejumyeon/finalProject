@@ -24,6 +24,11 @@ public class HyeminService implements InterHyeminService {
 		return rsvtvoList;
 	}
 
-	
+	// === 검색어 입력 시 자동글 완성하기 4 ===
+	@Override
+	public List<String> headSearchShow(String searchHead) {		
+		List<String> headList = dao.headSearchShow(searchHead);
+		return headList;
+	}
 	
 }

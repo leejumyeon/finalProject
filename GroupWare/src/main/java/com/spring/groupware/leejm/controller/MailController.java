@@ -1,6 +1,7 @@
 package com.spring.groupware.leejm.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ public class MailController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("home.tiles1");
+		mav.setViewName("home.tiles3");
 		return mav;
 	}
 	
@@ -24,6 +25,9 @@ public class MailController {
 	@RequestMapping(value="/mail/list.top")
 	public ModelAndView mailList(ModelAndView mav, HttpServletRequest request) {
 		String type = request.getParameter("type");
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("test", "yes");
 		
 		if("receive".equals(type)) {
 			mav.addObject("mailhamType","받은메일함");
@@ -49,6 +53,13 @@ public class MailController {
 		}
 		
 		mav.setViewName("mail/mailWrite.tiles2");
+		return mav;
+	}
+	
+	// 메일 읽기 페이지 이동
+	@RequestMapping(value="/mail/read.top")
+	public ModelAndView mailRead(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
 	}
 }
