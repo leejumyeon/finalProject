@@ -19,7 +19,7 @@
     
    
 
-	<div class="container" style="width: 700px; display: inline-block; float: left;">
+	 <div class="container" style="width: 700px; display: inline-block; float: left;">
 				
 	        <!-- 일자 클릭시 메뉴오픈 -->
 	        <div id="contextMenu" class="dropdown clearfix">
@@ -130,7 +130,7 @@
 	        </div><!-- /.modal -->        
         
 
-         <div class="panel panel-default" id="hideAll">
+         <div class="panel panel-default">
 
             <div class="panel-heading">
                 <h3 class="panel-title">필터</h3>
@@ -174,24 +174,14 @@
     
     <div style="float: left; border: solid 0px green; width: 300px; height: 300px; padding-top: 22px;" >
     	<div style="border: solid 1px blue; width: 730px; height: 267px;">
-	        <h3>개인정보</h3>
+	        <h3>매출통계</h3>
         </div>
         <br/>
         <div style="border: solid 1px red; width: 730px; height: 267px;">
-        	<h3>동호회</h3>
+        	<h3>인사고과</h3>
         </div> 	                     
     </div>
-	<div style="clear: both;"></div>
-	<br/>
-    <div style="padding-left: 15px;">   
-	    <div style="border: solid 1px red; width: 1415px; height: 148px; ">
-	        <h3>도서추천</h3>
-			<input id="bookName" type="text">
-			<button id="search">검색</button>
-			
-			<div id="p" style="border: solid 1px red; display: inline-block;">피카츄라이츄파이리꼬북이</div>			
-	    </div>    
-    </div>
+	<div style="clear: both;"></div> 
     <!-- /.container -->
     
      <script src="https://code.jquery.com/jquery-3.4.1.js"
@@ -244,7 +234,4 @@
     <script src="./resources/calendar/js/addEvent.js"></script>
     <script src="./resources/calendar/js/editEvent.js"></script>
     <script src="./resources/calendar/js/etcSetting.js"></script>
-  	<script type="text/javascript">
-		
-  		$("#hideAll").hide();
-	</script>
+    

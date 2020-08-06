@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+body {font-family: Arial, Helvetica, sans-serif, 돋움; }
+
+#mycontainer	{ width:1300px; border:solid 0px black; display: inline-block; float:left}
+#mysideinfo		{ background-color:#1187cf; float:left; display:inline-block; width:260px; min-height:800px; padding-top: 20px;}
+#mycontent		{ background-color:white; display:inline-block; width:1030px; min-height:800px; padding-top: 40px;}
+
+.myrank {font-weight:bold; color:red; font-size:13pt;}
+.myaligncenter {text-align:center;}
