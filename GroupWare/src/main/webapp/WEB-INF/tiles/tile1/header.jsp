@@ -101,8 +101,6 @@
 		<li class="dropdown">
 			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
 		</li>
-		<li class="dropdown"><a href="#" onclick = "open_messenger()">메신저 아이콘 </a>
-		</li>
 	</ul>
 	
 </div>
