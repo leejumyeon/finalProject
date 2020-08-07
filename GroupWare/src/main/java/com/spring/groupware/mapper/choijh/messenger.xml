@@ -20,7 +20,7 @@
 
 
 	<!-- 채팅 방 존재유무 조회하기 -->
-	<select id="roomExist" parameterType="HashMap" resultType="com.spring.groupware.commonVO.MessengerVO">
+	<select id="roomExist" parameterType="HashMap" resultType="String">
 		select roomNumber
 		from
 		(
@@ -55,5 +55,19 @@
 	</insert>
 	
 	
+	<!-- 채팅방 내용 읽어오기 -->
+	<select id="contentView" parameterType="String" resultType="com.spring.groupware.commonVO.MessengerVO">
+		select message_seq, content, to_char(regDate, 'mm-dd hh24:mi')AS regDate, status, fk_roomNumber, fk_employee_seq, employee_name
+		from messenger_table M join employees_table E
+		on fk_employee_seq = employee_seq
+		order by regDate
+	</select>
+	
+	
+	<!-- 채팅방 글쓰기 -->
+	<insert id="goWriteMsg" parameterType="HashMap">
+		insert into messenger_table(message_seq, content, regDate, status, fk_roomNumber, fk_employee_seq)
+		values(messenger_table_seq.nextval, #{content}, default, default, #{roomNumber}, #{sEmployee_seq})
+	</insert>
 	
 </mapper>
