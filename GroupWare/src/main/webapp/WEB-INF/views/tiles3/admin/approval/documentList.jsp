@@ -30,12 +30,12 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".datepicker").datepicker({});
-	        
+		$(".prevday").datepicker({});
+	    $(".today").datepicker({});   
 	        // 기간 선택
 	        $("#documentDay").change(function(){
 	        	if($(this).val()!="" && $(this).val()!="direct"){
-	        		$(".today").datepicker('setDate', 'today');
+	        		$(".today").datepicker('setDate', '-7D');
 		        	
 	        		if($(this).val()=="week"){
 	        			console.log("1주");
@@ -68,7 +68,7 @@
 	<h3>문서함</h3>
 	</div>
 </div>
-
+<form name="documentFrm">
 <div id="searchArea">
 	<div style="position: relative; display: inline;">
 		<select name="documentType">
@@ -110,10 +110,27 @@
 		<button type="button">검색</button>
 	</div>
 </div>
+</form>
 <div>
-	<table>
+	<table class="table">
 		<tr>
 			<td>신청자</td>
+			<td>신청날짜</td>
+			<td>문서항목</td>
+			<td>제목</td>
+			<td>결제날짜</td>
+			<td>삭제</td>
+		</tr>
+		<tr>
+			<td>신청자</td>
+			<td>신청날짜</td>
+			<td>문서항목</td>
+			<td>제목</td>
+			<td>결제날짜</td>
+			<td><input type="checkbox" name="delCheck" value=""/></td>
 		</tr>
 	</table>
+	<div align="right">
+		<div class="manaerBtn">선택삭제</div>
+	</div>
 </div>
