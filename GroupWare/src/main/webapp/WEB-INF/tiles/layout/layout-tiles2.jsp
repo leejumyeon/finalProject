@@ -18,11 +18,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/jquery-ui-1.11.4.custom/jquery-ui.css" />
-  <script type="text/javascript" src="<%= request.getContextPath() %>/resources/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
-  
-  
+  <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
   <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style2.css" />
+  <script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
 </head>
 <body>
 	<div id="mycontainer">
@@ -42,5 +40,9 @@
 			<tiles:insertAttribute name="content" />
 		</div>
 	</div>
+	<div id="mymessenger" class="messengerClose">
+		<tiles:insertAttribute name="messenger" />
+	</div>
+	<div style="clear:both;"></div>
 </body>
 </html>

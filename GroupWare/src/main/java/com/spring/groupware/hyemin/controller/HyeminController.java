@@ -65,6 +65,29 @@ public class HyeminController {
 		return jsonArr.toString();
 
 	}
+	
+	// === 검색어 입력 시 자동글 완성하기 3 ===
+	@ResponseBody
+	@RequestMapping(value = "/headSearchShow.action", produces = "text/plain;charset=UTF-8")
+	public String headSearchShow(HttpServletRequest request) {
+		
+		String searchHead = request.getParameter("searchHead");
+		
+		List<String> headList = service.headSearchShow(searchHead);
+		
+		JSONArray jsonArr = new JSONArray();		
+		
+		if (headList != null) {
+			for(String head : headList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("head", head);
+				
+				jsonArr.put(jsonObj);
+			}
+		}
+		
+		return jsonArr.toString();
+	}
 
 	
 }
