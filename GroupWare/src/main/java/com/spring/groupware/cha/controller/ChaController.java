@@ -91,7 +91,7 @@ public class ChaController {
 	@RequestMapping(value="/adminMain.top")
 	public String clup() {
 		
-		return "admin/adminMain";
+		return "admin/adminMain.tiles3";
 		
 	}
 	
