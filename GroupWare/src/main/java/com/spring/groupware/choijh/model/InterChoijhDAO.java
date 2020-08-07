@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.MessengerVO;
 
 public interface InterChoijhDAO {
 
@@ -14,5 +15,9 @@ public interface InterChoijhDAO {
 	int getRoomNumber(); // 방번호 채번해오기
 
 	void createRoom(HashMap<String, String> map); // 채팅방 생성
+
+	List<MessengerVO> contentView(String roomNumber); // 채팅방 내용 읽어오기
+
+	int goWriteMsg(HashMap<String, String> map); // 채팅방 글쓰기
 	
 }
