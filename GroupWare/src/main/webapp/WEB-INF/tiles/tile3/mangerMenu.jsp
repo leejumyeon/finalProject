@@ -54,8 +54,8 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>사원정보</li>
-					<li>인사고과</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/list.top'">사원정보</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/review.top'">인사고과</li>
 					<li>계정발급</li>
 				</ul>
 			</td>
@@ -66,8 +66,8 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>매출내역</li>
-					<li>급여내역</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/finance/salesList.top'">매출내역</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/finance/salaryList.top'">급여내역</li>
 				</ul>
 			</td>
 		</tr>

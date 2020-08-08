@@ -27,6 +27,14 @@
 	.hide{
 		display:none;
 	}
+	
+	.managerBtn{
+		width: 80px;
+		padding: 15px 5px;
+		cursor: pointer;
+		border:solid 1px black;
+		text-align: center;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -131,6 +139,6 @@
 		</tr>
 	</table>
 	<div align="right">
-		<div class="manaerBtn">선택삭제</div>
+		<div class="managerBtn">선택삭제</div>
 	</div>
 </div>

@@ -17,7 +17,7 @@ public class MailController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("home.tiles3");
+		mav.setViewName("home");
 		return mav;
 	}
 	

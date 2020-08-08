@@ -12,13 +12,8 @@
 	<definition name="layout-tiles1" template="/WEB-INF/tiles/layout/layout-tiles1.jsp"> 
 		<put-attribute name="header" value="/WEB-INF/tiles/tile1/header.jsp" />
 		<put-attribute name="sideinfo" value="/WEB-INF/tiles/tile1/sideinfo.jsp" />
-<<<<<<< HEAD
-		<put-attribute name="content" value="" />  
-		<put-attribute name="footer" value="/WEB-INF/tiles/tile1/footer.jsp" />
-=======
 		<put-attribute name="content" value="" />
 		<put-attribute name="messenger" value="/WEB-INF/tiles/tile1/messenger.jsp" />
->>>>>>> c0abeffce35d58f8320f0aafb55779beba89aecc
 	</definition>
 	
 	<definition name="*.tiles1" extends="layout-tiles1">
