@@ -483,7 +483,7 @@ create table messengerLog_table
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 테이블(mail_table) --
+-- 메일 테이블(mail_send_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,mail_groupno       number -- 송신/수신 그룹번호 (null=임시저장?)
@@ -512,6 +512,7 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
+
 
 
 -- 회의실 테이블(reservationRoom_table) --
