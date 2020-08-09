@@ -23,7 +23,7 @@ public class MailController {
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("home");
+		mav.setViewName("Notice/FAQlist.tiles1");
 		return mav;
 	}
 	

@@ -20,7 +20,7 @@
 		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}.jsp"/>
 	</definition>
 	<definition name="*/*.tiles1" extends="layout-tiles1">
-		<put-attribute name="content" value="/WEB-INF/views/tiles1/board/add.tiles1.jsp"/>
+		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}.jsp"/>
 	</definition>
 	<definition name="*/*/*.tiles1" extends="layout-tiles1">
 		<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}/{3}.jsp"/>

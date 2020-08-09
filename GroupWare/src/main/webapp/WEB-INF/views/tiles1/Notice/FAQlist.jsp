@@ -64,11 +64,20 @@
 	
 	}
 	
-
+	.hide{
+		display:none;
+	}
 
 </style>
 
-
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".accodion").click(function(){
+			$target = $(this).next();
+			$target.toggleClass("hide");
+		});
+	});
+</script>
 	
 <div class="fralme">
 	<div class="container">
@@ -82,14 +91,20 @@
 			</ul>
 		</div>
 		<div class="content">
-			<h3>공지사항</h3>
+			<h3>FAQ</h3>
 			<table class="table">
 				<tr>
 					<td>글번호</td>
-					<td>공지</td>
 					<td>제목</td>
 					<td>작성날짜</td>
-					<td>조회수</td>
+				</tr>
+				<tr class="accodion">
+					<td>글번호</td>
+					<td>제목</td>
+					<td>작성날짜</td>
+				</tr>
+				<tr class="pannel hide">
+					<td colspan="3">내용</td>
 				</tr>
 			</table>
 			<div id="pageBar">
