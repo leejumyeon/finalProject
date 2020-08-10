@@ -15,6 +15,7 @@ select * from seq;
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
 drop table equipment_table purge;
+drop sequence equipment_table_seq;
 drop table comment_table purge;
 drop sequence comment_table_seq;
 drop table attachFile_table purge;
@@ -185,7 +186,7 @@ create table sales_table
 ,reason     varchar2(4000) not null -- 매출 사유
 ,fk_department_seq  number -- 매출 부서
 ,regDate    date default sysdate not null -- 매출 기록 날짜
-,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,documentStatus     number default 0 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_sales_approval primary key(sales_seq)
 ,constraint fk_sales_department foreign key(fk_department_seq) REFERENCES department_table(department_seq) on delete set null
 );
@@ -289,7 +290,7 @@ create table trip_table
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
 ,triplocatioin      varchar2(1000) -- 출장지
 ,fk_employee_seq    number  -- 신청자
-,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,documentStatus     number default 0 not null -- 연결되어있는 결재문서가 모두 승인 되면 1
 ,constraint pk_trip_table primary key (trip_seq)
 ,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)on delete set null
 ,constraint fk_trip_category foreign key (trip_category) references trip_category(category_num) on delete set null
@@ -324,7 +325,7 @@ create table document_table
 ,orgFileName    varchar2(500) -- 파일첨부(기존 파일명)
 ,fileSize   number -- 파일크기
 ,parent_approver    varchar2(100) -- 상위 결재자
-,status     number not null -- 결재 상태(승인, 미승인, 반려)
+,status     number default 0 not null -- 결재 상태(승인, 미승인, 반려)
 ,reason     varchar2(4000) -- 결재 사유( 반려 사유 )
 ,document_category  number not null -- 문서 항목
 ,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq) on delete set null
@@ -349,7 +350,9 @@ create table project_table
 ,startDate  date not null -- 프로젝트 시작날짜
 ,manager    varchar2(50) not null -- 프로젝트 책임자
 ,memberCount    number not null -- 프로젝트 참가 인원수
-,dwonPayment    number -- 계약금
+,reason     varchar2(4000)  -- 프로젝트 중단 사유
+,status     number default 0 -- 프로젝트 상태(0: 진행중 1:중단 2:완료)
+,downPayment    number -- 계약금
 ,middlePayment  number -- 중도금
 ,completionPayment number -- 완료금
 ,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??(0:결재 진행중, 1:결재완료, 삭제:결재반려)
@@ -631,6 +634,13 @@ create table equipment_table
 ,constraint fk_equipment_department foreign key(fk_department_seq) references department_table(department_seq) on delete set null
 );
 
+create sequence equipment_table_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
 
 -- 항목(카테고리) 데이터 입력 --
 insert into position_table(position_seq, position_name, position_salary) values(1,'사원',2500);

@@ -52,4 +52,202 @@
 		from document_table
 		where substr(groupno, 4, 8) = #{regDate}
 	</select>
+	
+	<!-- === 문서 결재 작성 페이지에서 사원들 정보 불러오기 === -->
+	<select id="showMemberByDepartment" parameterType="String" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.position_name, D.department_name, V.gender
+		     , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade
+		from
+		(
+		select E.employee_seq, E.employee_name, E.employee_id, E.employee_pw, E.email, E.phone, E.hire_date, P.position_name, E.fk_department, E.gender
+		     , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade, E.fk_status
+		from employees_table E join position_table P
+		on E.fk_position = P.position_seq
+		where E.fk_department = #{seq}
+		) V join department_table D
+		on V.fk_department = D.department_seq
+		where V.fk_status != 2 and V.fk_status != 3
+	</select>
+	
+	<!-- === 클릭한 사원들 결재선에 올리기 === -->
+	<select id="approvalList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.position_name, D.department_name, V.gender
+		     , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade
+		from
+		(
+		select E.employee_seq, E.employee_name, E.employee_id, E.employee_pw, E.email, E.phone, E.hire_date, E.fk_position, P.position_name, E.fk_department, E.gender
+		     , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade, E.fk_status
+		from employees_table E join position_table P
+		on E.fk_position = P.position_seq
+		where E.employee_seq in
+		<foreach collection="seqArr" index="i" open="(" separator="," close=")">
+			'${seqArr[i]}'
+		</foreach>
+		) V join department_table D
+		on V.fk_department = D.department_seq
+		where V.fk_status != 2 and V.fk_status != 3
+		order by V.fk_position asc, V.grade asc
+	</select>
+	
+	<!-- === 휴가 종류 받아오기 === -->
+	<resultMap type="HashMap" id="tripCatMapOfVacation">
+		<result property="category_num" column="category_num" javaType="String"/>
+		<result property="category_name" column="category_name" javaType="String"/>
+	</resultMap>
+	<select id="tripCatListOfVacation" resultMap="tripCatMapOfVacation">
+		select category_num, category_name
+		from trip_category
+		where category_num not in ('6', '7', '8')
+	</select>
+	
+	<!-- === 휴가 종류 받아오기 === -->
+	<resultMap type="HashMap" id="tripCatMapOfBusiness">
+		<result property="category_num" column="category_num" javaType="String"/>
+		<result property="category_name" column="category_name" javaType="String"/>
+	</resultMap>
+	<select id="tripCatListOfBusiness" resultMap="tripCatMapOfBusiness">
+		select category_num, category_name
+		from trip_category
+		where category_num in ('6', '7', '8')
+	</select>
+	
+	<!-- === 문서 결재 테이블에 정보 집어 넣기 === -->
+	<insert id="insertDocumentTable" parameterType="com.spring.groupware.commonVO.DocumentVO">
+		<if test='parent_approver != ""'>
+			<if test='fileName != ""'>
+				insert into document_table(document_seq, groupno, fk_employee_seq, subject, content, approver_seq, fileName, orgFileName, fileSize, parent_approver, document_category)
+				values(document_table_seq.nextval, #{groupno}, #{fk_employee_seq}, #{subject}, #{content}, #{approver_seq}, #{fileName}, #{orgFileName}, #{fileSize}, #{parent_approver}, #{document_category})
+			</if>
+			<if test='fileName == ""'>
+				insert into document_table(document_seq, groupno, fk_employee_seq, subject, content, approver_seq, fileName, orgFileName, fileSize, parent_approver, document_category)
+				values(document_table_seq.nextval, #{groupno}, #{fk_employee_seq}, #{subject}, #{content}, #{approver_seq}, '', '', '', #{parent_approver}, #{document_category})
+			</if>
+		</if>
+		<if test='parent_approver == ""'>
+			<if test='fileName != ""'>
+				insert into document_table(document_seq, groupno, fk_employee_seq, subject, content, approver_seq, fileName, orgFileName, fileSize, parent_approver, document_category)
+				values(document_table_seq.nextval, #{groupno}, #{fk_employee_seq}, #{subject}, #{content}, #{approver_seq}, #{fileName}, #{orgFileName}, #{fileSize}, '', #{document_category})
+			</if>
+			<if test='fileName == ""'>
+				insert into document_table(document_seq, groupno, fk_employee_seq, subject, content, approver_seq, fileName, orgFileName, fileSize, parent_approver, document_category)
+				values(document_table_seq.nextval, #{groupno}, #{fk_employee_seq}, #{subject}, #{content}, #{approver_seq}, '', '', '', '', #{document_category})
+			</if>
+		</if>
+	</insert>
+	
+	<!-- === 휴가 정보를 휴가/출장 테이블에 집어 넣기 === -->
+	<insert id="insertTripTableOfVacation" parameterType="HashMap">
+		insert into trip_table(trip_seq, groupno, trip_category, reason, trip_start, trip_end, triplocation, fk_employee_seq, documentStatus)
+		values(trip_table_seq.nextval, #{groupno}, #{trip_category}, #{reason}, to_date(#{trip_start}, 'yyyy. mm. dd'), to_date(#{trip_start}, 'yyyy. mm. dd') + 1, '', ${fk_employee_seq}, default)
+	</insert>
+	
+	<!-- === 출장 정보를 휴가/출장 테이블에 집어 넣기 === -->
+	<insert id="insertTripTableOfBusiness" parameterType="HashMap">
+		insert into trip_table(trip_seq, groupno, trip_category, reason, trip_start, trip_end, triplocation, fk_employee_seq, documentStatus)
+		values(trip_table_seq.nextval, #{groupno}, #{trip_category}, #{reason}, to_date(#{trip_start}, 'yyyy. mm. dd'), to_date(#{trip_start}, 'yyyy. mm. dd') + 1, #{triplocation}, ${fk_employee_seq}, default)
+	</insert>
+	
+	<!-- === 매출 정보를 매출 테이블에 집어 넣기 === -->
+	<insert id="insertSalesTable" parameterType="HashMap">
+		insert into sales_table(sales_seq, groupno, sales_title, sales_price, sales_count, reason, fk_department_seq, regDate, documentStatus)
+		values(sales_table_seq.nextval, #{groupno}, #{sales_title}, #{price}, #{sales_count}, #{reason}, #{fk_department_seq}, default, default)
+	</insert>
+	
+	<!-- === 비품 구매 정보를 배품 테이블에 집어 넣기 === -->
+	<insert id="insertEquipmentTable" parameterType="HashMap">
+		insert into equipment_table(equipment_seq, fk_department_seq, equipment_name, unit, equipment_price, equipment_count, reason, purchaseDate, groupno, documentStatus)
+		values(equipment_table_seq.nextval, #{fk_department_seq}, #{equipment_name}, #{unit}, #{equipment_price}, #{equipment_count}, to_date(#{purchaseDate}, 'yyyy. mm. dd'), #{groupno}, default)
+	</insert>
+	
+	<!-- === 프로젝트 seq번호 체번해오기 === -->
+	<select id="getProjectSeq" resultType="String">
+		select project_table_seq.nextval AS project_seq
+		from dual
+	</select>
+	
+	<!-- === 프로젝트 정보를 프로젝트 테이블에 집어 넣기 === -->
+	<insert id="insertProjectTable" parameterType="HashMap">
+		insert into project_table(project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus)
+		values(#{project_seq}, #{groupno}, #{project_name}, #{content}, #{term}, #{startDate}, #{manager}, #{memberCount}, '', default, #{downPayment}, #{middlePayment}, #{completionPayment}, default)
+	</insert>
+	
+	<!-- === 프로젝트 명단에 들어갈 사원 번호 받아오기 === -->
+	<select id="getEmployeeSeq" parameterType="HashMap" resultType="String">
+		select employee_seq
+		from employees_table
+		where fk_department = #{department_seq} and fk_position = #{position_seq} and employee_name = #{employee_name}
+	</select>
+	
+	<!-- === 사원 ID로 사원 번호 알아오기 === -->
+	<select id="getEmployeeSeqByEmployeeId" parameterType="String" resultType="String">
+		select employee_seq
+		from employees_table
+		where employee_id = #{employee_id}
+	</select>
+	
+	<!-- === 프로젝트 명단에 집어 넣기 === -->
+	<insert id="insertProjectMemberTable" parameterType="HashMap">
+		insert into projectMember_table(projectMember_seq, fk_project_seq, fk_employee_seq)
+		values(projectMember_table_seq.nextval, #{project_seq}, #{employee_seq})
+	</insert>
+	
+	<!-- === 프로젝트 중단 정보를 프로젝트 테이블에 업데이트 하기 === -->
+	<update id="updateProjectTable" parameterType="HashMap">
+		update project_table set term = #{term}, reason = #{reason}, middlePayment = #{middlePayment}
+		where project_name = #{project_name}
+	</update>
+	
+	<!-- === 프로젝트 중단 정보를 프로젝트 테이블에 업데이트 하기 === -->
+	<update id="updateProjectTableEnd" parameterType="HashMap">
+		update project_table set term = #{term}, content = #{content}, completionPayment = #{completionPayment}
+		where project_name = #{project_name}
+	</update>
+	
+	<!-- === 퇴사 정보를 퇴사 테이블에 집어 넣기 === -->
+	<insert id="insertFireTable" parameterType="HashMap">
+		insert into fire_table(fk_employee_seq, groupno, reason, interviewer_seq, interview_content, documentStatus)
+		values(#{fk_employee_seq}, #{groupno}, #{reason}, #{interviewer_seq}, #{interview_content}, default)
+	</insert>
+	
+	<!-- === 근태 정보를 근태관리 테이블에 집어 넣기 === -->
+	<insert id="insertTATable" parameterType="HashMap">
+		insert into TA_table(ta_seq, groupno, fk_employee_seq, attendance, attitude, performance, manager, reason, regDate, documentStatus)
+		values(ta_table_seq.nextval, #{fk_employee_seq}, #{attendance}, #{attitude}, #{performance}, #{manager}, #{reason}, default, default)
+	</insert>
+	
+	<!-- === 동호회 정보를 종호회 테이블에 집어 넣기 === -->
+	<insert id="insertClubTable" parameterType="HashMap">
+		insert into club_table(club_seq, groupno, club_name, club_info, regDate, documentStatus, representative_img)
+		values(#{club_seq}, #{groupno}, #{club_name}, #{club_info}, default, default, #{newFileName})
+	</insert>
+	
+	<!-- === 클럽 모두 가져오기 === -->
+	<select id="clubList" resultType="com.spring.groupware.commonVO.ClubVO">
+		select club_seq, club_name
+		from club_table
+	</select>
+	
+	<!-- === 동호회 명단 정보 테이블에 집어 넣기 === -->
+	<insert id="insertClubMemberTable" parameterType="HashMap">
+		insert into clubMember_table(member_seq, groupno, fk_club, status, regDate, fk_employee_seq, documentStatus)
+		values(clubMember_table_seq.nextval, #{groupno}, #{club_seq}, default, default, #{employee_seq}, default)
+	</insert>
+	
+	<!-- === 클럽 번호 채번해오기 === -->
+	<select id="getClubSeq" resultType="String">
+		select club_table_seq.nextval
+		from dual;
+	</select>
+	
+	<!-- === 클럽 회장 정보 넣기 === -->
+	<insert id="insertClubMemberTableOfManager" parameterType="HashMap">
+		insert into clubMember_table(member_seq, groupno, fk_club, status, regDate, fk_employee_seq, documentStatus)
+		values(clubMember_table_seq.nextval, #{groupno}, #{club_seq}, '1', default, #{employee_seq}, default)
+	</insert>
+	
+	<!-- === 클럽 지우기 === -->
+	<update id="deleteClub" parameterType="HashMap">
+		update club_table set groupno = #{groupno}, documentStatus = 0
+		where club_seq = #{club_seq}
+	</update>
 </mapper>
