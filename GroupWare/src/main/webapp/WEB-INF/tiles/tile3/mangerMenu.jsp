@@ -54,8 +54,8 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>사원정보</li>
-					<li>인사고과</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/list.top'">사원정보</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/review.top'">인사고과</li>
 					<li>계정발급</li>
 				</ul>
 			</td>
@@ -66,8 +66,8 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>매출내역</li>
-					<li>급여내역</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/finance/salesList.top'">매출내역</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/finance/salaryList.top'">급여내역</li>
 				</ul>
 			</td>
 		</tr>
@@ -77,9 +77,9 @@
 		<tr class="pannel hide">
 			<td>
 				<ul class="secondCategory">
-					<li>결재현황</li>
-					<li>문서함</li>
-					<li>휴지통</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/approvalList.top'">결재현황</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/documentList.top'">문서함</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/approval/garbage.top'">휴지통</li>
 				</ul>
 			</td>
 		</tr>
@@ -90,9 +90,10 @@
 			<td>
 				<ul class="secondCategory">
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">공지사항</li>
-					<li>FAQ</li>
-					<li>신고글 확인</li>
-					<li>공지글 작성</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/faqList.top'">FAQ</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardOut.top'">신고글 확인</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardWrite.top'">공지글 작성</li>
+					
 				</ul>
 			</td>
 		</tr>

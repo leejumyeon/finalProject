@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-
+<% String ctxPath = request.getContextPath(); %>
 <style type="text/css">
 	table, td, th{
 		border:solid 1px black;
@@ -40,6 +40,11 @@
 	.hide{
 		display: none;
 	}
+	
+	.select{
+		background-color: pink;
+		
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -64,24 +69,85 @@
 	    });
 		<%-- === 스마트 에디터 구현 끝 === --%>
 		
-		$(document).on("keydown",".searchEmail",function(event){
+		
+		$(document).on("keyup",".searchEmail",function(event){
 			var code = event.keyCode;
 			var len = $(this).val().length;
 			var col = $(this).prop("cols");
-			console.log(len+"/"+col);
+			console.log(code); //아래 방향키 : 40 / 위 방향키 : 38
 			if(Number(col)-Number(len)<3){
 				$(this).prop("cols",Number(col+5));
 			}
 			
+			
 			if(code == 13){
-				var html="<li><div style='background-color:orange; margin-right:5px;'><span>"+$(this).val().trim()+"</span> X</div></li>";
-				$("#inputArea").append(html);
-				$(this).val("");
-				$("#findEmail").addClass("hide");
+				if($("#findEmail").hasClass("hide")==true){
+					var html="<li><div style='background-color:orange; margin-right:5px;'><span>"+$(this).val().trim()+"</span> X</div></li>";
+					$("#inputArea").append(html);
+					$(this).val("");
+				}
+				else{
+					var html = "<li><div style='background-color:orange; margin-right:5px;'><span>"+$(".select").text().trim()+"</span> X</div></li>";
+					$("#inputArea").append(html);
+					$(this).val("");
+					$("#findEmail").addClass("hide");
+				}
+				
+				return false;
+				
 			}
-			else{
-				$("#findEmail").removeClass("hide");
+			
+			else if(code == 40 || code == 38){
+				if(!$("#findEmail").hasClass("hide")){
+					var currentSelect = $(".select");
+					var nextSelect = currentSelect.next();
+					var prevSelect = currentSelect.prev();
+					
+					if(code == 40){
+						nextSelect.addClass("select");
+						currentSelect.removeClass("select");
+					}else{
+						prevSelect.addClass("select");
+						currentSelect.removeClass("select");
+					}
+				}
+				
+				return false;
 			}
+			
+			
+			if(len > 0){
+				$.ajax({
+					url:"<%= ctxPath%>/mail/searchReceive.top",
+					data:{"keyWord":$(this).val().trim()},
+					type:"GET",
+					dataType:"JSON",
+					success:function(json){
+						if(json.length > 0){
+							$("#findEmail").removeClass("hide");
+							var html = "<ul style='list-style:none; padding:0;'>"
+							$(json).each(function(index, item){
+								if(index == 0){
+									html+="<li class='select'>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")</li>";
+								}
+								else{
+									html+="<li>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")</li>";
+								}
+								
+							});
+							html+="</ul>";
+							$("#findEmail").html(html);
+						}
+						else{
+							$("#findEmail").addClass("hide");
+						}
+					},
+					error:function(e){
+						console.log("오류발생");
+					}
+				});
+			}
+			
 		});
 	});
 </script>
@@ -98,7 +164,7 @@
 					<td id="receive">
 					<div style="display:inline-block;position:relative;">
 						<div style="border:solie 1px black;"><ul id="inputArea" style="list-style: none; padding:0; display:inline-block;"></ul><textarea rows="1" cols="10" class="searchEmail" style="resize: none;"></textarea></div>
-						<div style="position: absolute; width:300px; height:50px; background-color: white;" id="findEmail" class="hide">ddd</div>
+						<div style="position: absolute; width:500px; height:50px; background-color: white;" id="findEmail" class="hide"></div>
 					</div>
 					</td>
 				</tr>

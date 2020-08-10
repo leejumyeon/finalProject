@@ -1,23 +1,29 @@
 package com.spring.groupware.leejm.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.groupware.leejm.service.MailService;
+import com.google.gson.Gson;
+import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.leejm.service.InterMailService;
 
 @Controller
 public class MailController {
 	@Autowired
-	private MailService service;
+	private InterMailService service;
 	
 	@RequestMapping(value="/test.top")
 	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("home.tiles3");
+		mav.setViewName("Notice/FAQlist.tiles1");
 		return mav;
 	}
 	
@@ -54,6 +60,25 @@ public class MailController {
 		
 		mav.setViewName("mail/mailWrite.tiles2");
 		return mav;
+	}
+	
+	// 받는 사람 메일 검색 기능
+	@ResponseBody
+	@RequestMapping(value="/mail/searchReceive.top", produces= "text/plain;charset=UTF-8")
+	public String searchReceive(HttpServletRequest request) {
+		String keyWord = request.getParameter("keyWord");
+		
+		HttpSession session = request.getSession();
+		EmployeesVO empVO = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("keyWord", keyWord);
+		paraMap.put("loginSeq", empVO.getEmployee_seq());
+		
+		List<EmployeesVO> receiveList = service.searchReceive(paraMap);
+		Gson gson = new Gson();
+		
+		return gson.toJson(receiveList);
 	}
 	
 	// 메일 읽기 페이지 이동

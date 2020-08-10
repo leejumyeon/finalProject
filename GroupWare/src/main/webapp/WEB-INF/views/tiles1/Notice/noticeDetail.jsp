@@ -64,7 +64,30 @@
 	
 	}
 	
+	.content table{
+		width: 800px;
+	}
+	
+	.content table, .content table td{
+		border: solid 1px black;
+		border-collapse: collapse;
+	}
+	
+	#contentArea{
+		margin-top: 5px;
+		width: 800px;
+		min-height: 400px;
+		border:solid 1px blue;
+	}
 
+	.boardBtn{
+		width: 80px;
+		text-align: center;
+		border:solid 1px black;
+		margin-right: 5px;
+		padding: 10px 0;
+		cursor: pointer;
+	}
 
 </style>
 
@@ -83,27 +106,26 @@
 		</div>
 		<div class="content">
 			<h3>공지사항</h3>
-			<table class="table">
+			<table>
 				<tr>
-					<td>글번호</td>
-					<td>공지</td>
 					<td>제목</td>
+					<td colspan="3">제목의 내용</td>
+				</tr>
+				<tr>
 					<td>작성날짜</td>
+					<td>작성날짜의 내용</td>
 					<td>조회수</td>
+					<td>조회수 내용</td>
 				</tr>
 			</table>
-			<div id="pageBar">
-			
+			<div id="contentArea">게시글 내용</div>
+			<div id="otherArea">
+				<div class="prevNotice">이전글 |<span>OOOOO</span></div>
+				<div class="nextNotice">다음글 |<span>XXXXX</span></div>
 			</div>
-			<div id="searchArea">
-				<label for="typeSubject">제목</label><input type="checkbox" name="searchType" id="typeSubject" value="subject" checked />
-				<label for="typeContent">내용</label><input type="checkbox" name="searcyType" id="typeContent" value="content" />
-				<div id="searchWordArea" style="display: inline-block; width: 230px; margin-right:10px; border:solid 1px black; float:right;">
-					<input type="text" name="searchWord" style="border:none;"/>
-					<span>아이콘</span>
-				</div>
+			<div align="right">
+				<div class="boardBtn">목록보기</div>
 			</div>
-			<div style="clear:both;"></div>
 		</div>
 	</div>
 	

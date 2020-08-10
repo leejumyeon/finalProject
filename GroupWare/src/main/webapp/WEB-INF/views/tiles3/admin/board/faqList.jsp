@@ -23,7 +23,7 @@
 <div>
 	<div style="display: inline-block;">
 	<h3>게시글관리</h3>
-	<h4 style="text-align: center;">-공지사항-</h4>
+	<h4 style="text-align: center;">-FAQ-</h4>
 	</div>
 	
 	<div style="margin-top: 20px; border:solid 1px blue;">
@@ -41,7 +41,6 @@
 				<td>글번호</td>
 				<td class="tbl_title">제목</td>
 				<td>작성날짜</td>
-				<td>조회수</td>
 				<td>삭제</td>
 			</tr>
 		</table>

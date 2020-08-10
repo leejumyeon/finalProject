@@ -12,6 +12,9 @@ show user; -- USER이(가) "FINALORAUSER3"입니다.
 select * from tab;
 select * from seq;
 
+select *
+from employees_table;
+
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
 drop table equipment_table purge;
@@ -134,6 +137,9 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+
+
 
  -- album 카테고리 테이블(album_category) --
  create table album_category
@@ -464,6 +470,7 @@ create table messenger_table
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
+
 create SEQUENCE messenger_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -479,7 +486,7 @@ create table messengerLog_table
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 테이블(mail_table) --
+-- 메일 테이블(mail_send_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,mail_groupno       number -- 송신/수신 그룹번호 (null=임시저장?)
@@ -510,6 +517,7 @@ nocycle -- 반복 설정
 nocache;
 
 
+
 -- 회의실 테이블(reservationRoom_table) --
 create table reservationRoom_table
 (roomNumber     number not null -- 회의실 번호
@@ -527,7 +535,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)

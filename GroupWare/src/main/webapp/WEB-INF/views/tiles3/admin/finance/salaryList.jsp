@@ -1,44 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <style type="text/css">
-.highcharts-figure, .highcharts-data-table table {
-  min-width: 320px; 
-  max-width: 800px;
-  margin: 1em auto;
-}
-
-.highcharts-data-table table {
-	font-family: Verdana, sans-serif;
-	border-collapse: collapse;
-	border: 1px solid #EBEBEB;
-	margin: 10px auto;
-	text-align: center;
-	width: 100%;
-	max-width: 500px;
-}
-.highcharts-data-table caption {
-  padding: 1em 0;
-  font-size: 1.2em;
-  color: #555;
-}
-.highcharts-data-table th {
-	font-weight: 600;
-  padding: 0.5em;
-}
-.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
-  padding: 0.5em;
-}
-.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
-  background: #f8f8f8;
-}
-.highcharts-data-table tr:hover {
-  background: #f1f7ff;
-}
-
-
-input[type="number"] {
-	min-width: 50px;
-}
+	#chartArea{
+		display: inline-block;
+		border:solid 1px red;
+		width: 200px;
+		min-height: 200px;
+		float:left;
+	}
+	
+	#listArea{
+		display: inline-block;
+		width: 400px;
+	}
+	
+	#listArea .table, #listArea .table td{
+		border:solid 1px black;
+		border-collapse: collapse;
+	}
+	
+	.changeBtn{
+		cursor: pointer;
+		width: 80px;
+		text-align: center;
+		border:solid 1px blue;
+		padding: 5px 0;
+	}
 </style>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -117,11 +104,37 @@ Highcharts.chart('#container', {
 	</div>
 </div>
 
-<figure class="highcharts-figure">
-  <div id="container"></div>
-  <p class="highcharts-description">
-    Pie charts are very popular for showing a compact overview of a
-    composition or comparison. While they can be harder to read than
-    column charts, they remain a popular choice for small datasets.
-  </p>
-</figure>
+<div id="chartArea">
+	<div align="right">
+		<div class="changeBtn">change</div>
+	</div>
+	 <div id="container"></div>
+</div>
+<div id="listArea">
+	<table class="table">
+		<tr>
+			<td>
+				<select name="employee_name">
+					<option>사원명</option>
+				</select>
+			</td>
+			<td>
+				<select name="position_name">
+					<option>직책</option>
+				</select>
+			</td>
+			<td>
+				<select name="department_name">
+					<option>부서명</option>
+				</select>
+			</td>
+			<td>
+				<select name="year">
+					<option>년도</option>
+				</select>
+			</td>
+			<td>연봉</td>
+		</tr>
+	</table>
+</div>
+ 
