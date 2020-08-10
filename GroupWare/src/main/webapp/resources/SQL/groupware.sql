@@ -502,6 +502,7 @@ create table mail_table
 ,status         number default 0 not null-- 발송/수신 상태
 ,readStatus     number default 0 not null -- 기독 유무
 ,mailStatus     number default 1 not null-- 삭제유무 상태
+,regDate        date default sysdate not null
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 ,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
 );
@@ -513,7 +514,7 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
-
+select nvl(max(mail_groupno),0) from mail_table;
 
 -- 회의실 테이블(reservationRoom_table) --
 create table reservationRoom_table
@@ -715,4 +716,15 @@ insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2'
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
 
-desc employees_table;
+insert into companyCalendar_category(category_num, category_name) values(1,'경조사');
+insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
+insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
+insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+
+select * from employees_table;
+
+
+select to_char(sysdate, 'hh24:mi') from dual;
+select * from mail_table;
+
+run s
