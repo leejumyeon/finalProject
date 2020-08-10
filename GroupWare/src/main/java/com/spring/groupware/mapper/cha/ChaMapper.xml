@@ -6,8 +6,25 @@
 
 	<select id="fullCalendar" resultType="com.spring.groupware.commonVO.PersonalCalVO">
 		select calendar_seq, title, content, to_char(startDate, 'yyyy-mm-dd') || 'T' || to_char(startDate, 'hh24:mi') AS startDate
-			 , to_char(endDate, 'yyyy-mm-dd') || 'T' || to_char(endDate, 'hh24:mi') AS endDate , color
+			 , to_char(endDate, 'yyyy-mm-dd') || 'T' || to_char(endDate, 'hh24:mi') AS endDate , backgroundColor
 		from personalCalendar_table
 	</select>
+
+	<select id="adminFullCalendar" resultType="com.spring.groupware.commonVO.CompanyCalVO">
+		select C.calendar_seq, C.title, C.content, to_char(C.startDate, 'yyyy-mm-dd') || 'T' || to_char(C.startDate, 'hh24:mi') AS startDate
+			 , to_char(C.endDate, 'yyyy-mm-dd') || 'T' || to_char(C.endDate, 'hh24:mi') AS endDate , C.color, D.department_name, CC.category_name
+		from department_table D join companyCalendar_table C
+		on D.department_seq = C.fk_department_seq
+		join companyCalendar_category CC
+		on C.calendar_category = CC.category_num
+	</select>
+	
+	<insert id="insertFullCalendar" parameterType="HashMap">		
+		insert INTO personalCalendar_table(calendar_seq,fk_employee_seq,title,content,startDate,endDate,backgroundColor)
+		values(personalCalendar_table_seq.nextval, #{employee_id},#{title},#{content}		
+		,to_date(#{startDate},'yyyy-mm-dd hh24:mi')
+		,to_date(#{endDate},'yyyy-mm-dd hh24:mi')
+		,#{backgroundColor})		
+	</insert>
 
 </mapper>

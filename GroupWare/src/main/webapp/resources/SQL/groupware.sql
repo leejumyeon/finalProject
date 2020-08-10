@@ -34,6 +34,7 @@ drop table messenger_table purge;
 drop sequence messenger_table_seq;
 drop table messengerRoom_table purge;
 drop sequence messengerRoom_table_seq;
+drop table companyCalendar_category purge;
 drop table companyCalendar_table purge;
 drop sequence companyCalendar_table_seq;
 drop table personalCalendar_table purge;
@@ -401,6 +402,8 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+alter table personalCalendar_table rename column color to backgroundColor;
+
 create table companyCalendar_category
 (category_num   number not null -- 항목번호
 ,category_name  varchar2(50) not null -- 항목명
@@ -409,7 +412,7 @@ create table companyCalendar_category
 
 -- 회사일정 테이블(companyCalendar_table) --
 create table companyCalendar_table
-(calendar_seq   number not null -- 일정번호
+(comCalendar_seq   number not null -- 일정번호
 ,title      varchar2(500) not null -- 일정 타이틀
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
@@ -417,10 +420,11 @@ create table companyCalendar_table
 ,color      varchar2(100) -- 배경색
 ,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
 ,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
-,constraint pk_companyCalendar primary key(calendar_seq)
+,constraint pk_companyCalendar primary key(comCalendar_seq)
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
+
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값

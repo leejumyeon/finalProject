@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <title>캘린더</title>
 
-	<link rel= "shortcut icon" href="./resources/calendar/images/favicon.ico">
+	<link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/fullcalendar.min.css" />
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/bootstrap.min.css">
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/select2.min.css' />
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/bootstrap-datetimepicker.min.css' />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/fullcalendar.min.css" />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/bootstrap.min.css">
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/select2.min.css' />
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/bootstrap-datetimepicker.min.css' />
 
     <link rel= "stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
     <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <link rel= "stylesheet" href="./resources/calendar/css/main.css">
+    <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
     
    
 
@@ -89,6 +89,18 @@
 	                                    <option value="카테고리2">카테고리2</option>
 	                                    <option value="카테고리3">카테고리3</option>
 	                                    <option value="카테고리4">카테고리4</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-xs-12">
+	                                <label class="col-xs-4" for="edit-type">부서명</label>
+	                                <select class="inputModal" type="text" name="edit-username" id="edit-type">
+	                                    <option value="1">개발팀</option>
+	                                    <option value="2">디자인팀</option>
+	                                    <option value="3">영업팀</option>
+	                                    <option value="4">인사팀</option>
+	                                    <option value="5">경영지원팀</option>
 	                                </select>
 	                            </div>
 	                        </div>
@@ -223,15 +235,15 @@
 	  });
 	</script>  
 
-	<script src="./resources/calendar/vendor/js/jquery.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap.min.js"></script>
-    <script src="./resources/calendar/vendor/js/moment.min.js"></script>
-    <script src="./resources/calendar/vendor/js/fullcalendar.min.js"></script>
-    <script src="./resources/calendar/vendor/js/ko.js"></script>
-    <script src="./resources/calendar/vendor/js/select2.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="./resources/calendar/js/main.js"></script>
-    <script src="./resources/calendar/js/addEvent.js"></script>
-    <script src="./resources/calendar/js/editEvent.js"></script>
-    <script src="./resources/calendar/js/etcSetting.js"></script>
+	<script src="./resources/admincalendar/vendor/js/jquery.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/moment.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/fullcalendar.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/ko.js"></script>
+    <script src="./resources/admincalendar/vendor/js/select2.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./resources/admincalendar/js/main.js"></script>
+    <script src="./resources/admincalendar/js/addEvent.js"></script>
+    <script src="./resources/admincalendar/js/editEvent.js"></script>
+    <script src="./resources/admincalendar/js/etcSetting.js"></script>
     
