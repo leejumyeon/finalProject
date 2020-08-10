@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <title>캘린더</title>
 
-	<link rel= "shortcut icon" href="./resources/calendar/images/favicon.ico">
+	<link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/fullcalendar.min.css" />
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/bootstrap.min.css">
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/select2.min.css' />
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/bootstrap-datetimepicker.min.css' />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/fullcalendar.min.css" />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/bootstrap.min.css">
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/select2.min.css' />
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/bootstrap-datetimepicker.min.css' />
 
     <link rel= "stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
     <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <link rel= "stylesheet" href="./resources/calendar/css/main.css">
+    <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
     
    
 
@@ -41,9 +41,6 @@
 	               
 	        </div>
 	        
-	       
-	
-	
 	        <!-- 일정 추가 MODAL -->
 	        <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
 	            <div class="modal-dialog" role="document">
@@ -94,6 +91,18 @@
 	                        </div>
 	                        <div class="row">
 	                            <div class="col-xs-12">
+	                                <label class="col-xs-4" for="edit-type">부서명</label>
+	                                <select class="inputModal" type="text" name="edit-username" id="edit-type">
+	                                    <option value="1">개발팀</option>
+	                                    <option value="2">디자인팀</option>
+	                                    <option value="3">영업팀</option>
+	                                    <option value="4">인사팀</option>
+	                                    <option value="5">경영지원팀</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-color">색상</label>
 	                                <select class="inputModal" name="color" id="edit-color">
 	                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
@@ -130,7 +139,7 @@
 	        </div><!-- /.modal -->        
         
 
-        <!-- <div class="panel panel-default">
+         <div class="panel panel-default">
 
             <div class="panel-heading">
                 <h3 class="panel-title">필터</h3>
@@ -154,94 +163,45 @@
                     <label for="calendar_view">등록자별</label>
                     <div class="input-group">
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
-                                checked>정연</label>
+                                checked>개발팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
-                                checked>다현</label>
+                                checked>디자인팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
-                                checked>사나</label>
+                                checked>영업팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
-                                checked>나연</label>
+                                checked>인사팀</label>
                         <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
-                                checked>지효</label>
+                                checked>경영지원팀</label>
                     </div>
                 </div>
 
             </div>
-        </div> -->
+        </div> 
         <!-- /.filter panel -->
                                    
     </div>
     
     <div style="float: left; border: solid 0px green; width: 300px; height: 300px; padding-top: 22px;" >
     	<div style="border: solid 1px blue; width: 730px; height: 267px;">
-	        <h3>개인정보</h3>
+	        <h3>매출통계</h3>
         </div>
         <br/>
         <div style="border: solid 1px red; width: 730px; height: 267px;">
-        	<h3>동호회</h3>
+        	<h3>인사고과</h3>
         </div> 	                     
     </div>
-	<div style="clear: both;"></div>
-	<br/>
-    <div style="padding-left: 15px;">   
-	    <div style="border: solid 1px red; width: 1415px; height: 148px; ">
-	        <h3>도서추천</h3>
-			<input id="bookName" type="text">
-			<button id="search">검색</button>
-			
-			<div id="p" style="border: solid 1px red; display: inline-block;">피카츄라이츄파이리꼬북이</div>			
-	    </div>    
-    </div>
+	<div style="clear: both;"></div> 
     <!-- /.container -->
-    
-     <script src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
-  	</script>
-  	
-  	<script>
-	  $(function () {
-	      $("#search").click(function () {
-	    	      	     	  
-	          $.ajax({
-	              method: "GET",
-	              url: "https://dapi.kakao.com/v3/search/book?target=title", // 전송 주소
-	              data: { query: $("#bookName").val() }, 
-	              headers: { Authorization: "KakaoAK 6b9a374380958fdd321ffdf370b9e7d9" }
-	          })
-	             .done(function (msg) {   
-	            	 
-	            var html ="";
-	            
-	           	for(var i = 0; i<10 ; i++) {
-	           		
-	           		html += "<div style='display:inline-block; min-width:300px;'>";
-		           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
-		           		html += "제목&nbsp;:&nbsp;<strong>" + msg.documents[i].title + "</strong><br />";
-		       			html +=	"저자&nbsp;:&nbsp;<strong>" + msg.documents[i].authors + "</strong><br />";
-		     			html += "판매가&nbsp;:&nbsp;<strong>" + msg.documents[i].price + "</strong><br />";
-		           		html += "판매현황&nbsp;:&nbsp;<strong>" + msg.documents[i].status + "</strong><br />";
-		           		html += "출간일자&nbsp;:&nbsp;<strong>" + msg.documents[i].datetime + "</strong><br />";
-		           		html += "바코드&nbsp;:&nbsp;<strong>" + msg.documents[i].isbn + "</strong><br />";
-	           		html += "</div>";
-	           							          		                         
-	           	}
-	           	
-	           	$("#p").html(html);
-	           	
-	           });
-	      })
-	  });
-	</script>  
 
-	<script src="./resources/calendar/vendor/js/jquery.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap.min.js"></script>
-    <script src="./resources/calendar/vendor/js/moment.min.js"></script>
-    <script src="./resources/calendar/vendor/js/fullcalendar.min.js"></script>
-    <script src="./resources/calendar/vendor/js/ko.js"></script>
-    <script src="./resources/calendar/vendor/js/select2.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="./resources/calendar/js/main.js"></script>
-    <script src="./resources/calendar/js/addEvent.js"></script>
-    <script src="./resources/calendar/js/editEvent.js"></script>
-    <script src="./resources/calendar/js/etcSetting.js"></script>
+	<script src="./resources/admincalendar/vendor/js/jquery.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/moment.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/fullcalendar.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/ko.js"></script>
+    <script src="./resources/admincalendar/vendor/js/select2.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./resources/admincalendar/js/main.js"></script>
+    <script src="./resources/admincalendar/js/addEvent.js"></script>
+    <script src="./resources/admincalendar/js/editEvent.js"></script>
+    <script src="./resources/admincalendar/js/etcSetting.js"></script>
     

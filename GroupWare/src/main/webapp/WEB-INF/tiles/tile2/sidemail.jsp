@@ -51,7 +51,7 @@
 <div style="margin: 0 auto;" align="center">
 	<div id="mailBtnArea">
 		<span class="mailBtn" onclick="javascript:location.href='<%=ctxPath%>/mail/write.top?type=normal'">메일쓰기</span>
-		<span class="mailBtn">내게쓰기</span>
+		<span class="mailBtn" onclick="javascript:location.href='<%=ctxPath%>/mail/write.top?type=mine'">내게쓰기</span>
 		<br>
 	</div>
 	<div align="left" style="margin:10px 10px 0 12px; padding-bottom:5px; border-bottom: solid 1px white">

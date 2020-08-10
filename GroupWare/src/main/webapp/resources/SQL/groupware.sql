@@ -12,6 +12,9 @@ show user; -- USER이(가) "FINALORAUSER3"입니다.
 select * from tab;
 select * from seq;
 
+select *
+from employees_table;
+
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
 drop table equipment_table purge;
@@ -35,6 +38,7 @@ drop table messenger_table purge;
 drop sequence messenger_table_seq;
 drop table messengerRoom_table purge;
 drop sequence messengerRoom_table_seq;
+drop table companyCalendar_category purge;
 drop table companyCalendar_table purge;
 drop sequence companyCalendar_table_seq;
 drop table personalCalendar_table purge;
@@ -134,6 +138,9 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+
+
 
  -- album 카테고리 테이블(album_category) --
  create table album_category
@@ -404,6 +411,8 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+alter table personalCalendar_table rename column color to backgroundColor;
+
 create table companyCalendar_category
 (category_num   number not null -- 항목번호
 ,category_name  varchar2(50) not null -- 항목명
@@ -412,7 +421,7 @@ create table companyCalendar_category
 
 -- 회사일정 테이블(companyCalendar_table) --
 create table companyCalendar_table
-(calendar_seq   number not null -- 일정번호
+(comCalendar_seq   number not null -- 일정번호
 ,title      varchar2(500) not null -- 일정 타이틀
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
@@ -420,10 +429,13 @@ create table companyCalendar_table
 ,color      varchar2(100) -- 배경색
 ,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
 ,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
-,constraint pk_companyCalendar primary key(calendar_seq)
+,constraint pk_companyCalendar primary key(comCalendar_seq)
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
+
+alter table companyCalendar_table rename column color to backgroundColor;
+
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -463,6 +475,7 @@ create table messenger_table
 ,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
 on delete set null
 );
+
 create SEQUENCE messenger_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -478,7 +491,7 @@ create table messengerLog_table
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 테이블(mail_table) --
+-- 메일 테이블(mail_send_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,mail_groupno       number -- 송신/수신 그룹번호 (null=임시저장?)
@@ -497,6 +510,7 @@ create table mail_table
 ,status         number default 0 not null-- 발송/수신 상태
 ,readStatus     number default 0 not null -- 기독 유무
 ,mailStatus     number default 1 not null-- 삭제유무 상태
+,regDate        date default sysdate not null
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 ,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
 );
@@ -508,6 +522,7 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+select nvl(max(mail_groupno),0) from mail_table;
 
 -- 회의실 테이블(reservationRoom_table) --
 create table reservationRoom_table
@@ -526,7 +541,7 @@ create table reservation_table
 ,head_seq   number not null -- 예약 책임자 사원번호
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
-,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료)
+,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
@@ -715,3 +730,16 @@ insert into reservationRoom_table(roomNumber, roomName) values(5,'소회의실1'
 insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2');
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
+
+insert into companyCalendar_category(category_num, category_name) values(1,'경조사');
+insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
+insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
+insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+
+select * from employees_table;
+
+
+select to_char(sysdate, 'hh24:mi') from dual;
+select * from mail_table;
+
+run s

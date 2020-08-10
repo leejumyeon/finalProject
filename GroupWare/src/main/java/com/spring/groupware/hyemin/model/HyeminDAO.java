@@ -25,6 +25,13 @@ public class HyeminDAO implements InterHyeminDAO {
 		return rsvtvoList;
 	}
 
+	// === 검색어 입력 시 자동글 완성하기 5 ===
+	@Override
+	public List<HashMap<String, String>> headSearchShow(String searchHead) {
+		List<HashMap<String, String>> headList = sqlsession.selectList("hyemin.headSearchShow", searchHead);
+		return headList;
+	}
+
 	
 	
 }

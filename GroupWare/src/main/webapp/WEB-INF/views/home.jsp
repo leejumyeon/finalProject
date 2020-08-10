@@ -1,63 +1,127 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <style type="text/css">
-   div#container {
-      width: 1700px;
-      margin: 0 auto;
-   }
-   div.mt {
-      margin-top: 30px;
-   }
-   p {
-      margin: 15px;
-      display: inline-block;
-   }
-   #img {
-      width: 25px;
-      height: 25px;
-      margin: 15px;
-      float: right;
-   }
-   a {
-      cursor: pointer;
-   }
+.highcharts-figure, .highcharts-data-table table {
+  min-width: 320px; 
+  max-width: 800px;
+  margin: 1em auto;
+}
+
+.highcharts-data-table table {
+	font-family: Verdana, sans-serif;
+	border-collapse: collapse;
+	border: 1px solid #EBEBEB;
+	margin: 10px auto;
+	text-align: center;
+	width: 100%;
+	max-width: 500px;
+}
+.highcharts-data-table caption {
+  padding: 1em 0;
+  font-size: 1.2em;
+  color: #555;
+}
+.highcharts-data-table th {
+	font-weight: 600;
+  padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+  padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+  background: #f1f7ff;
+}
+
+
+input[type="number"] {
+	min-width: 50px;
+}
 </style>
 
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
+Highcharts.chart('#container', {
+	  chart: {
+	    plotBackgroundColor: null,
+	    plotBorderWidth: null,
+	    plotShadow: false,
+	    type: 'pie'
+	  },
+	  title: {
+	    text: 'Browser market shares in January, 2018'
+	  },
+	  tooltip: {
+	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	  },
+	  accessibility: {
+	    point: {
+	      valueSuffix: '%'
+	    }
+	  },
+	  plotOptions: {
+	    pie: {
+	      allowPointSelect: true,
+	      cursor: 'pointer',
+	      dataLabels: {
+	        enabled: true,
+	        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+	      }
+	    }
+	  },
+	  series: [{
+	    name: 'Brands',
+	    colorByPoint: true,
+	    data: [{
+	      name: 'Chrome',
+	      y: 61.41,
+	      sliced: true,
+	      selected: true
+	    }, {
+	      name: 'Internet Explorer',
+	      y: 11.84
+	    }, {
+	      name: 'Firefox',
+	      y: 10.85
+	    }, {
+	      name: 'Edge',
+	      y: 4.67
+	    }, {
+	      name: 'Safari',
+	      y: 4.18
+	    }, {
+	      name: 'Sogou Explorer',
+	      y: 1.64
+	    }, {
+	      name: 'Opera',
+	      y: 1.6
+	    }, {
+	      name: 'QQ',
+	      y: 1.2
+	    }, {
+	      name: 'Other',
+	      y: 2.61
+	    }]
+	  }]
+	});
 </script>
 
-<body>
-   <div id="container">
-      <div style="float: left;">
-         <div style="width: 350px; height: 300px; border: 1px solid red;">
-            <p>공지사항</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
-         </div>
-         <div class="mt" style="width: 350px; height: 300px; border: 1px solid red;">
-            <p>자유게시판</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
-         </div>
-      </div>
-      <div style="clear: both; display: inline-block; margin-left: 195px;">
-         <div style="width: 600px; height: 630px; border: 1px solid red;">
-            <p>사내일정</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>                  
-         </div>
-      </div>
-      <div style="float: right;">
-         <div style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>앨범</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
-         </div>
-         <div class="mt" style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>봉사</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
-         </div>
-         <div class="mt" style="width: 350px; height: 190px; border: 1px solid red;">
-            <p>동호회</p>
-            <a><img id="img" alt="plus" src="images/512px-Plus_font_awesome.svg.png"></a>
-         </div>
-      </div>
-   </div>      
-</body>
+<div>
+	<div style="display: inline-block;">
+	<h3>급여내역</h3>
+	</div>
+</div>
+
+<figure class="highcharts-figure">
+  <div id="container"></div>
+  <p class="highcharts-description">
+    Pie charts are very popular for showing a compact overview of a
+    composition or comparison. While they can be harder to read than
+    column charts, they remain a popular choice for small datasets.
+  </p>
+</figure>

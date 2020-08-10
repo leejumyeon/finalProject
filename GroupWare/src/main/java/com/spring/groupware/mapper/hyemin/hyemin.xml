@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="hyemin">
+	
+	<select id="select_possibleTime" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
+		select to_char(startDate, 'hh24:mi') as startDate
+			 , to_char(endDate, 'hh24:mi') as endDate
+			 , status
+		from reservation_table
+		where fk_roomNumber = #{fk_roomNumber} and to_char(startDate, 'yyyy. mm. dd') = #{rsvtDate}
+	</select>
+	
+	<!-- === 검색어 입력 시 자동글 완성하기 6 === -->
+	<resultMap type="HashMap" id="headMap">
+		<result property="employee_seq" column="employee_seq" javaType="String" />
+		<result property="employee_name" column="employee_name" javaType="String" />
+		<result property="department_name" column="department_name" javaType="String" />
+		<result property="position_name" column="position_name" javaType="String" />
+	</resultMap>
+	<select id="headSearchShow" parameterType="String" resultMap="headMap">
+		select distinct E.employee_seq
+		     , E.employee_name AS employee_name
+		     , D.department_name AS department_name
+		     , P.position_name AS position_name
+		from department_table D join employees_table E
+		on D.department_seq = E.fk_department
+		join position_table P
+		on E.fk_position = P.position_seq
+		where lower(employee_name) like '%' || lower(#{searchHead}) || '%'
+		   or lower(department_name) like '%' || lower(#{searchHead}) || '%'
+		   or lower(position_name) like '%' || lower(#{searchHead}) || '%'
+	</select>
+</mapper>

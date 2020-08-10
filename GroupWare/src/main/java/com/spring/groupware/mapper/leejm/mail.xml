@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mail">
+	<!-- 받는 메일 검색기능 -->
+	<select id="searchReceive" parameterType="HashMap" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select employee_seq, employee_id, employee_name, email, fk_position, fk_department, position_name, department_name 
+		from employees_table 
+		join position_table on fk_position = position_seq
+		join department_table on fk_department = department_seq
+		where fk_status != 0 and employee_seq != #{loginSeq} and (employee_name like '%'||#{keyWord}||'%' or email like '%'||#{keyWord}||'%')
+	</select>
+	
+	<!-- 메일 보내기 기능 -->
+	<insert id="mailSend" parameterType="com.spring.groupware.commonVO.MailVO">
+		insert into mail_table(mail_seq, mail_groupno, fk_employee_seq, subject, content, status
+		<if test="fileName1!=null and !fileName1.equals('')">
+			,fileName1, orgFileName1, fileSize1
+		</if>
+		<if test="fileName2!=null and !fileName2.equals('')">
+			,fileName2, orgFileName2, fileSize2
+		</if>
+		<if test="fileName3!=null and !fileName3.equals('')">
+			,fileName3, orgFileName3, fileSize3
+		</if>
+		)
+		values(mail_table_seq.nextval, #{mail_groupno}, #{fk_employee_seq}, #{subject}, #{content}, #{status}
+		<if test="fileName1!=null and !fileName1.equals('')">
+			,#{fileName1}, #{orgFileName1}, #{fileSize1}
+		</if>
+		<if test="fileName2!=null and !fileName2.equals('')">
+			,#{fileName2}, #{orgFileName2}, #{fileSize2}
+		</if>
+		<if test="fileName3!=null and !fileName3.equals('')">
+			,#{fileName3}, #{orgFileName3}, #{fileSize3}
+		</if>
+		)
+		
+		
+	</insert>
+	
+	<!-- 메일 그룹번호 채번하기 -->
+	<select id="getMail_groupno" resultType="String">
+		select nvl(max(mail_groupno),0) from mail_table
+	</select>
+	
+	<!-- 받은 메일함 조회 -->
+	<select id="receiveMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
+		select mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate,
+				E.email, E.employee_name, D.department_name, P.position_name
+		from mail_table M 
+		join employees_table E on M.fk_employee_seq = E.employee_seq
+		join department_table D on E.fk_department = D.department_seq
+		join position_table P on E.fk_position = P.position_seq 
+			where M.status = 0 and M.fk_employee_seq != #{loginSeq}  and M.mail_groupno in
+				(select mail_groupno from mail_table
+					where status = 1 and mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+	</select>
+</mapper>
