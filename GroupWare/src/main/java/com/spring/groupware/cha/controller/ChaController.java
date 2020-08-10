@@ -99,6 +99,66 @@ public class ChaController {
 		return jsonObj.toString();
 	}
 	
+	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정 수정
+	@ResponseBody
+	@RequestMapping(value="/updateCalendar.top", produces="text/plain;charset=UTF-8")
+	public String updateCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String calendar_seq = request.getParameter("_id");
+		String title = request.getParameter("title");
+		String content = request.getParameter("description");
+		String startDate = request.getParameter("start");
+		String endDate = request.getParameter("end");
+		String backgroundColor = request.getParameter("backgroundColor");
+		String allDay = request.getParameter("allDay");
+		
+		System.out.println(employee_id+"/"+calendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor);
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("calendar_seq", calendar_seq);
+		paraMap.put("title", title);
+		paraMap.put("content", content);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("backgroundColor", backgroundColor);
+		paraMap.put("allDay", allDay);
+		
+		int n = service.updateFullCalendar(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정 삭제
+	@ResponseBody
+	@RequestMapping(value="/deleteCalendar.top", produces="text/plain;charset=UTF-8")
+	public String deleteCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String calendar_seq = request.getParameter("_id");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("calendar_seq", calendar_seq);
+		
+		int n = service.deleteFullCalendar(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
 	// ------------------------------선을 중심으로 윗 부분 마이페이지(개인 일정 캘린더 & 책검색) 모음 ----------------------------------------------
 		
 	// 공지 사항
@@ -111,7 +171,7 @@ public class ChaController {
 			
 	// ------------------------------선을 중심으로 윗 부분 공지사항  ----------------------------------------------
 	
-	// 관리자 메인페이지
+	// 관리자 메인페이지(회사 일정 캘린더) - 뷰페이지	
 	@RequestMapping(value="/adminMain.top")
 	public String clup() {
 		
@@ -119,7 +179,7 @@ public class ChaController {
 		
 	}
 	
-	// 관리자 메인 페이지, 일반 메인페이지 캘린더 DB값 얻어오기
+	// 관리자 메인페이지(회사 일정 캘린더) -  일반 메인페이지 캘린더 DB값 얻어오기(뿌리기)
 	@ResponseBody
 	@RequestMapping(value="/adminFullCalendar.top", produces="text/plain;charset=UTF-8")
 	public String adminFullCalendar() {

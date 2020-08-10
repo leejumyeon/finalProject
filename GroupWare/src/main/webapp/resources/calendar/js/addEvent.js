@@ -95,6 +95,12 @@ var newEvent = function (start, end, eventType) {
             },
             dataType:"JSON",
             success: function (json) {
+            	if(json.n == "1"){
+            		history.go(0);
+            	}
+            	else{
+            		alert("일정추가 실패");
+            	}
             	
                 //DB연동시 중복이벤트 방지를 위한
                 //$('#calendar').fullCalendar('removeEvents');

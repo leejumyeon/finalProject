@@ -431,6 +431,8 @@ create table companyCalendar_table
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
 
+alter table companyCalendar_table rename column color to backgroundColor;
+
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
