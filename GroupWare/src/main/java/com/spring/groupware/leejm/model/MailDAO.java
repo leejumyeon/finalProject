@@ -43,8 +43,37 @@ public class MailDAO implements InterMailDAO{
 		return mailList;
 	}
 
+	// 보낸 메일 조회
 	@Override
 	public List<MailVO> sendMailList(HashMap<String, String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.sendMailList",paraMap);
+		return mailList;
+	}
+
+	// 검색 메일 조회
+	@Override
+	public List<MailVO> searchMailList(HashMap<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// 내게 쓴 메일 조회
+	@Override
+	public List<MailVO> mineMailList(HashMap<String, String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.mineMailList",paraMap);
+		return mailList;
+	}
+
+	// 안 읽은 메일 조회
+	@Override
+	public List<MailVO> noReadMailList(HashMap<String, String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.noReadMailList", paraMap);
+		return null;
+	}
+
+	// 첨부파일 있는 메일 조회
+	@Override
+	public List<MailVO> attachMailList(HashMap<String, String> paraMap) {
 		// TODO Auto-generated method stub
 		return null;
 	}

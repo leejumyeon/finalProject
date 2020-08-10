@@ -726,10 +726,3 @@ insert into companyCalendar_category(category_num, category_name) values(2,'워�
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
 
-select * from employees_table;
-
-
-select to_char(sysdate, 'hh24:mi') from dual;
-select * from mail_table;
-
-run s

@@ -22,8 +22,11 @@
 	}
 	
 	#searchTypeList > li:hover{
-		background-color: #f5f5f5;
 		cursor: pointer; 
+	}
+	
+	.select{
+		background-color: #f5f5f5;
 	}
 	
 	.hide{
@@ -46,7 +49,7 @@
 	        	
 	        });
 	        
-	        $("#mailSearch").keyup(function(){
+	        $("#mailSearch").keyup(function(event){
 	        	var txtVal = $(this).val();
 	        	func_searchTypeFind(txtVal);
 	        });
@@ -89,7 +92,7 @@
 		var html = "";
 		if(len>0){
 			html += "<ul id='searchTypeList'>";
-			html+="<li onclick='goSearch("+val+", all)'><div>"+val+"-<span style='font-size:8pt; color:gray;'>전체검색</span></div></li>";
+			html+="<li onclick='goSearch("+val+", all)' class='select'><div>"+val+"-<span style='font-size:8pt; color:gray;'>전체검색</span></div></li>";
 			html+="<li onclick='goSearch("+val+", sender)'><div>보낸사람: "+val+"-<span style='font-size:8pt; color:gray;'>보낸사람을 찾기</span></div></li>";
 			html+="<li onclick='goSearch("+val+", receiver)'><div>받은사람: "+val+"-<span style='font-size:8pt; color:gray;'>받은사람을 찾기</span></div></li>";
 			html+="<li onclick='goSearch("+val+", content)'><div>내용: "+val+"-<span style='font-size:8pt; color:gray;'>제목, 본문내용, 첨부파일을 찾기</span></div></li>";
@@ -102,8 +105,8 @@
 		$("#searchTypetArea").html(html);
 	}
 	
-	function goSearch(val, type){
-		console.log(val+"/"+type);
+	function goSearch(val, category){
+		location.href = "<%=request.getContextPath()%>/mail/list.top?searchWord="+val+"&type=search&searchType="+category;
 	}
 </script>
 <div style="margin-left:10px;">
@@ -136,14 +139,49 @@
 		<div id="mailList">
 			<table class="table">
 			<c:if test="${not empty mailList}">
-			<c:forEach var="mail" items="${mailList}">
-				<tr>
-					<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
-					<td>${mail.email}</td>
-					<td>${mail.subject}</td>
-					<td>${mail.regDate}</td>
-				</tr>	
-			</c:forEach>
+				<c:if test="${mailhamType == '안 읽은 메일'}">
+					<c:forEach var="mail" items="${mailList}">
+						<tr style="color:blue;">
+							<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+							<td>${mail.email}</td>
+							
+							<c:choose>
+								<c:when test="${mail.mailStatus eq 0}">
+									<td>[휴지통]${mail.subject}</td>
+								</c:when>
+								<c:when test="${mail.fk_employee_seq eq sessionScope.loginuser.employee_seq}">
+									<td>[내게 쓴 메일]${mail.subject}</td>
+								</c:when>
+								<c:when test="${mail.fk_employee_seq ne sessionScope.loginuser.employee_seq}">
+									<td>[받은 메일]${mail.subject}</td>
+								</c:when>
+							</c:choose>
+							
+							<td>${mail.regDate}</td>
+						</tr>	
+					</c:forEach>
+				</c:if>
+				<c:if test="${mailhamType == '받은메일' or mailhamType == '보낸메일' or mailhamType == '내게 쓴 메일'}">
+					<c:forEach var="mail" items="${mailList}">
+						<c:if test="${mail.readStatus ne '1' }">
+							<tr style="color:blue;">
+								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+								<td>${mail.email}</td>
+								<td>${mail.subject}</td>
+								<td>${mail.regDate}</td>
+							</tr>	
+						</c:if>
+						<c:if test="${mail.readStatus eq '1' }">
+							<tr>
+								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+								<td>${mail.email}</td>
+								<td>${mail.subject}</td>
+								<td>${mail.regDate}</td>
+							</tr>	
+						</c:if>
+						
+					</c:forEach>
+				</c:if>
 			</c:if>
 			
 			<c:if test="${empty mailList}">

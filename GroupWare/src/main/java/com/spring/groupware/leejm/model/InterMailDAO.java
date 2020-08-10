@@ -22,4 +22,16 @@ public interface InterMailDAO {
 
 	// 보낸 메일 조회
 	List<MailVO> sendMailList(HashMap<String, String> paraMap);
+
+	// 검색 메일 조회
+	List<MailVO> searchMailList(HashMap<String, String> paraMap);
+
+	// 내게 쓴 메일 조회
+	List<MailVO> mineMailList(HashMap<String, String> paraMap);
+
+	// 안 읽은 메일 조회
+	List<MailVO> noReadMailList(HashMap<String, String> paraMap);
+
+	// 첨부파일 있는 메일 조회
+	List<MailVO> attachMailList(HashMap<String, String> paraMap);
 }

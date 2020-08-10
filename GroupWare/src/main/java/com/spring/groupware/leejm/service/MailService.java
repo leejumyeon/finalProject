@@ -54,6 +54,18 @@ public class MailService implements InterMailService{
 		else if("send".equals(paraMap.get("type"))) {
 			mailList = dao.sendMailList(paraMap);
 		}
+		else if("mine".equals(paraMap.get("type"))) {
+			mailList = dao.mineMailList(paraMap);
+		}
+		else if("read".equals(paraMap.get("type"))) {
+			mailList = dao.noReadMailList(paraMap);
+		}
+		else if("attach".equals(paraMap.get("type"))) {
+			mailList = dao.attachMailList(paraMap);
+		}
+		else if("search".equals(paraMap.get("type"))) {
+			mailList = dao.searchMailList(paraMap);
+		}
 		return mailList;
 	}
 }

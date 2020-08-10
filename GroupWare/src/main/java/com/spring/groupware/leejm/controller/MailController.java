@@ -42,7 +42,6 @@ public class MailController {
 	@RequestMapping(value="/mail/list.top")
 	public ModelAndView mailList(ModelAndView mav, HttpServletRequest request) {
 		String type = request.getParameter("type");
-		
 		HttpSession session = request.getSession();
 		EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
 		
@@ -50,13 +49,47 @@ public class MailController {
 		paraMap.put("type", type);
 		paraMap.put("loginSeq", emp.getEmployee_seq());
 		
+		String currentPageNo = request.getParameter("currentPageNo");
+		if(currentPageNo == null || currentPageNo.trim().isEmpty()) {
+			currentPageNo = "1";
+		}
+		paraMap.put("currentPageNo", currentPageNo);
+		
+		String searchWord = request.getParameter("searchWord");
+		String searchType = request.getParameter("searchType");
+		if(searchWord == null || searchWord.trim().isEmpty()) {
+			searchWord = "";
+			searchType = "";
+		}
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("searchType", searchType);
+		
+		
+		
+		
 		List<MailVO> mailList = service.mailList(paraMap);
 		
 		if("receive".equals(type)) {
-			mav.addObject("mailhamType","받은메일함");
+			mav.addObject("mailhamType","받은메일");
 		}
 		else if("send".equals(type)) {
-			mav.addObject("mailhamType","보낸메일함");
+			mav.addObject("mailhamType","보낸메일");
+		}
+		
+		else if("mine".equals(type)) {
+			mav.addObject("mailhamType","내게 쓴 메일");
+		}
+		
+		else if("read".equals(type)) {
+			mav.addObject("mailhamType","안 읽은 메일");
+		}
+		
+		else if("attach".equals(type)) {
+			mav.addObject("mailhamType","첨부파일 있는 메일");
+		}
+		
+		else if("search".equals(type)) {
+			
 		}
 		
 		mav.addObject("mailList",mailList);
@@ -106,6 +139,7 @@ public class MailController {
 		sendMail.setStatus("0"); // 발신 상태
 		sendMail.setContent(content);
 		sendMail.setSubject(subject);
+		sendMail.setReadStatus("1");
 		
 		// 받는 메일 VO 생성 //
 		MailVO receiveMail = new MailVO();
@@ -113,6 +147,7 @@ public class MailController {
 		receiveMail.setContent(content);
 		receiveMail.setSubject(subject);
 		receiveMail.setStatus("1");
+		receiveMail.setReadStatus("0");
 		
 		// 메일 그룹번호 채번하기
 		String mail_groupno = service.getMail_groupno();
