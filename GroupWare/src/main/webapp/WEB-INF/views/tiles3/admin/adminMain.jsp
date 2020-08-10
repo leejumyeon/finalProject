@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <title>캘린더</title>
 
-	<link rel= "shortcut icon" href="./resources/calendar/images/favicon.ico">
+	<link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/fullcalendar.min.css" />
-    <link rel= "stylesheet" href="./resources/calendar/vendor/css/bootstrap.min.css">
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/select2.min.css' />
-    <link rel= "stylesheet" href='./resources/calendar/vendor/css/bootstrap-datetimepicker.min.css' />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/fullcalendar.min.css" />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/bootstrap.min.css">
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/select2.min.css' />
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/bootstrap-datetimepicker.min.css' />
 
     <link rel= "stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
     <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <link rel= "stylesheet" href="./resources/calendar/css/main.css">
+    <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
     
    
 
@@ -41,9 +41,6 @@
 	               
 	        </div>
 	        
-	       
-	
-	
 	        <!-- 일정 추가 MODAL -->
 	        <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
 	            <div class="modal-dialog" role="document">
@@ -89,6 +86,18 @@
 	                                    <option value="카테고리2">카테고리2</option>
 	                                    <option value="카테고리3">카테고리3</option>
 	                                    <option value="카테고리4">카테고리4</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-xs-12">
+	                                <label class="col-xs-4" for="edit-type">부서명</label>
+	                                <select class="inputModal" type="text" name="edit-username" id="edit-type">
+	                                    <option value="1">개발팀</option>
+	                                    <option value="2">디자인팀</option>
+	                                    <option value="3">영업팀</option>
+	                                    <option value="4">인사팀</option>
+	                                    <option value="5">경영지원팀</option>
 	                                </select>
 	                            </div>
 	                        </div>
@@ -183,55 +192,16 @@
     </div>
 	<div style="clear: both;"></div> 
     <!-- /.container -->
-    
-     <script src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
-  	</script>
-  	
-  	<script>
-	  $(function () {
-	      $("#search").click(function () {
-	    	      	     	  
-	          $.ajax({
-	              method: "GET",
-	              url: "https://dapi.kakao.com/v3/search/book?target=title", // 전송 주소
-	              data: { query: $("#bookName").val() }, 
-	              headers: { Authorization: "KakaoAK 6b9a374380958fdd321ffdf370b9e7d9" }
-	          })
-	             .done(function (msg) {   
-	            	 
-	            var html ="";
-	            
-	           	for(var i = 0; i<10 ; i++) {
-	           		
-	           		html += "<div style='display:inline-block; min-width:300px;'>";
-		           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
-		           		html += "제목&nbsp;:&nbsp;<strong>" + msg.documents[i].title + "</strong><br />";
-		       			html +=	"저자&nbsp;:&nbsp;<strong>" + msg.documents[i].authors + "</strong><br />";
-		     			html += "판매가&nbsp;:&nbsp;<strong>" + msg.documents[i].price + "</strong><br />";
-		           		html += "판매현황&nbsp;:&nbsp;<strong>" + msg.documents[i].status + "</strong><br />";
-		           		html += "출간일자&nbsp;:&nbsp;<strong>" + msg.documents[i].datetime + "</strong><br />";
-		           		html += "바코드&nbsp;:&nbsp;<strong>" + msg.documents[i].isbn + "</strong><br />";
-	           		html += "</div>";
-	           							          		                         
-	           	}
-	           	
-	           	$("#p").html(html);
-	           	
-	           });
-	      })
-	  });
-	</script>  
 
-	<script src="./resources/calendar/vendor/js/jquery.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap.min.js"></script>
-    <script src="./resources/calendar/vendor/js/moment.min.js"></script>
-    <script src="./resources/calendar/vendor/js/fullcalendar.min.js"></script>
-    <script src="./resources/calendar/vendor/js/ko.js"></script>
-    <script src="./resources/calendar/vendor/js/select2.min.js"></script>
-    <script src="./resources/calendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="./resources/calendar/js/main.js"></script>
-    <script src="./resources/calendar/js/addEvent.js"></script>
-    <script src="./resources/calendar/js/editEvent.js"></script>
-    <script src="./resources/calendar/js/etcSetting.js"></script>
+	<script src="./resources/admincalendar/vendor/js/jquery.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/moment.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/fullcalendar.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/ko.js"></script>
+    <script src="./resources/admincalendar/vendor/js/select2.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./resources/admincalendar/js/main.js"></script>
+    <script src="./resources/admincalendar/js/addEvent.js"></script>
+    <script src="./resources/admincalendar/js/editEvent.js"></script>
+    <script src="./resources/admincalendar/js/etcSetting.js"></script>
     
