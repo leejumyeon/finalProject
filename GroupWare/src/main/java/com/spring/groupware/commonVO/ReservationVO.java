@@ -167,10 +167,7 @@ public class ReservationVO { // 예약 신청VO
 	}
 	
 	public String getStatus() {			
-		if("0".equals(status))
-			return "승인대기중";
-		else
-			return "예약불가";
+		return status;
 	}
 	
 	public void setStatus(String status) {

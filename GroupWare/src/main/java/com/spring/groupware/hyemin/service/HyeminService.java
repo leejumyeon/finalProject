@@ -26,8 +26,8 @@ public class HyeminService implements InterHyeminService {
 
 	// === 검색어 입력 시 자동글 완성하기 4 ===
 	@Override
-	public List<String> headSearchShow(String searchHead) {		
-		List<String> headList = dao.headSearchShow(searchHead);
+	public List<HashMap<String, String>> headSearchShow(String searchHead) {		
+		List<HashMap<String, String>> headList = dao.headSearchShow(searchHead);
 		return headList;
 	}
 	
