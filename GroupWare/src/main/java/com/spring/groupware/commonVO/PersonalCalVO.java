@@ -7,19 +7,19 @@ public class PersonalCalVO {//개인일정 VO
 	private String content; //일정 내용
 	private String startDate; //일정 시작날짜
 	private String endDate; //일정 종료날짜
-	private String color; //색상
+	private String backgroundColor; //색상
 	
 	public PersonalCalVO() {}
 	
 	public PersonalCalVO(String calendar_seq, String fk_employee_seq, String title, String content, String startDate,
-			String endDate, String color) {
+			String endDate, String backgroundColor) {
 		this.calendar_seq = calendar_seq;
 		this.fk_employee_seq = fk_employee_seq;
 		this.title = title;
 		this.content = content;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.color = color;
+		this.backgroundColor = backgroundColor;
 	}
 	
 	public String getCalendar_seq() {
@@ -58,11 +58,11 @@ public class PersonalCalVO {//개인일정 VO
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public String getColor() {
-		return color;
+	public String getBackgroundColor() {
+		return backgroundColor;
 	}
-	public void setColor(String color) {
-		this.color = color;
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 	
 	

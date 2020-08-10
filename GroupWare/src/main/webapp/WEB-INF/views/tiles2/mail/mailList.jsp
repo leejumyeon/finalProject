@@ -135,12 +135,23 @@
 		</div>
 		<div id="mailList">
 			<table class="table">
+			<c:if test="${not empty mailList}">
+			<c:forEach var="mail" items="${mailList}">
 				<tr>
-					<td><input type="checkbox" name="selectCheck"/></td>
-					<td>이메일</td>
-					<td>제목</td>
-					<td>날짜</td>
-				</tr>
+					<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+					<td>${mail.email}</td>
+					<td>${mail.subject}</td>
+					<td>${mail.regDate}</td>
+				</tr>	
+			</c:forEach>
+			</c:if>
+			
+			<c:if test="${empty mailList}">
+				<tr>
+					<td colspan="4"> 받은 메일이 없습니다.</td>
+				</tr>	
+			
+			</c:if>
 			</table>
 			<div id="pageBar"></div>
 		</div>

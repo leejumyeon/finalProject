@@ -25,7 +25,6 @@ var editEvent = function (event, element, view) {
     }
 
     modalTitle.html('일정 수정');
-    
     editTitle.val(event.title);
     editStart.val(event.start.format('YYYY-MM-DD HH:mm'));
     editType.val(event.type);
@@ -77,53 +76,40 @@ var editEvent = function (event, element, view) {
         event.backgroundColor = editColor.val();
         event.description = editDesc.val();
 
-       // $("#calendar").fullCalendar('updateEvent', event);
+        $("#calendar").fullCalendar('updateEvent', event);
 
         //일정 업데이트
         $.ajax({
             type: "get",
-            url: "/groupware/updateCalendar.top",
-            data: {  	
-            	"_id":event._id,
-            	"title":event.title,
-            	"start":event.start,
-            	"end":event.end,
-            	"description":event.description,
-            	"backgroundColor":event.backgroundColor  
-            	
-            },
-            success: function (response) {
-            	
-                alert('수정되었습니다.')
-                history.go(0);
-            }
-        });
-
-    });
-    
-    // 삭제버튼
-    $('#deleteEvent').on('click', function () {
-        
-        $('#deleteEvent').unbind();
-        //$("#calendar").fullCalendar('removeEvents', $(this).data('id'));
-        eventModal.modal('hide');
-
-        //삭제시
-        $.ajax({
-            type: "get",
-            url: "/groupware/deleteCalendar.top",
+            url: "",
             data: {
-            	
-            	"_id":event._id
-                
+                //...
             },
             success: function (response) {
-                alert('삭제되었습니다.');
-                history.go(0);
+                alert('수정되었습니다.')
             }
         });
 
     });
-    
 };
 
+// 삭제버튼
+$('#deleteEvent').on('click', function () {
+    
+    $('#deleteEvent').unbind();
+    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+    eventModal.modal('hide');
+
+    //삭제시
+    $.ajax({
+        type: "get",
+        url: "",
+        data: {
+            //...
+        },
+        success: function (response) {
+            alert('삭제되었습니다.');
+        }
+    });
+
+});
