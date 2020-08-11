@@ -91,10 +91,53 @@ public class ManagerController {
 		mav.setViewName("admin/approval/garbage.tiles3");
 		return mav;
 	}
+	
 	// 관리자-결재 관리(문서함)페이지 이동
 	@RequestMapping(value="/manager/approval/documentList.top")
 	public ModelAndView managerDocumentList(ModelAndView mav, HttpServletRequest request) {
 		mav.setViewName("admin/approval/documentList.tiles3");
+		return mav;
+	}
+	
+	// 관리자-결재 관리(문서함-상세)페이지 이동
+	@RequestMapping(value="/manager/approval/documentDetail.top")
+	public ModelAndView managerDocumentDetail(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/approval/documentDetail.tiles3");
+		return mav;
+	}
+	
+	// 관리자-재무 관리(급여내역)페이지 이동
+	@RequestMapping(value="/manager/finance/salaryList.top")
+	public ModelAndView managerSalaryList(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/finance/salaryList.tiles3");
+		return mav;
+	}
+	
+	// 관리자-재무 관리(매출내역)페이지 이동
+	@RequestMapping(value="/manager/finance/salesList.top")
+	public ModelAndView managerSalesList(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/finance/salesList.tiles3");
+		return mav;
+	}
+	
+	// 관리자-인사 관리(인사고과)페이지 이동
+	@RequestMapping(value="/manager/HR/review.top")
+	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/HR/review.tiles3");
+		return mav;
+	}
+	
+	// 관리자-인사 관리(사원정보-리스트)페이지 이동
+	@RequestMapping(value="/manager/HR/list.top")
+	public ModelAndView managerHRlist(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/HR/list.tiles3");
+		return mav;
+	}
+		
+	// 관리자-인사 관리(사원정보-상세)페이지 이동
+	@RequestMapping(value="/manager/HR/detail.top")
+	public ModelAndView managerHRdetail(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/HR/detail.tiles3");
 		return mav;
 	}
 	

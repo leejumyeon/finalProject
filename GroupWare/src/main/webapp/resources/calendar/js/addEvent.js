@@ -76,7 +76,7 @@ var newEvent = function (start, end, eventType) {
             eventData.allDay = true;
         }
 
-        $("#calendar").fullCalendar('renderEvent', eventData, true);
+       // $("#calendar").fullCalendar('renderEvent', eventData, true);
         eventModal.find('input, textarea').val('');
         editAllDay.prop('checked', false);
         eventModal.modal('hide');
@@ -86,10 +86,22 @@ var newEvent = function (start, end, eventType) {
             type: "get",
             url: "/groupware/insertCalendar.top",
             data: {
-            	"_id":eventData._id
+            	"_id":eventData._id,
+            	"title":eventData.title,
+            	"start":eventData.start,
+            	"end":eventData.end,
+            	"description":eventData.description,
+            	"backgroundColor":eventData.backgroundColor           	
             },
             dataType:"JSON",
             success: function (json) {
+            	if(json.n == "1"){
+            		history.go(0);
+            	}
+            	else{
+            		alert("일정추가 실패");
+            	}
+            	
                 //DB연동시 중복이벤트 방지를 위한
                 //$('#calendar').fullCalendar('removeEvents');
                 //$('#calendar').fullCalendar('refetchEvents');

@@ -148,7 +148,6 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -157,9 +156,6 @@
 		
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 		allEmployeeView();
-
-		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
-		//allEmployeeView();
 
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){

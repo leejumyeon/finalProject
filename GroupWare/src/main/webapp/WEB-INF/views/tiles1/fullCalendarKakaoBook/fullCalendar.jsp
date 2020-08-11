@@ -95,7 +95,7 @@
 	                        <div class="row">
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-color">색상</label>
-	                                <select class="inputModal" name="color" id="edit-color">
+	                                <select class="inputModal" name="backgroundColor" id="edit-color">
 	                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
 	                                    <option value="#9775fa" style="color:#9775fa;">보라색</option>
 	                                    <option value="#ffa94d" style="color:#ffa94d;">주황색</option>
@@ -194,9 +194,7 @@
     </div>
     <!-- /.container -->
     
-     <script src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous">
-  	</script>
+     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
   	
   	<script>
 	  $(function () {

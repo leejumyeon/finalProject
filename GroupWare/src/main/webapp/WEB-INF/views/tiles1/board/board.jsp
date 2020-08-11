@@ -23,13 +23,7 @@
 	th, td {
 		height: 27px;
 	}
-	ul {
-		list-style: none;
-	}
-	ul > li {
-		display: inline-block;
-		width: 40px;
-	}
+	
 	#searchType {
 		height: 28px;
 		vertical-align: middle;
