@@ -32,6 +32,9 @@
 <%--  ===== datepicker css 와 script ===== --%>
 <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
 <script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>
+<script src="<%= request.getContextPath()%>/resources/datepicker/datepicker.js"></script>  
+<link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style1.css" />
+<link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
 
 </head>
 <body>

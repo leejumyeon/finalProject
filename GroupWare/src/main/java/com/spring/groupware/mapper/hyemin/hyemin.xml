@@ -17,21 +17,19 @@
 	<!-- === 검색어 입력 시 자동글 완성하기 6 === -->
 	<resultMap type="HashMap" id="headMap">
 		<result property="employee_seq" column="employee_seq" javaType="String" />
-		<result property="employee_name" column="employee_name" javaType="String" />
-		<result property="department_name" column="department_name" javaType="String" />
-		<result property="position_name" column="position_name" javaType="String" />
+		<result property="searchResult" column="searchResult" javaType="String" />
 	</resultMap>
 	<select id="headSearchShow" parameterType="String" resultMap="headMap">
-		select distinct E.employee_seq
-		     , E.employee_name AS employee_name
-		     , D.department_name AS department_name
-		     , P.position_name AS position_name
-		from department_table D join employees_table E
-		on D.department_seq = E.fk_department
-		join position_table P
-		on E.fk_position = P.position_seq
-		where lower(employee_name) like '%' || lower(#{searchHead}) || '%'
-		   or lower(department_name) like '%' || lower(#{searchHead}) || '%'
-		   or lower(position_name) like '%' || lower(#{searchHead}) || '%'
+		select employee_seq, searchResult
+		from
+		(
+			select distinct E.employee_seq
+				 , E.employee_name || ' &lt;' || D.department_name || '/' || P.position_name || '&gt;' AS searchResult
+			from department_table D join employees_table E
+			on D.department_seq = E.fk_department
+			join position_table P
+			on E.fk_position = P.position_seq
+		) V
+		where lower(searchResult) like '%' || lower(#{searchHead}) || '%'		   
 	</select>
 </mapper>

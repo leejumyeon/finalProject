@@ -19,5 +19,7 @@ public interface InterChoijhDAO {
 	List<MessengerVO> contentView(String roomNumber); // 채팅방 내용 읽어오기
 
 	int goWriteMsg(HashMap<String, String> map); // 채팅방 글쓰기
+
+	List<HashMap<String, String>> msgRoomListView(String employee_seq); // 대화목록 보여주기
 	
 }

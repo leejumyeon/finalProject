@@ -399,7 +399,7 @@ create table personalCalendar_table
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색     
+,backgroundColor      varchar2(100) -- 배경색     
 ,constraint pk_personalCalendar primary key(calendar_seq)
 ,constraint fk_personalcalendar_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
@@ -426,7 +426,7 @@ create table companyCalendar_table
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색
+,backgroundColor      varchar2(100) -- 배경색
 ,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
 ,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
 ,constraint pk_companyCalendar primary key(comCalendar_seq)
@@ -443,7 +443,6 @@ nomaxvalue -- 최대값 설정
 nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
-
 
 
 -- 메신저 그룹 테이블(messengerRoom_table) --
@@ -507,13 +506,14 @@ create table mail_table
 ,fileName3          varchar2(500) -- 파일첨부이름3
 ,orgFileName3       varchar2(500) -- 파일첨부 원래 이름3
 ,fileSize3          varchar2(10) -- 파일사이즈3
-,status         number default 0 not null-- 발송/수신 상태
+,status         number default 0 not null-- 발송/수신 상태(0:보낸 1:받은 2:자신)
 ,readStatus     number default 0 not null -- 기독 유무
 ,mailStatus     number default 1 not null-- 삭제유무 상태
 ,regDate        date default sysdate not null
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
-,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
+,constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1))
 );
+
 create SEQUENCE mail_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -735,5 +735,14 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+<<<<<<< HEAD
+=======
 
+-- 메일 테이블 check 제약조건 수정 --
+alter table mail_table drop constraint CK_mail_table;
+alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
+
+select * from mail_table order by mail_seq desc;
+commit;
               
+>>>>>>> 2538929cef56b382d9f446230d80b6b68e93c28a

@@ -2,27 +2,14 @@
 
 body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 
-<<<<<<< HEAD
-#mycontainer	{ width:1300px; border:solid 0px black; display: inline-block; float:left}
-#myheader		{ background-color:white; width:1300px; height:60px; padding: 10px; border-bottom:solid 1px #bfbfbf;}
-#mysession		{ width:1300px; border:solid 0px green;}
-#mysideinfo		{ background-color:#1187cf; float:left; display:inline-block; width:60px; min-height:800px; padding-top: 20px;}
-#mycontent		{ background-color:white; display:inline-block; width:1030px; min-height:800px; padding-top: 40px;}
-#mymessenger	{ background-color: black; display:inline-block; width:380px; margin-left:5px; min-height:800px;}
-=======
 
->>>>>>> 68be52b28377dc1b99bb81d24d1e5e9652bedfc9
 #mycontainer	{ width:1300px; border:solid 0px black; display: inline-block; float:left;}
 #myheader		{ background-color:white; height:60px; width:1300px; padding: 10px; border-bottom:solid 1px #F5F5F5;}
 #mysession		{ width:1300px; border:solid 0px green;}
 #mysideinfo		{ background-color:#1187cf; float:left; display:inline-block; width:60px; min-height:800px; padding-top: 20px;}
-<<<<<<< HEAD
-#mycontent		{ background-color:white; display:inline-block; width:1140px; min-height:800px; padding-top: 40px;}
-#mymessenger	{ background-color: white; width:380px; margin-left:5px; min-height:870px; display: inline-block;}
-=======
 #mycontent		{ background-color:white; display:inline-block; width:1240px; min-height:800px; padding-top: 40px;}
 #mymessenger	{ background-color: white; width:380px; margin-left:5px; min-height:870px;}
->>>>>>> 68be52b28377dc1b99bb81d24d1e5e9652bedfc9
+
 #myheader a {text-decoration:none;}
 
 /* mouse over link */

@@ -118,7 +118,7 @@ public class ChoijhController {
 	// 채팅방 글 쓰기
 	@ResponseBody
 	@RequestMapping(value="goWriteMsg.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
-	public String goMsg(HttpServletRequest request) {
+	public String goWriteMsg(HttpServletRequest request) {
 		
 		String roomNumber = request.getParameter("roomNumber");
 		String content = request.getParameter("content");
@@ -136,6 +136,34 @@ public class ChoijhController {
 		jsonObj.put("n", n);
 		
 		return jsonObj.toString();
+	}
+	
+	
+	// 대화목록 보여주기 
+	@ResponseBody
+	@RequestMapping(value="msgRoomListView.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.GET})
+	public String msgRoomListView(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		String Employee_seq = loginEmployee.getEmployee_seq();
+		
+		List<HashMap<String,String>> mapList = service.msgRoomListView(Employee_seq);
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(HashMap<String,String> map : mapList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("roomNumber", map.get("roomNumber"));
+			jsonObj.put("fk_employee_seq", map.get("fk_employee_seq"));
+			jsonObj.put("employee_name", map.get("employee_name"));
+			jsonObj.put("content", map.get("content"));
+			jsonObj.put("regDate", map.get("regDate"));
+		
+			jsArr.put(jsonObj);
+		} 
+		
+		return jsArr.toString();
 	}
 	
 	

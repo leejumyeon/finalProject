@@ -113,7 +113,7 @@
 	<div id="searchArea">
 		<div style="position: relative; display: inline;">
 			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" style="border: none;"/><span style="background-color: white">아이콘</span></div>
-			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>&nbsp;&nbsp;<span style="font-weight: bold;">${mailhamType}</span>
+			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>&nbsp;&nbsp;<span style="font-weight: bold;">${mailhamType} / ${total}</span>
 			<div id="searchTypetArea"></div>
 		</div>
 		<div id="termSearch" class="hide">
@@ -137,61 +137,71 @@
 			<button type="button">답장</button>
 		</div>
 		<div id="mailList">
-			<table class="table">
-			<c:if test="${not empty mailList}">
-				<c:if test="${mailhamType == '안 읽은 메일'}">
-					<c:forEach var="mail" items="${mailList}">
-						<tr style="color:blue;">
-							<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
-							<td>${mail.email}</td>
-							
-							<c:choose>
-								<c:when test="${mail.mailStatus eq 0}">
-									<td>[휴지통]${mail.subject}</td>
-								</c:when>
-								<c:when test="${mail.fk_employee_seq eq sessionScope.loginuser.employee_seq}">
-									<td>[내게 쓴 메일]${mail.subject}</td>
-								</c:when>
-								<c:when test="${mail.fk_employee_seq ne sessionScope.loginuser.employee_seq}">
-									<td>[받은 메일]${mail.subject}</td>
-								</c:when>
-							</c:choose>
-							
-							<td>${mail.regDate}</td>
-						</tr>	
-					</c:forEach>
-				</c:if>
-				<c:if test="${mailhamType == '받은메일' or mailhamType == '보낸메일' or mailhamType == '내게 쓴 메일'}">
-					<c:forEach var="mail" items="${mailList}">
-						<c:if test="${mail.readStatus ne '1' }">
+			<c:if test="${mailhamType != '첨부파일 있는 메일' }">
+				<table class="table">
+				<c:if test="${not empty mailList}">
+					<c:if test="${mailhamType == '안 읽은 메일' or mailhamType == '휴지통'}">
+						<c:forEach var="mail" items="${mailList}">
 							<tr style="color:blue;">
-								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
-								<td>${mail.email}</td>
-								<td>${mail.subject}</td>
-								<td>${mail.regDate}</td>
+								<c:if test="${mail.fk_employee_seq ne sessionScope.loginEmployee.employee_seq}">
+									<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+									<td>${mail.email}</td>
+									
+									<c:choose>
+										<c:when test="${mail.status eq 2}">
+											<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[내게 쓴 메일]${mail.subject}</a></td>
+										</c:when>
+										<c:when test="${mail.status eq 1}">
+											<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[보낸 메일]${mail.subject}</a></td>
+										</c:when>
+										<c:when test="${mail.status eq 0}">
+											<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[받은 메일]${mail.subject}</a></td>
+										</c:when>
+									</c:choose>
+									
+									<td>${mail.regDate}</td>
+								</c:if>
 							</tr>	
-						</c:if>
-						<c:if test="${mail.readStatus eq '1' }">
-							<tr>
-								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
-								<td>${mail.email}</td>
-								<td>${mail.subject}</td>
-								<td>${mail.regDate}</td>
-							</tr>	
-						</c:if>
-						
-					</c:forEach>
+						</c:forEach>
+					</c:if>
+					<c:if test="${mailhamType == '받은메일' or mailhamType == '보낸메일' or mailhamType == '내게 쓴 메일'}">
+						<c:forEach var="mail" items="${mailList}">
+							<c:choose>
+								<c:when test="${mail.readStatus eq 0 }">
+								<tr style="color:blue;">
+									<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+									<td>${mail.email}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
+									<td>${mail.regDate}</td>
+								</tr>	
+							</c:when>
+							<c:when test="${mail.readStatus eq 1 }">
+								<tr>
+									<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
+									<td>${mail.email}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
+									<td>${mail.regDate}</td>
+								</tr>	
+							</c:when>
+							</c:choose>
+						</c:forEach>
+					</c:if>
 				</c:if>
+				
+				<c:if test="${empty mailList}">
+					<tr>
+						<td colspan="4"> 메일이 없습니다.</td>
+					</tr>	
+				
+				</c:if>
+				</table>
 			</c:if>
-			
-			<c:if test="${empty mailList}">
-				<tr>
-					<td colspan="4"> 받은 메일이 없습니다.</td>
-				</tr>	
-			
+			<c:if test="${mailhamType == '첨부파일 있는 메일' }">
+				
 			</c:if>
-			</table>
-			<div id="pageBar"></div>
+			<div id="pageBar">
+				${pageBar}
+			</div>
 		</div>
 		
 	</div>
