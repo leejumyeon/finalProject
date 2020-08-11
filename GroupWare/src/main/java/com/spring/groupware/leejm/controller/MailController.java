@@ -49,11 +49,7 @@ public class MailController {
 		paraMap.put("type", type);
 		paraMap.put("loginSeq", emp.getEmployee_seq());
 		
-		String currentPageNo = request.getParameter("currentPageNo");
-		if(currentPageNo == null || currentPageNo.trim().isEmpty()) {
-			currentPageNo = "1";
-		}
-		paraMap.put("currentPageNo", currentPageNo);
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
 		
 		String searchWord = request.getParameter("searchWord");
 		String searchType = request.getParameter("searchType");
@@ -64,10 +60,89 @@ public class MailController {
 		paraMap.put("searchWord", searchWord);
 		paraMap.put("searchType", searchType);
 		
+		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
+		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
+		int totalCount = 0;        // 총게시물 건수
+		int sizePerPage = 15;      // 한 페이지당 보여줄 게시물 건수
+		int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage = 0;         // 총 페이지 수(웹브라우저상에 보여줄 총 페이지 개수, 페이지바) 
+		
+		int startRno = 0;          // 시작 행번호
+		int endRno = 0;            // 끝 행번호
+		
+		totalCount = service.getTotalCount(paraMap);
+		
+		totalPage = (int) Math.ceil( (double)totalCount/sizePerPage );
+		
+		if(str_currentPageNo == null || str_currentPageNo.trim().isEmpty()) {
+			currentShowPageNo = 1;
+		}else {	
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentPageNo); 
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1; 
+		
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
 		
 		
 		
 		List<MailVO> mailList = service.mailList(paraMap);
+		
+		// === #119. 페이지바 만들기 === //
+		String pageBar = "<ul style='list-style: none; text-align:center;'>";
+		
+		int blockSize = 10;
+		
+		
+		int loop = 1;
+		/*
+		    loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[ 지금은 10개(== blockSize) ] 까지만 증가하는 용도이다.
+		*/
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		// *** !! 공식이다. !! *** //
+		System.out.println("총 게시글 수:"+totalCount+"/ pageNo:"+pageNo+"/ currentPage:"+currentShowPageNo);
+	
+		
+		String url = request.getContextPath()+"/mail/list.top";
+		
+		// === [이전] 만들기 === 
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"&type="+type+"'>[이전]</a></li>";
+		}
+		
+		while( !(loop > blockSize || pageNo > totalPage) ) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>"+pageNo+"</a></li>";
+			}
+			
+			loop++;
+			pageNo++;
+			
+		}// end of while------------------------------
+		
+		
+		// === [다음] 만들기 ===
+		if( !(pageNo > totalPage) ) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>[다음]</a></li>";
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
 		
 		if("receive".equals(type)) {
 			mav.addObject("mailhamType","받은메일");
@@ -89,10 +164,15 @@ public class MailController {
 		}
 		
 		else if("search".equals(type)) {
-			
+			mav.addObject("mailhamType","검색");
+		}
+		
+		else if("del".equals(type)) {
+			mav.addObject("mailhamType","휴지통");
 		}
 		
 		mav.addObject("mailList",mailList);
+		mav.addObject("total",totalCount);
 		mav.setViewName("mail/mailList.tiles2");
 		
 		return mav;
@@ -118,6 +198,7 @@ public class MailController {
 		return mav;
 	}
 	
+	// 메일 보내기 기능 //
 	@RequestMapping(value="mail/mailSend.top")
 	public ModelAndView mailSend(ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		HttpSession session = mrequest.getSession();
@@ -130,6 +211,7 @@ public class MailController {
 		
 		String subject = mrequest.getParameter("subject");
 		String content = mrequest.getParameter("content");
+		String sendType = mrequest.getParameter("sendType");
 		List<MultipartFile> attachList = mrequest.getFiles("fileName");
 		List<MailVO> mailList = new ArrayList<>();
 		
@@ -141,19 +223,31 @@ public class MailController {
 		sendMail.setSubject(subject);
 		sendMail.setReadStatus("1");
 		
-		// 받는 메일 VO 생성 //
-		MailVO receiveMail = new MailVO();
-		receiveMail.setFk_employee_seq(receiveArr[0]);
-		receiveMail.setContent(content);
-		receiveMail.setSubject(subject);
-		receiveMail.setStatus("1");
-		receiveMail.setReadStatus("0");
+		MailVO receiveMail = null;
+		if(!"mine".equals(sendType)) {
+			// 받는 메일 VO 생성 //
+			receiveMail = new MailVO();
+			receiveMail.setFk_employee_seq(receiveArr[0]);
+			receiveMail.setContent(content);
+			receiveMail.setSubject(subject);
+			receiveMail.setStatus("1");
+			receiveMail.setReadStatus("0");
+		}
+		else {
+			sendMail.setStatus("2"); //내게 쓰기 상태
+			sendMail.setReadStatus("0");
+		}
+		
 		
 		// 메일 그룹번호 채번하기
 		String mail_groupno = service.getMail_groupno();
 		mail_groupno = String.valueOf(Integer.parseInt(mail_groupno)+1);
 		sendMail.setMail_groupno(mail_groupno);
-		receiveMail.setMail_groupno(mail_groupno);
+		
+		if(!"mine".equals(sendType)) {
+			receiveMail.setMail_groupno(mail_groupno);
+		}
+		
 		
 		
 		if(!attachList.isEmpty()) {
@@ -163,81 +257,96 @@ public class MailController {
 			String receivePath = root + "resources" + File.separator + "receiveFiles";
 			String newReceiveFileName = "";
 			
+			int cnt = 0;
+			
 			for(int i=0; i<attachList.size(); i++) {
-				
-				byte[] bytes = null;
-				
-				long fileSize = 0;
-				
-				try {
-					bytes = attachList.get(i).getBytes();
-					// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
-					// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
-					// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+				if(!attachList.get(i).isEmpty()) {
+					System.out.println("파일 업로드");
+					byte[] bytes = null;
+					long fileSize = 0;
 					
-					newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
-					newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
-					// 위의 것이 파일 올리기를 해주는 것이다.
-					// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
-					
-					System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
-			
-				/*
-				 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
-				*/
-					fileSize = attachList.get(i).getSize();
-					
-					if(i==0) {
-						sendMail.setFileName1(newSendFileName);
-						sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize1(String.valueOf(fileSize));
+					try {
+						bytes = attachList.get(i).getBytes();
+						// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
 						
-						receiveMail.setFileName1(newSendFileName);
-						receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize1(String.valueOf(fileSize));
-					}
-					else if(i==1) {
-						sendMail.setFileName2(newSendFileName);
-						sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize2(String.valueOf(fileSize));
+						newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
+						if(!"mine".equals(sendType)) {
+							newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
+						}
+						// 위의 것이 파일 올리기를 해주는 것이다.
+						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
-						receiveMail.setFileName2(newReceiveFileName);
-						receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize2(String.valueOf(fileSize));
-					}
-					else {
-						sendMail.setFileName3(newReceiveFileName);
-						sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize3(String.valueOf(fileSize));
+						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+				
+					/*
+					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
+					*/
+						fileSize = attachList.get(i).getSize();
 						
-						receiveMail.setFileName3(newReceiveFileName);
-						receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize3(String.valueOf(fileSize));
-					}
-					// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+						if(cnt==0) {
+							sendMail.setFileName1(newSendFileName);
+							sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize1(String.valueOf(fileSize));
 							
+							if(receiveMail != null) {
+								receiveMail.setFileName1(newSendFileName);
+								receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize1(String.valueOf(fileSize));
+							}
+							
+						}
+						else if(cnt==1) {
+							sendMail.setFileName2(newSendFileName);
+							sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize2(String.valueOf(fileSize));
+							
+							if(receiveMail != null) {
+								receiveMail.setFileName2(newReceiveFileName);
+								receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize2(String.valueOf(fileSize));
+							}
+						}
+						else {
+							sendMail.setFileName3(newReceiveFileName);
+							sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize3(String.valueOf(fileSize));
+							
+							if(receiveMail != null) {
+								receiveMail.setFileName3(newReceiveFileName);
+								receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize3(String.valueOf(fileSize));
+							}
+							
+						}
+						cnt++;
+						// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
 								
-				} catch (Exception e) {
-					e.printStackTrace();
+									
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				
-				
 			}
-			
 		} // end of if(!attachList.isEmpty())-------------------------------------------------
 		
 		mailList.add(sendMail);
-		mailList.add(receiveMail);
 		
-		// 받는 사람 복수일 경우
-		if(receiveArr.length>1) {
-			for(int i=0; i<receiveArr.length; i++) {
-				if(i>0) {
-					receiveMail.setFk_employee_seq(receiveArr[i]);
-					mailList.add(receiveMail);
+		if(receiveMail!=null) {
+			mailList.add(receiveMail);
+			
+			// 받는 사람 복수일 경우
+			if(receiveArr.length>1) {
+				for(int i=0; i<receiveArr.length; i++) {
+					if(i>0) {
+						receiveMail.setFk_employee_seq(receiveArr[i]);
+						mailList.add(receiveMail);
+					}
 				}
 			}
 		}
+		
 		
 		int count = mailList.size();
 		int n = 0;
@@ -274,11 +383,19 @@ public class MailController {
 	// 메일 읽기 페이지 이동
 	@RequestMapping(value="/mail/read.top")
 	public ModelAndView mailRead(ModelAndView mav, HttpServletRequest request) {
+		String mail_seq = request.getParameter("mail_seq");
+		MailVO mail = null;
+		try {
+			mail = service.mailRead(mail_seq);
+		}catch(Throwable e) {
+			e.printStackTrace();
+		}
+		if(mail != null) mav.addObject("mail",mail);
 		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
 	}
 	
-	
+	// 스마트 에디터 사진첨부 //
 	@RequestMapping(value="/image/photoUpload.action", method={RequestMethod.POST})
 	public String photoUpload(PhotoVO photovo, MultipartHttpServletRequest req) {
 	    

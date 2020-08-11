@@ -34,4 +34,36 @@ public interface InterMailDAO {
 
 	// 첨부파일 있는 메일 조회
 	List<MailVO> attachMailList(HashMap<String, String> paraMap);
+
+	// 메일 읽기 
+	MailVO mailRead(String mail_seq);
+
+	// readCount 업데이트(0->1)
+	void updateReadstatus(String mail_seq);
+
+	// 휴지통 메일 조회
+	List<MailVO> delMailList(HashMap<String, String> paraMap);
+
+	// 받는 메일 건 수
+	int receiveMailCount(HashMap<String, String> paraMap);
+
+	// 보낸 메일 건 수
+	int sendMailCount(HashMap<String, String> paraMap);
+
+	// 내게 쓴 메일 건 수
+	int mineMailCount(HashMap<String, String> paraMap);
+
+	// 안 읽은 메일 건 수
+	int noReadMailCount(HashMap<String, String> paraMap);
+
+	// 첨부파일 있는 메일 건 수 
+	int attachMailCount(HashMap<String, String> paraMap);
+
+	// 검색 메일 건 수
+	int searchMailCount(HashMap<String, String> paraMap);
+
+	// 휴지통 메일 건 수
+	int delMailCount(HashMap<String, String> paraMap);
+
+	
 }

@@ -219,6 +219,7 @@
 			
 		}); // end of $(".room").click(function(event){})----------------------------
 		
+		var fk_roomNumber = $("#fk_roomNumber").text();
 		
 		// 날짜 변경했을 때
 		$("#datepicker").change(function(event){
@@ -377,7 +378,7 @@
 								// word 값을 전부 소문자로 맞춰준다. // 글자가 위치하는 인덱스 값을 알려준다.(즉, 길이)
 							//	console.log("index : " + index);
 								
-								var len = $("#searchHead").val().length;
+							//	var len = $("#searchHead").val().length;
 								
 								var result = "";													
 								
@@ -385,7 +386,7 @@
 							//	console.log( word.substr(index,len) );	// 검색어 글자
 							//	console.log( word.substr(index+len) );	// 검색어 뒤부터 끝까지의 글자
 							
-								result = "<span class='search' style='color:gray;'>"+item.employee_name+" &lt;"+item.department_name+"/"+item.position_name+"&gt;"+"</span><span class='hide'>"+item.employee_seq+"</span>";	
+								result = "<span class='search' style='color:gray;'>"+item.searchResult+"</span><span class='hide'>"+item.employee_seq+"</span>";	
 								
 								html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br/>";
 							});
@@ -660,8 +661,14 @@
 				<tr id="info_tr">
 					<th id="info_th">회의실</th>
 					<td id="info_td">
-						<span id="roomName"></span>
-						<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						<c:if test="${empty fk_roomNumber}">
+							<span id="roomName">-</span>
+							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						</c:if>
+						<c:if test="${not empty fk_roomNumber}">
+							<span id="roomName"></span>
+							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						</c:if>
 					</td>
 				</tr>
 				<tr id="info_tr">
@@ -679,11 +686,12 @@
 						<input type="hidden" id="endTimeH" name="endTimeH"><!-- hidden -->						
 					</td>
 				</tr>
-				<tr id="info_tr">
+				<tr id="info_tr">		
 					<th id="info_th">예약 신청자</th>
 					<td id="info_td">
+						<span id="rsvt_employee"></span>
 						<input type="text" readonly="readonly"/>
-						<input type="text" value="fk_employee_seq"/><!-- hidden -->
+						<input type="text" name="fk_employee_seq" value="${sessionScope.loginuser.fk_employee_seq}" /><!-- hidden -->
 					</td>
 				</tr>
 				<tr id="info_tr">

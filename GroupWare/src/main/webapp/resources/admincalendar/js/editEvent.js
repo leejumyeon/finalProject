@@ -30,7 +30,9 @@ var editEvent = function (event, element, view) {
     editType.val(event.type);
     editDesc.val(event.description);
     editColor.val(event.backgroundColor).css('color', event.backgroundColor);
-
+    editType.val(event.calendar_category);
+    editusername.val(event.fk_department_seq);
+    
     addBtnContainer.hide();
     modifyBtnContainer.show();
     eventModal.modal('show');
@@ -74,42 +76,58 @@ var editEvent = function (event, element, view) {
         event.end = displayDate;
         event.type = editType.val();
         event.backgroundColor = editColor.val();
-        event.description = editDesc.val();
-
-        $("#calendar").fullCalendar('updateEvent', event);
-
+        event.description = editDesc.val();    
+        event.fk_department_seq = editusername.val();
+        event.calendar_category = editType.val();
+        //$("#calendar").fullCalendar('updateEvent', event);
+        
+        alert(event._id);
+        
         //일정 업데이트
         $.ajax({
             type: "get",
-            url: "",
+            url: "/groupware/updateAdminCalendar.top",
             data: {
-                //...
+            	"_id":event._id,
+            	"title":event.title,
+            	"start":event.start,
+            	"end":event.end,
+            	"description":event.description,
+            	"backgroundColor":event.backgroundColor,
+            	"edit-username":event.fk_department_seq,
+            	"edit-type":event.calendar_category
             },
             success: function (response) {
                 alert('수정되었습니다.')
+                history.go(0);
+            }
+        });
+        
+    });
+    
+    // 삭제버튼
+    $('#deleteEvent').on('click', function () {
+        
+        $('#deleteEvent').unbind();
+        $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+        eventModal.modal('hide');
+
+        //삭제시
+        $.ajax({
+            type: "get",
+            url: "/groupware/deleteAdminCalendar.top",
+            data: {
+                
+            	"_id":event._id
+            	
+            },
+            success: function (response) {
+                alert('삭제되었습니다.');
+                history.go(0);
             }
         });
 
     });
+    
 };
 
-// 삭제버튼
-$('#deleteEvent').on('click', function () {
-    
-    $('#deleteEvent').unbind();
-    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
-    eventModal.modal('hide');
-
-    //삭제시
-    $.ajax({
-        type: "get",
-        url: "",
-        data: {
-            //...
-        },
-        success: function (response) {
-            alert('삭제되었습니다.');
-        }
-    });
-
-});

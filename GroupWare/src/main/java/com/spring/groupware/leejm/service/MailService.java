@@ -29,7 +29,7 @@ public class MailService implements InterMailService{
 	// 메일 보내기 기능(트랜잭션 처리 필요 - 메일의 수 만큼 insert를 해야 하고 중간에 오류가 발생할 경우 rollback)
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = {Throwable.class})
-	public int mailSend(List<MailVO> mailList) {
+	public int mailSend(List<MailVO> mailList) throws Throwable{
 		int result = 0;
 		for(MailVO mail : mailList) {
 			result += dao.mailSend(mail);
@@ -66,6 +66,51 @@ public class MailService implements InterMailService{
 		else if("search".equals(paraMap.get("type"))) {
 			mailList = dao.searchMailList(paraMap);
 		}
+		else if("del".equals(paraMap.get("type"))) {
+			mailList = dao.delMailList(paraMap);
+		}
 		return mailList;
+	}
+
+	// 메일 읽기 페이지 이동(트랜잭션 처리 - 페이지 이동과 동시에 readStatus값 업데이트)
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = {Throwable.class})
+	public MailVO mailRead(String mail_seq) throws Throwable {
+		MailVO mail = dao.mailRead(mail_seq);
+		
+		if(mail!=null) {
+			dao.updateReadstatus(mail_seq);
+		}
+		
+		return mail;
+	}
+
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+		int result = 0;
+		
+		if("receive".equals(paraMap.get("type"))) {
+			result = dao.receiveMailCount(paraMap);
+		}
+		else if("send".equals(paraMap.get("type"))) {
+			result = dao.sendMailCount(paraMap);
+		}
+		else if("mine".equals(paraMap.get("type"))) {
+			result = dao.mineMailCount(paraMap);
+		}
+		else if("read".equals(paraMap.get("type"))) {
+			result = dao.noReadMailCount(paraMap);
+		}
+		else if("attach".equals(paraMap.get("type"))) {
+			result = dao.attachMailCount(paraMap);
+		}
+		else if("search".equals(paraMap.get("type"))) {
+			result = dao.searchMailCount(paraMap);
+		}
+		else if("del".equals(paraMap.get("type"))) {
+			result = dao.delMailCount(paraMap);
+		}
+		
+		return result;
 	}
 }

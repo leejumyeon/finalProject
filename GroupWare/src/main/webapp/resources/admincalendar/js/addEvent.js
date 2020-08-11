@@ -8,6 +8,7 @@ var editEnd = $('#edit-end');
 var editType = $('#edit-type');
 var editColor = $('#edit-color');
 var editDesc = $('#edit-desc');
+var editusername = $('#edit-username');
 
 var addBtnContainer = $('.modalBtnContainer-addEvent');
 var modifyBtnContainer = $('.modalBtnContainer-modifyEvent');
@@ -26,13 +27,13 @@ var newEvent = function (start, end, eventType) {
     editStart.val(start);
     editEnd.val(end);
     editDesc.val('');
-    
+
     addBtnContainer.show();
     modifyBtnContainer.hide();
     eventModal.modal('show');
 
     /******** 임시 RAMDON ID - 실제 DB 연동시 삭제 **********/
-    var eventId = 1 + Math.floor(Math.random() * 1000);
+//    var eventId = 1 + Math.floor(Math.random() * 1000);
     /******** 임시 RAMDON ID - 실제 DB 연동시 삭제 **********/
 
     //새로운 일정 저장버튼 클릭
@@ -45,14 +46,14 @@ var newEvent = function (start, end, eventType) {
             start: editStart.val(),
             end: editEnd.val(),
             description: editDesc.val(),
-            type: editType.val(),
-            username: '사나',
+            calendar_category: editType.val(),
+            fk_department_seq: editusername.val(),
             backgroundColor: editColor.val(),
             textColor: '#ffffff',
             allDay: false
         };
         
-        alert(eventData.start);
+        alert(eventData.calendar_category);
 
         if (eventData.start > eventData.end) {
             alert('끝나는 날짜가 앞설 수 없습니다.');
@@ -76,20 +77,35 @@ var newEvent = function (start, end, eventType) {
             eventData.allDay = true;
         }
 
-        $("#calendar").fullCalendar('renderEvent', eventData, true);
+        //$("#calendar").fullCalendar('renderEvent', eventData, true);
         eventModal.find('input, textarea').val('');
         editAllDay.prop('checked', false);
         eventModal.modal('hide');
 
         //새로운 일정 저장
         $.ajax({
-            type: "get",
-            url: "/groupware/insertCalendar.top",
+            type: "POST",
+            url: "/groupware/insertAdminCalendar.top",
             data: {
-            	"_id":eventData._id
+            	"_id":eventData._id,
+            	"title":eventData.title,
+            	"start":eventData.start,
+            	"end":eventData.end,
+            	"description":eventData.description,
+            	"backgroundColor":eventData.backgroundColor,
+            	"edit-username":eventData.fk_department_seq,
+            	"edit-type":eventData.calendar_category
             },
             dataType:"JSON",
             success: function (json) {
+            	
+            	if(json.n == "1"){
+            		history.go(0);
+            	}
+            	else{
+            		alert("일정추가 실패");
+            	}
+            	
                 //DB연동시 중복이벤트 방지를 위한
                 //$('#calendar').fullCalendar('removeEvents');
                 //$('#calendar').fullCalendar('refetchEvents');

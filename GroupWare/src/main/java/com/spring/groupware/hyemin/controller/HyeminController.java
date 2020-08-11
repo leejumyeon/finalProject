@@ -80,9 +80,7 @@ public class HyeminController {
 			for(HashMap<String, String> head : headList) {
 				JSONObject jsonObj = new JSONObject();
 				jsonObj.put("employee_seq", head.get("employee_seq"));
-				jsonObj.put("employee_name", head.get("employee_name"));
-				jsonObj.put("department_name", head.get("department_name"));
-				jsonObj.put("position_name", head.get("position_name"));
+				jsonObj.put("searchResult", head.get("searchResult"));
 				
 				jsonArr.put(jsonObj);
 			}

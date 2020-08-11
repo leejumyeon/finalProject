@@ -1,22 +1,22 @@
 package com.spring.groupware.commonVO;
 
 public class CompanyCalVO {//회사일정VO
-	private String calendar_seq; //일정 번호
+	private String comCalendar_seq; //일정 번호
 	private String title; //일정 제목
 	private String content; //일정 내용
 	private String startDate; //일정 시작날짜
 	private String endDate; //일정 종료날짜
-	private String color; //색상
+	private String backgroundColor; //색상
 	private String fk_department_seq; //부서번호
 	private String department_name; //부서명
 	private String calendar_category; //회사일정 항목번호
 	private String category_name; //회사일정 항목 이름
-	
-	public String getCalendar_seq() {
-		return calendar_seq;
+
+	public String getComCalendar_seq() {
+		return comCalendar_seq;
 	}
-	public void setCalendar_seq(String calendar_seq) {
-		this.calendar_seq = calendar_seq;
+	public void setComCalendar_seq(String comCalendar_seq) {
+		this.comCalendar_seq = comCalendar_seq;
 	}
 	public String getTitle() {
 		return title;
@@ -42,11 +42,11 @@ public class CompanyCalVO {//회사일정VO
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public String getColor() {
-		return color;
+	public String getBackgroundColor() {
+		return backgroundColor;
 	}
-	public void setColor(String color) {
-		this.color = color;
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 	public String getFk_department_seq() {
 		return fk_department_seq;

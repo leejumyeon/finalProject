@@ -20,8 +20,17 @@ public interface ChaInterService {
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정삭제
 	int deleteFullCalendar(HashMap<String, String> paraMap);
 
-	// 회사 일정
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정
 	List<CompanyCalVO> adminFullCalendar();
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정추가
+	int insertAdminCalendar(HashMap<String, String> paraMap);
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 수정
+	int updateAdminCalendar(HashMap<String, String> paraMap);
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
+	int deleteAdminCalendar(HashMap<String, String> paraMap);
 
 	
 	
