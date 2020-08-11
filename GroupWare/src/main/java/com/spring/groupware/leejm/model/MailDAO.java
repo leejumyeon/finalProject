@@ -77,4 +77,18 @@ public class MailDAO implements InterMailDAO{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	// 메일 읽기
+	@Override
+	public MailVO mailRead(String mail_seq) {
+		MailVO mail = sqlsession.selectOne("mail.mailRead",mail_seq);
+		return mail;
+	}
+
+	// readCount 업데이트(0->1)
+	@Override
+	public void updateReadstatus(String mail_seq) {
+		sqlsession.update("mail.updateReadstatus",mail_seq);
+		
+	}
 }

@@ -68,4 +68,17 @@ public class MailService implements InterMailService{
 		}
 		return mailList;
 	}
+
+	// 메일 읽기 페이지 이동
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = {Throwable.class})
+	public MailVO mailRead(String mail_seq) {
+		MailVO mail = dao.mailRead(mail_seq);
+		
+		if(mail!=null) {
+			dao.updateReadstatus(mail_seq);
+		}
+		
+		return mail;
+	}
 }

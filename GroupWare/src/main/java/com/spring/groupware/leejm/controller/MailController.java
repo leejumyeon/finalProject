@@ -118,6 +118,7 @@ public class MailController {
 		return mav;
 	}
 	
+	// 메일 보내기 기능 //
 	@RequestMapping(value="mail/mailSend.top")
 	public ModelAndView mailSend(ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		HttpSession session = mrequest.getSession();
@@ -154,6 +155,7 @@ public class MailController {
 		}
 		else {
 			sendMail.setStatus("2"); //내게 쓰기 상태
+			sendMail.setReadStatus("0");
 		}
 		
 		
@@ -161,7 +163,11 @@ public class MailController {
 		String mail_groupno = service.getMail_groupno();
 		mail_groupno = String.valueOf(Integer.parseInt(mail_groupno)+1);
 		sendMail.setMail_groupno(mail_groupno);
-		receiveMail.setMail_groupno(mail_groupno);
+		
+		if(!"mine".equals(sendType)) {
+			receiveMail.setMail_groupno(mail_groupno);
+		}
+		
 		
 		
 		if(!attachList.isEmpty()) {
@@ -172,76 +178,74 @@ public class MailController {
 			String newReceiveFileName = "";
 			
 			for(int i=0; i<attachList.size(); i++) {
-				
-				byte[] bytes = null;
-				
-				long fileSize = 0;
-				
-				try {
-					bytes = attachList.get(i).getBytes();
-					// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
-					// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
-					// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+				if(attachList.get(i)!=null) {
+					byte[] bytes = null;
 					
-					newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
-					if(!"mine".equals(sendType)) {
-						newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
-					}
-					// 위의 것이 파일 올리기를 해주는 것이다.
-					// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
+					long fileSize = 0;
 					
-					System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
-			
-				/*
-				 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
-				*/
-					fileSize = attachList.get(i).getSize();
-					
-					if(i==0) {
-						sendMail.setFileName1(newSendFileName);
-						sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize1(String.valueOf(fileSize));
+					try {
+						bytes = attachList.get(i).getBytes();
+						// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
 						
-						if(receiveMail != null) {
-							receiveMail.setFileName1(newSendFileName);
-							receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
-							receiveMail.setFileSize1(String.valueOf(fileSize));
+						newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
+						if(!"mine".equals(sendType)) {
+							newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
 						}
+						// 위의 것이 파일 올리기를 해주는 것이다.
+						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
-					}
-					else if(i==1) {
-						sendMail.setFileName2(newSendFileName);
-						sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize2(String.valueOf(fileSize));
+						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+				
+					/*
+					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
+					*/
+						fileSize = attachList.get(i).getSize();
 						
-						if(receiveMail != null) {
-							receiveMail.setFileName2(newReceiveFileName);
-							receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
-							receiveMail.setFileSize2(String.valueOf(fileSize));
-						}
-					}
-					else {
-						sendMail.setFileName3(newReceiveFileName);
-						sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
-						sendMail.setFileSize3(String.valueOf(fileSize));
-						
-						if(receiveMail != null) {
-							receiveMail.setFileName3(newReceiveFileName);
-							receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
-							receiveMail.setFileSize3(String.valueOf(fileSize));
-						}
-						
-					}
-					// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+						if(i==0) {
+							sendMail.setFileName1(newSendFileName);
+							sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize1(String.valueOf(fileSize));
 							
+							if(receiveMail != null) {
+								receiveMail.setFileName1(newSendFileName);
+								receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize1(String.valueOf(fileSize));
+							}
+							
+						}
+						else if(i==1) {
+							sendMail.setFileName2(newSendFileName);
+							sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize2(String.valueOf(fileSize));
+							
+							if(receiveMail != null) {
+								receiveMail.setFileName2(newReceiveFileName);
+								receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize2(String.valueOf(fileSize));
+							}
+						}
+						else {
+							sendMail.setFileName3(newReceiveFileName);
+							sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize3(String.valueOf(fileSize));
+							
+							if(receiveMail != null) {
+								receiveMail.setFileName3(newReceiveFileName);
+								receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+								receiveMail.setFileSize3(String.valueOf(fileSize));
+							}
+							
+						}
+						// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
 								
-				} catch (Exception e) {
-					e.printStackTrace();
+									
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				
-				
 			}
-			
 		} // end of if(!attachList.isEmpty())-------------------------------------------------
 		
 		mailList.add(sendMail);
@@ -296,6 +300,8 @@ public class MailController {
 	// 메일 읽기 페이지 이동
 	@RequestMapping(value="/mail/read.top")
 	public ModelAndView mailRead(ModelAndView mav, HttpServletRequest request) {
+		String mail_seq = request.getParameter("mail_seq");
+		MailVO mail = service.mailRead(mail_seq);
 		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
 	}

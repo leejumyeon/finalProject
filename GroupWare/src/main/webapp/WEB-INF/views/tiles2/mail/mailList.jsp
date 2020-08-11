@@ -147,16 +147,16 @@
 							
 							<c:choose>
 								<c:when test="${mail.mailStatus eq 0}">
-									<td>[휴지통]${mail.subject}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[휴지통]${mail.subject}</a></td>
 								</c:when>
 								<c:when test="${mail.status eq 2}">
-									<td>[내게 쓴 메일]${mail.subject}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[내게 쓴 메일]${mail.subject}</a></td>
 								</c:when>
 								<c:when test="${mail.status eq 0}">
-									<td>[보낸 메일]${mail.subject}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[보낸 메일]${mail.subject}</a></td>
 								</c:when>
 								<c:when test="${mail.status eq 1}">
-									<td>[받은 메일]${mail.subject}</td>
+									<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[받은 메일]${mail.subject}</a></td>
 								</c:when>
 							</c:choose>
 							
@@ -166,23 +166,24 @@
 				</c:if>
 				<c:if test="${mailhamType == '받은메일' or mailhamType == '보낸메일' or mailhamType == '내게 쓴 메일'}">
 					<c:forEach var="mail" items="${mailList}">
-						<c:if test="${mail.readStatus ne '1' }">
+						<c:choose>
+							<c:when test="${mail.readStatus ne 1 }">
 							<tr style="color:blue;">
 								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
 								<td>${mail.email}</td>
-								<td>${mail.subject}</td>
+								<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
 								<td>${mail.regDate}</td>
 							</tr>	
-						</c:if>
-						<c:if test="${mail.readStatus eq '1' }">
+						</c:when>
+						<c:when test="${mail.readStatus eq 1 }">
 							<tr>
 								<td><input type="checkbox" name="selectCheck" value="${mail.mail_seq}" /></td>
 								<td>${mail.email}</td>
-								<td>${mail.subject}</td>
+								<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
 								<td>${mail.regDate}</td>
 							</tr>	
-						</c:if>
-						
+						</c:when>
+						</c:choose>
 					</c:forEach>
 				</c:if>
 			</c:if>
