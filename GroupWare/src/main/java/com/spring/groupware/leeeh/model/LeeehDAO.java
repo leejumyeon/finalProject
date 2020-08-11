@@ -8,8 +8,10 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.ClubVO;
 import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
+import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 
 @Repository
@@ -68,6 +70,192 @@ public class LeeehDAO implements InterLeeehDAO {
 		String max = sqlsession.selectOne("leeeh.getMaxOfGroupno", regDate);
 		
 		return max;
+	}
+
+	// === 문서 결재 작성 페이지에서 사원들 정보 불러오기 === //
+	@Override
+	public List<EmployeesVO> showMemberByDepartment(String seq) {
+
+		List<EmployeesVO> employeesByDepartList = sqlsession.selectList("leeeh.showMemberByDepartment", seq);
+		
+		return employeesByDepartList;
+	}
+
+	// === 클릭한 사원들 결재선에 올리기 === //
+	@Override
+	public List<EmployeesVO> approvalList(HashMap<String, Object> paraMap) {
+
+		List<EmployeesVO> approvalList = sqlsession.selectList("leeeh.approvalList", paraMap);
+		
+		return approvalList;
+	}
+
+	// === 휴가 종류 받아오기 === //
+	@Override
+	public List<HashMap<String, String>> tripCatListOfVacation() {
+
+		List<HashMap<String, String>> tripCatList = sqlsession.selectList("leeeh.tripCatListOfVacation");
+		
+		return tripCatList;
+	}
+
+	// === 출장 종류 받아오기 === //
+	@Override
+	public List<HashMap<String, String>> tripCatListOfBusiness() {
+
+		List<HashMap<String, String>> tripCatList = sqlsession.selectList("leeeh.tripCatListOfBusiness");
+		
+		return tripCatList;
+	}
+	
+	// === 문서 결재 테이블에 정보 집어 넣기 === //
+	@Override
+	public void insertDocumentTable(DocumentVO dvo) {
+
+		sqlsession.insert("leeeh.insertDocumentTable", dvo);
+	}
+
+	// === 휴가 정보를 휴가/출장 테이블에 집어 넣기 === //
+	@Override
+	public void insertTripTableOfVacation(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertTripTableOfVacation", paraMap);
+	}
+
+	// === 휴가 정보를 휴가/출장 테이블에 집어 넣기 === //
+	@Override
+	public void insertTripTableOfBusiness(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertTripTableOfBusiness", paraMap);
+	}
+
+	// === 매출 정보를 매출 테이블에 집어 넣기 === //
+	@Override
+	public void insertSalesTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertSalesTable", paraMap);
+	}
+
+	// === 비품 구매 정보를 배품 테이블에 집어 넣기 === //
+	@Override
+	public void insertEquipmentTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertEquipmentTable", paraMap);
+	}
+
+	// === 프로젝트 seq번호 체번해오기 === //
+	@Override
+	public String getProjectSeq() {
+
+		String project_seq = sqlsession.selectOne("leeeh.getProjectSeq");
+		
+		return project_seq;
+	}
+
+	// === 프로젝트 정보를 프로젝트 테이블에 집어 넣기 === //
+	@Override
+	public void insertProjectTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertProjectTable", paraMap);
+	}
+
+	// === 프로젝트 명단에 들어갈 사원 번호 받아오기 === //
+	@Override
+	public String getEmployeeSeq(HashMap<String, Object> paraMap) {
+
+		String employee_seq = sqlsession.selectOne("leeeh.getEmployeeSeq", paraMap);
+		
+		return employee_seq;
+	}
+
+	// === 사원 ID로 사원 번호 알아오기 === //
+	@Override
+	public String getEmployeeSeqByEmployeeId(String employee_id) {
+		
+		String employee_seq = sqlsession.selectOne("leeeh.getEmployeeSeqByEmployeeId", employee_id);
+		
+		return employee_seq;
+	}
+	
+	// === 프로젝트 명단에 집어 넣기 === //
+	@Override
+	public void insertProjectMemberTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertProjectMemberTable", paraMap);
+	}
+
+	// === 프로젝트 중단 정보를 프로젝트 테이블에 업데이트 하기 === //
+	@Override
+	public void updateProjectTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateProjectTable", paraMap);
+	}
+
+	// === 프로젝트 완료 정보를 프로젝트 테이블에 업데이트 하기 === //
+	@Override
+	public void updateProjectTableEnd(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateProjectTableEnd", paraMap);
+	}
+
+	// === 퇴사 정보를 퇴사 테이블에 집어 넣기 === //
+	@Override
+	public void insertFireTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertFireTable", paraMap);
+	}
+
+	// === 근태 정보를 근태관리 테이블에 집어 넣기 === //
+	@Override
+	public void insertTATable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertTATable", paraMap);
+	}
+
+	// === 동호회 정보를 종호회 테이블에 집어 넣기 === //
+	@Override
+	public void insertClubTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertClubTable", paraMap);
+	}
+
+	// === 클럽 모두 가져오기 === //
+	@Override
+	public List<ClubVO> clubList() {
+
+		List<ClubVO> clubList = sqlsession.selectList("leeeh.clubList");
+		
+		return clubList;
+	}
+
+	// === 동호회 명단 정보 테이블에 집어 넣기 === //
+	@Override
+	public void insertClubMemberTable(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertClubMemberTable", paraMap);
+	}
+
+	// === 클럽 번호 채번해오기 === //
+	@Override
+	public String getClubSeq() {
+		
+		String club_seq = sqlsession.selectOne("leeeh.getClubSeq");
+		
+		return club_seq;
+	}
+
+	// === 클럽 회장 정보 넣기 === //
+	@Override
+	public void insertClubMemberTableOfManager(HashMap<String, Object> paraMap) {
+
+		sqlsession.insert("leeeh.insertClubMemberTableOfManager", paraMap);
+	}
+
+	// === 클럽 지우기 === //
+	@Override
+	public void deleteClub(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.deleteClub", paraMap);
 	}
 
 }

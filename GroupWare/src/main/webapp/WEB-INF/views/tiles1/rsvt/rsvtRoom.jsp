@@ -180,6 +180,14 @@
 		outline: 0;
 	}
 	
+	.hide {
+		display: none;
+	}
+	
+	.search:hover {
+		font-weight: bold;
+	}
+	
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -193,8 +201,8 @@
 		
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
-		$('#RsvtDateH').text($('#datepicker').val());
-		$('#RsvtDate').val($('#datepicker').val());
+		$('#rsvtDateH').text($('#datepicker').val());
+		$('#rsvtDate').val($('#datepicker').val());
 		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
@@ -204,18 +212,21 @@
 			$(this).addClass("rChoice");
 						
 		//	alert($(this).children('.roomName').text());
-						
+					
 			$("#roomName").text($(this).children('.roomName').text());			
-			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());			
+			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());	
+			showPossibleTime();
 			
 		}); // end of $(".room").click(function(event){})----------------------------
 		
+		var fk_roomNumber = $("#fk_roomNumber").text();
 		
 		// 날짜 변경했을 때
 		$("#datepicker").change(function(event){
 			
-			$("#RsvtDateH").text($("#datepicker").val());
-			$('#RsvtDate').val($('#datepicker').val());
+			$("#rsvtDateH").text($("#datepicker").val());
+			$('#rsvtDate').val($('#datepicker').val());
+			showPossibleTime();
 			
 		});
 		
@@ -345,15 +356,15 @@
 				// 검색어 입력 후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
 			}			
 			else {
-				<%--
+				
 				$.ajax({
-					url:"<%= request.getContextPath()%>/headSearchShow.action",
+					url:"<%= request.getContextPath()%>/headSearchShow.top",
 					type:"GET",
 					data:{searchHead:$("#searchHead").val()},
 					dataType:"JSON",
 					success:function(json){
 						
-						<%-- === 검색어 입력 시 자동글 완성하기 7 === --%
+						<%-- === 검색어 입력 시 자동글 완성하기 7 === --%>
 						
 						if(json.length > 0) {
 							// 검색된 데이터가 존재하는 경우
@@ -363,11 +374,11 @@
 							$.each(json, function(entryIndex, item){								
 								var word = item.word;
 								
-								var index = word.toLowerCase().indexOf( $("#searchHead").val().toLowerCase() );
+							//	var index = word.toLowerCase().indexOf( $("#searchHead").val().toLowerCase() );
 								// word 값을 전부 소문자로 맞춰준다. // 글자가 위치하는 인덱스 값을 알려준다.(즉, 길이)
 							//	console.log("index : " + index);
 								
-								var len = $("#searchHead").val().length;
+							//	var len = $("#searchHead").val().length;
 								
 								var result = "";													
 								
@@ -375,11 +386,11 @@
 							//	console.log( word.substr(index,len) );	// 검색어 글자
 							//	console.log( word.substr(index+len) );	// 검색어 뒤부터 끝까지의 글자
 							
-			//					result = "<span style='color:gray;'>"+word.substr(0,index)+"</span>"+"<span style='color:red;'>"+word.substr(index,len)+"</span>"+"<span style='color:gray;'>"+word.substr(index+len)+"</span>";	
+								result = "<span class='search' style='color:gray;'>"+item.searchResult+"</span><span class='hide'>"+item.employee_seq+"</span>";	
 								
-			//					html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br/>";
+								html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br/>";
 							});
-							
+				
 							$("#displayList").html(html);
 							$("#displayList").show();
 						}
@@ -387,54 +398,124 @@
 							// 검색된 데이터가 존재하지 않는 경우
 							$("#displayList").hide();
 						}
-																		
+						console.log(json);												
 					},
 					error: function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 					}				
 				});
-				--%>
+				
 			}
 			
-		});// end of $("#searchWord").keyup()------------------
+		});// end of $("#searchHead").keyup()------------------
+		
+		<%-- === 검색어 입력 시 자동글 완성하기 8 === --%>
+		$(document).on("click", ".result", function(){
+			var str = $(this).text();
+			$(this).addClass("select");
+			$("#searchHead").val(str.substring(0, str.lastIndexOf(">")+1)); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
+			$("#head_seq").val($(".select .hide").text());
+			$("#displayList").hide();
+		});
 		
 	}); // end of $(document).ready(function(){})------------------------------------------------
 	
-<%-- 	function showPossibleTime() {		
+	function showPossibleTime() {		
 		
 		var fk_roomNumber = $("#fk_roomNumber").val();
-		var RsvtDate = $("#RsvtDate").val();
+		var rsvtDate = $("#rsvtDate").val();
 		
 		$.ajax({
 			url:"<%=request.getContextPath()%>/showPossibleTime.top",
 			data : {"fk_roomNumber":fk_roomNumber,
-					"RsvtDate":RsvtDate},
+					"rsvtDate":rsvtDate},
 			dataType : "JSON",
 			success:function(json){
 				var html = "";
-				$.each(json, function(index, item) {
-					html += '<tr class="tr_time">';
-					html += 	'<td class="td_time times">'+(index + 9)+':00 - '+(index + 10)+':00';
-					html += 		'<input type="text" id="startTime" name="fk_roomNumber" value="09:00" />';
-					html += 		'<input type="text" id="endTime" name="fk_roomNumber" value="10:00" />';
+				/* $.each(json, function(index, item) {
+					
+				} */
+/*  				html += '<table id="time" style="margin-left: 30px;">';
+			 		html += '<tr>';
+					html += 	'<th class="th_time times">시간</th>';
+					html += 	'<td class="td_time times time9"><span class="start">09:00</span> - <span class="end">10:00</span></td>';
+					html += 	'<td class="td_time times time10"><span class="start">10:00</span> - <span class="end">11:00</span></td>';
+					html += 	'<td class="td_time times time11"><span class="start">11:00</span> - <span class="end">12:00</span></td>';
+					html += 	'<td class="td_time times time12"><span class="start">12:00</span> - <span class="end">13:00</span></td>';								
+					html += '</tr>';
+					
+					html += '<tr>';
+					html += 	'<th class="th_time">가능여부</th>';
+					html += 	'<td class="td_time ability tdOne time9">';
+					html += 		'<div>'+json.status+'</div>';
+					html += 		'<input type="hidden" class="startTime" name="startTime" value="09:00" /><!-- hidden -->';
+					html += 		'<input type="hidden" class="endTime" name="endTime" value="10:00" /><!-- hidden -->';
 					html += 	'</td>';
-					html += 	'<td class="td_time ability">';
-					html += 		'<div>'+item.status+'</div>';
-					html +=		'</td>';
-					html +=	'</tr>';
-				}
+					html += 	'<td class="td_time ability tdOne time10">';
+					html += 		'<div>'+json.status+'</div>';
+					html += 		'<input type="hidden" class="startTime" name="startTime" value="10:00" /><!-- hidden -->';
+					html += 		'<input type="hidden" class="endTime" name="endTime" value="11:00" /><!-- hidden -->';
+					html += 	'</td>';
+					html += 	'<td class="td_time ability tdOne time11">';
+					html += 		'<div>'+json.status+'</div>';
+					html += 		'<input type="hidden" class="startTime" name="startTime" value="11:00" /><!-- hidden -->';
+					html += 		'<input type="hidden" class="endTime" name="endTime" value="12:00" /><!-- hidden -->';						
+					html += 	'</td>';
+					html += 	'<td class="td_time ability tdOne time12">';
+					html += 		'<div>'+json.status+'</div>';
+					html += 		'<input type="hidden" class="startTime" name="startTime" value="12:00" /><!-- hidden -->';
+					html += 		'<input type="hidden" class="endTime" name="endTime" value="13:00" /><!-- hidden -->';					
+					html += 	'</td>';
+					html += '</tr>';
+					
+					<tr>
+						<th class="th_time times">시간</th>
+						<td class="td_time times time14"><span class="start">14:00</span> - <span class="end">15:00</span></td>
+						<td class="td_time times time15"><span class="start">15:00</span> - <span class="end">16:00</span></td>
+						<td class="td_time times time16"><span class="start">16:00</span> - <span class="end">17:00</span></td>
+						<td class="td_time times time17"><span class="start">17:00</span> - <span class="end">18:00</span></td>									
+					</tr>
+					<tr>
+						<th class="th_time">가능여부</th>
+						<td class="td_time ability tdTwo time14">
+							<div>예약 가능</div>
+							<input type="hidden" class="startTime" name="startTime" value="14:00" /><!-- hidden -->
+							<input type="hidden" class="endTime" name="endTime" value="15:00" /><!-- hidden -->
+						</td>
+						<td class="td_time ability tdTwo time15">
+							<div>예약 가능</div>
+							<input type="hidden" class="startTime" name="startTime" value="15:00" /><!-- hidden -->
+							<input type="hidden" class="endTime" name="endTime" value="16:00" /><!-- hidden -->						
+						</td>
+						<td class="td_time ability tdTwo time16">
+							<div>예약 가능</div>
+							<input type="hidden" class="startTime" name="startTime" value="16:00" /><!-- hidden -->
+							<input type="hidden" class="endTime" name="endTime" value="17:00" /><!-- hidden -->						
+						</td>
+						<td class="td_time ability tdTwo time17">
+							<div>예약 가능</div>
+							<input type="hidden" class="startTime" name="startTime" value="17:00" /><!-- hidden -->
+							<input type="hidden" class="endTime" name="endTime" value="18:00" /><!-- hidden -->						
+						</td>								
+					</tr>				
+				</table> */
+				console.log(json);
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 		})		
-	} --%>
+	}
 
-	  function maxLengthCheck(object){
-		    if (object.value.length > object.maxLength){
-		      object.value = object.value.slice(0, object.maxLength);
-		    }    
-		  }
+	function maxLengthCheck(object){
+		if (object.value.length > object.maxLength){
+			object.value = object.value.slice(0, object.maxLength);
+		}    
+	}
+	
+	
+	
+	
 	
 </script>
 
@@ -510,7 +591,7 @@
 			<table id="time" style=" margin-left: 30px;">
 				<tr>
 					<th class="th_time times">시간</th>
-					<td class="td_time times time9">9:00 - 10:00</td>
+					<td class="td_time times time9">09:00 - 10:00</td>
 					<td class="td_time times time10">10:00 - 11:00</td>
 					<td class="td_time times time11">11:00 - 12:00</td>
 					<td class="td_time times time12">12:00 - 13:00</td>									
@@ -580,15 +661,21 @@
 				<tr id="info_tr">
 					<th id="info_th">회의실</th>
 					<td id="info_td">
-						<span id="roomName"></span>
-						<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						<c:if test="${empty fk_roomNumber}">
+							<span id="roomName">-</span>
+							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						</c:if>
+						<c:if test="${not empty fk_roomNumber}">
+							<span id="roomName"></span>
+							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+						</c:if>
 					</td>
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">예약일</th>
 					<td id="info_td">
-						<span id="RsvtDateH"></span>
-						<input type="hidden" id="RsvtDate" name="RsvtDate"/><!-- hidden -->
+						<span id="rsvtDateH"></span>
+						<input type="hidden" id="rsvtDate" name="rsvtDate"/><!-- hidden -->
 					</td>
 				</tr>
 				<tr id="info_tr">
@@ -599,11 +686,12 @@
 						<input type="hidden" id="endTimeH" name="endTimeH"><!-- hidden -->						
 					</td>
 				</tr>
-				<tr id="info_tr">
+				<tr id="info_tr">		
 					<th id="info_th">예약 신청자</th>
 					<td id="info_td">
+						<span id="rsvt_employee"></span>
 						<input type="text" readonly="readonly"/>
-						<input type="text" value="fk_employee_seq"/><!-- hidden -->
+						<input type="text" name="fk_employee_seq" value="${sessionScope.loginuser.fk_employee_seq}" /><!-- hidden -->
 					</td>
 				</tr>
 				<tr id="info_tr">
@@ -611,7 +699,7 @@
 					<td id="info_td">
 						<div style="position: relative;">
 							<input type="text" name="searchHead" id="searchHead" autocomplete="off"/>
-							<input type="text" value="head_seq"/><!-- hidden -->
+							<input type="hidden" name="head_seq" id="head_seq"/><!-- hidden -->
 							<%-- === 검색어 입력 시 자동글 완성하기 1 === --%>
 							<div id="displayList" style="position: absolute; border:solid 1px gray; border-top:0px; width:174px; height:70px; margin-left:59px; margin-top:0px; padding: 4px; overflow: auto; background-color: #e7f5fd;"></div>
 						</div>
