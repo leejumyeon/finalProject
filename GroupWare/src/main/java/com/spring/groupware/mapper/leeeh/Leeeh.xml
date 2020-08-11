@@ -335,12 +335,12 @@
 	</select>
 	
 	<!-- === 신청 완료된 결재한 문서 보여주기 === -->
-	<!-- <select id="senComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+	<select id="recComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
 		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
 		from employees_table E join document_table D
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
 		where D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno)
-	</select> -->
+	</select>
 </mapper>
