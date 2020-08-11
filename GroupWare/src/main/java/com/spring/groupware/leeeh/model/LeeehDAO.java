@@ -258,4 +258,67 @@ public class LeeehDAO implements InterLeeehDAO {
 		sqlsession.update("leeeh.deleteClub", paraMap);
 	}
 
+	// === 문서 결재 신청자의 List 얻어오기 === //
+	@Override
+	public List<DocumentVO> regDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> regDocumentList = sqlsession.selectList("leeeh.regDocumentList", fk_employee_seq);
+		
+		return regDocumentList;
+	}
+
+	// === 문서 상세 내용 보여주기 === //
+	@Override
+	public HashMap<String, String> goDocumentContent(String document_seq) {
+		
+		HashMap<String, String> documentContent = sqlsession.selectOne("leeeh.goDocumentContent", document_seq);
+		
+		return documentContent;
+	}
+
+	// === 문서 결재자들 알아오기 === //
+	@Override
+	public List<DocumentVO> getApproverList(String groupno) {
+
+		List<DocumentVO> approverList = sqlsession.selectList("leeeh.getApproverList", groupno);
+		
+		return approverList;
+	}
+
+	// === 문서 결재 받는 사람의 List 얻어오기 === //
+	@Override
+	public List<DocumentVO> aproDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> aproDocumentList = sqlsession.selectList("leeeh.aproDocumentList", fk_employee_seq);
+		
+		return aproDocumentList;
+	}
+
+	// === 신청 완료된 전체 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> allComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = sqlsession.selectList("leeeh.allComDocumentList", fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
+	// === 신청 완료된 신청한 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> senComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = sqlsession.selectList("leeeh.senComDocumentList", fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
+	// === 신청 완료된 결재한 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> recComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = sqlsession.selectList("leeeh.recComDocumentList", fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
 }

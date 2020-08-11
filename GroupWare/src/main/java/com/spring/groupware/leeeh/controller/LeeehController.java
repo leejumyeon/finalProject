@@ -3,6 +3,7 @@ package com.spring.groupware.leeeh.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -224,7 +225,7 @@ public class LeeehController {
 		return mav;
 	}
 
-	// === 선택 페이지 보여주기 === //
+	// === 메인 페이지 보여주기 === //
 	@RequestMapping(value = "/main.top")
 	public ModelAndView main(ModelAndView mav) {
 
@@ -235,11 +236,85 @@ public class LeeehController {
 
 	// === 문서 결재 페이지로 이동하기 === //
 	@RequestMapping(value = "/documentPayment.top")
-	public ModelAndView goDocumentPayment(ModelAndView mav) {
+	public ModelAndView goDocumentPayment(ModelAndView mav, HttpServletRequest request) {
 
-		mav.setViewName("document/documentPayment.tiles1");
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		List<DocumentVO> regDocumentList = service.regDocumentList(fk_employee_seq);
+		
+		List<DocumentVO> aproDocumentList = service.aproDocumentList(fk_employee_seq);
+
+		mav.addObject("regDocumentList", regDocumentList);
+		mav.addObject("aproDocumentList", aproDocumentList);
+		mav.setViewName("document/documentPaymentList.tiles1");
 
 		return mav;
+	}
+	
+	// === 문서 내용 페이지로 이동하기 === //
+	@RequestMapping(value = "/documentContent.top")
+	public ModelAndView goDocumentContent(ModelAndView mav, HttpServletRequest request) {
+
+		String document_seq = request.getParameter("document_seq");
+		
+		HashMap<String, String> documentContent = service.goDocumentContent(document_seq);
+		
+		String groupno = documentContent.get("groupno");
+		
+		List<DocumentVO> approverList = service.getApproverList(groupno);
+
+		mav.addObject("documentContent", documentContent);
+		mav.addObject("approverList", approverList);
+		mav.setViewName("document/documentContent.notiles");
+
+		return mav;
+	}
+	
+	// === 신청 완료된 문서 List 불러오기(AJAX) === //
+	@RequestMapping(value="/comDocumentList.top")
+	public String comDocumentList(HttpServletRequest request) {
+		
+		String statusValue = request.getParameter("statusValue");
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		List<DocumentVO> comDocumentList = new ArrayList<>();
+		
+		if("0".equals(statusValue)) {
+			
+			comDocumentList = service.allComDocumentList(fk_employee_seq);
+		}
+		else if("1".equals(statusValue)) {
+			
+			comDocumentList = service.senComDocumentList(fk_employee_seq);
+		}
+		else if("2".equals(statusValue)) {
+			
+			comDocumentList = service.recComDocumentList(fk_employee_seq);
+		}
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(DocumentVO docuvo : comDocumentList) {
+			
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("document_seq", docuvo.getDocument_seq());
+			jsObj.put("groupno", docuvo.getGroupno());
+			jsObj.put("subject", docuvo.getSubject());
+			jsObj.put("regDate", docuvo.getRegDate());
+			jsObj.put("employee_name", docuvo.getEmployee_name());
+			jsObj.put("category_name", docuvo.getCategory_name());
+			
+			jsArr.put(jsObj);
+		}
+		
+		return jsArr.toString();
 	}
 
 	// === 문서 결재 페이지에서 문서 작성 페이지로 이동 === //
@@ -738,7 +813,7 @@ public class LeeehController {
 		
 		dvo.setFk_employee_seq(loginEmployee.getEmployee_seq());
 		dvo.setDocument_category(documentCategory);
-		dvo.setContent(path + "/" + contentsName);
+		dvo.setContent(contentsName);
 		dvo.setParent_approver("");
 		
 		for(EmployeesVO empvo : approvalList) {
@@ -752,7 +827,7 @@ public class LeeehController {
 		if("1".equals(documentCategory)) {
 			
 			String trip_category = request.getParameter("trip_category");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String trip_start = request.getParameter("trip_start");
 			String trip_end = request.getParameter("trip_end");
@@ -771,7 +846,7 @@ public class LeeehController {
 		else if("2".equals(documentCategory)) {
 			
 			String trip_category = request.getParameter("trip_category");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String trip_start = request.getParameter("trip_start");
 			String trip_end = request.getParameter("trip_end");
@@ -794,7 +869,7 @@ public class LeeehController {
 			String[] sales_titleArr = request.getParameterValues("sales_title");
 			String[] sales_countArr = request.getParameterValues("sales_count");
 			String[] priceArr = request.getParameterValues("price");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String fk_department_seq = request.getParameter("department_seq");
 			String sales_subject = request.getParameter("sales_subject");
@@ -821,7 +896,7 @@ public class LeeehController {
 			String[] equipment_countArr = request.getParameterValues("equipment_count");
 			String[] purchaseDateArr = request.getParameterValues("purchaseDate");
 			String fk_department_seq = request.getParameter("department_seq");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			
 			paraMap.put("groupno", groupno);
@@ -843,7 +918,7 @@ public class LeeehController {
 		else if("5".equals(documentCategory)) {
 			
 			String project_seq = service.getProjectSeq();
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String project_name = request.getParameter("project_name");
 			String content = request.getParameter("content");
 			String term = request.getParameter("term");
@@ -926,7 +1001,7 @@ public class LeeehController {
 			paraMap.put("employee_name", employee_name);
 			
 			String fk_employee_seq = service.getEmployeeSeq(paraMap);
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String interviewer_seq = loginEmployee.getEmployee_seq();
 			String interview_content = request.getParameter("interview_content");
@@ -944,7 +1019,7 @@ public class LeeehController {
 			String employee_id = request.getParameter("employee_id");
 			
 			String fk_employee_seq = service.getEmployeeSeqByEmployeeId(employee_id);
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String attendance = request.getParameter("attendance");
 			String attitude = request.getParameter("attitude");
@@ -1000,7 +1075,7 @@ public class LeeehController {
 		else if("11".equals(documentCategory)) {
 			
 			String club_seq = request.getParameter("club_seq");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			
 			paraMap.put("club_seq", club_seq);
 			paraMap.put("groupno", groupno);
@@ -1026,7 +1101,7 @@ public class LeeehController {
 		else if("12".equals(documentCategory)) {
 			
 			String club_seq = request.getParameter("club_seq");
-			String groupno = request.getParameter("goupno");
+			String groupno = request.getParameter("groupno");
 			
 			paraMap.put("club_seq", club_seq);
 			paraMap.put("groupno", groupno);
@@ -1034,7 +1109,7 @@ public class LeeehController {
 			service.deleteClub(paraMap);
 		}
 		
-		mav.setViewName("document/documentPaymentList.tiles1");
+		mav.setViewName("redirect:/documentPayment.top");
 		return mav;
 	}
 }

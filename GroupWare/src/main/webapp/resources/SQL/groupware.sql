@@ -295,7 +295,7 @@ create table trip_table
 ,reason     varchar2(4000) not null -- 사유
 ,trip_start date not null -- 휴가/출장 시작 날짜
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
-,triplocatioin      varchar2(1000) -- 출장지
+,triplocation      varchar2(1000) -- 출장지
 ,fk_employee_seq    number  -- 신청자
 ,documentStatus     number default 0 not null -- 연결되어있는 결재문서가 모두 승인 되면 1
 ,constraint pk_trip_table primary key (trip_seq)

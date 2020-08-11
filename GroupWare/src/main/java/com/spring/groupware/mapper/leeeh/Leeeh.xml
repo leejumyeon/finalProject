@@ -85,7 +85,6 @@
 		</foreach>
 		) V join department_table D
 		on V.fk_department = D.department_seq
-		where V.fk_status != 2 and V.fk_status != 3
 		order by V.fk_position asc, V.grade asc
 	</select>
 	
@@ -250,4 +249,98 @@
 		update club_table set groupno = #{groupno}, documentStatus = 0
 		where club_seq = #{club_seq}
 	</update>
+	
+	<!-- === 문서 결재 신청자의 List 얻어오기 === -->
+	<select id="regDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where fk_employee_seq = #{fk_employee_seq} and parent_approver is null
+		      and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+	</select>
+	
+	<!-- === 문서 상세 내용 보여주기 === -->
+	<resultMap type="HashMap" id="documentMap">
+		<result property="document_seq" column="document_seq" javaType="String"/>
+		<result property="groupno" column="groupno" javaType="String"/>
+		<result property="content" column="content" javaType="String"/>
+		<result property="regDate" column="regDate" javaType="String"/>
+		<result property="department_name" column="department_name" javaType="String"/>
+		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="category_name" column="category_name" javaType="String"/>
+	</resultMap>
+	<select id="goDocumentContent" parameterType="String" resultMap="documentMap">
+		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_name
+		from department_table DE join employees_table E  
+		on DE.department_seq = E.fk_department
+		join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.document_seq = #{document_seq}
+	</select>
+	
+	<!-- === 문서 결재자들 알아오기 === -->
+	<select id="getApproverList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.approver_seq, D.status, E.employee_name AS approver_name, DE.department_name AS approver_department, P.position_name AS approver_position
+		from document_table D join employees_table E
+		on D.approver_seq = E.employee_seq
+		join department_table DE
+		on E.fk_department = DE.department_seq
+		join position_table P
+		on E.fk_position = P.position_seq
+		where groupno = #{groupno}
+	</select>
+	
+	<!-- === 문서 결재 받는 사람의 List 얻어오기 === -->
+	<select id="aproDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.approver_seq = #{fk_employee_seq} and D.parent_approver is null
+			  and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+		UNION
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.approver_seq = '2' and D.parent_approver is not null and (select status from document_table where approver_seq = (select parent_approver from document_table where approver_seq = '2')) = '1'
+		      and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+	</select>
+	
+	<!-- === 신청 완료된 전체 문서 보여주기 === -->
+	<select id="allComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where ( D.approver_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno) )
+		or ( D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno) )
+	</select>
+	
+	<!-- === 신청 완료된 신청한 문서 보여주기 === -->
+	<select id="senComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno)
+	</select>
+	
+	<!-- === 신청 완료된 결재한 문서 보여주기 === -->
+	<select id="senComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno)
+	</select>
 </mapper>
