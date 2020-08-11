@@ -32,8 +32,6 @@
 	
 	}
 	.nav-list{
-		
-		
 		border: 1px solid blue;
 		list-style:none;
 		margin-top: 50px;
@@ -60,8 +58,8 @@
 		display : inline-block;	 
 		border: 1px solid red;
 		margin-top: 50px;
+		width:800px;
 		/* margin-left: 300px;  */
-		width:300px; 
 		/*padding: 200px;*/
 	
 	}
@@ -75,6 +73,7 @@
 <div class="fralme">
 	<div class="container">
 		<div class="nav">
+			<h2>사내공지</h2>
 			<ul class="nav-list">
 				<li class="nav-item"><h2>공지사항</h2></li>
 			</ul>				
@@ -82,12 +81,29 @@
 				<li class="nav-item"><h2>자주묻는질문</h2></li>
 			</ul>
 		</div>
-		
 		<div class="content">
-			<h1>Hello World</h1>
+			<h3>공지사항</h3>
+			<table class="table">
+				<tr>
+					<td>글번호</td>
+					<td>공지</td>
+					<td>제목</td>
+					<td>작성날짜</td>
+					<td>조회수</td>
+				</tr>
+			</table>
+			<div id="pageBar">
 			
-			<p> 내용이 들어올곳</p>
-	
+			</div>
+			<div id="searchArea">
+				<label for="typeSubject">제목</label><input type="checkbox" name="searchType" id="typeSubject" value="subject" checked />
+				<label for="typeContent">내용</label><input type="checkbox" name="searcyType" id="typeContent" value="content" />
+				<div id="searchWordArea" style="display: inline-block; width: 230px; margin-right:10px; border:solid 1px black; float:right;">
+					<input type="text" name="searchWord" style="border:none;"/>
+					<span>아이콘</span>
+				</div>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 	</div>
 	

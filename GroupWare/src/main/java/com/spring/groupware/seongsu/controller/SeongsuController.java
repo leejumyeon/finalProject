@@ -5,15 +5,21 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+>>>>>>> 2538929cef56b382d9f446230d80b6b68e93c28a
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+<<<<<<< HEAD
 import com.spring.board.model.BoardVO;
 import com.spring.groupware.seongsu.service.InterSeongsuService;
 
+=======
+>>>>>>> 2538929cef56b382d9f446230d80b6b68e93c28a
 @Controller
 public class SeongsuController {
 

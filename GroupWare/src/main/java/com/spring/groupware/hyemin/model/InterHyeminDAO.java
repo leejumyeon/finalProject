@@ -11,7 +11,7 @@ public interface InterHyeminDAO {
 	List<ReservationVO> select_possibleTime(HashMap<String, String> paraMap);
 
 	// 검색어 입력 시 자동글 완성하기
-	List<String> headSearchShow(String searchHead);
+	List<HashMap<String, String>> headSearchShow(String searchHead);
 
 	
 	

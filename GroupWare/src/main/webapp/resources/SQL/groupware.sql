@@ -18,6 +18,7 @@ from employees_table;
 -- 테이블 삭제 --
 drop table companycalendar_category purge;
 drop table equipment_table purge;
+drop sequence equipment_table_seq;
 drop table comment_table purge;
 drop sequence comment_table_seq;
 drop table attachFile_table purge;
@@ -37,6 +38,7 @@ drop table messenger_table purge;
 drop sequence messenger_table_seq;
 drop table messengerRoom_table purge;
 drop sequence messengerRoom_table_seq;
+drop table companyCalendar_category purge;
 drop table companyCalendar_table purge;
 drop sequence companyCalendar_table_seq;
 drop table personalCalendar_table purge;
@@ -191,7 +193,7 @@ create table sales_table
 ,reason     varchar2(4000) not null -- 매출 사유
 ,fk_department_seq  number -- 매출 부서
 ,regDate    date default sysdate not null -- 매출 기록 날짜
-,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,documentStatus     number default 0 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
 ,constraint pk_sales_approval primary key(sales_seq)
 ,constraint fk_sales_department foreign key(fk_department_seq) REFERENCES department_table(department_seq) on delete set null
 );
@@ -295,7 +297,7 @@ create table trip_table
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
 ,triplocatioin      varchar2(1000) -- 출장지
 ,fk_employee_seq    number  -- 신청자
-,documentStatus     number default 1 not null -- 연결되어있는 결재문서의 승인상태 값과 연동??
+,documentStatus     number default 0 not null -- 연결되어있는 결재문서가 모두 승인 되면 1
 ,constraint pk_trip_table primary key (trip_seq)
 ,constraint fk_trip_employee foreign key (fk_employee_seq) REFERENCES employees_table(employee_seq)on delete set null
 ,constraint fk_trip_category foreign key (trip_category) references trip_category(category_num) on delete set null
@@ -330,7 +332,7 @@ create table document_table
 ,orgFileName    varchar2(500) -- 파일첨부(기존 파일명)
 ,fileSize   number -- 파일크기
 ,parent_approver    varchar2(100) -- 상위 결재자
-,status     number not null -- 결재 상태(승인, 미승인, 반려)
+,status     number default 0 not null -- 결재 상태(승인, 미승인, 반려)
 ,reason     varchar2(4000) -- 결재 사유( 반려 사유 )
 ,document_category  number not null -- 문서 항목
 ,constraint fk_document_employee foreign key (fk_employee_seq) references employees_table(employee_seq) on delete set null
@@ -355,7 +357,9 @@ create table project_table
 ,startDate  date not null -- 프로젝트 시작날짜
 ,manager    varchar2(50) not null -- 프로젝트 책임자
 ,memberCount    number not null -- 프로젝트 참가 인원수
-,dwonPayment    number -- 계약금
+,reason     varchar2(4000)  -- 프로젝트 중단 사유
+,status     number default 0 -- 프로젝트 상태(0: 진행중 1:중단 2:완료)
+,downPayment    number -- 계약금
 ,middlePayment  number -- 중도금
 ,completionPayment number -- 완료금
 ,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??(0:결재 진행중, 1:결재완료, 삭제:결재반려)
@@ -395,7 +399,7 @@ create table personalCalendar_table
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색     
+,backgroundColor      varchar2(100) -- 배경색     
 ,constraint pk_personalCalendar primary key(calendar_seq)
 ,constraint fk_personalcalendar_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
@@ -407,6 +411,8 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+alter table personalCalendar_table rename column color to backgroundColor;
+
 create table companyCalendar_category
 (category_num   number not null -- 항목번호
 ,category_name  varchar2(50) not null -- 항목명
@@ -415,18 +421,20 @@ create table companyCalendar_category
 
 -- 회사일정 테이블(companyCalendar_table) --
 create table companyCalendar_table
-(calendar_seq   number not null -- 일정번호
+(comCalendar_seq   number not null -- 일정번호
 ,title      varchar2(500) not null -- 일정 타이틀
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색
+,backgroundColor      varchar2(100) -- 배경색
 ,fk_department_seq number -- 부서일정인 경우 사용하는 컬럼
 ,calendar_category  number not null -- 일정 카테고리(경조사, 협력일정, 단독일정...등)
-,constraint pk_companyCalendar primary key(calendar_seq)
+,constraint pk_companyCalendar primary key(comCalendar_seq)
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
+
+alter table companyCalendar_table rename column color to backgroundColor;
 
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
@@ -483,7 +491,7 @@ create table messengerLog_table
 ,constraint fk_messengerLog_table foreign key(fk_message_seq) references messenger_table(message_seq)
 );
 
--- 메일 테이블(mail_table) --
+-- 메일 테이블(mail_send_table) --
 create table mail_table
 (mail_seq           number not null -- 메일 번호(P.K)
 ,mail_groupno       number -- 송신/수신 그룹번호 (null=임시저장?)
@@ -499,12 +507,14 @@ create table mail_table
 ,fileName3          varchar2(500) -- 파일첨부이름3
 ,orgFileName3       varchar2(500) -- 파일첨부 원래 이름3
 ,fileSize3          varchar2(10) -- 파일사이즈3
-,status         number default 0 not null-- 발송/수신 상태
+,status         number default 0 not null-- 발송/수신 상태(0:보낸 1:받은 2:자신)
 ,readStatus     number default 0 not null -- 기독 유무
 ,mailStatus     number default 1 not null-- 삭제유무 상태
+,regDate        date default sysdate not null
 ,constraint FK_mail_table foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
-,constraint CK_mail_table CHECK(status in(0, 1)and mailStatus in(0,1) and readStatus in(0,1))
+,constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1))
 );
+
 create SEQUENCE mail_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -513,6 +523,7 @@ nominvalue -- 최소값 설정
 nocycle -- 반복 설정
 nocache;
 
+select nvl(max(mail_groupno),0) from mail_table;
 
 -- 회의실 테이블(reservationRoom_table) --
 create table reservationRoom_table
@@ -639,6 +650,13 @@ create table equipment_table
 ,constraint fk_equipment_department foreign key(fk_department_seq) references department_table(department_seq) on delete set null
 );
 
+create sequence equipment_table_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
 
 -- 항목(카테고리) 데이터 입력 --
 insert into position_table(position_seq, position_name, position_salary) values(1,'사원',2500);
@@ -714,4 +732,15 @@ insert into reservationRoom_table(roomNumber, roomName) values(6,'소회의실2'
 insert into reservationRoom_table(roomNumber, roomName) values(7,'소회의실3');
 commit;
 
-desc employees_table;
+insert into companyCalendar_category(category_num, category_name) values(1,'경조사');
+insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
+insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
+insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+
+-- 메일 테이블 check 제약조건 수정 --
+alter table mail_table drop constraint CK_mail_table;
+alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
+
+select * from mail_table order by mail_seq desc;
+commit;
+              

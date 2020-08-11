@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.groupware.choijh.model.InterChoijhDAO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.MessengerVO;
 
 @Service
 public class ChoijhService implements InterChoijhService {
@@ -43,6 +44,22 @@ public class ChoijhService implements InterChoijhService {
 	@Override
 	public void createRoom(HashMap<String, String> map) {		
 		dao.createRoom(map);
+	}
+
+
+	// 채팅방 내용 읽어오기 
+	@Override
+	public List<MessengerVO> contentView(String roomNumber) {
+		List<MessengerVO> msgList = dao.contentView(roomNumber);
+		return msgList;
+	}
+
+
+	// 채팅방 글쓰기
+	@Override
+	public int goWriteMsg(HashMap<String, String> map) {
+		int n = dao.goWriteMsg(map);
+		return n;
 	}
 
 	

@@ -26,6 +26,7 @@
 	.msgcontainer {
 	  border: 2px solid #dedede;
 	  background-color: #f1f1f1;
+	  height: 90px;
 	  border-radius: 5px;
 	  padding: 10px;
 	  margin: 10px 0;
@@ -137,8 +138,10 @@
    		-webkit-transform: scale(1.1);
    		transform: scale(1.1);
 	}
+	
 
 </style>
+
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -146,17 +149,13 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-
 <script type="text/javascript">
 
 	$(document).ready(function(){
 		
 		$("#message").hide();
-	
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
-		//allEmployeeView();
-
-		
+		// allEmployeeView();
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
 			$("#message").hide();
@@ -220,10 +219,10 @@
 			data:{"rEmployee_seq":rEmployee_seq,"sEmployee_seq":sEmployee_seq},
 			type:"POST",
 			dataType:"JSON",
-			succes:function(json){
+			success:function(json){
 				
 				var roomNumber = json.roomNumber;
-				
+	
 				// 채팅방 내용 읽어오기
 				contentView(roomNumber, rEmployee_seq, sEmployee_seq);
 							
@@ -234,19 +233,84 @@
 		
 		});
 		
-		$("#message").click();
-		$("#message").show();
 	}
 	
 	
 	// 채팅방 내용 읽어오기 
 	function contentView(roomNumber, rEmployee_seq, sEmployee_seq) {
+		
 		$.ajax({
-			url:"/groupware/goChatting.top",
-			data
+			url:"/groupware/contentView.top",
+			data:{"roomNumber":roomNumber},
+			type:"GET",
+			dataType:"JSON",
+			success:function(json){
+				
+				var html = "";
+				if(json.length != 0){ // 채팅방이 이미 만들어져 있는 경우
+					
+					$.each(json,function(index, item){
+						
+						if(sEmployee_seq == item.fk_employee_seq) { // 로그인 한 사원이 채팅한 내용 인 경우
+							
+							html += "<div class='msgcontainer' style='border-color: #e6f5ff; background-color: #e6f5ff; border-radius: 10px;'>" +
+									"	<p>"+item.content+"</p>" +
+									" 	<span class='time-left'>"+item.regDate+"</span>" +
+									"</div>";						
+						}
+						else { // 상대방이 채팅한 내용 인 경우
+							
+							html += "<div class='msgcontainer' style='border-color: #e6f5ff; background-color: white; border-radius: 10px;'>" +
+									"	<figure>" +
+									"		<figcaption style='padding-left: 9px;'>"+item.employee_name+"</figcaption>" +
+									"		<img src='/groupware/resources/msg_images/user2.png' alt='Avatar' width='40px;' height='40px;' style='width: 100%'>" +
+									"	</figure>" +
+									"	<p>"+item.content+"</p>" +
+									"	<span class='time-right'>"+item.regDate+"</span>" +
+									"</div>";
+						}	 
+					});	
+					$("#contentList").html(html);
+				}
+				else { // 채팅방을 새로 만든경우
+					alert("대화내용이 없습니다.");
+				}
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
 		});
+		$("#message").show();
+		$("#message").click();
+		
+		// 글을 쓰고 전송 버튼 클릭 시
+		$("#msgBtn").click(function(){
+			var content = $("#content").val();
+			goWriteMsg(roomNumber, sEmployee_seq, content, rEmployee_seq);	
+		});
+		
 	}
 
+	
+	// 글을 쓰고 전송 버튼을 클릭했을 시
+	function goWriteMsg(roomNumber, sEmployee_seq, content, rEmployee_seq) {
+		$.ajax({
+			url:"/groupware/goWriteMsg.top",
+			data:{"roomNumber":roomNumber,"sEmployee_seq":sEmployee_seq, "content":content},
+			type:"POST",
+			dataType:"JSON",
+			success:function(json){
+				$("#content").val("");
+				contentView(roomNumber, rEmployee_seq, sEmployee_seq);
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+	}
+	
 	
 	// 채팅 방 삭제하기
 	function roomDelete() {
@@ -336,13 +400,15 @@
     		
     		<!-- ===###msg start###=== -->
     		<div id="menu2" class="tab-pane fade">
+    			<div id="contentList"></div>
+    			<%-- 
 				<div class="msgcontainer" style="border-color: #e6f5ff; background-color: white; border-radius: 10px;">
 				  <figure>
 				  	<figcaption style="padding-left: 9px;">이순신</figcaption>
 				  	<img src="/groupware/resources/msg_images/user2.png" alt="Avatar" width="40px;" height="40px;" style="width: 100%">
 				  </figure>
 				  <p>Hello. How are you today?</p>
-				  <span class="time-right">11:00</span>
+				  <span class="time-right">11:00</span> 
 				</div>
 				
 				<div class="msgcontainer" style="border-color: #e6f5ff; background-color: #e6f5ff; border-radius: 10px;">
@@ -360,9 +426,10 @@
 				</div>
 				
 				<div class="msgcontainer" style="border-color: #e6f5ff; background-color: #e6f5ff; border-radius: 10px;">
-				  <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
+				  <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?Nah, I dunno. Play soccer.. or learn more coding perhaps?Nah, I dunno. Play soccer.. or learn more coding perhaps?Nah, I dunno. Play soccer.. or learn more coding perhaps?Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
 				  <span class="time-left">11:05</span>
 				</div>
+     			--%>
      			
      			<form name="sendMsg">
      				<input type="text" name="content" id="content" /><div id="msgBtn">전송</div>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.MessengerVO;
 
 @Repository
 public class ChoijhDAO implements InterChoijhDAO {
@@ -41,6 +42,20 @@ public class ChoijhDAO implements InterChoijhDAO {
 	public void createRoom(HashMap<String, String> map) {
 		sqlsession.insert("messenger.createRoom_S", map);
 		sqlsession.insert("messenger.createRoom_R", map);
+	}
+
+	// 채팅방 내용 읽어오기
+	@Override
+	public List<MessengerVO> contentView(String roomNumber) {
+		List<MessengerVO> msgList = sqlsession.selectList("messenger.contentView", roomNumber);
+		return msgList;
+	}
+
+	// 채팅방 글쓰기
+	@Override
+	public int goWriteMsg(HashMap<String, String> map) {
+		int n = sqlsession.insert("messenger.goWriteMsg", map);
+		return n;
 	}
 	
 }

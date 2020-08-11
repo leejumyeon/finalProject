@@ -42,11 +42,11 @@ public class HyeminController {
 	public String select_possibleTime(HttpServletRequest request) {
 
 		String fk_roomNumber = request.getParameter("fk_roomNumber");
-		String RsvtDate = request.getParameter("RsvtDate");
+		String rsvtDate = request.getParameter("rsvtDate");
 		
 		HashMap<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_roomNumber", fk_roomNumber);
-		paraMap.put("RsvtDate", RsvtDate);
+		paraMap.put("rsvtDate", rsvtDate);
 		
 		List<ReservationVO> rsvtvoList = service.select_possibleTime(paraMap);
 
@@ -54,7 +54,6 @@ public class HyeminController {
 
 		for (ReservationVO vo : rsvtvoList) {
 			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("fk_roomNumber", vo.getFk_roomNumber());
 			jsonObj.put("startDate", vo.getStartDate());
 			jsonObj.put("endDate", vo.getEndDate());
 			jsonObj.put("status", vo.getStatus());
@@ -68,19 +67,20 @@ public class HyeminController {
 	
 	// === 검색어 입력 시 자동글 완성하기 3 ===
 	@ResponseBody
-	@RequestMapping(value = "/headSearchShow.action", produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/headSearchShow.top", produces = "text/plain;charset=UTF-8")
 	public String headSearchShow(HttpServletRequest request) {
 		
 		String searchHead = request.getParameter("searchHead");
 		
-		List<String> headList = service.headSearchShow(searchHead);
+		List<HashMap<String, String>> headList = service.headSearchShow(searchHead);
 		
 		JSONArray jsonArr = new JSONArray();		
 		
 		if (headList != null) {
-			for(String head : headList) {
+			for(HashMap<String, String> head : headList) {
 				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("head", head);
+				jsonObj.put("employee_seq", head.get("employee_seq"));
+				jsonObj.put("searchResult", head.get("searchResult"));
 				
 				jsonArr.put(jsonObj);
 			}

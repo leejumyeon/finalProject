@@ -11,10 +11,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.groupware.choijh.service.InterChoijhService;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.MessengerVO;
 
 @Controller
 public class ChoijhController {
@@ -51,7 +53,7 @@ public class ChoijhController {
 	
 	// 채팅 방 생성하기
 	@ResponseBody
-	@RequestMapping(value="goChatting", produces="text/plain;charset=UTF-8")
+	@RequestMapping(value="goChatting", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
 	public String goChatting(HttpServletRequest request) {
 		
 		String rEmployee_seq = request.getParameter("rEmployee_seq");
@@ -85,6 +87,59 @@ public class ChoijhController {
 		return jsonObj.toString();
 	}
 		
+	
+	// 채팅방 내용 읽어오기 
+	@ResponseBody
+	@RequestMapping(value="contentView.top", produces="text/plain;charset=UTF-8")
+	public String contentView(HttpServletRequest request) {
 		
+		String roomNumber = request.getParameter("roomNumber");
+		
+		List<MessengerVO> msgList = service.contentView(roomNumber);
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(MessengerVO msg : msgList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("message_seq", msg.getMessage_seq());
+			jsonObj.put("fk_roomNumber", msg.getFk_roomNumber());
+			jsonObj.put("fk_employee_seq", msg.getFk_employee_seq());
+			jsonObj.put("employee_name", msg.getEmployee_name());
+			jsonObj.put("content", msg.getContent());
+			jsonObj.put("status", msg.getStatus());
+			jsonObj.put("regDate", msg.getRegDate());
+			jsArr.put(jsonObj);
+		} 
+		
+		return jsArr.toString();
+	}
+	
+	
+	// 채팅방 글 쓰기
+	@ResponseBody
+	@RequestMapping(value="goWriteMsg.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
+	public String goMsg(HttpServletRequest request) {
+		
+		String roomNumber = request.getParameter("roomNumber");
+		String content = request.getParameter("content");
+		String sEmployee_seq = request.getParameter("sEmployee_seq");
+		
+		HashMap<String,String> map = new HashMap<>();
+		
+		map.put("roomNumber", roomNumber);
+		map.put("content", content);
+		map.put("sEmployee_seq", sEmployee_seq);
+		
+		int n = service.goWriteMsg(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	
+	
 	
 }
