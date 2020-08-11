@@ -71,8 +71,7 @@
 	        <div id="wrapper">
 	            <div id="loading"></div>
 	            <div id="calendar"></div>	
-	            
-	               
+	            	               
 	        </div>	        
 	        <!-- 일정 추가 MODAL -->
 	        <!-- <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
