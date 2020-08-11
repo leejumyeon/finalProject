@@ -1,5 +1,7 @@
 package com.spring.groupware.commonVO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BoardVO { //게시글 VO
 	private String board_seq; //게시글 번호
 	private String fk_category_num; //게시글 카테고리 번호
@@ -12,5 +14,5 @@ public class BoardVO { //게시글 VO
 	private String employee_name; // 작성자 사원명
 	private String employee_id; //작성자 사원ID
 	private String status; //게시글 상태
-	private String commentCnt; //댓글 수
+	private String commentCnt; //댓글 수	
 }
