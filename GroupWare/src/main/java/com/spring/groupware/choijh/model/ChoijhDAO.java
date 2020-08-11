@@ -57,5 +57,12 @@ public class ChoijhDAO implements InterChoijhDAO {
 		int n = sqlsession.insert("messenger.goWriteMsg", map);
 		return n;
 	}
+
+	// 대화목록 보여주기
+	@Override
+	public List<HashMap<String, String>> msgRoomListView(String employee_seq) {
+		List<HashMap<String, String>> mapList = sqlsession.selectList("messenger.msgRoomListView", employee_seq);
+		return mapList;
+	}
 	
 }

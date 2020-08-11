@@ -157,6 +157,9 @@
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 		allEmployeeView();
 
+		// 대화목록 보여주기 
+		msgRoomListView();
+		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
 			$("#message").hide();
@@ -166,6 +169,19 @@
 			$("#message").hide();
 		});
 		
+		// 글을 쓰고 전송 버튼 클릭 시
+		$("#msgBtn").click(function(){
+			var content = $("#content").val();
+			var roomNumber = $("#roomNumber").val()
+			var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
+			if(content != null && content.trim() != ''){
+				goWriteMsg(roomNumber, sEmployee_seq, content);	
+			}
+			else{
+				alert("글을 입력하세요");
+			}
+		});	
+		
 	});// end of $(document).ready()----------------------
 
 	
@@ -173,7 +189,7 @@
 	function allEmployeeView() {
 		
 		$.ajax({
-				
+				async: false,
 				url:"/groupware/allEmployeeView.top",
 				type:"GET",
 				dataType:"JSON",
@@ -215,7 +231,7 @@
 		alert("보내는이 : " + sEmployee_seq + " 받는이 : " + rEmployee_seq);
 		
 		$.ajax({
-			
+			async: false,
 			url:"/groupware/goChatting.top",
 			data:{"rEmployee_seq":rEmployee_seq,"sEmployee_seq":sEmployee_seq},
 			type:"POST",
@@ -224,8 +240,10 @@
 				
 				var roomNumber = json.roomNumber;
 	
+				$("#roomNumber").val(roomNumber);
+				
 				// 채팅방 내용 읽어오기
-				contentView(roomNumber, rEmployee_seq, sEmployee_seq);
+				contentView(roomNumber, sEmployee_seq);
 							
 			},
 			error: function(request, status, error){
@@ -238,15 +256,16 @@
 	
 	
 	// 채팅방 내용 읽어오기 
-	function contentView(roomNumber, rEmployee_seq, sEmployee_seq) {
-		
+	function contentView(roomNumber, sEmployee_seq) {
+	//	alert(roomNumber);
 		$.ajax({
 			url:"/groupware/contentView.top",
 			data:{"roomNumber":roomNumber},
+			async: false,
 			type:"GET",
 			dataType:"JSON",
 			success:function(json){
-				
+				$("#contentList").html("");
 				var html = "";
 				if(json.length != 0){ // 채팅방이 이미 만들어져 있는 경우
 					
@@ -285,31 +304,66 @@
 		});
 		$("#message").show();
 		$("#message").click();
-		
-		// 글을 쓰고 전송 버튼 클릭 시
-		$("#msgBtn").click(function(){
-			var content = $("#content").val();
-			goWriteMsg(roomNumber, sEmployee_seq, content, rEmployee_seq);	
-		});
-		
+
 	}
 
 	
 	// 글을 쓰고 전송 버튼을 클릭했을 시
-	function goWriteMsg(roomNumber, sEmployee_seq, content, rEmployee_seq) {
+	function goWriteMsg(roomNumber, sEmployee_seq, content) {
+		alert("전송:"+content);
 		$.ajax({
 			url:"/groupware/goWriteMsg.top",
+			async: false,
 			data:{"roomNumber":roomNumber,"sEmployee_seq":sEmployee_seq, "content":content},
 			type:"POST",
 			dataType:"JSON",
 			success:function(json){
 				$("#content").val("");
-				contentView(roomNumber, rEmployee_seq, sEmployee_seq);
+				contentView(roomNumber, sEmployee_seq);
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 		});
+	}
+	
+	
+	// 대화목록 보여주기 
+	function msgRoomListView() {
+		$.ajax({
+			url:"/groupware/msgRoomListView.top",
+			type:"GET",
+			dataType:"JSON",
+			success:function(json){
+				
+				var html = "";
+				$.each(json, function(index,item){
+					
+					html += "<tr class='msglist'>" +
+								"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
+								"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
+									"<div class='divText name'>"+item.employee_name+"</div>" +
+									"<div class='divText roomText'>"+item.content+"</div>" +
+								"</td>" +
+								"<td align='right' style='color: #aaa;'>15:00</td>" +
+								"<td><img class='del' onclick='roomDelete();' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
+							"</tr>";
+				});
+				
+				$("#msglistTbody").html(html);
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
+		
+	}
+	
+	
+	// 대화목록에서  대화방 클릭시 대화창으로 이동하기
+	function goMsgWriteView(roomNumber, sEmployee_seq) {
+	//	alert("roomNumber : " + roomNumber + " rEmployee_seq : " + rEmployee_seq + " sEmployee_seq : " + sEmployee_seq);
+		contentView(roomNumber, sEmployee_seq);
 	}
 	
 	
@@ -367,6 +421,8 @@
       				<tr>
       					<th style="color: #1aa3ff">대화목록</th>
       				</tr>
+      				<tbody id="msglistTbody"></tbody>
+      				<%-- 
       				<tr class="msglist">
       					<td align="center" style="width: 60px;"><img src="/groupware/resources/msg_images/user2.png" width="40px;" height="40px;" /></td>
       					<td style="cursor: pointer">
@@ -394,6 +450,7 @@
       					<td align="right" style="color: #aaa;">13:00</td>
       					<td><img class="del" onclick="roomDelete();" src="/groupware/resources/msg_images/trash.png" width="28px;" height="28px;" /></td>
       				</tr>
+      				--%>
       			</table>
     		</div>
     		<!-- ===###msglist end###=== -->
@@ -432,11 +489,9 @@
 				</div>
      			--%>
      			
-     			<form name="sendMsg">
-     				<input type="text" name="content" id="content" /><div id="msgBtn">전송</div>
-     				<input type="hidden" name="" value="" />
-     			</form>
-     			
+     			<input type="text" name="content" id="content" /><div id="msgBtn">전송</div>
+     			<input type="hidden" name="roomNumber" value="" id="roomNumber" />
+     		
    			</div>
    			<!-- ===###msg end###=== -->
    			

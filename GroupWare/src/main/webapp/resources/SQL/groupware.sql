@@ -445,7 +445,6 @@ nocycle -- 반복 설정
 nocache;
 
 
-
 -- 메신저 그룹 테이블(messengerRoom_table) --
 create table messengerRoom_table
 (roomNumber     number not null -- 그룹 번호
@@ -735,5 +734,3 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
-
-              
