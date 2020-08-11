@@ -79,9 +79,7 @@
 		join employees_table E on M.fk_employee_seq = E.employee_seq
 		join department_table D on E.fk_department = D.department_seq
 		join position_table P on E.fk_position = P.position_seq 
-			where M.status = 0 and M.fk_employee_seq = #{loginSeq}  and M.mail_groupno in
-				(select mail_groupno from mail_table
-					where status = 1 and mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+			where M.status = 2 and M.fk_employee_seq = #{loginSeq}
 	</select>
 	
 	<!-- 안 읽은 메일 조회 -->
@@ -92,8 +90,8 @@
 		join employees_table E on M.fk_employee_seq = E.employee_seq
 		join department_table D on E.fk_department = D.department_seq
 		join position_table P on E.fk_position = P.position_seq 
-			where M.status = 0 and M.readStatus = 0 and M.mail_groupno in
+			where M.readStatus = 0 and M.mail_groupno in
 				(select mail_groupno from mail_table
-					where status = 1 and fk_employee_seq = #{loginSeq}) 
+					where fk_employee_seq = #{loginSeq}) 
 	</select> 
 </mapper>

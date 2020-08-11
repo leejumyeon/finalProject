@@ -149,10 +149,13 @@
 								<c:when test="${mail.mailStatus eq 0}">
 									<td>[휴지통]${mail.subject}</td>
 								</c:when>
-								<c:when test="${mail.fk_employee_seq eq sessionScope.loginuser.employee_seq}">
+								<c:when test="${mail.status eq 2}">
 									<td>[내게 쓴 메일]${mail.subject}</td>
 								</c:when>
-								<c:when test="${mail.fk_employee_seq ne sessionScope.loginuser.employee_seq}">
+								<c:when test="${mail.status eq 0}">
+									<td>[보낸 메일]${mail.subject}</td>
+								</c:when>
+								<c:when test="${mail.status eq 1}">
 									<td>[받은 메일]${mail.subject}</td>
 								</c:when>
 							</c:choose>

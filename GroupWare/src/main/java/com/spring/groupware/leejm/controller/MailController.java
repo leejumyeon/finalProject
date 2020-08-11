@@ -130,6 +130,7 @@ public class MailController {
 		
 		String subject = mrequest.getParameter("subject");
 		String content = mrequest.getParameter("content");
+		String sendType = mrequest.getParameter("sendType");
 		List<MultipartFile> attachList = mrequest.getFiles("fileName");
 		List<MailVO> mailList = new ArrayList<>();
 		
@@ -141,13 +142,20 @@ public class MailController {
 		sendMail.setSubject(subject);
 		sendMail.setReadStatus("1");
 		
-		// 받는 메일 VO 생성 //
-		MailVO receiveMail = new MailVO();
-		receiveMail.setFk_employee_seq(receiveArr[0]);
-		receiveMail.setContent(content);
-		receiveMail.setSubject(subject);
-		receiveMail.setStatus("1");
-		receiveMail.setReadStatus("0");
+		MailVO receiveMail = null;
+		if(!"mine".equals(sendType)) {
+			// 받는 메일 VO 생성 //
+			receiveMail = new MailVO();
+			receiveMail.setFk_employee_seq(receiveArr[0]);
+			receiveMail.setContent(content);
+			receiveMail.setSubject(subject);
+			receiveMail.setStatus("1");
+			receiveMail.setReadStatus("0");
+		}
+		else {
+			sendMail.setStatus("2"); //내게 쓰기 상태
+		}
+		
 		
 		// 메일 그룹번호 채번하기
 		String mail_groupno = service.getMail_groupno();
@@ -176,7 +184,9 @@ public class MailController {
 					// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
 					
 					newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
-					newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
+					if(!"mine".equals(sendType)) {
+						newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
+					}
 					// 위의 것이 파일 올리기를 해주는 것이다.
 					// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 					
@@ -192,27 +202,35 @@ public class MailController {
 						sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
 						sendMail.setFileSize1(String.valueOf(fileSize));
 						
-						receiveMail.setFileName1(newSendFileName);
-						receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize1(String.valueOf(fileSize));
+						if(receiveMail != null) {
+							receiveMail.setFileName1(newSendFileName);
+							receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize1(String.valueOf(fileSize));
+						}
+						
 					}
 					else if(i==1) {
 						sendMail.setFileName2(newSendFileName);
 						sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
 						sendMail.setFileSize2(String.valueOf(fileSize));
 						
-						receiveMail.setFileName2(newReceiveFileName);
-						receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize2(String.valueOf(fileSize));
+						if(receiveMail != null) {
+							receiveMail.setFileName2(newReceiveFileName);
+							receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize2(String.valueOf(fileSize));
+						}
 					}
 					else {
 						sendMail.setFileName3(newReceiveFileName);
 						sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
 						sendMail.setFileSize3(String.valueOf(fileSize));
 						
-						receiveMail.setFileName3(newReceiveFileName);
-						receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
-						receiveMail.setFileSize3(String.valueOf(fileSize));
+						if(receiveMail != null) {
+							receiveMail.setFileName3(newReceiveFileName);
+							receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize3(String.valueOf(fileSize));
+						}
+						
 					}
 					// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
 							
@@ -227,17 +245,21 @@ public class MailController {
 		} // end of if(!attachList.isEmpty())-------------------------------------------------
 		
 		mailList.add(sendMail);
-		mailList.add(receiveMail);
 		
-		// 받는 사람 복수일 경우
-		if(receiveArr.length>1) {
-			for(int i=0; i<receiveArr.length; i++) {
-				if(i>0) {
-					receiveMail.setFk_employee_seq(receiveArr[i]);
-					mailList.add(receiveMail);
+		if(receiveMail!=null) {
+			mailList.add(receiveMail);
+			
+			// 받는 사람 복수일 경우
+			if(receiveArr.length>1) {
+				for(int i=0; i<receiveArr.length; i++) {
+					if(i>0) {
+						receiveMail.setFk_employee_seq(receiveArr[i]);
+						mailList.add(receiveMail);
+					}
 				}
 			}
 		}
+		
 		
 		int count = mailList.size();
 		int n = 0;
@@ -278,7 +300,7 @@ public class MailController {
 		return mav;
 	}
 	
-	
+	// 스마트 에디터 사진첨부 //
 	@RequestMapping(value="/image/photoUpload.action", method={RequestMethod.POST})
 	public String photoUpload(PhotoVO photovo, MultipartHttpServletRequest req) {
 	    

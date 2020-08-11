@@ -318,7 +318,7 @@
 				
 				<c:if test="${not empty(receive) && sessionScope.loginEmployee.employee_seq == receive.employee_seq}">
 					<tr>
-						<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/></td>
+						<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
 					</tr>
 					<tr>
 						<th>제목</th>

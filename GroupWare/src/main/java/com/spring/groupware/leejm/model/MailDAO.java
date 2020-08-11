@@ -68,7 +68,7 @@ public class MailDAO implements InterMailDAO{
 	@Override
 	public List<MailVO> noReadMailList(HashMap<String, String> paraMap) {
 		List<MailVO> mailList = sqlsession.selectList("mail.noReadMailList", paraMap);
-		return null;
+		return mailList;
 	}
 
 	// 첨부파일 있는 메일 조회
