@@ -78,7 +78,7 @@ var editEvent = function (event, element, view) {
         event.description = editDesc.val();
 
        // $("#calendar").fullCalendar('updateEvent', event);
-
+        
         //일정 업데이트
         $.ajax({
             type: "get",

@@ -61,6 +61,35 @@ public class ChaDAO implements ChaInterDAO {
 		
 		return comCalvo;
 	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정추가
+	@Override
+	public int insertAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = sqlsession.insert("cha.insertAdminCalendar", paraMap);
+		
+		System.out.println(n);
+		
+		return n;
+	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 수정
+	@Override
+	public int updateAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = sqlsession.update("cha.updateAdminCalendar", paraMap);
+		
+		return n;
+	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
+	@Override
+	public int deleteAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = sqlsession.delete("cha.deleteAdminCalendar",paraMap);
+		
+		return n;
+	}
 
 	
 	

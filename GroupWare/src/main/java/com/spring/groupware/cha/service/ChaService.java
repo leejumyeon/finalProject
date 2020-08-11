@@ -52,13 +52,40 @@ public class ChaService implements ChaInterService {
 		return n;
 	}
 
-	// 회사 일정 캘린더
+	// 관리자 메인페이지(회사 일정 캘린더) - 회사 일정 캘린더
 	@Override
 	public List<CompanyCalVO> adminFullCalendar() {
 
 		List<CompanyCalVO> comCalvo = dao.adminFullCalendar();
 		
 		return comCalvo;
+	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정추가
+	@Override
+	public int insertAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = dao.insertAdminCalendar(paraMap);
+		
+		return n;
+	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 수정
+	@Override
+	public int updateAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = dao.updateAdminCalendar(paraMap);
+		
+		return n;
+	}
+	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
+	@Override
+	public int deleteAdminCalendar(HashMap<String, String> paraMap) {
+		
+		int n = dao.deleteAdminCalendar(paraMap);
+		
+		return n;
 	}
 
 	
