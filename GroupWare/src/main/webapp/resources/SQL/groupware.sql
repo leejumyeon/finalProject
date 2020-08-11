@@ -741,6 +741,6 @@ insert into companyCalendar_category(category_num, category_name) values(4,'ì±„ì
 alter table mail_table drop constraint CK_mail_table;
 alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
 
-
-
+select * from mail_table order by mail_seq desc;
+commit;
               

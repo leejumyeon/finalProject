@@ -74,8 +74,8 @@ public class MailDAO implements InterMailDAO{
 	// 첨부파일 있는 메일 조회
 	@Override
 	public List<MailVO> attachMailList(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return null;
+		List<MailVO> mailList = sqlsession.selectList("mail.attachMailList",paraMap);
+		return mailList;
 	}
 
 	// 메일 읽기
@@ -90,5 +90,61 @@ public class MailDAO implements InterMailDAO{
 	public void updateReadstatus(String mail_seq) {
 		sqlsession.update("mail.updateReadstatus",mail_seq);
 		
+	}
+
+	// 휴지통 이동
+	@Override
+	public List<MailVO> delMailList(HashMap<String, String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.delMailList",paraMap);
+		return mailList;
+	}
+
+	// 받은 메일 건 수
+	@Override
+	public int receiveMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.receiveMailCount",paraMap);
+		return result;
+	}
+
+	// 보낸 메일 건 수
+	@Override
+	public int sendMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.sendMailCount",paraMap);
+		return result;
+	}
+
+	// 내게 쓴 메일 건 수
+	@Override
+	public int mineMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.mineMailCount",paraMap);
+		return result;
+	}
+
+	// 안 읽은 메일 건 수
+	@Override
+	public int noReadMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.noReadMailCount",paraMap);
+		return result;
+	}
+
+	// 첨부파일 있는 메일 건 수
+	@Override
+	public int attachMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.attachMailCount",paraMap);
+		return result;
+	}
+
+	// 검색 메일 건 수
+	@Override
+	public int searchMailCount(HashMap<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	// 휴지통 메일 건 수
+	@Override
+	public int delMailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.delMailCount",paraMap);
+		return result;
 	}
 }

@@ -43,6 +43,10 @@
 		font-weight: bold;
 		color: black;
 	}
+	
+	.delete:hover{
+		background-color: gray;
+	}
 </style>
 
 <script type="text/javascript">
@@ -53,6 +57,28 @@
 			}
 			else{
 				location.href="<%=request.getContextPath()%>/mail/list.top?type=attach";
+			}
+		});
+		
+		$(".trush").click(function(event){
+			var $target = $(event.target);
+			console.log($target);
+			if(target.hasClass("delete")){ //비우기 클릭시
+				$.ajax({
+					url:"<%=request.getContextPath()%>/mail/drop",
+					data:{"loginSeq":"${sessionScope.loginEmployee.employee_seq}"},
+					type:"GET",
+					dataType:"JSON",
+					success:function(json){
+						
+					},
+					error:function(e){
+						
+					}
+				});
+			}
+			else{ // 휴지통 클릭시
+				location.href="<%=request.getContextPath()%>/mail/list.top?type=del";
 			}
 		});
 	});
@@ -80,11 +106,11 @@
 	</div>
 	<div id="mailhamArea" align="left">
 		<ul id="mailhamList">
-			<li><div>전체메일</div></li>
+			<li onclick="location.href='<%=request.getContextPath()%>/mail/list.top?type=all'"><div>전체메일</div></li>
 			<li onclick="location.href='<%=request.getContextPath()%>/mail/list.top?type=receive'"><div>받은메일함</div></li>
 			<li onclick="location.href='<%=request.getContextPath()%>/mail/list.top?type=send'"><div>보낸메일함</div></li>
 			<li onclick="location.href='<%=request.getContextPath()%>/mail/list.top?type=mine'"><div>내게쓴메일함</div></li>
-			<li><div>휴지통<div style="display: inline-block; float:right; margin-right:30px; color:black;">비우기</div></div></li>
+			<li class="trush"><div>휴지통<div style="display: inline-block; float:right; margin-right:30px; color:black;" class="delete">비우기</div></div></li>
 		</ul>
 	</div>
 </div>
