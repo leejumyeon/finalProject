@@ -34,4 +34,10 @@ public interface InterMailDAO {
 
 	// 첨부파일 있는 메일 조회
 	List<MailVO> attachMailList(HashMap<String, String> paraMap);
+
+	// 메일 읽기 
+	MailVO mailRead(String mail_seq);
+
+	// readCount 업데이트(0->1)
+	void updateReadstatus(String mail_seq);
 }

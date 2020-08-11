@@ -20,4 +20,7 @@ public interface InterMailService {
 	// 메일 리스트(받은 메일함, 보낸 메일함, 내게 쓴 메일함, 휴지통) 조회
 	List<MailVO> mailList(HashMap<String, String> paraMap);
 
+	// 메일 읽기 페이지 이동
+	MailVO mailRead(String mail_seq);
+
 }

@@ -399,7 +399,7 @@ create table personalCalendar_table
 ,content    varchar2(2000) not null -- 일정내용
 ,startDate  date not null -- 일정시작 날짜
 ,endDate    date not null -- 일정종료 날짜
-,color      varchar2(100) -- 배경색     
+,backgroundColor      varchar2(100) -- 배경색     
 ,constraint pk_personalCalendar primary key(calendar_seq)
 ,constraint fk_personalcalendar_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
