@@ -6,6 +6,7 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="hyemin">
 	
+	<!-- === 예약 가능한 시간 조회(Ajax) === -->
 	<select id="select_possibleTime" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
 		select to_char(startDate, 'hh24:mi') as startDate
 			 , to_char(endDate, 'hh24:mi') as endDate
