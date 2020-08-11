@@ -47,7 +47,23 @@
 	
 	<!-- 받은 메일함 조회 -->
 	<select id="receiveMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select 
+		select 	T.Ron, mail_seq, mail_groupno, readStatus, mailStatus, status, subject, content, regDate, fk_employee_seq, employee_name, email, position_name, department_name
+			from(select row_number() over(order by My.mail_seq desc) as Ron, My.mail_seq, mail_groupno, My.readStatus, My.mailStatus, My.status, My.subject, My.content, My.regDate, 
+				   You.fk_employee_seq, You.employee_name, You.email, You.position_name, You.department_name	
+			from
+				(select mail_seq, mail_groupno readStatus, mailStatus, status, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate 
+					from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq})My join
+				(select mail_groupno, fk_employee_seq, employee_name, email, position_name, department_name 
+					from mail_table 
+						join employees_table on fk_employee_seq =  employee_seq 
+						join position_table on fk_position= position_seq 
+						join department_table on fk_department = department_seq
+					where fk_employee_seq != #{loginSeq} and mail_groupno 
+						in(select mail_groupno from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq})
+				)You on mail_groupno = You.mail_groupno
+			)T where T.Ron between #{startRno} and #{endRno}
+
+		
 	</select>
 	
 	<!-- 보낸 메일함 조회 -->
@@ -140,11 +156,7 @@
 	
 	<!-- 받은 메일 건 수 -->
 	<select id="receiveMailCount" resultType="int"  parameterType="HashMap">
-		select count(*)
-		from mail_table 
-			where status = 0 and fk_employee_seq != #{loginSeq}  and mail_groupno in
-				(select mail_groupno from mail_table
-					where status = 1 and mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+		select count(*) from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq}
 	</select>
 	
 	<!-- 보낸 메일 건 수 -->
