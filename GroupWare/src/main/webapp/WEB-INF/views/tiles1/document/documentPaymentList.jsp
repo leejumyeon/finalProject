@@ -189,8 +189,6 @@
 		
 		var statusValue = $("input:radio[name=DocumentList]:checked").val();
 		
-		alert(statusValue);
-		
 		$.ajax({
 			url:"<%= request.getContextPath()%>/comDocumentList.top",
 			type:"GET",
@@ -199,17 +197,53 @@
 			success:function(json) {
 				
 				var html = "";
+				var html2 = "";
 				
-				$.each(json, function(index, item) {
+				if(json != null) {
+
+					$.each(json, function(index, item) {
+						
+						html += '<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">'
+							 +  '<td class="cell100 column1">' + item.groupno + '</td>'
+							 +  '<td class="cell100 column1">' + item.category_name + '</td>'
+							 +  '<td class="cell100 column1">' + item.subject + '</td>'
+							 +  '<td class="cell100 column1">' + item.employee_name + '</td>'
+							 +  '<td class="cell100 column1">' + item.regDate + '</td>'
+							 +  '</tr>';
+					});
+
+					$.each(json, function(index, item) {
+						
+						html2 += '<div class="modal fade" id="documentContent3' + item.document_seq + '" role="dialog">'
+							  +  '<div class="modal-dialog" style="width: 900px;">'
+							  +  '<div class="modal-content">'
+							  +  '<div class="modal-header">'
+							  +  '<button type="button" class="close myclose" data-dismiss="modal">&times;</button>'
+							  +  '<h4 class="modal-title">문서 내용</h4>'
+							  +  '</div>'
+							  +  '<div class="modal-body" style="height: 620px; width: 900px;">'
+							  +  '<div id="addDelivery">';
+							  +  '<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=' + item.document_seq + '">'
+							  +  '</iframe>'
+							  +  '</div>'
+							  +  '</div>'
+							  +  '<div class="modal-footer">'
+							  +  '<button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>'
+							  +  '</div>'
+							  +  '</div>'
+							  +  '</div>'
+							  +  '</div>';
+	
+					});
+
+				}
+				else {
 					
-					html += '<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">'
-						 +  '<td class="cell100 column1">' + item.groupno + '</td>'
-						 +  '<td class="cell100 column1">' + item.category_name + '</td>'
-						 +  '<td class="cell100 column1">' + item.subject + '</td>'
-						 +  '<td class="cell100 column1">' + item.employee_name + '</td>'
-						 +  '<td class="cell100 column1">' + item.regDate + '</td>'
-						 +  '</tr>';
-				})
+					html = '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
+				}
+				
+				$("#ajaxDocumentList").html(html);
+				$("#comDocumentModal").html(html2);
 			}
 		});
 	}
@@ -236,19 +270,24 @@
 			</div>
 	
 			<div class="table100-body js-pscroll">
-				<table>
-					<tbody>
-						<c:forEach var="docuvo" items="${regDocumentList}">
-							<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">
-								<td class="cell100 column1">${docuvo.groupno}</td>
-								<td class="cell100 column2">${docuvo.category_name}</td>
-								<td class="cell100 column3">${docuvo.subject}</td>
-								<td class="cell100 column4">${docuvo.employee_name}</td>
-								<td class="cell100 column5">${docuvo.regDate}</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+				<c:if test="${not empty regDocumentList}">
+					<table>
+						<tbody>
+							<c:forEach var="docuvo" items="${regDocumentList}">
+								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">
+									<td class="cell100 column1">${docuvo.groupno}</td>
+									<td class="cell100 column2">${docuvo.category_name}</td>
+									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column4">${docuvo.employee_name}</td>
+									<td class="cell100 column5">${docuvo.regDate}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</c:if>
+				<c:if test="${empty regDocumentList}">
+					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">신청한 결재 문서가 없습니다.</span>
+				</c:if>
 			</div>
 		</div>
 		
@@ -272,20 +311,25 @@
 			</div>
 	
 			<div class="table100-body js-pscroll">
-				<table>
-					<tbody>
-						<c:forEach var="docuvo" items="${aproDocumentList}">
-							<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">
-								<th class="cell100 column0"><input type="checkbox" name="documentSeqList" value="${docuvo.document_seq}"/></th>
-								<td class="cell100 column1">${docuvo.groupno}</td>
-								<td class="cell100 column2">${docuvo.category_name}</td>
-								<td class="cell100 column3">${docuvo.subject}</td>
-								<td class="cell100 column4">${docuvo.employee_name}</td>
-								<td class="cell100 column5">${docuvo.regDate}</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+				<c:if test="${not empty aproDocumentList}">
+					<table>
+						<tbody>
+							<c:forEach var="docuvo" items="${aproDocumentList}">
+								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">
+									<th class="cell100 column0"><input type="checkbox" name="documentSeqList" value="${docuvo.document_seq}"/></th>
+									<td class="cell100 column1">${docuvo.groupno}</td>
+									<td class="cell100 column2">${docuvo.category_name}</td>
+									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column4">${docuvo.employee_name}</td>
+									<td class="cell100 column5">${docuvo.regDate}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</c:if>
+				<c:if test="${empty aproDocumentList}">
+					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">결재할 결재 문서가 없습니다.</span>
+				</c:if>
 			</div>
 		</div>
 		
@@ -370,29 +414,7 @@
 	</c:forEach>
 	
 	<%-- *** 문서 내용  modal *** --%>
-	<div id="">
-	</div>
-	<div class="modal fade" id="documentContent2${docuvo.document_seq}" role="dialog">
-		<div class="modal-dialog" style="width: 900px;">
-		  
-			    <!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close myclose" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">문서 내용</h4>
-				</div>
-				<div class="modal-body" style="height: 620px; width: 900px;">
-					<div id="addDelivery">
-						<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=${docuvo.document_seq}">
-						</iframe>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		    
-		</div>
+	<div id="comDocumentModal">
 	</div>
 	
 </body>

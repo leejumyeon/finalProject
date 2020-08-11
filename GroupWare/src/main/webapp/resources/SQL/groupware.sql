@@ -735,8 +735,6 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
-<<<<<<< HEAD
-=======
 
 -- 메일 테이블 check 제약조건 수정 --
 alter table mail_table drop constraint CK_mail_table;
@@ -744,5 +742,3 @@ alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and 
 
 select * from mail_table order by mail_seq desc;
 commit;
-              
->>>>>>> 2538929cef56b382d9f446230d80b6b68e93c28a
