@@ -99,7 +99,6 @@
 	    });
 		<%-- === 스마트 에디터 구현 끝 === --%>
 		
-		
 		$(document).on("keyup",".searchEmail",function(event){
 			var code = event.keyCode;
 			var len = $(this).val().trim().length;
@@ -123,7 +122,7 @@
 					
 				}
 				console.log("엔터");
-				$("#findEmail").addClass("hide");	
+				$("#findEmail").css("display","none");	
 				return;
 			}
 			else if(code == 40 || code == 38){
@@ -133,16 +132,22 @@
 					var prevSelect = currentSelect.prev();
 					
 					if(code == 40){
-						if(nextSelect != null){
+						if(nextSelect.hasClass("searchList")){
 							nextSelect.addClass("select");
-							currentSelect.removeClass("select");
 						}
+						else{
+							$("#resultEmail > li:first-child").addClass("select");
+						}
+						currentSelect.removeClass("select");
 						
 					}else{
-						if(prevSelect != null){
+						if(prevSelect.hasClass("searchList")){
 							prevSelect.addClass("select");
-							currentSelect.removeClass("select");
 						}
+						else{
+							$("#resultEmail > li:last-child").addClass("select");
+						}
+						currentSelect.removeClass("select");
 						
 					}
 				}
@@ -151,6 +156,7 @@
 			}
 			else{
 				if(len > 0){
+					$("#findEmail").css("display","block");
 					$.ajax({
 						url:"<%= ctxPath%>/mail/searchReceive.top",
 						data:{"keyWord":$(this).val().trim()},
@@ -163,10 +169,10 @@
 								$(json).each(function(index, item){
 									// 보기 출력 부분
 									if(index == 0){
-										html+="<li class='select'>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")<div class='hiddenValue hide'>"+item.employee_seq+"</div></li>";
+										html+="<li class='select searchList'>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")<div class='hiddenValue hide'>"+item.employee_seq+"</div></li>";
 									}
 									else{
-										html+="<li>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")<div class='hiddenValue hide'>"+item.employee_seq+"</div></li>";
+										html+="<li class='searchList'>"+item.employee_name+" &lt;"+item.position_name+"/"+item.department_name+" &gt;("+item.email+")<div class='hiddenValue hide'>"+item.employee_seq+"</div></li>";
 									}
 									
 								});

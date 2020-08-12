@@ -1,13 +1,17 @@
 package com.spring.groupware.leejm.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,14 +56,11 @@ public class MailController {
 		String str_currentPageNo = request.getParameter("currentShowPageNo");
 		
 		String searchWord = request.getParameter("searchWord");
-		String searchType = request.getParameter("searchType");
 		if(searchWord == null || searchWord.trim().isEmpty()) {
 			searchWord = "";
-			searchType = "";
 		}
 		paraMap.put("searchWord", searchWord);
-		paraMap.put("searchType", searchType);
-		
+		System.out.println(type+"/"+searchWord);
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
 		int totalCount = 0;        // 총게시물 건수
@@ -93,10 +94,6 @@ public class MailController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
 		
-		
-		
-		List<MailVO> mailList = service.mailList(paraMap);
-		
 		// === #119. 페이지바 만들기 === //
 		String pageBar = "<ul style='list-style: none; text-align:center;'>";
 		
@@ -109,15 +106,16 @@ public class MailController {
 		*/
 		
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
-		// *** !! 공식이다. !! *** //
 		System.out.println("총 게시글 수:"+totalCount+"/ pageNo:"+pageNo+"/ currentPage:"+currentShowPageNo);
-	
+		
+		// 리스트 조회 //
+		List<MailVO> mailList = service.mailList(paraMap);
 		
 		String url = request.getContextPath()+"/mail/list.top";
 		
 		// === [이전] 만들기 === 
 		if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"&type="+type+"'>[이전]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"&type="+type+"'>[이전]</a></li>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -126,7 +124,7 @@ public class MailController {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
 			}
 			else {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>"+pageNo+"</a></li>";
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>"+pageNo+"</a></li>";
 			}
 			
 			loop++;
@@ -137,40 +135,50 @@ public class MailController {
 		
 		// === [다음] 만들기 ===
 		if( !(pageNo > totalPage) ) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>[다음]</a></li>";
 		}
 		
 		pageBar += "</ul>";
 		
 		mav.addObject("pageBar", pageBar);
 		
-		if("receive".equals(type)) {
-			mav.addObject("mailhamType","받은메일");
-		}
-		else if("send".equals(type)) {
-			mav.addObject("mailhamType","보낸메일");
+		if(searchWord.trim().isEmpty()) {
+			if("receive".equals(type)) {
+				mav.addObject("mailhamType","받은메일");
+			}
+			else if("send".equals(type)) {
+				mav.addObject("mailhamType","보낸메일");
+			}
+			
+			else if("mine".equals(type)) {
+				mav.addObject("mailhamType","내게 쓴 메일");
+			}
+			
+			else if("noRead".equals(type)) {
+				mav.addObject("mailhamType","안 읽은 메일");
+			}
+			
+			else if("attach".equals(type)) {
+				mav.addObject("mailhamType","첨부파일 있는 메일");
+			}
+			
+			else if("search".equals(type)) {
+				mav.addObject("mailhamType","검색");
+			}
+			
+			else if("del".equals(type)) {
+				mav.addObject("mailhamType","휴지통");
+			}
+			
+			else if("all".equals(type)) {
+				mav.addObject("mailhamType","전체메일");
+			}
+		}else {
+			mav.addObject("mailhamType","메일 검색");
 		}
 		
-		else if("mine".equals(type)) {
-			mav.addObject("mailhamType","내게 쓴 메일");
-		}
 		
-		else if("read".equals(type)) {
-			mav.addObject("mailhamType","안 읽은 메일");
-		}
-		
-		else if("attach".equals(type)) {
-			mav.addObject("mailhamType","첨부파일 있는 메일");
-		}
-		
-		else if("search".equals(type)) {
-			mav.addObject("mailhamType","검색");
-		}
-		
-		else if("del".equals(type)) {
-			mav.addObject("mailhamType","휴지통");
-		}
-		
+		mav.addObject("searchWord",searchWord);
 		mav.addObject("mailList",mailList);
 		mav.addObject("total",totalCount);
 		mav.setViewName("mail/mailList.tiles2");
@@ -199,15 +207,32 @@ public class MailController {
 	}
 	
 	// 메일 보내기 기능 //
-	@RequestMapping(value="mail/mailSend.top")
+	@RequestMapping(value="/mail/mailSend.top")
 	public ModelAndView mailSend(ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		HttpSession session = mrequest.getSession();
 		EmployeesVO empVO = (EmployeesVO)session.getAttribute("loginEmployee");
 		String sendSeq = empVO.getEmployee_seq();
-		String[] receiveArr = mrequest.getParameterValues("receiveSeq");
-		for(String receiveSeq : receiveArr) {
-			System.out.println("확인용 받는 메일번호:"+receiveSeq);
+		String[] tempReceiveArr = mrequest.getParameterValues("receiveSeq");
+		for(String receiveSeq : tempReceiveArr) {
+			System.out.println("확인용 받는 메일번호:"+tempReceiveArr);
 		}
+		
+		List<String> receiveArr = new ArrayList<>();
+		boolean flag = false;
+		for(int i=0; i<tempReceiveArr.length; i++) {
+			for(int j=i+1; j<tempReceiveArr.length; j++) {
+				if(tempReceiveArr[i].equals(tempReceiveArr[j])) {
+					flag = true;
+					break;
+				}
+			}
+			if(!flag) {
+				receiveArr.add(tempReceiveArr[i]);
+			}
+			flag = false;
+		}
+		
+		
 		
 		String subject = mrequest.getParameter("subject");
 		String content = mrequest.getParameter("content");
@@ -227,7 +252,7 @@ public class MailController {
 		if(!"mine".equals(sendType)) {
 			// 받는 메일 VO 생성 //
 			receiveMail = new MailVO();
-			receiveMail.setFk_employee_seq(receiveArr[0]);
+			receiveMail.setFk_employee_seq(receiveArr.get(0));
 			receiveMail.setContent(content);
 			receiveMail.setSubject(subject);
 			receiveMail.setStatus("1");
@@ -337,10 +362,10 @@ public class MailController {
 			mailList.add(receiveMail);
 			
 			// 받는 사람 복수일 경우
-			if(receiveArr.length>1) {
-				for(int i=0; i<receiveArr.length; i++) {
+			if(receiveArr.size()>1) {
+				for(int i=0; i<receiveArr.size(); i++) {
 					if(i>0) {
-						receiveMail.setFk_employee_seq(receiveArr[i]);
+						receiveMail.setFk_employee_seq(receiveArr.get(i));
 						mailList.add(receiveMail);
 					}
 				}
@@ -463,5 +488,44 @@ public class MailController {
 		}
 	    
 		return "redirect:" + callback + "?callback_func="+callback_func+file_result;
+	}
+	
+	@RequestMapping(value="/mail/download.top",method = {RequestMethod.POST})
+	public void attachFileDownload(HttpServletRequest request, HttpServletResponse response) {
+		String fileName = request.getParameter("fileName");
+		String orgFileName = request.getParameter("orgFileName");
+		String status = request.getParameter("status");
+		
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator;
+		if("1".equals(status)) {
+			path += "receiveFiles";
+		}
+		else {
+			path += "sendFiles";
+		}
+		
+		boolean flag = false;
+		flag = fileManager.doFileDownload(fileName, orgFileName, path, response);
+
+		if(!flag) {
+			// 다운로드가 실패할 경우 메시지를 띄워준다.
+			
+			response.setContentType("text/html; charset=UTF-8"); 
+			PrintWriter writer = null;
+			
+			try {
+				writer = response.getWriter();
+				// 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+			} catch (IOException e) {
+				
+			}
+			
+			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
+			
+		}
+		
+		
 	}
 }

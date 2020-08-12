@@ -51,21 +51,25 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".subMailBtn").click(function(){
-			if($(this).has("read")){
-				location.href="<%=request.getContextPath()%>/mail/list.top?type=read";
+		$(".subMailBtn").click(function(event){
+			var $target = $(event.target);
+		
+			if($target.hasClass("noRead")){
+				
+				location.href="<%=request.getContextPath()%>/mail/list.top?type=noRead";
 			}
-			else{
+			else if($target.hasClass("attach")){
+				
 				location.href="<%=request.getContextPath()%>/mail/list.top?type=attach";
-			}
+			} 
 		});
 		
 		$(".trush").click(function(event){
 			var $target = $(event.target);
 			console.log($target);
-			if(target.hasClass("delete")){ //비우기 클릭시
+			if($target.hasClass("delete")){ //비우기 클릭시
 				$.ajax({
-					url:"<%=request.getContextPath()%>/mail/drop",
+					url:"<%=request.getContextPath()%>/mail/drop.top",
 					data:{"loginSeq":"${sessionScope.loginEmployee.employee_seq}"},
 					type:"GET",
 					dataType:"JSON",
@@ -90,18 +94,18 @@
 		<br>
 	</div>
 	<div align="left" style="margin:10px 10px 0 12px; padding-bottom:5px; border-bottom: solid 1px white">
-		<div class="subMailBtn read">
-			<div style="border:solid 1px black; width: 50px; height: 50px;">
+		<div class="subMailBtn">
+			<div style="border:solid 1px black; width: 50px; height: 50px;" class="noRead">
 				
 			</div>
-			<div style="border:solid 1px green">안읽음</div>
+			<div style="border:solid 1px green" class="noRead">안읽음</div>
 		</div>
 		
-		<div class="subMailBtn attach">
-			<div style="border:solid 1px black; width: 50px; height: 50px;">
+		<div class="subMailBtn">
+			<div style="border:solid 1px black; width: 50px; height: 50px;" class="attach">
 				<img src="" />
 			</div>
-			<div style="border:solid 1px green">첨부</div>
+			<div style="border:solid 1px green" class="attach">첨부</div>
 		</div>
 	</div>
 	<div id="mailhamArea" align="left">
