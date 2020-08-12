@@ -125,7 +125,7 @@
 	}
 
 	#profileTBL td, #myProfileTBL td, #msglistTBL td {
-		padding: 3px;
+		padding: 10px;
 	}
 
 	.del { /* 대화방 삭제 */
@@ -138,7 +138,31 @@
    		transform: scale(1.1);
 	}
 	
-
+	#groupchatBtn {
+		margin: 12px 0 0 5px;
+		float: right;
+    	border-style: none;
+		color: white;
+		background-color: #33adff;
+		padding: 7px 7px;
+		cursor: pointer;
+	}
+	
+	#inviteBtn {
+		float: right;
+    	margin-top: 12px;
+    	border-style: none;
+		color: white;
+		background-color: #33adff;
+		padding: 7px 7px;
+		cursor: pointer;
+	}
+	
+	.hide {
+		display: none;
+	}
+	
+	
 </style>
 
 <meta charset="utf-8">
@@ -154,6 +178,39 @@
 	$(document).ready(function(){
 		
 		$("#message").hide();
+		
+		// 초대하기 버튼 숨기기
+		$("#inviteBtn").hide();
+		
+		// 그룹채팅하기 버튼 클릭시
+		$("#groupchatBtn").click(function(){
+			$(".hide").removeClass(); // 체크박스 보여주기
+			$(this).hide(); // 그룹채팅하기 버튼 숨김
+			$("#inviteBtn").show(); // 초대하기 버튼 보임
+		});
+		
+		// 초대하기 버튼 클릭시
+		$("#inviteBtn").click(function(){
+			
+			var len = $("input:checkbox[name=groupChat]:checked").length;
+			if(len == 0){
+				alert("초대할 상대를 선택해주세요.");
+				return;
+			}
+			
+			var arr = new Array();
+			var i = 0;
+			$(".groupChat").each(function(index,item){
+				if($(this).prop("checked") == true){
+					console.log($(this).val());
+					arr[i] = $(this).val();
+					i++;
+				}
+			});
+			
+			var allEmpSeq = arr.join(",");
+			console.log(allEmpSeq);
+		});
 		
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 		allEmployeeView();
@@ -185,8 +242,6 @@
 		
 		$("#conversationPerson").click(function(){clearInterval(timerId);});
 		$("#conversationList").click(function(){clearInterval(timerId);});
-	//	console.log("하하2")	
-		
 		
 	});// end of $(document).ready()----------------------
 
@@ -206,6 +261,7 @@
 						$.each(json,function(index, item){
 							
 							html += "<tr>" +
+										"<td style='width: 20px;' class='hide' ><input type='checkbox' name='groupChat' class='groupChat ' value='"+item.employee_seq+"' /></td>" +
 			            				"<td align='center' style='width: 60px;'>" +
 			            					"<img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' />" +
 			            				"</td>" +
@@ -339,6 +395,9 @@
 	
 	// 대화목록 보여주기 
 	function msgRoomListView() {
+		
+		var employee_name = "${sessionScope.loginEmployee.employee_name}";
+		
 		$.ajax({
 			url:"/groupware/msgRoomListView.top",
 			async: false,
@@ -349,15 +408,29 @@
 				var html = "";
 				$.each(json, function(index,item){
 					
-					html += "<tr class='msglist'>" +
-								"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
-								"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
-									"<div class='divText name'>"+item.employee_name+"</div>" +
-									"<div class='divText roomText'>"+item.content+"</div>" +
-								"</td>" +
-								"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
-								"<td><img class='del' onclick='roomDelete("+item.roomNumber+");' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
-							"</tr>";
+					if(item.cnt > 2){
+						html += "<tr class='msglist'>" +
+									"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
+									"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
+										"<div class='divText name'>" + employee_name + "외 " + Number(item.cnt)-1 +"명 </div>" +
+										"<div class='divText roomText'>"+item.content+"</div>" +
+									"</td>" +
+									"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
+									"<td><img class='del' onclick='roomDelete("+item.roomNumber+");' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
+								"</tr>";
+					}
+					else{
+					
+						html += "<tr class='msglist'>" +
+									"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
+									"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
+										"<div class='divText name'>"+item.employee_name+"</div>" +
+										"<div class='divText roomText'>"+item.content+"</div>" +
+									"</td>" +
+									"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
+									"<td><img class='del' onclick='roomDelete("+item.roomNumber+");' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
+								"</tr>";
+					}		
 				});
 				
 				$("#msglistTbody").html(html);
@@ -440,12 +513,15 @@
       			
       			<table id="profileTBL">
       				<tr>
-      					<th style="color: #1aa3ff">대화 상대</th>			
+      					<th style="color: #1aa3ff; width: 60px;">대화 상대</th>		
       				</tr>
       				<tbody id="allEmpInfo">
       				
       				</tbody>
-      			</table>	
+      			</table>
+      			<button type="button" id="groupchatBtn">그룹채팅하기</button>
+      			<button type="button" id="inviteBtn">초대하기</button>
+      			<div style="clear: both;"></div>	
     		</div>
     		<!-- ===###profile end###=== -->
     		
@@ -532,3 +608,4 @@
    			
   	    </div>
    </div>
+
