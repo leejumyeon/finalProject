@@ -3,7 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="manager">
-
+	
+	<!-- 관리자 - 게시글 관리(공지사항 리스트)페이지[글목록] --> 
 	<select id="managerNoticeList" resultType="com.spring.groupware.commonVO.BoardVO">
 		select A.category_name 
 		     , board_seq, subject,content,readCnt
@@ -17,6 +18,7 @@
 		where B.fk_category_num = 1
 	</select>
 	
+	<!-- 관리자 - 게시글 관리(FAQ 리스트)페이지[글목록]	 -->
 	<select id="managerFaqList" resultType="com.spring.groupware.commonVO.BoardVO">
 		select A.category_name 
 		     , board_seq, subject,content,readCnt
@@ -29,12 +31,29 @@
 		ON C.employee_seq = B.fk_employee_seq
 		where B.fk_category_num = 2
 	</select>
-		
+	
+	<!-- 관리자 - 게시글 관리(공지사항 리스트)페이지[글쓰기] -->		
 	<insert id="managerNoticeInsert" parameterType="HashMap">
 		insert INTO board_table(board_seq, fk_category_num, subject
                      , content, readCnt, regDate, fk_employee_seq, status, commentCnt)
 		values(board_table_seq.nextval,1,#{subject},#{content}, default, default, #{fk_employee_seq}, default,default);	
 	</insert>
+	
+	<!-- 관리자- 결재 관리(결재현황 리스트)페이지 이동[글목록] -->
+	<select id="managerApprovalList" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select A.category_name, document_seq, groupno
+		     , C.employee_name AS employee_name ,subject ,content
+		     , to_char(regDate, 'yyyy-mm-dd') AS regDate
+		     , approver_seq ,approveDate ,fileName ,orgFileName ,fileSize ,parent_approver ,status ,reason
+		     , A.document_category_seq     
+		from document_category A join document_table B
+		ON A.document_category_seq = B.document_category
+		join employees_table C
+		ON C.employee_seq = B.fk_employee_seq
+	</select>
+	
+	
+	
 	
 	
 </mapper>

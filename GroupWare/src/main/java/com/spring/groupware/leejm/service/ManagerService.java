@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.leejm.model.InterManagerDAO;
 
 
@@ -41,6 +42,15 @@ public class ManagerService implements InterManagerService {
 		List<BoardVO> boardvoList = dao.managerFaqList();
 		
 		return boardvoList;
+	}
+	
+	// 관리자- 결재 관리(결재현황 리스트)페이지 이동[글목록]
+	@Override
+	public List<DocumentVO> managerApprovalList() {
+		
+		List<DocumentVO> dpmList = dao.managerApprovalList();
+		
+		return dpmList;
 	}
 
 	

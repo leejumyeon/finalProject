@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.leejm.service.InterManagerService;
 
@@ -87,14 +88,57 @@ public class ManagerController {
 		return "admin/board/boardWrite.tiles3";
 		
 	}
-	
-	
-	
+		
 	// ---------------------------------- 공지 사항 / FAQ 끝 -------------------------------------------------------
 	
 	
+	// ---------------------------------- 결재 관리 시작 ----------------------------------------------
 	
+		// 관리자-결재 관리(결재현황 리스트)페이지 이동[글목록]
 	
+		@RequestMapping(value="/manager/approval/documentList.top")
+		public String managerApprovalList(HttpServletRequest request ) {
+			
+			List<DocumentVO> dpmList = service.managerApprovalList();
+			
+			request.setAttribute("dpmList", dpmList);
+			
+			//System.out.println(dpmList.get(0).getFileName());
+			
+			return "admin/approval/documentList.tiles3";
+		}
+		
+		// 관리자-결재 관리(휴지통)페이지 이동
+		@RequestMapping(value="/manager/approval/garbage.top")
+		public ModelAndView managerGarbage(ModelAndView mav, HttpServletRequest request) {
+			mav.setViewName("admin/approval/garbage.tiles3");
+			return mav;
+		}
+		
+		// 관리자-결재 관리(결재현황 상세)페이지 이동
+		@RequestMapping(value="/manager/approval/approvalDetail.top")
+		public ModelAndView managerApprovalDetail(ModelAndView mav, HttpServletRequest request) {
+			mav.setViewName("admin/approval/approvalDetail.tiles3");
+			return mav;
+		}
+		
+		// 관리자-결재 관리(문서함)페이지 이동
+		@RequestMapping(value="/manager/approval/approvalList.top")
+		public ModelAndView managerDocumentList(ModelAndView mav, HttpServletRequest request) {
+			mav.setViewName("admin/approval/approvalList.tiles3");
+			return mav;
+		}
+		
+		// 관리자-결재 관리(문서함-상세)페이지 이동
+		@RequestMapping(value="/manager/approval/documentDetail.top")
+		public ModelAndView managerDocumentDetail(ModelAndView mav, HttpServletRequest request) {
+			mav.setViewName("admin/approval/documentDetail.tiles3");
+			return mav;
+		}
+		
+		// ---------------------------------- 결재 관리 끝 ----------------------------------------------
+	
+		
 	// 관리자-게시글 관리(공지사항 상세보기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeDetail.top")
 	public ModelAndView managerNoticeDetail(ModelAndView mav, HttpServletRequest request) {
@@ -124,41 +168,8 @@ public class ManagerController {
 		mav.setViewName("admin/board/boardOut.tiles3");
 		return mav;
 	}
+
 	
-	// 관리자-결재 관리(결재현황 리스트)페이지 이동
-	@RequestMapping(value="/manager/approval/approvalList.top")
-	public ModelAndView managerApprovalList(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/approval/approvalList.tiles3");
-		return mav;
-	}
-	
-	// 관리자-결재 관리(결재현황 상세)페이지 이동
-	@RequestMapping(value="/manager/approval/approvalDetail.top")
-	public ModelAndView managerApprovalDetail(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/approval/approvalDetail.tiles3");
-		return mav;
-	}
-	
-	// 관리자-결재 관리(휴지통)페이지 이동
-	@RequestMapping(value="/manager/approval/garbage.top")
-	public ModelAndView managerGarbage(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/approval/garbage.tiles3");
-		return mav;
-	}
-	
-	// 관리자-결재 관리(문서함)페이지 이동
-	@RequestMapping(value="/manager/approval/documentList.top")
-	public ModelAndView managerDocumentList(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/approval/documentList.tiles3");
-		return mav;
-	}
-	
-	// 관리자-결재 관리(문서함-상세)페이지 이동
-	@RequestMapping(value="/manager/approval/documentDetail.top")
-	public ModelAndView managerDocumentDetail(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/approval/documentDetail.tiles3");
-		return mav;
-	}
 	
 	// 관리자-재무 관리(급여내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salaryList.top")
