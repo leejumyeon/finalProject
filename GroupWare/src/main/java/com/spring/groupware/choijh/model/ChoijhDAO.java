@@ -64,5 +64,12 @@ public class ChoijhDAO implements InterChoijhDAO {
 		List<HashMap<String, String>> mapList = sqlsession.selectList("messenger.msgRoomListView", employee_seq);
 		return mapList;
 	}
+
+	// 채팅 방 삭제하기
+	@Override
+	public int roomDelete(HashMap<String, String> map) {
+		int n = sqlsession.delete("messenger.roomDelete",map);
+		return n;
+	}
 	
 }
