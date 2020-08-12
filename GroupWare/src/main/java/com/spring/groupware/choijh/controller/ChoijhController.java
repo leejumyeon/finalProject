@@ -167,6 +167,27 @@ public class ChoijhController {
 	}
 	
 	
+	// 채팅 방 삭제하기
+	@ResponseBody
+	@RequestMapping(value="roomDelete.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
+	public String roomDelete(HttpServletRequest request) {
+		
+		String roomNumber = request.getParameter("roomNumber");
+		String sEmployee_seq = request.getParameter("sEmployee_seq");
+		
+		HashMap<String,String> map = new HashMap<>();
+		map.put("roomNumber", roomNumber);
+		map.put("sEmployee_seq", sEmployee_seq);
+		
+		int n = service.roomDelete(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
 	
 	
 	

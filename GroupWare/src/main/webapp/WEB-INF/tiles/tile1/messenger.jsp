@@ -5,7 +5,6 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <% String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
@@ -142,10 +141,6 @@
 
 </style>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> f9678ca402af1737289fca2a308b6196d1a4f2bb
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -153,6 +148,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
+
+	var timerId = '';
 
 	$(document).ready(function(){
 		
@@ -186,6 +183,11 @@
 			}
 		});	
 		
+		$("#conversationPerson").click(function(){clearInterval(timerId);});
+		$("#conversationList").click(function(){clearInterval(timerId);});
+	//	console.log("하하2")	
+		
+		
 	});// end of $(document).ready()----------------------
 
 	
@@ -193,8 +195,8 @@
 	function allEmployeeView() {
 		
 		$.ajax({
-				async: false,
 				url:"/groupware/allEmployeeView.top",
+				async: false,
 				type:"GET",
 				dataType:"JSON",
 				success:function(json){
@@ -235,8 +237,8 @@
 		alert("보내는이 : " + sEmployee_seq + " 받는이 : " + rEmployee_seq);
 		
 		$.ajax({
-			async: false,
 			url:"/groupware/goChatting.top",
+			async: false,
 			data:{"rEmployee_seq":rEmployee_seq,"sEmployee_seq":sEmployee_seq},
 			type:"POST",
 			dataType:"JSON",
@@ -246,8 +248,9 @@
 	
 				$("#roomNumber").val(roomNumber);
 				
-				// 채팅방 내용 읽어오기
-				contentView(roomNumber, sEmployee_seq);
+				// 1초마다 채팅방 내용 읽어오기
+				timerId = setInterval(contentView, 1000, roomNumber, sEmployee_seq);
+			//	contentView(roomNumber, sEmployee_seq);
 							
 			},
 			error: function(request, status, error){
@@ -255,7 +258,7 @@
 			}
 		
 		});
-		
+			
 	}
 	
 	
@@ -264,8 +267,8 @@
 	//	alert(roomNumber);
 		$.ajax({
 			url:"/groupware/contentView.top",
-			data:{"roomNumber":roomNumber},
 			async: false,
+			data:{"roomNumber":roomNumber},
 			type:"GET",
 			dataType:"JSON",
 			success:function(json){
@@ -298,6 +301,7 @@
 				}
 				else { // 채팅방을 새로 만든경우
 					alert("대화내용이 없습니다.");
+					clearInterval(timerId);
 				}
 				
 				
@@ -324,6 +328,7 @@
 			success:function(json){
 				$("#content").val("");
 				contentView(roomNumber, sEmployee_seq);
+				msgRoomListView();
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -336,6 +341,7 @@
 	function msgRoomListView() {
 		$.ajax({
 			url:"/groupware/msgRoomListView.top",
+			async: false,
 			type:"GET",
 			dataType:"JSON",
 			success:function(json){
@@ -349,8 +355,8 @@
 									"<div class='divText name'>"+item.employee_name+"</div>" +
 									"<div class='divText roomText'>"+item.content+"</div>" +
 								"</td>" +
-								"<td align='right' style='color: #aaa;'>15:00</td>" +
-								"<td><img class='del' onclick='roomDelete();' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
+								"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
+								"<td><img class='del' onclick='roomDelete("+item.roomNumber+");' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
 							"</tr>";
 				});
 				
@@ -366,15 +372,40 @@
 	
 	// 대화목록에서  대화방 클릭시 대화창으로 이동하기
 	function goMsgWriteView(roomNumber, sEmployee_seq) {
-	//	alert("roomNumber : " + roomNumber + " rEmployee_seq : " + rEmployee_seq + " sEmployee_seq : " + sEmployee_seq);
-		contentView(roomNumber, sEmployee_seq);
+		alert("roomNumber : " + roomNumber + " sEmployee_seq : " + sEmployee_seq);
+		$("#roomNumber").val(roomNumber);
+		
+		// 1초마다 채팅방 내용 읽어오기
+		timerId = setInterval(contentView, 1000, roomNumber, sEmployee_seq);
 	}
 	
 	
 	// 채팅 방 삭제하기
-	function roomDelete() {
-		
+	function roomDelete(roomNumber) {
+		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
 		alert("삭제하시겠습니까?");
+		
+		$.ajax({
+			
+			url:"/groupware/roomDelete.top",
+			async: false,
+			data:{"roomNumber":roomNumber, "sEmployee_seq":sEmployee_seq},
+			type:"POST",
+			dataType:"JSON",
+			success:function(json){
+				if(json.n == 1){ // 삭제가 된 경우
+					alert("삭제가 되었습니다");
+					msgRoomListView(); // 대화목록 보여주기
+				}
+				else { // 삭제가 되지 않은 경우 
+					alert("삭제가 안됬습니다.");
+				}
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+			
+		});
 		
 	}
 	

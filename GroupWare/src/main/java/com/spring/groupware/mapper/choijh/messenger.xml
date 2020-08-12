@@ -81,17 +81,27 @@
 		<result property="regDate" 			column="regDate" 			javaType="String" />
 	</resultMap>
 	<select id="msgRoomListView" parameterType="String" resultMap="roomMap">
-		select V.roomNumber, V.fk_employee_seq, V.employee_name, M.content, to_char(M.regdate,'yyyy-mm-dd hh24:mi:ss') As regDate
+		select V.roomNumber, V.fk_employee_seq, V.employee_name, M.content, to_char(M.regdate,'mm-dd hh24:mi') As regDate
 		from
 		(
-		select  R.roomNumber, R.fk_employee_seq, E.employee_name
-		from messengerRoom_table R join employees_table E
-		on   R.fk_employee_seq = E.employee_seq
-		where fk_employee_seq != #{employee_seq}
+		    select  R.roomNumber, R.fk_employee_seq, E.employee_name
+		    from messengerRoom_table R join employees_table E
+		    on   R.fk_employee_seq = E.employee_seq
+		    where fk_employee_seq != #{employee_seq} and R.roomNumber in (select roomNumber from messengerRoom_table where fk_employee_seq = #{employee_seq})
 		) V join messenger_table M
 		on V.roomNumber = M.fk_roomNumber
 		where regDate in (select max(regDate) from messenger_table group by fk_roomNumber)
 		order by regDate desc
 	</select>
+	
+	
+	<!-- 채팅 방 삭제하기 -->
+	<delete id="roomDelete" parameterType="HashMap">
+		delete from messengerRoom_table 
+		where roomNumber = #{roomNumber} and fk_employee_seq = #{sEmployee_seq}
+	</delete>
+	
+	
+	
 	
 </mapper>
