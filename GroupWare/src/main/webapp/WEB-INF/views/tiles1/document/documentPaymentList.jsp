@@ -183,6 +183,51 @@
 			getComDocumentList();
 		});
 		
+		
+		$("#btnRejected").click(function() {
+			
+			var documentSeqArr = new Array();
+			
+			documentSeqArr = $("input:checkbox[name=documentSeqList]:checked").val();
+			
+			var documentSeq = documentSeqArr.join(",");
+			
+			if(confirm("정말 결재를 반려하시겠습니까?") == true) {
+				var frm = document.approveDocumentFrm;
+				frm.documentSeq.value = documentSeq;
+				frm.method = "POST";
+				frm.action = "<%= request.getContextPath()%>/documentRejected.top";
+				frm.submit();
+			}
+			else {
+				
+				return false;
+			}
+
+		});
+		
+		$("#btnRejected").click(function() {
+			
+			var documentSeqArr = new Array();
+			
+			documentSeqArr = $("input:checkbox[name=documentSeqList]:checked").val();
+			
+			var documentSeq = documentSeqArr.join(",");
+			
+			if(confirm("정말 결재를 완료하시겠습니까?") == true) {
+				var frm = document.approveDocumentFrm;
+				frm.documentSeq.value = documentSeq;
+				frm.method = "POST";
+				frm.action = "<%= request.getContextPath()%>/documentAccepted.top";
+				frm.submit();
+			}
+			else {
+				
+				return false;
+			}
+
+		});
+		
 	});
 	
 	function getComDocumentList() {
@@ -198,10 +243,11 @@
 				
 				var html = "";
 				var html2 = "";
-				
-				if(json != null) {
 
+				if(json.size == 0) {
+					
 					$.each(json, function(index, item) {
+						
 						
 						html += '<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">'
 							 +  '<td class="cell100 column1">' + item.groupno + '</td>'
@@ -210,6 +256,7 @@
 							 +  '<td class="cell100 column1">' + item.employee_name + '</td>'
 							 +  '<td class="cell100 column1">' + item.regDate + '</td>'
 							 +  '</tr>';
+
 					});
 
 					$.each(json, function(index, item) {
@@ -233,15 +280,21 @@
 							  +  '</div>'
 							  +  '</div>'
 							  +  '</div>';
-	
-					});
 
+					});
+					
 				}
 				else {
-					
-					html = '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
-				}
+
+					html += '<tr>'
+						 + '<td style="text-align: center;">'
+						 + '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
+						 + '</td>'
+						 + '</tr>';
+				}	
 				
+				
+			
 				$("#ajaxDocumentList").html(html);
 				$("#comDocumentModal").html(html2);
 			}
@@ -254,7 +307,7 @@
 
 	<div id="myContainer">
 		<h5 style="color: #0099ff">1. 신청한 결재 문서</h5>
-		<div class="table100 ver2 m-b-110">
+		<div class="table100 ver2 m-b-35">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -286,15 +339,23 @@
 					</table>
 				</c:if>
 				<c:if test="${empty regDocumentList}">
-					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">신청한 결재 문서가 없습니다.</span>
+					<table>
+						<tbody>
+							<tr>
+								<td style="text-align: center;">
+									<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">신청한 결재 문서가 없습니다.</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</c:if>
 			</div>
 		</div>
 		
 		<h5 style="color: #0099ff; display: inline-block; float: reft; width: 150px;">2. 결재할 결재 문서</h5>
-		<button class="snip1535" style="float: right;">반려하기</button>
-		<button class="snip1536" style="float: right;">결재하기</button>
-		<div class="table100 ver2 m-b-110" style="clear: both;">
+		<button class="snip1535" style="float: right;" id="btnRejected">반려하기</button>
+		<button class="snip1536" style="float: right;" id="btnAccepted">결재하기</button>
+		<div class="table100 ver2 m-b-35" style="clear: both;">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -328,7 +389,15 @@
 					</table>
 				</c:if>
 				<c:if test="${empty aproDocumentList}">
-					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">결재할 결재 문서가 없습니다.</span>
+					<table>
+						<tbody>
+							<tr>
+								<td style="text-align: center;">
+									<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">결재할 결재 문서가 없습니다.</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</c:if>
 			</div>
 		</div>
@@ -337,7 +406,7 @@
 		<input type="radio" id="allComDocumentList" name="DocumentList" value="0" checked/><label for="allComDocumentList" class="labelDocumentList">전체 문서</label>
 		<input type="radio" id="senComDocumentList" name="DocumentList" value="1" /><label for="senComDocumentList" class="labelDocumentList">신청한 문서</label>
 		<input type="radio" id="recComDocumentList" name="DocumentList" value="2" /><label for="recComDocumentList" class="labelDocumentList">결재한 문서</label>
-		<div class="table100 ver2 m-b-110" style="clear: both;">
+		<div class="table100 ver2 m-b-35" style="clear: both;">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -361,7 +430,7 @@
 		</div>
 	</div>
 
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal1 *** --%>
 	<c:forEach var="docuvo" items="${regDocumentList}">
 	<div class="modal fade" id="documentContent${docuvo.document_seq}" role="dialog">
 		<div class="modal-dialog" style="width: 900px;">
@@ -387,7 +456,7 @@
 	</div>
 	</c:forEach>
 	
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal2 *** --%>
 	<c:forEach var="docuvo" items="${aproDocumentList}">
 	<div class="modal fade" id="documentContent2${docuvo.document_seq}" role="dialog">
 		<div class="modal-dialog" style="width: 900px;">
@@ -413,8 +482,11 @@
 	</div>
 	</c:forEach>
 	
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal3 *** --%>
 	<div id="comDocumentModal">
 	</div>
 	
+	<form name="approveDocumentFrm">
+		<input type="hidden" name="documentSeq"/>
+	</form>
 </body>

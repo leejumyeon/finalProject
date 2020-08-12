@@ -73,9 +73,9 @@ public class LeeehService implements InterLeeehService {
 
 	// === 문서 결재 작성 페이지에서 사원들 정보 불러오기 === //
 	@Override
-	public List<EmployeesVO> showMemberByDepartment(String seq) {
+	public List<EmployeesVO> showMemberByDepartment(HashMap<String, String> paraMap) {
 
-		List<EmployeesVO> employeesByDepartList = dao.showMemberByDepartment(seq);
+		List<EmployeesVO> employeesByDepartList = dao.showMemberByDepartment(paraMap);
 		
 		return employeesByDepartList;
 	}
@@ -320,6 +320,101 @@ public class LeeehService implements InterLeeehService {
 		List<DocumentVO> comDocumentList = dao.recComDocumentList(fk_employee_seq);
 		
 		return comDocumentList;
+	}
+
+	// === 결재 반려 테이블에 status 업데이트 하기 === //
+	@Override
+	public void updateStatusDocmenetTable(HashMap<String, Object> paraMap) {
+		
+		dao.updateStatusDocmenetTable(paraMap);
+	}
+
+	// === 결재 반려된 테이블 groupno와 cateory_seq 알아오기 === //
+	@Override
+	public List<DocumentVO> getDocumentList(HashMap<String, Object> paraMap) {
+		
+		List<DocumentVO> documentVOList =  dao.getDocumentList(paraMap);
+		
+		return documentVOList;
+	}
+
+	// === 반려된 휴가/출장 정보 삭제하기 === //
+	@Override
+	public void deleteTripTable(String groupno) {
+
+		dao.deleteTripTable(groupno);
+	}
+
+	// === 반려된 매출 정보 삭제하기 === //
+	@Override
+	public void deleteSalesTable(String groupno) {
+
+		dao.deleteSalesTable(groupno);
+	}
+
+	// === 반려된 비품 구매 정보 삭제하기 === //
+	@Override
+	public void deleteEquipmentTable(String groupno) {
+
+		dao.deleteEquipmentTable(groupno);
+	}
+
+	// === 반려된 프로젝트 정보 삭제하기 === //
+	@Override
+	public void deleteProjectTable(String groupno) {
+
+		dao.deleteProjectTable(groupno);
+	}
+
+	// === 반려된 퇴사 정조 삭제하기 === //
+	@Override
+	public void deleteFireTable(String groupno) {
+
+		dao.deleteFireTable(groupno);
+	}
+
+	// === 반려된 인사고과 정보 삭제하기 === //
+	@Override
+	public void deleteTATable(String groupno) {
+
+		dao.deleteTATable(groupno);
+	}
+
+	// === 반려된 동호회 정보 삭제하기 === //
+	@Override
+	public void deleteClubTable(String groupno) {
+
+		dao.deleteClubTable(groupno);
+	}
+
+	// === 반려된 동호회 회원 정보 삭제하기 === //
+	@Override
+	public void deleteClubMemberTable(String groupno) {
+
+		dao.deleteClubMemberTable(groupno);
+	}
+
+	// === 결재 완료 테이블에 status 업데이트 하기 === //
+	@Override
+	public void updateStatusDocmenetTable2(HashMap<String, Object> paraMap) {
+
+		dao.updateStatusDocmenetTable2(paraMap);
+	}
+
+	// === 전체 결재 완료된 groupno와 cateory_seq 알아오기 === //
+	@Override
+	public List<DocumentVO> getDocumentList2(HashMap<String, Object> paraMap) {
+
+		List<DocumentVO> documentVOList =  dao.getDocumentList2(paraMap);
+		
+		return documentVOList;
+	}
+
+	// === 전체 결재 완료된 테이블 documentStatus 업데이트하기 === //
+	@Override
+	public void updateDocumentStatus(HashMap<String, Object> paraMap) {
+
+		dao.updateDocumentStatus(paraMap);
 	}
 
 }

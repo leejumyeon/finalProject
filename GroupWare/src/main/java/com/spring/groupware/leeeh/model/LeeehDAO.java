@@ -74,9 +74,9 @@ public class LeeehDAO implements InterLeeehDAO {
 
 	// === 문서 결재 작성 페이지에서 사원들 정보 불러오기 === //
 	@Override
-	public List<EmployeesVO> showMemberByDepartment(String seq) {
+	public List<EmployeesVO> showMemberByDepartment(HashMap<String, String> paraMap) {
 
-		List<EmployeesVO> employeesByDepartList = sqlsession.selectList("leeeh.showMemberByDepartment", seq);
+		List<EmployeesVO> employeesByDepartList = sqlsession.selectList("leeeh.showMemberByDepartment", paraMap);
 		
 		return employeesByDepartList;
 	}
@@ -319,6 +319,101 @@ public class LeeehDAO implements InterLeeehDAO {
 		List<DocumentVO> comDocumentList = sqlsession.selectList("leeeh.recComDocumentList", fk_employee_seq);
 		
 		return comDocumentList;
+	}
+
+	// === 결재 반려 테이블에 status 업데이트 하기 === //
+	@Override
+	public void updateStatusDocmenetTable(HashMap<String, Object> paraMap) {
+		
+		sqlsession.update("leeeh.updateStatusDocmenetTable", paraMap);
+	}
+
+	// === 결재번호로 groupno와 cateory_seq 알아오기 === //
+	@Override
+	public List<DocumentVO> getDocumentList(HashMap<String, Object> paraMap) {
+
+		List<DocumentVO> documentVOList = sqlsession.selectList("leeeh.getDocumentList", paraMap);
+		
+		return documentVOList;
+	}
+
+	// === 반려된 휴가/출장 정보 삭제하기 === //
+	@Override
+	public void deleteTripTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteTripTable", groupno);
+	}
+
+	// === 반려된 매출 정보 삭제하기 === //
+	@Override
+	public void deleteSalesTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteSalesTable", groupno);
+	}
+
+	// === 반려된 비품 구매 정보 삭제하기 === //
+	@Override
+	public void deleteEquipmentTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteEquipmentTable", groupno);
+	}
+
+	// === 반려된 프로젝트 정보 삭제하기 === //
+	@Override
+	public void deleteProjectTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteProjectTable", groupno);
+	}
+
+	// === 반려된 퇴사 정조 삭제하기 === //
+	@Override
+	public void deleteFireTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteFireTable", groupno);
+	}
+
+	// === 반려된 인사고과 정보 삭제하기 === //
+	@Override
+	public void deleteTATable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteTATable", groupno);
+	}
+
+	// === 반려된 동호회 정보 삭제하기 === //
+	@Override
+	public void deleteClubTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteClubTable", groupno);
+	}
+
+	// === 반려된 동호회 회원 정보 삭제하기 === //
+	@Override
+	public void deleteClubMemberTable(String groupno) {
+
+		sqlsession.delete("leeeh.deleteClubMemberTable", groupno);
+	}
+
+	// === 결재 완료 테이블에 status 업데이트 하기 === //
+	@Override
+	public void updateStatusDocmenetTable2(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateStatusDocmenetTable2", paraMap);
+	}
+
+	// === 전체 결재 완료된 groupno와 cateory_seq 알아오기 === //
+	@Override
+	public List<DocumentVO> getDocumentList2(HashMap<String, Object> paraMap) {
+		
+		List<DocumentVO> documentVOList = sqlsession.selectList("leeeh.getDocumentList2", paraMap);
+		
+		return documentVOList;
+	}
+
+	// === 전체 결재 완료된 테이블 documentStatus 업데이트하기 === //
+	@Override
+	public void updateDocumentStatus(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateDocumentStatus", paraMap);
 	}
 
 }

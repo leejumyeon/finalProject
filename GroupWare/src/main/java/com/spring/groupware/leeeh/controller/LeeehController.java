@@ -274,6 +274,7 @@ public class LeeehController {
 	}
 	
 	// === 신청 완료된 문서 List 불러오기(AJAX) === //
+	@ResponseBody
 	@RequestMapping(value="/comDocumentList.top")
 	public String comDocumentList(HttpServletRequest request) {
 		
@@ -338,8 +339,17 @@ public class LeeehController {
 	public String showMemberByDepartment(HttpServletRequest request) {
 
 		String seq = request.getParameter("seq");
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String employee_seq = loginEmployee.getEmployee_seq();
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("seq", seq);
+		paraMap.put("employee_seq", employee_seq);
 
-		List<EmployeesVO> employeesByDepartList = service.showMemberByDepartment(seq);
+		List<EmployeesVO> employeesByDepartList = service.showMemberByDepartment(paraMap);
 
 		JSONArray jsArr = new JSONArray();
 
@@ -850,7 +860,7 @@ public class LeeehController {
 			String reason = request.getParameter("reason");
 			String trip_start = request.getParameter("trip_start");
 			String trip_end = request.getParameter("trip_end");
-			String triplocatioin = request.getParameter("triplocatioin");
+			String triplocation = request.getParameter("triplocation");
 			String fk_employee_seq = loginEmployee.getEmployee_seq();
 			
 			paraMap.put("trip_category", trip_category);
@@ -858,7 +868,7 @@ public class LeeehController {
 			paraMap.put("reason", reason);
 			paraMap.put("trip_start", trip_start);
 			paraMap.put("trip_end", trip_end);
-			paraMap.put("triplocatioin", triplocatioin);
+			paraMap.put("triplocation", triplocation);
 			paraMap.put("fk_employee_seq", fk_employee_seq);
 			
 			service.insertTripTableOfBusiness(paraMap);
@@ -1039,11 +1049,13 @@ public class LeeehController {
 		}
 		else if("10".equals(documentCategory)) {
 			
+			String groupno = request.getParameter("groupno");
 			String club_name = request.getParameter("club_name");
 			String club_info = request.getParameter("club_info");
 			
 			paraMap.put("club_name", club_name);
 			paraMap.put("club_info", club_info);
+			paraMap.put("groupno", groupno);
 
 			String newFileName = "";
 			byte[] bytes = null;
@@ -1107,6 +1119,104 @@ public class LeeehController {
 			paraMap.put("groupno", groupno);
 			
 			service.deleteClub(paraMap);
+		}
+		
+		mav.setViewName("redirect:/documentPayment.top");
+		return mav;
+	}
+	
+	// === 결재 반려하기 버튼을 눌렀을 경우 === //
+	@RequestMapping(value="/documentRejected.top", method={RequestMethod.POST})
+	public ModelAndView documentRejected(ModelAndView mav, HttpServletRequest request) {
+		
+		String documentSeq = request.getParameter("documentSeq");
+		
+		String[] document_seqArr = documentSeq.split(",");
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("document_seqArr", document_seqArr);
+		
+		service.updateStatusDocmenetTable(paraMap);
+		
+		List<DocumentVO> documentVOList = service.getDocumentList(paraMap);
+		
+		for(DocumentVO docuvo : documentVOList) {
+			
+			String groupno = docuvo.getGroupno();
+			
+			String category_seq = docuvo.getDocument_category();
+			
+			if("1".equals(category_seq)) {
+				
+				service.deleteTripTable(groupno);
+			}
+			else if("2".equals(category_seq)) {
+				
+				service.deleteTripTable(groupno);
+			}
+			else if("3".equals(category_seq)) {
+				
+				service.deleteSalesTable(groupno);
+			}
+			else if("4".equals(category_seq)) {
+				
+				service.deleteEquipmentTable(groupno);
+			}
+			else if("5".equals(category_seq)) {
+				
+				service.deleteProjectTable(groupno);
+			}
+			else if("8".equals(category_seq)) {
+				
+				service.deleteFireTable(groupno);
+			}
+			else if("9".equals(category_seq)) {
+				
+				service.deleteTATable(groupno);
+			}
+			else if("10".equals(category_seq)) {
+				
+				service.deleteClubTable(groupno);
+			}
+			else if("11".equals(category_seq)) {
+				
+				service.deleteClubMemberTable(groupno);
+			}
+		}
+		
+		mav.setViewName("redirect:/documentPayment.top");
+		return mav;
+	}
+	
+	// === 결재 완료하기 버튼을 눌렀을 경우 === //
+	@RequestMapping(value="/documentAccepted.top", method={RequestMethod.POST})
+	public ModelAndView documentAccepted(ModelAndView mav, HttpServletRequest request) {
+		
+		String documentSeq = request.getParameter("documentSeq");
+		
+		String[] document_seqArr = documentSeq.split(",");
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("document_seqArr", document_seqArr);
+		
+		service.updateStatusDocmenetTable2(paraMap);
+		
+		List<DocumentVO> documentVOList = service.getDocumentList2(paraMap);
+		
+		for(DocumentVO docuvo : documentVOList) {
+			
+			String groupno = docuvo.getGroupno();
+			
+			paraMap.put("groupno", groupno);
+			paraMap.put("document_category", docuvo.getCategory_name());
+			
+			if("12".equals(docuvo.getDocument_category())) {
+				service.deleteClubTable(groupno);
+			}
+			else {
+				service.updateDocumentStatus(paraMap);
+			}
+			
 		}
 		
 		mav.setViewName("redirect:/documentPayment.top");

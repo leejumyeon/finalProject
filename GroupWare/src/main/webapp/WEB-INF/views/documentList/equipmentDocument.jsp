@@ -5,16 +5,6 @@
 
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/css/documentStyle.css" />
 
-<style>
-	
-	button {
-		background-color: #0099ff;
-		color: white;
-		border: none;
-	}
-	
-</style>
-
 <script type="text/javascript">
 
 	$(document).ready(function() {
@@ -37,6 +27,8 @@
 				 + '</tr>';
 				 
 		$("#my_tbody1").append(html);
+		
+		$(".datepicker").datepicker({});
 	}
 	
 	function deleteRow1() {
@@ -128,8 +120,8 @@
 		</table>
 		
 		<h3>비품 구매 정보</h3>
-		<button type="button" onclick="addRow1()">행추가</button>
-		<button type="button" onclick="deleteRow1()">행삭제</button>
+		<button type="button" onclick="addRow1()" style="background-color: #0099ff; color: white; border: none;">행추가</button>
+		<button type="button" onclick="deleteRow1()" style="background-color: #0099ff; color: white; border: none;">행삭제</button>
 		<table class="detailSection">
 			<tbody id="my_tbody1">
 				

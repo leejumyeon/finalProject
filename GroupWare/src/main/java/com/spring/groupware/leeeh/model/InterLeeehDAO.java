@@ -23,7 +23,7 @@ public interface InterLeeehDAO {
 
 	String getMaxOfGroupno(String regDate);	// 문서 결재를 하기위해 문서번호에서 max값을 가져오기
 
-	List<EmployeesVO> showMemberByDepartment(String seq);	// 문서 결재 작성 페이지에서 사원들 정보 불러오기
+	List<EmployeesVO> showMemberByDepartment(HashMap<String, String> paraMap);	// 문서 결재 작성 페이지에서 사원들 정보 불러오기
 
 	List<EmployeesVO> approvalList(HashMap<String, Object> paraMap);	// 클릭한 사원들 결재선에 올리기
 
@@ -84,6 +84,32 @@ public interface InterLeeehDAO {
 	List<DocumentVO> senComDocumentList(String fk_employee_seq);	// 신청 완료된 신청한 문서 보여주기
 
 	List<DocumentVO> recComDocumentList(String fk_employee_seq);	// 신청 완료된 결재한 문서 보여주기
+
+	void updateStatusDocmenetTable(HashMap<String, Object> paraMap);	// 결재 반려 테이블에 status 업데이트 하기
+
+	List<DocumentVO> getDocumentList(HashMap<String, Object> paraMap);	// 결재번호로 groupno와 cateory_seq 알아오기
+
+	void deleteTripTable(String groupno);	// 반려된 휴가/출장 정보 삭제하기
+
+	void deleteSalesTable(String groupno);	// 반려된 매출 정보 삭제하기
+
+	void deleteEquipmentTable(String groupno);	// 반려된 비품 구매 정보 삭제하기
+
+	void deleteProjectTable(String groupno);	// 반려된 프로젝트 정보 삭제하기
+
+	void deleteFireTable(String groupno);	// 반려된 퇴사 정조 삭제하기
+
+	void deleteTATable(String groupno);	// 반려된 인사고과 정보 삭제하기
+
+	void deleteClubTable(String groupno);	// 반려된 동호회 정보 삭제하기
+
+	void deleteClubMemberTable(String groupno);	// 반려된 동호회 회원 정보 삭제하기
+
+	void updateStatusDocmenetTable2(HashMap<String, Object> paraMap);	// 결재 완료 테이블에 status 업데이트 하기
+
+	List<DocumentVO> getDocumentList2(HashMap<String, Object> paraMap);	// 전체 결재 완료된 groupno와 cateory_seq 알아오기
+
+	void updateDocumentStatus(HashMap<String, Object> paraMap);	// 전체 결재 완료된 테이블 documentStatus 업데이트하기
 
 
 	
