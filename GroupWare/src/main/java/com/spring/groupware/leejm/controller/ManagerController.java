@@ -1,19 +1,29 @@
 package com.spring.groupware.leejm.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.groupware.leejm.service.MailService;
+import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.leejm.service.InterManagerService;
+
 
 @Controller
 public class ManagerController {
 	
 	@Autowired
-	private MailService service;
+	private InterManagerService service;
 	
 	// 관리자-예약관리 페이지 이동
 	@RequestMapping(value="/manager/reservation.top")
@@ -22,19 +32,68 @@ public class ManagerController {
 		return mav;
 	}
 	
-	// 관리자-게시글 관리(공지사항 리스트)페이지 이동
-	@RequestMapping(value="/manager/board/noticeList.top")
-	public ModelAndView managerNoticeList(ModelAndView mav) {
-		mav.setViewName("admin/board/noticeList.tiles3");
-		return mav;
+	// ---------------------------------- 공지 사항 / FAQ시작 -------------------------------------------------------
+	
+	// 관리자 - 게시글 관리(FAQ 리스트)페이지[글목록]
+	@RequestMapping(value="/manager/board/faqList.top")
+	public String managerFaqList(HttpServletRequest request) {
+		
+		List<BoardVO> boardvoList = service.managerFaqList();
+		
+		request.setAttribute("boardvoList", boardvoList);
+		
+		return "admin/board/faqList.tiles3";
 	}
 	
-	// 관리자-게시글 관리(FAQ 리스트)페이지 이동
-	@RequestMapping(value="/manager/board/faqList.top")
-	public ModelAndView managerFaqList(ModelAndView mav) {
-		mav.setViewName("admin/board/faqList.tiles3");
+	// 관리자 - 게시글 관리(공지사항 리스트)페이지[글목록] 
+	@RequestMapping(value="/manager/board/noticeList.top")
+	public String managerNoticeList(HttpServletRequest request) {
+		
+		List<BoardVO> boardvoList = service.managerNoticeList();
+			
+		request.setAttribute("boardvoList", boardvoList);
+				
+		return "admin/board/noticeList.tiles3";
+	}
+	
+	
+	// 관리자 - 게시글 관리(공지사항 리스트)페이지[작성페이지 - 뷰단] 
+	@RequestMapping(value="/manager/board/boardWrite.top")
+	public ModelAndView managerBoardWrite(ModelAndView mav, HttpServletRequest request) {
+		mav.setViewName("admin/board/boardWrite.tiles3");
 		return mav;
 	}
+		
+	// 관리자 - 게시글 관리(공지사항 리스트)페이지[작성페이지 - 완료] 
+	@RequestMapping(value="/manager/board/noticeInsert.top", method= {RequestMethod.POST})
+	public String managerNoticeInsert(HashMap<String, String> paraMap, MultipartHttpServletRequest mrequest){
+		
+		/*HttpSession session = request.getSession();
+		String loginEmployee = ((EmployeesVO) session.getAttribute("loginEmployee")).getEmployee_seq();
+		
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+				
+		paraMap.put("loginEmployee", loginEmployee);
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		
+		int n = service.managerNoticeInsert(paraMap);*/
+		
+		mrequest.getParameter("attach");
+			
+		return "admin/board/boardWrite.tiles3";
+		
+	}
+	
+	
+	
+	// ---------------------------------- 공지 사항 / FAQ 끝 -------------------------------------------------------
+	
+	
+	
 	
 	// 관리자-게시글 관리(공지사항 상세보기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeDetail.top")
@@ -57,12 +116,7 @@ public class ManagerController {
 		return mav;
 	}
 	
-	// 관리자-게시글 관리(공지글 작성)페이지 이동
-	@RequestMapping(value="/manager/board/boardWrite.top")
-	public ModelAndView managerBoardWrite(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/board/boardWrite.tiles3");
-		return mav;
-	}
+	
 	
 	// 관리자-게시글 관리(신고글 조회)페이지 이동
 	@RequestMapping(value="/manager/board/boardOut.top")

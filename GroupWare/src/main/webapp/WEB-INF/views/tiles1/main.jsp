@@ -54,9 +54,9 @@
 <div style="clear: both; display: inline-block; margin-left: 25px;">
    <div style="width: 600px; height: 630px; border: 1px solid red;">
    
-   		 <!-- <div class="container" style=" width: 600px; height: 1300px;" >				
-	        일자 클릭시 메뉴오픈
-	        <div id="contextMenu" class="dropdown clearfix">
+<div class="container" style=" width: 600px; height: 1300px;" >				
+	   <%--    
+	      <div id="contextMenu" class="dropdown clearfix">
 	            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
 	                style="display:block;position:static;margin-bottom:5px;">
 	                <li><a tabindex="-1" href="#">카테고리1</a></li>
@@ -66,8 +66,8 @@
 	                <li class="divider"></li>
 	                <li><a tabindex="-1" href="#" data-role="close">Close</a></li>
 	            </ul>
-	        </div> -->
-	
+	         </div>
+		--%>  
 	        <div id="wrapper">
 	            <div id="loading"></div>
 	            <div id="calendar"></div>	
@@ -213,7 +213,7 @@
         </div> 
         <!-- /.filter panel -->
                                    
-	    </div>
+</div>
 	    	   
 		<div style="clear: both;"></div> 
                    
