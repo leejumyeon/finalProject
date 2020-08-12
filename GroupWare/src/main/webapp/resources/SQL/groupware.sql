@@ -420,7 +420,6 @@ create table companyCalendar_category
 );
 
 -- 회사일정 테이블(companyCalendar_table) --
-
 create table companyCalendar_table
 (comCalendar_seq   number not null -- 일정번호
 ,title      varchar2(500) not null -- 일정 타이틀
@@ -434,7 +433,9 @@ create table companyCalendar_table
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
+select * from companyCalendar_table;
 alter table companyCalendar_table rename column color to backgroundColor;
+alter table companyCalendar_table rename column CALENDAR_SEQ to comCalendar_seq;
 
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
@@ -450,9 +451,11 @@ create table messengerRoom_table
 (roomNumber     number not null -- 그룹 번호
 ,fk_employee_seq   number not null -- 참가자 번호
 ,regDate    date default sysdate not null -- 참가날짜
-,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
+
+
+
 
 create SEQUENCE messengerRoom_table_seq
 start with 1 -- 시작값
@@ -471,8 +474,6 @@ create table messenger_table
 ,fk_roomNumber      number -- 메신저 그룹번호
 ,fk_employee_seq    number  -- 발신자
 ,constraint pk_messenger_table primary key(message_seq)
-,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
-on delete set null
 );
 
 create SEQUENCE messenger_table_seq
@@ -742,17 +743,3 @@ alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and 
 
 select * from mail_table order by mail_seq desc;
 commit;
-select Ron, mail_seq, mail_groupno, subject, mailStatus, readStatus, status, regDate, fk_employee_seq, employee_name
-    from(select row_number() over(order by My.mail_seq desc)as Ron, My.mail_seq, My.mail_groupno, My.subject, My.content, My.filename1, My.mailStatus, My.readStatus, My.status, My.regDate, You.fk_employee_seq, You.employee_name from
-    (select mail_seq, mail_groupno, subject, content, filename1, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate 
-    from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = 6)My join 
-       (select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-        from mail_table M 
-        join employees_table E on M.fk_employee_seq = E.employee_seq 
-        join position_table P on E.fk_position = P.position_seq 
-        join department_table D on E.fk_department = D.department_seq  where M.status = 0 and 
-                                                                        mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = 6))You
-    on My.mail_groupno = You.mail_groupno)T where T.Ron between 1 and 2
-;
-
-

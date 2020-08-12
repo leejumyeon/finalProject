@@ -75,6 +75,7 @@ public class ChaController {
 		
 		HttpSession session = request.getSession();
 		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		
 		String title = request.getParameter("title");
 		String content = request.getParameter("description");
 		String startDate = request.getParameter("start");

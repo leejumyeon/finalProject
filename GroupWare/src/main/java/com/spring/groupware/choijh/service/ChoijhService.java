@@ -70,6 +70,14 @@ public class ChoijhService implements InterChoijhService {
 		return mapList;
 	}
 
+
+	// 채팅 방 삭제하기
+	@Override
+	public int roomDelete(HashMap<String, String> map) {
+		int n = dao.roomDelete(map);
+		return n;
+	}
+
 	
 	
 	

@@ -3,6 +3,7 @@ package com.spring.groupware.commonVO;
 import org.springframework.web.multipart.MultipartFile;
 
 public class DocumentVO { // 결재문서VO
+	
 	private String document_seq; // 결재 문서번호
 	private String fk_employee_seq; // 결재 신청자 사원번호
 	private String employee_name; // 결재 신청자 사원명
@@ -27,6 +28,38 @@ public class DocumentVO { // 결재문서VO
 	private String fileSize;
 	
 	private MultipartFile attach;
+	
+	public DocumentVO() {}
+
+	public DocumentVO(String document_seq, String fk_employee_seq, String employee_name, String position_name,
+			String department_name, String subject, String content, String regDate, String approver_seq,
+			String approver_name, String approver_position, String approver_department, String parent_approver,
+			String status, String document_category, String category_name, String approveDate, String groupno,
+			String fileName, String orgFileName, String fileSize, MultipartFile attach) {
+		super();
+		this.document_seq = document_seq;
+		this.fk_employee_seq = fk_employee_seq;
+		this.employee_name = employee_name;
+		this.position_name = position_name;
+		this.department_name = department_name;
+		this.subject = subject;
+		this.content = content;
+		this.regDate = regDate;
+		this.approver_seq = approver_seq;
+		this.approver_name = approver_name;
+		this.approver_position = approver_position;
+		this.approver_department = approver_department;
+		this.parent_approver = parent_approver;
+		this.status = status;
+		this.document_category = document_category;
+		this.category_name = category_name;
+		this.approveDate = approveDate;
+		this.groupno = groupno;
+		this.fileName = fileName;
+		this.orgFileName = orgFileName;
+		this.fileSize = fileSize;
+		this.attach = attach;
+	}
 
 	public String getDocument_seq() {
 		return document_seq;
