@@ -159,6 +159,7 @@ public class ChoijhController {
 			jsonObj.put("employee_name", map.get("employee_name"));
 			jsonObj.put("content", map.get("content"));
 			jsonObj.put("regDate", map.get("regDate"));
+			jsonObj.put("cnt", map.get("cnt"));
 		
 			jsArr.put(jsonObj);
 		} 
