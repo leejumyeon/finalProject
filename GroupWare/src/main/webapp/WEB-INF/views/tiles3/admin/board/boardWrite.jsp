@@ -86,6 +86,13 @@ $(document).ready(function(){
 		$("#attach"+idx).remove();
 		
 	});
+	
+	$("#write").click(function(){
+		
+		location.href = "/groupware/manager/board/noticeInsertView.top";
+		
+	});// end of $("#write").click(function(){})
+	
 });
 </script>   
 <div>
@@ -119,7 +126,7 @@ $(document).ready(function(){
 		</form>
 		<div align="center">
 			<div class="managerBtn">삭제</div>
-			<div class="managerBtn">작성</div>
+			<div id="write" class="managerBtn">작성</div>
 		</div>
 	</div>
 </div>

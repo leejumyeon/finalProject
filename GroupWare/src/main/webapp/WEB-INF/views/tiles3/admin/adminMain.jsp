@@ -82,17 +82,17 @@
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">구분</label>
 	                                <select class="inputModal" type="text" name="edit-type" id="edit-type">
-	                                    <option value="카테고리1">카테고리1</option>
-	                                    <option value="카테고리2">카테고리2</option>
-	                                    <option value="카테고리3">카테고리3</option>
-	                                    <option value="카테고리4">카테고리4</option>
+	                                    <option value="1">경조사</option>
+	                                    <option value="2">워크샵</option>
+	                                    <option value="3">협력일정</option>
+	                                    <option value="4">채용일정</option>
 	                                </select>
 	                            </div>
 	                        </div>
 	                        <div class="row">
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">부서명</label>
-	                                <select class="inputModal" type="text" name="edit-username" id="edit-type">
+	                                <select class="inputModal" type="text" name="edit-username" id="edit-username">
 	                                    <option value="1">개발팀</option>
 	                                    <option value="2">디자인팀</option>
 	                                    <option value="3">영업팀</option>
@@ -162,15 +162,17 @@
                 <div class="col-lg-6">
                     <label for="calendar_view">등록자별</label>
                     <div class="input-group">
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
+                    	<label class="checkbox-inline"><input class='filter' type="checkbox" value="회사"
+                                checked>회사</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="개발팀"
                                 checked>개발팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="디자인팀"
                                 checked>디자인팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="영업팀"
                                 checked>영업팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="인사팀"
                                 checked>인사팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="경영지원팀"
                                 checked>경영지원팀</label>
                     </div>
                 </div>

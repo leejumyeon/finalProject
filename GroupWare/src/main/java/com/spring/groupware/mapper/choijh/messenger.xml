@@ -33,7 +33,7 @@
 		                           fk_employee_seq = #{rEmployee_seq})
 		group by roomNumber 
 		) V    
-		where cnt = 2
+		where V.cnt = 2
 	</select>
 	
 	
@@ -57,10 +57,11 @@
 	
 	<!-- 채팅방 내용 읽어오기 -->
 	<select id="contentView" parameterType="String" resultType="com.spring.groupware.commonVO.MessengerVO">
-		select message_seq, content, to_char(regDate, 'mm-dd hh24:mi')AS regDate, status, fk_roomNumber, fk_employee_seq, employee_name
+		select message_seq, content, to_char(M.regDate, 'mm-dd hh24:mi')AS regDate, status, fk_roomNumber, fk_employee_seq, employee_name
 		from messenger_table M join employees_table E
 		on fk_employee_seq = employee_seq
-		order by regDate
+		where fk_roomNumber = #{roomNumber}
+		order by M.regDate
 	</select>
 	
 	
@@ -69,5 +70,43 @@
 		insert into messenger_table(message_seq, content, regDate, status, fk_roomNumber, fk_employee_seq)
 		values(messenger_table_seq.nextval, #{content}, default, default, #{roomNumber}, #{sEmployee_seq})
 	</insert>
+	
+	
+	<!-- 대화목록 보여주기 -->
+	<resultMap type="HashMap" id="roomMap">
+		<result property="roomNumber" 		column="roomNumber" 		javaType="String" />
+		<result property="fk_employee_seq" 	column="fk_employee_seq" 	javaType="String" />
+		<result property="employee_name" 	column="employee_name" 		javaType="String" />
+		<result property="content" 			column="content" 			javaType="String" />
+		<result property="regDate" 			column="regDate" 			javaType="String" />
+		<result property="cnt" 				column="cnt" 				javaType="String" />
+	</resultMap>
+	<select id="msgRoomListView" parameterType="String" resultMap="roomMap">
+		select T.roomNumber, T.cnt, T.fk_employee_seq, T.content, to_char(T.regdate,'mm-dd hh24:mi') As regDate, E.employee_name
+		from
+		(
+		    select V.roomNumber, V.cnt, M.fk_employee_seq, M.content, regDate
+		    from 
+		    (
+		        select roomNumber, count(*) AS cnt
+		        from messengerRoom_table
+		        group by roomNumber
+		    ) V join messenger_table M
+		    on V.roomNumber = M.fk_roomNumber
+		    where fk_employee_seq != 1 and V.roomNumber in (select roomNumber from messengerRoom_table where fk_employee_seq = 1)
+		) T join employees_table E
+		on T.fk_employee_seq = E.employee_seq
+		where T.regDate in (select max(regDate) from messenger_table group by fk_roomNumber)
+	</select>
+	
+	
+	<!-- 채팅 방 삭제하기 -->
+	<delete id="roomDelete" parameterType="HashMap">
+		delete from messengerRoom_table 
+		where roomNumber = #{roomNumber} and fk_employee_seq = #{sEmployee_seq}
+	</delete>
+	
+	
+	
 	
 </mapper>

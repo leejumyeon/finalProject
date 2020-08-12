@@ -36,7 +36,10 @@ public class ChaController {
 	// 마이페이지(개인 일정 캘린더) - 뿌리기
 	@ResponseBody
 	@RequestMapping(value="/personalFullCalendar.top", produces="text/plain;charset=UTF-8")
-	public String fullCalendar() {
+	public String fullCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
 		
 		List<PersonalCalVO> perCalvo =  service.fullCalendar();
 						
@@ -53,7 +56,7 @@ public class ChaController {
 			jsObj.put("end", personalCalVO.getEndDate());
 			jsObj.put("backgroundColor", personalCalVO.getBackgroundColor());
 			jsObj.put("type", "카테고리1");
-			jsObj.put("username", "다현");
+			jsObj.put("username", loginEmployee.getEmployee_name());
 			jsObj.put("textColor", "#ffffff");
 			jsObj.put("allDay", false);
 			
@@ -72,6 +75,7 @@ public class ChaController {
 		
 		HttpSession session = request.getSession();
 		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		
 		String title = request.getParameter("title");
 		String content = request.getParameter("description");
 		String startDate = request.getParameter("start");
@@ -192,12 +196,12 @@ public class ChaController {
 			
 			JSONObject jsObj = new JSONObject();
 			
-			jsObj.put("_id", companyCalVO.getCalendar_seq()); 			
+			jsObj.put("_id", companyCalVO.getComCalendar_seq()); 			
 			jsObj.put("title", companyCalVO.getTitle());
 			jsObj.put("description", companyCalVO.getContent());
 			jsObj.put("start", companyCalVO.getStartDate());
 			jsObj.put("end", companyCalVO.getEndDate());
-			jsObj.put("backgroundColor", companyCalVO.getColor());
+			jsObj.put("backgroundColor", companyCalVO.getBackgroundColor());
 			jsObj.put("type", companyCalVO.getCategory_name());
 			jsObj.put("username", companyCalVO.getDepartment_name());
 			jsObj.put("textColor", "#ffffff");
@@ -210,13 +214,108 @@ public class ChaController {
 		return jsonArr.toString();
 	}
 	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정추가	
+	@ResponseBody
+	@RequestMapping(value="/insertAdminCalendar.top", produces="text/plain;charset=UTF-8")
+	public String insertAdminCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String title = request.getParameter("title");
+		String content = request.getParameter("description");
+		String startDate = request.getParameter("start");
+		String endDate = request.getParameter("end");
+		String backgroundColor = request.getParameter("backgroundColor");
+		String allDay = request.getParameter("allDay");
+		String fk_department_seq = request.getParameter("edit-username");
+		String calendar_category = request.getParameter("edit-type");
+		
+		System.out.println(employee_id+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor+"/"+fk_department_seq+"/"+calendar_category);
+		
+		HashMap<String, String> paraMap = new HashMap<>();		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("title", title);
+		paraMap.put("content", content);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("backgroundColor", backgroundColor);
+		paraMap.put("allDay", allDay);
+		paraMap.put("fk_department_seq", fk_department_seq);
+		paraMap.put("calendar_category", calendar_category);
+		
+		int n = service.insertAdminCalendar(paraMap);
+											
+		JSONObject jsonObj = new JSONObject();
+			
+		jsonObj.put("n", n);
+																															
+		return jsonObj.toString();
+	}
 	
 	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 수정
+	@ResponseBody
+	@RequestMapping(value="/updateAdminCalendar.top", produces="text/plain;charset=UTF-8")
+	public String updateAdminCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String comCalendar_seq = request.getParameter("_id");
+		String title = request.getParameter("title");
+		String content = request.getParameter("description");
+		String startDate = request.getParameter("start");
+		String endDate = request.getParameter("end");
+		String backgroundColor = request.getParameter("backgroundColor");
+		String allDay = request.getParameter("allDay");
+		String fk_department_seq = request.getParameter("edit-username");
+		String calendar_category = request.getParameter("edit-type");
+		
+		System.out.println(employee_id+"/"+comCalendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor+"/"+fk_department_seq+"/"+calendar_category);
+		
+		HashMap<String, String> paraMap = new HashMap<>();		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("comCalendar_seq", comCalendar_seq);
+		paraMap.put("title", title);
+		paraMap.put("content", content);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("backgroundColor", backgroundColor);
+		paraMap.put("allDay", allDay);
+		paraMap.put("fk_department_seq", fk_department_seq);
+		paraMap.put("calendar_category", calendar_category);
+		
+		int n = service.updateAdminCalendar(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
 	
-	
-	
-	
-	
+	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
+	@ResponseBody
+	@RequestMapping(value="/deleteAdminCalendar.top", produces="text/plain;charset=UTF-8")
+	public String deleteAdminCalendar(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String comCalendar_seq = request.getParameter("_id");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("comCalendar_seq", comCalendar_seq);
+		
+		int n = service.deleteAdminCalendar(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+
 	
 	
 	

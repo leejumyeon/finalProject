@@ -62,6 +62,22 @@ public class ChoijhService implements InterChoijhService {
 		return n;
 	}
 
+
+	// 대화목록 보여주기 
+	@Override
+	public List<HashMap<String, String>> msgRoomListView(String employee_seq) {
+		List<HashMap<String, String>> mapList = dao.msgRoomListView(employee_seq);
+		return mapList;
+	}
+
+
+	// 채팅 방 삭제하기
+	@Override
+	public int roomDelete(HashMap<String, String> map) {
+		int n = dao.roomDelete(map);
+		return n;
+	}
+
 	
 	
 	

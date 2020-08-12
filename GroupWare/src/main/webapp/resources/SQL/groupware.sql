@@ -295,7 +295,7 @@ create table trip_table
 ,reason     varchar2(4000) not null -- 사유
 ,trip_start date not null -- 휴가/출장 시작 날짜
 ,trip_end   date not null -- 휴가/출장 복귀 날짜
-,triplocatioin      varchar2(1000) -- 출장지
+,triplocation      varchar2(1000) -- 출장지
 ,fk_employee_seq    number  -- 신청자
 ,documentStatus     number default 0 not null -- 연결되어있는 결재문서가 모두 승인 되면 1
 ,constraint pk_trip_table primary key (trip_seq)
@@ -433,8 +433,9 @@ create table companyCalendar_table
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
-
+select * from companyCalendar_table;
 alter table companyCalendar_table rename column color to backgroundColor;
+alter table companyCalendar_table rename column CALENDAR_SEQ to comCalendar_seq;
 
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
@@ -445,15 +446,16 @@ nocycle -- 반복 설정
 nocache;
 
 
-
 -- 메신저 그룹 테이블(messengerRoom_table) --
 create table messengerRoom_table
 (roomNumber     number not null -- 그룹 번호
 ,fk_employee_seq   number not null -- 참가자 번호
 ,regDate    date default sysdate not null -- 참가날짜
-,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
+
+
+
 
 create SEQUENCE messengerRoom_table_seq
 start with 1 -- 시작값
@@ -472,8 +474,6 @@ create table messenger_table
 ,fk_roomNumber      number -- 메신저 그룹번호
 ,fk_employee_seq    number  -- 발신자
 ,constraint pk_messenger_table primary key(message_seq)
-,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
-on delete set null
 );
 
 create SEQUENCE messenger_table_seq
@@ -741,6 +741,5 @@ insert into companyCalendar_category(category_num, category_name) values(4,'채�
 alter table mail_table drop constraint CK_mail_table;
 alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
 
-
-
-              
+select * from mail_table order by mail_seq desc;
+commit;

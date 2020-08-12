@@ -153,16 +153,8 @@
                 <div class="col-lg-6">
                     <label for="calendar_view">등록자별</label>
                     <div class="input-group">
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="${sessionScope.loginEmployee.employee_name}"
                                 checked>개발팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
-                                checked>디자인팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
-                                checked>영업팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
-                                checked>인사팀</label>
-                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
-                                checked>경영지원팀</label>
                     </div>
                 </div>
 

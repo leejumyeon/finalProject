@@ -12,6 +12,8 @@
 	<definition name="layout-tiles1" template="/WEB-INF/tiles/layout/layout-tiles1.jsp"> 
 		<put-attribute name="header" value="/WEB-INF/tiles/tile1/header.jsp" />
 		<put-attribute name="sideinfo" value="/WEB-INF/tiles/tile1/sideinfo.jsp" />
+		<put-attribute name="content" value="" />  
+		<put-attribute name="footer" value="/WEB-INF/tiles/tile1/footer.jsp" />
 		<put-attribute name="content" value="" />
 		<put-attribute name="messenger" value="/WEB-INF/tiles/tile1/messenger.jsp" />
 	</definition>
@@ -74,6 +76,9 @@
 	
 	<definition name="*.notiles" extends="layout-notiles">
 		<put-attribute name="content" value="/WEB-INF/views/notiles/{1}.jsp"/>
+	</definition>
+	<definition name="*/*.notiles" extends="layout-notiles">
+		<put-attribute name="content" value="/WEB-INF/views/notiles/{1}/{2}.jsp"/>
 	</definition>
 	<!-- ==== tiles 를 사용하지 않는 레이아웃 설정 끝 ==== -->
 	

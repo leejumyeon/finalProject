@@ -12,7 +12,7 @@ public interface InterMailService {
 	List<EmployeesVO> searchReceive(HashMap<String, String> paraMap);
 
 	// 메일 보내기 기능
-	int mailSend(List<MailVO> mailList);
+	int mailSend(List<MailVO> mailList) throws Throwable;
 
 	// 메일 그룹번호 채번하기
 	String getMail_groupno();
@@ -21,6 +21,9 @@ public interface InterMailService {
 	List<MailVO> mailList(HashMap<String, String> paraMap);
 
 	// 메일 읽기 페이지 이동
-	MailVO mailRead(String mail_seq);
+	MailVO mailRead(String mail_seq) throws Throwable;
+
+	// 메일 게시글 수 조회
+	int getTotalCount(HashMap<String, String> paraMap);
 
 }

@@ -259,4 +259,67 @@ public class LeeehService implements InterLeeehService {
 		dao.deleteClub(paraMap);
 	}
 
+	// === 문서 결재 신청자의 List 얻어오기 === //
+	@Override
+	public List<DocumentVO> regDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> regDocumentList = dao.regDocumentList(fk_employee_seq);
+		
+		return regDocumentList;
+	}
+
+	// === 문서 상세 내용 보여주기 === //
+	@Override
+	public HashMap<String, String> goDocumentContent(String document_seq) {
+
+		HashMap<String, String> documentContent = dao.goDocumentContent(document_seq);
+		
+		return documentContent;
+	}
+
+	// === 문서 결재자들 알아오기 === //
+	@Override
+	public List<DocumentVO> getApproverList(String groupno) {
+
+		List<DocumentVO> approverList = dao.getApproverList(groupno);
+		
+		return approverList;
+	}
+
+	// === 문서 결재 받는 사람의 List 얻어오기 === //
+	@Override
+	public List<DocumentVO> aproDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> aproDocumentList = dao.aproDocumentList(fk_employee_seq);
+		
+		return aproDocumentList;
+	}
+
+	// === 신청 완료된 전체 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> allComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = dao.allComDocumentList(fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
+	// === 신청 완료된 신청한 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> senComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = dao.senComDocumentList(fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
+	// === 신청 완료된 결재한 문서 보여주기 === //
+	@Override
+	public List<DocumentVO> recComDocumentList(String fk_employee_seq) {
+
+		List<DocumentVO> comDocumentList = dao.recComDocumentList(fk_employee_seq);
+		
+		return comDocumentList;
+	}
+
 }

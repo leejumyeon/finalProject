@@ -47,52 +47,66 @@
 	
 	<!-- 받은 메일함 조회 -->
 	<select id="receiveMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
-				E.email, E.employee_name, D.department_name, P.position_name
-		from mail_table M 
-		join employees_table E on M.fk_employee_seq = E.employee_seq
-		join department_table D on E.fk_department = D.department_seq
-		join position_table P on E.fk_position = P.position_seq 
-			where M.status = 0 and M.fk_employee_seq != #{loginSeq}  and M.mail_groupno in
-				(select mail_groupno from mail_table
-					where status = 1 and mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+		select 	T.Ron, mail_seq, mail_groupno, readStatus, mailStatus, status, subject, content, regDate, fk_employee_seq, employee_name, email, position_name, department_name
+			from(select row_number() over(order by My.mail_seq desc) as Ron, My.mail_seq, mail_groupno, My.readStatus, My.mailStatus, My.status, My.subject, My.content, My.regDate, 
+				   You.fk_employee_seq, You.employee_name, You.email, You.position_name, You.department_name	
+			from
+				(select mail_seq, mail_groupno readStatus, mailStatus, status, subject, content, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate 
+					from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq})My join
+				(select mail_groupno, fk_employee_seq, employee_name, email, position_name, department_name 
+					from mail_table 
+						join employees_table on fk_employee_seq =  employee_seq 
+						join position_table on fk_position= position_seq 
+						join department_table on fk_department = department_seq
+					where fk_employee_seq != #{loginSeq} and mail_groupno 
+						in(select mail_groupno from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq})
+				)You on mail_groupno = You.mail_groupno
+			)T where T.Ron between #{startRno} and #{endRno}
+
+		
 	</select>
 	
 	<!-- 보낸 메일함 조회 -->
 	<select id="sendMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select distinct mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate,readStatus, status,
-				E.email, E.employee_name, D.department_name, P.position_name
-		from mail_table M 
-		join employees_table E on M.fk_employee_seq = E.employee_seq
-		join department_table D on E.fk_department = D.department_seq
-		join position_table P on E.fk_position = P.position_seq 
-			where M.status = 1 and M.fk_employee_seq != #{loginSeq}  and M.mail_groupno in
-				(select mail_groupno from mail_table 
-					where status=0 and mailStatus !=0 and fk_employee_seq = #{loginSeq})
+		select T.RON, T.mail_groupno, T.fk_employee_seq, T.subject, T.regDate, T.readStatus, T.status, T.email, T.employee_name, T.position_name, T.department_name
+			from (select row_number() over(order by mail_groupno desc) as RON, mail_groupno, fk_employee_seq, subject, regDate, readStatus, status, email, employee_name, department_name, position_name
+				from (select distinct mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate,readStatus, status,
+						E.email, E.employee_name, D.department_name, P.position_name
+				from mail_table M 
+				join employees_table E on M.fk_employee_seq = E.employee_seq
+				join department_table D on E.fk_department = D.department_seq
+				join position_table P on E.fk_position = P.position_seq 
+					where M.status = 1 and M.fk_employee_seq != #{loginSeq}  and M.mail_groupno in
+						(select mail_groupno from mail_table 
+							where status=0 and mailStatus !=0 and fk_employee_seq = #{loginSeq})
+				)V
+			)T where T.RON between #{startRno} and #{endRno} 
 	</select>
 	
 	<!-- 내게 쓴 메일 조회 -->
 	<select id="mineMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
-				E.email, E.employee_name, D.department_name, P.position_name
-		from mail_table M 
-		join employees_table E on M.fk_employee_seq = E.employee_seq
-		join department_table D on E.fk_department = D.department_seq
-		join position_table P on E.fk_position = P.position_seq 
-			where M.status = 2 and M.status != 0 and M.fk_employee_seq = #{loginSeq}
+		select T.RON, mail_seq, mail_groupno, fk_employee_seq, subject, regDate, readStatus, status, email, employee_name, department_name, position_name
+			from(select row_number() over(order by mail_seq desc) as RON, mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
+					E.email, E.employee_name, D.department_name, P.position_name
+			from mail_table M 
+			join employees_table E on M.fk_employee_seq = E.employee_seq
+			join department_table D on E.fk_department = D.department_seq
+			join position_table P on E.fk_position = P.position_seq 
+				where M.status = 2 and M.mailStatus != 0 and M.fk_employee_seq = #{loginSeq}
+			)T where T.RON between #{startRno} and #{endRno} 
 	</select>
 	
 	<!-- 안 읽은 메일 조회 -->
 	<select id="noReadMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
-				E.email, E.employee_name, D.department_name, P.position_name
-		from mail_table M 
-		join employees_table E on M.fk_employee_seq = E.employee_seq
-		join department_table D on E.fk_department = D.department_seq
-		join position_table P on E.fk_position = P.position_seq 
-			where M.readStatus = 0 and M.mail_groupno in
-				(select mail_groupno from mail_table
-					where fk_employee_seq = #{loginSeq}) 
+		select T.RON, mail_seq, mail_groupno, fk_employee_seq, subject, regDate, readStatus, status, email, employee_name, department_name, position_name
+			from(select row_number() over(order by mail_seq desc) as RON, mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
+					E.email, E.employee_name, D.department_name, P.position_name
+			from mail_table M 
+			join employees_table E on M.fk_employee_seq = E.employee_seq
+			join department_table D on E.fk_department = D.department_seq
+			join position_table P on E.fk_position = P.position_seq 
+				where M.mail_groupno in(select mail_groupno from mail_table where mailStatus != 0 and readStatus = 0 and fk_employee_seq = #{loginSeq})
+			)T where T.RON between #{startRno} and #{endRno} 
 	</select>
 	
 	<!-- 메일 읽기 -->
@@ -108,6 +122,80 @@
 	
 	<!-- 읽은 메일 readStatus 업데이트 -->
 	<update id="updateReadstatus" parameterType="String">
-		
+		update mail_table set readStatus = 1 where mail_seq = #{mail_seq}
 	</update>
+	
+	<!-- 휴지통 이동 -->
+	<select id="delMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
+		select T.RON, mail_seq, mail_groupno, fk_employee_seq, subject, regDate, readStatus, status, email, employee_name, department_name, position_name
+			from(select row_number() over(order by mail_seq desc) as RON, mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
+					E.email, E.employee_name, D.department_name, P.position_name
+			from mail_table M 
+			join employees_table E on M.fk_employee_seq = E.employee_seq
+			join department_table D on E.fk_department = D.department_seq
+			join position_table P on E.fk_position = P.position_seq 
+				where M.mail_groupno in(select mail_groupno from mail_table where mailStatus = 0 and fk_employee_seq = #{loginSeq} )
+			)T where T.RON between #{startRno} and #{endRno} 
+	</select>
+	
+	<!-- 첨부파일이 있는 메일 조회 -->
+	<select id="attachMailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
+		select T.RON, mail_seq, mail_groupno, fk_employee_seq, subject, regDate, readStatus, status, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3, employee_name, email, position_name, department_name
+			from(select row_number() over(order by mail_seq desc) as RON, mail_seq, mail_groupno, fk_employee_seq, subject, to_char(M.regDate, 'yyyy-mm-dd hh24:mi') as regDate, readStatus, status,
+					fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3,
+					E.email, E.employee_name, D.department_name, P.position_name
+			from mail_table M 
+			join employees_table E on M.fk_employee_seq = E.employee_seq
+			join department_table D on E.fk_department = D.department_seq
+			join position_table P on E.fk_position = P.position_seq 
+				where M.mail_groupno in
+					(select mail_groupno from mail_table
+						where fileName1 is not null and status != 0 and fk_employee_seq = #{loginSeq}) 
+			)T where T.RON between #{startRno} and #{endRno} 
+	</select>
+	
+	<!-- 받은 메일 건 수 -->
+	<select id="receiveMailCount" resultType="int"  parameterType="HashMap">
+		select count(*) from mail_table where mailStatus !=0 and status =1 and fk_employee_seq = #{loginSeq}
+	</select>
+	
+	<!-- 보낸 메일 건 수 -->
+	<select id="sendMailCount" resultType="int" parameterType="HashMap">
+		select count(*) from(
+			select distinct mail_groupno
+			from mail_table 
+			where status = 1 and fk_employee_seq != #{loginSeq}  and mail_groupno in
+				(select mail_groupno from mail_table 
+					where status=0 and mailStatus !=0 and fk_employee_seq = #{loginSeq})
+		)
+	</select>
+	
+	<!-- 내게 쓴 메일 건 수 -->
+	<select id="mineMailCount" resultType="int" parameterType="HashMap">
+		select count(*)
+		from mail_table 
+			where status = 2 and mailStatus != 0 and fk_employee_seq = #{loginSeq}
+	</select>
+	
+	<!-- 안 읽은 메일 건 수 -->
+	<select id="noReadMailCount" resultType="int" parameterType="HashMap">
+		select count(*)
+		from mail_table 
+			where readStatus = 0 and mailStatus != 0 and fk_employee_seq = #{loginSeq}
+	</select>
+	
+	<!-- 휴지통 메일 건 수 -->
+	<select id="delMailCount" resultType="int" parameterType="HashMap">
+		select count(*)
+		from mail_table 
+			where mailStatus = 0 and fk_employee_seq = #{loginSeq}
+	</select>
+	
+	<!-- 첨부파일이 있는 메일 건 수 -->
+	<select id="attachMailCount" resultType="int" parameterType="HashMap">
+		select count(*)
+		from mail_table 
+			where fileName1 is not null and status != 0 and fk_employee_seq = #{loginSeq}
+	</select>
+	
 </mapper>

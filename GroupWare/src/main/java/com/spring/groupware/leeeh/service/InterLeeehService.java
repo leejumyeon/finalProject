@@ -71,4 +71,18 @@ public interface InterLeeehService {
 
 	void deleteClub(HashMap<String, Object> paraMap);	// 클럽 지우기
 
+	List<DocumentVO> regDocumentList(String fk_employee_seq);	// 문서 결재 신청자의 List 얻어오기
+
+	HashMap<String, String> goDocumentContent(String document_seq);	// 문서 상세 내용 보여주기
+
+	List<DocumentVO> getApproverList(String groupno);	// 문서 결재자들 알아오기
+
+	List<DocumentVO> aproDocumentList(String fk_employee_seq);	// 문서 결재 받는 사람의 List 얻어오기
+
+	List<DocumentVO> allComDocumentList(String fk_employee_seq);	// 신청 완료된 전체 문서 보여주기
+
+	List<DocumentVO> senComDocumentList(String fk_employee_seq);	// 신청 완료된 신청한 문서 보여주기
+
+	List<DocumentVO> recComDocumentList(String fk_employee_seq);	// 신청 완료된 결재한 문서 보여주기
+
 }

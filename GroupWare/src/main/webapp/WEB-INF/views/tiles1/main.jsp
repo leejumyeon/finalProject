@@ -4,18 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 
-<link rel= "shortcut icon" href="./resources/calendar/images/favicon.ico">
-
-<link rel= "stylesheet" href="./resources/calendar/vendor/css/fullcalendar.min.css" />
-<link rel= "stylesheet" href="./resources/calendar/vendor/css/bootstrap.min.css">
-<link rel= "stylesheet" href='./resources/calendar/vendor/css/select2.min.css' />
-<link rel= "stylesheet" href='./resources/calendar/vendor/css/bootstrap-datetimepicker.min.css' />
-
-<link rel= "stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
-<link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-<link rel= "stylesheet" href="./resources/calendar/css/main.css">
-
 <style type="text/css">
    div#container {
       width: 1240px;
@@ -39,24 +27,36 @@
    }
 </style>
 
-<script type="text/javascript">
+	<link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
-</script>
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/fullcalendar.min.css" />
+    <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/bootstrap.min.css">
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/select2.min.css' />
+    <link rel= "stylesheet" href='./resources/admincalendar/vendor/css/bootstrap-datetimepicker.min.css' />
+
+    <link rel= "stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
+    <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
+
+	
 
 <body>
    <div id="container">
       <div style="float: left;">
-         <div style="width: 320px; height: 300px; border: 1px solid red;">
+         <div style="width: 300px; height: 300px; border: 1px solid red;">
          </div>
-         <div class="mt" style="width: 320px; height: 300px; border: 1px solid red;">
+         <div class="mt" style="width: 300px; height: 300px; border: 1px solid red;">
          </div>
       </div>
-      <div style="clear: both; display: inline-block; margin-left: 10px;">
-         <div style="width: 650px; height: 630px; border: 1px solid red;">
-         	<div class="container" style="width: 650px; display: inline-block; float: left;">
-				
-	        <!-- 일자 클릭시 메뉴오픈 -->
-	        <div id="contextMenu" class="dropdown clearfix">
+      
+      
+<div style="clear: both; display: inline-block; margin-left: 25px;">
+   <div style="width: 600px; height: 630px; border: 1px solid red;">
+   
+<div class="container" style=" width: 600px; height: 1300px;" >				
+	   <%--    
+	      <div id="contextMenu" class="dropdown clearfix">
 	            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
 	                style="display:block;position:static;margin-bottom:5px;">
 	                <li><a tabindex="-1" href="#">카테고리1</a></li>
@@ -66,15 +66,15 @@
 	                <li class="divider"></li>
 	                <li><a tabindex="-1" href="#" data-role="close">Close</a></li>
 	            </ul>
-	        </div>
-	
+	         </div>
+		--%>  
 	        <div id="wrapper">
 	            <div id="loading"></div>
 	            <div id="calendar"></div>	
-	        </div>
-	
+	            	               
+	        </div>	        
 	        <!-- 일정 추가 MODAL -->
-	        <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
+	        <!-- <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
 	            <div class="modal-dialog" role="document">
 	                <div class="modal-content">
 	                    <div class="modal-header">
@@ -114,10 +114,22 @@
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">구분</label>
 	                                <select class="inputModal" type="text" name="edit-type" id="edit-type">
-	                                    <option value="카테고리1">카테고리1</option>
-	                                    <option value="카테고리2">카테고리2</option>
-	                                    <option value="카테고리3">카테고리3</option>
-	                                    <option value="카테고리4">카테고리4</option>
+	                                    <option value="1">경조사</option>
+	                                    <option value="2">워크샵</option>
+	                                    <option value="3">협력일정</option>
+	                                    <option value="4">채용일정</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-xs-12">
+	                                <label class="col-xs-4" for="edit-type">부서명</label>
+	                                <select class="inputModal" type="text" name="edit-username" id="edit-username">
+	                                    <option value="1">개발팀</option>
+	                                    <option value="2">디자인팀</option>
+	                                    <option value="3">영업팀</option>
+	                                    <option value="4">인사팀</option>
+	                                    <option value="5">경영지원팀</option>
 	                                </select>
 	                            </div>
 	                        </div>
@@ -156,10 +168,59 @@
 	                    </div>
 	                </div>
 	            </div>
-	        </div>            
-         </div>
-      </div>
-      </div>   
+	        </div>      
+ -->        
+
+         <div class="panel panel-default" id="hideAll">
+
+            <div class="panel-heading" >
+                <h3 class="panel-title">필터</h3>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="col-lg-6">
+                    <label for="calendar_view">구분별</label>
+                    <div class="input-group">
+                        <select class="filter" id="type_filter" multiple="multiple">
+                            <option value="카테고리1">카테고리1</option>
+                            <option value="카테고리2">카테고리2</option>
+                            <option value="카테고리3">카테고리3</option>
+                            <option value="카테고리4">카테고리4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <label for="calendar_view">등록자별</label>
+                    <div class="input-group">
+                    	<label class="checkbox-inline"><input class='filter' type="checkbox" value="회사"
+                                checked>회사</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="개발팀"
+                                checked>개발팀</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="디자인팀"
+                                checked>디자인팀</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="영업팀"
+                                checked>영업팀</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="인사팀"
+                                checked>인사팀</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="경영지원팀"
+                                checked>경영지원팀</label>
+                    </div>
+                </div>
+
+            </div>
+        </div> 
+        <!-- /.filter panel -->
+                                   
+</div>
+	    	   
+		<div style="clear: both;"></div> 
+                   
+   </div>
+</div>
+      
+      
       <div style="float: right;">
          <div style="width: 250px; height: 190px; border: 1px solid red;">
          </div>
@@ -168,17 +229,26 @@
          <div class="mt" style="width: 250px; height: 190px; border: 1px solid red;">
          </div>
       </div>
-   </div>
+   </div>      
 </body>
 
-<script src="./resources/calendar/vendor/js/jquery.min.js"></script>
-<script src="./resources/calendar/vendor/js/bootstrap.min.js"></script>
-<script src="./resources/calendar/vendor/js/moment.min.js"></script>
-<script src="./resources/calendar/vendor/js/fullcalendar.min.js"></script>
-<script src="./resources/calendar/vendor/js/ko.js"></script>
-<script src="./resources/calendar/vendor/js/select2.min.js"></script>
-<script src="./resources/calendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
-<script src="./resources/calendar/js/main.js"></script>
-<script src="./resources/calendar/js/addEvent.js"></script>
-<script src="./resources/calendar/js/editEvent.js"></script>
-<script src="./resources/calendar/js/etcSetting.js"></script>
+
+	<script src="./resources/admincalendar/vendor/js/jquery.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/moment.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/fullcalendar.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/ko.js"></script>
+    <script src="./resources/admincalendar/vendor/js/select2.min.js"></script>
+    <script src="./resources/admincalendar/vendor/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./resources/admincalendar/js/main.js"></script>
+    <script src="./resources/admincalendar/js/addEvent.js"></script>
+    <script src="./resources/admincalendar/js/editEvent.js"></script>
+    <script src="./resources/admincalendar/js/etcSetting.js"></script>
+	
+	<script type="text/javascript">
+		
+  		$("#hideAll").hide();
+  		
+	</script>
+
+
