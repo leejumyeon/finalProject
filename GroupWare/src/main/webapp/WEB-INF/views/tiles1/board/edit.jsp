@@ -1,52 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<% String ctxPath = request.getContextPath(); %>    
+
+<% String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
-	#container {
-		width: 1240px;
-		margin: 0 auto;
-	}	
-	table {
-		width: 1180px;
-		margin: 0 auto;
-	}
-	table, th, td {
-		border: 0.1px solid #d9d9d9;
-		border-collapse: collapse;
-	}
-	th{
-		width: 130px;
-		font-size: 11pt;
-		background-color: #3399ff;
-		color: white;
-	}
-	td{
-		padding-left: 10px;
-	}	
-	th, td {
-		height: 40px;
-	}
-	button {
-		border-radius: 0;
-		border-style: none;
-		background-color: #3399ff;
-		padding: 5px;
-		width: 50px;
-		color: white;
-	}
-	input {
-		height: 20px;
-		border: 1px solid #b3b3b3;
-	}
-	#subject {
-		width: 450px;
-	}
+
+	table, th, td, input, textarea {border: solid gray 1px;}
+	
+	#table {border-collapse: collapse; width: 900px;}
+	#table th, #table td{padding: 5px;}
+	#table th{width: 120px; background-color: #DDDDDD;}
+	#table td{width: 860px;}
+	.long {width: 470px;}
+	.short {width: 120px;}
+	
 </style>
+    
 <script type="text/javascript">
 	$(document).ready(function(){
 		
-		<%-- === #160. 스마트 에디터 구현 시작 === --%>
+		<%-- === #161. 스마트 에디터 구현 시작 === --%>
 		//전역변수
 	    var obj = [];
 	    
@@ -66,14 +39,14 @@
 	    });
 		<%-- === 스마트 에디터 구현 끝 === --%>
 		
-		// 쓰기버튼
-		$("#btnWrite").click(function(){
+		// 완료버튼
+		$("#btnUpdate").click(function(){
 			
 			<%-- === 스마트에디터 구현 시작 === --%>
 			//id가 content인 textarea에 에디터에서 대입
 	        obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
 			<%-- === 스마트에디터 구현 끝 === --%>
-
+			
 			// 글제목 유효성 검사 
 			var subjectVal = $("#subject").val().trim();
 			if(subjectVal = "") {
@@ -131,52 +104,60 @@
 			}
 			
 			// 폼(form) 을 전송(submit)
-			var frm = document.addFrm;
+			var frm = document.editFrm;
 			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/addEnd.action";
+			frm.top = "<%= ctxPath%>/editEnd.top";
 			frm.submit();
 		});
 		
 	});// end of $(document).ready(function(){})----------------------------------
+	
 </script>    
-<div id="container" style="margin-top: 100px;">
-	<form name="addFrm" enctype="multipart/form-data">
+
+<div style="padding-left: 10%;">
+	<h1>글수정</h1>
+	
+	<form name="editFrm">
 		<table id="table">
-			<tbody>
-				<tr>
-					<th>성명</th>
-					<td>
-					<input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
-					<input type="text" name="name" value="${sessionScope.loginuser.name}" class="short" readonly />
-					</td>
-				</tr>
-				<tr>
-					<th>제목</th>
-					<td><input type="text" name="subject" id="subject" class="long"></td>
-				</tr>
-				<tr style="height: 400px;">
-					<th>내용</th>
-					<td><textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content"></textarea></td>
-				</tr>
-				<tr>
-					<th>파일첨부</th>
-					<td><input type="file" name="attach" style="width: 300px;"></td>
-				</tr>	
-				<tr>
-					<th>패스워드</th>
-					<td><input type="password" name="pw" id="pw" class="short"></td>
-				</tr>				
-			</tbody>				
-		</table>	
+			<tr>
+				<th>성명</th>
+				<td>
+					<input type="hidden" name="seq" value="${boardvo.seq}" />
+					${boardvo.name}      
+				</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td>
+					<input type="text" name="subject" id="subject" class="long" value="${boardvo.subject}"/>           
+				</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td>
+					<textarea rows="10" cols="100" style="width: 95%; height: 412px;" name="content" id="content">${boardvo.content}</textarea>           
+				</td>
+			</tr>
+			<tr>
+				<th>글암호</th>
+				<td>
+					<input type="password" name="pw" id="pw" class="short"/>           
+				</td>
+			</tr>
+		</table>
 		
-		<input type="hidden" name="fk_seq" value="${fk_seq}" />
-		<input type="hidden" name="groupno" value="${groupno}" />
-		<input type="hidden" name="depthno" value="${depthno}" />
-			
-		<div style="margin: 10px 0 0 30px;">
-			<button type="button" id="btnWrite">쓰기</button>
+		<div style="margin: 20px;">
+			<button type="button" id="btnUpdate">완료</button>
 			<button type="button" onclick="javascript:history.back()">취소</button>
-			<button type="button" onclick="goPrint('글쓰기인쇄')">인쇄</button>
 		</div>
 	</form>
 </div>
+
+
+
+
+
+
+
+
+
