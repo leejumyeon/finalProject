@@ -433,8 +433,9 @@ create table companyCalendar_table
 ,constraint fk_companyCal_department foreign key(fk_department_seq) references department_table(department_seq)on delete cascade
 ,constraint fk_companyCal_category foreign key(calendar_category) references companyCalendar_category(category_num)
 );
-
+select * from companyCalendar_table;
 alter table companyCalendar_table rename column color to backgroundColor;
+alter table companyCalendar_table rename column CALENDAR_SEQ to comCalendar_seq;
 
 create SEQUENCE companyCalendar_table_seq
 start with 1 -- 시작값
@@ -450,9 +451,11 @@ create table messengerRoom_table
 (roomNumber     number not null -- 그룹 번호
 ,fk_employee_seq   number not null -- 참가자 번호
 ,regDate    date default sysdate not null -- 참가날짜
-,constraint pk_messengerRoom primary key(roomNumber, fk_employee_seq)
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
+
+
+
 
 create SEQUENCE messengerRoom_table_seq
 start with 1 -- 시작값
@@ -471,8 +474,6 @@ create table messenger_table
 ,fk_roomNumber      number -- 메신저 그룹번호
 ,fk_employee_seq    number  -- 발신자
 ,constraint pk_messenger_table primary key(message_seq)
-,constraint fk_messenger_roomNumber foreign key(fk_roomNumber, fk_employee_seq) references messengerRoom_table(roomNumber, fk_employee_seq)
-on delete set null
 );
 
 create SEQUENCE messenger_table_seq

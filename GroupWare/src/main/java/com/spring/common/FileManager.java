@@ -126,6 +126,9 @@ public class FileManager {
 		클라이언트가 서버로 어떤 요청을 보낼때는 request로 전송되고, 반대로 서버에서 클라이언트로 응답을 보낼때는 response에 응답내용을 담아 보내게 된다.
 		파일을 다운로드하는 데이터 전송에 있어서 다운로드 될 파일의 정보는 response에 담아주게 된다.
     */
+		
+		System.out.println("path:"+path+"/ fileName"+saveFilename+"/ orgFileName:"+originalFilename);
+		
 		String pathname = path + File.separator + saveFilename;
 		// File.separator 은 운영체제에서 사용하는 파일경로의 구분자 이다.
         // 운영체제가 Windows 이라면 File.separator 은 "\" 이고,
@@ -142,7 +145,7 @@ public class FileManager {
         	// originalFilename.getBytes("UTF-8") 은 UTF-8 형태로 된 문자열 originalFilename 을 byte 형태로 변경한 후
         	// byte 형태로 된 것을 표준인 ISO-Latin1(혹은 Latin1 또는 8859_1) 형태로 인코딩한 문자열로 만든다.
         	
-        } catch (UnsupportedEncodingException e) { }
+        } catch (UnsupportedEncodingException e) {e.printStackTrace(); }
 
 	    try {
 	        File file = new File(pathname); // 다운로드 할 파일명(pathname)을 가지고 File 객체를 생성한다.
@@ -183,6 +186,7 @@ public class FileManager {
 	            return true;   // Exception 이 발생하지 않으면 true 를 리턴시킨다.
 	        }
 	    } catch(Exception e) {
+	    	e.printStackTrace();
 	    }
 	    
 	    return false;         // Exception 이 발생하면 false 를 리턴시킨다.
