@@ -35,10 +35,14 @@
 			$("#mymessenger").removeClass("messengerClose");
 			$("#mymessenger").addClass("messengerOpen");
 			
+			window.resizeTo(1600,845);
+			
 		}
 		else {
 			$("#mymessenger").addClass("messengerClose");
 			$("#mymessenger").removeClass("messengerOpen");
+			
+			window.resizeTo(1220,845);
 		}
 	}
 </script>

@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,8 +58,9 @@ public class LeeehController {
 	}
 
 	// === 로그인 페이지에서 적은 ID와 비밀번호를 통해 유저가 존재하는지 검사하기 === //
-	@RequestMapping(value = "/login.top", method = { RequestMethod.POST })
-	public ModelAndView loginEnd(ModelAndView mav, HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value = "/loginEnd.top", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET})
+	public String loginEnd(HttpServletRequest request) {
 
 		String employee_id = request.getParameter("employee_id");
 		String employee_pw = request.getParameter("employee_pw");
@@ -70,30 +72,24 @@ public class LeeehController {
 		paraMap.put("employee_pw", employee_pw);
 
 		EmployeesVO loginEmployee = service.isUserExist(paraMap);
-
-		String isLogin = "0";
+		
+		JSONObject jsObj = new JSONObject();
 
 		if (loginEmployee != null) {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("loginEmployee", loginEmployee);
+			
+			jsObj.put("isLogin", "1");
+			jsObj.put("grade", loginEmployee.getGrade());
 
-			String grade = loginEmployee.getGrade();
-
-			if ("1".equals(grade)) {
-
-				mav.setViewName("redirect:/main.top");
-			} else {
-
-				mav.setViewName("redirect:/twoChoice.top");
-			}
-		} else {
-
-			mav.addObject("isLogin", isLogin);
-			mav.setViewName("login.notiles");
 		}
-
-		return mav;
+		else {
+			
+			jsObj.put("isLogin", "0");
+		}
+		
+		return jsObj.toString();
 	}
 
 	// === 사원발급 페이지 보여주기 === //
@@ -275,7 +271,7 @@ public class LeeehController {
 	
 	// === 신청 완료된 문서 List 불러오기(AJAX) === //
 	@ResponseBody
-	@RequestMapping(value="/comDocumentList.top")
+	@RequestMapping(value="/comDocumentList.top", produces = "text/plain;charset=UTF-8")
 	public String comDocumentList(HttpServletRequest request) {
 		
 		String statusValue = request.getParameter("statusValue");
@@ -1208,15 +1204,27 @@ public class LeeehController {
 			String groupno = docuvo.getGroupno();
 			
 			paraMap.put("groupno", groupno);
-			paraMap.put("document_category", docuvo.getCategory_name());
+			paraMap.put("document_category", docuvo.getDocument_category());
 			
 			if("12".equals(docuvo.getDocument_category())) {
 				service.deleteClubTable(groupno);
 			}
 			else {
+				
+				System.out.println(paraMap.get("document_category"));
 				service.updateDocumentStatus(paraMap);
 			}
 			
+			String employee_seq = service.employeeSeqTripTable(paraMap);
+			
+			if("1".equals(docuvo.getDocument_category())) {
+				
+				service.updateStatusEmployeesTableVacation(employee_seq);
+			}
+			else if("2".equals(docuvo.getDocument_category())) {
+				
+				service.updateStatusEmployeesTableBusiness(employee_seq);
+			}
 		}
 		
 		mav.setViewName("redirect:/documentPayment.top");

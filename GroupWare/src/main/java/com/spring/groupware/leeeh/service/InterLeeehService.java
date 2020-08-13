@@ -111,4 +111,10 @@ public interface InterLeeehService {
 
 	void updateDocumentStatus(HashMap<String, Object> paraMap);	// 전체 결재 완료된 테이블 documentStatus 업데이트하기
 
+	String employeeSeqTripTable(HashMap<String, Object> paraMap);	// 휴가/출장 테이블에서 사원번호 얻어오기
+
+	void updateStatusEmployeesTableVacation(String employee_seq);	// 휴가를 간 사원의 status 값 변경하기
+
+	void updateStatusEmployeesTableBusiness(String employee_seq);	// 출장을 간 사원의 status 값 변경하기
+
 }
