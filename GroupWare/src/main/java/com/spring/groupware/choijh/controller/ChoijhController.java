@@ -190,6 +190,33 @@ public class ChoijhController {
 	}
 	
 	
+	// 그룹채팅 방 생성하기
+	@ResponseBody
+	@RequestMapping(value="goGroupChattRoomCreate.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
+	public String goGroupChattRoomCreate(HttpServletRequest request) {
+		
+		String allEmpSeq = request.getParameter("allEmpSeq");
+		String sEmployee_seq = request.getParameter("sEmployee_seq");
+		
+		String[] allEmpSeqArr = allEmpSeq.split(",");
+		
+		// 채번해오기
+		int roomNum = service.getRoomNumber();
+		String roomNumber = String.valueOf(roomNum);
+		
+		HashMap<String, Object> map = new HashMap<>();	
+		map.put("roomNumber", roomNumber);
+		map.put("allEmpSeqArr", allEmpSeqArr);
+		map.put("sEmployee_seq", sEmployee_seq);
+
+		int n = service.groupChattRoomCreate(map);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return "";
+	}
+		
 	
 	
 }

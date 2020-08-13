@@ -78,6 +78,14 @@ public class ChoijhService implements InterChoijhService {
 		return n;
 	}
 
+
+	// 그룹채팅 방 생성하기
+	@Override
+	public int groupChattRoomCreate(HashMap<String, Object> map) {
+		int n = dao.groupChattRoomCreate(map);
+		return n;
+	}
+
 	
 	
 	
