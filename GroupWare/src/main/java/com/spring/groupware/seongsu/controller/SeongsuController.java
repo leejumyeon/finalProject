@@ -1,4 +1,4 @@
-package com.spring.groupware.seongsu.controller;
+/*package com.spring.groupware.seongsu.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -342,8 +342,8 @@ public class SeongsuController {
 	@RequestMapping(value="/delEnd.top", method= {RequestMethod.POST})
 	public ModelAndView delEnd(HttpServletRequest request, ModelAndView mav) throws Throwable {
 		
-		/*  글 삭제를 하려면 원본글의 글암호와 삭제시 입력해준 암호가 일치할때만 
-		        글 삭제가 가능하도록 해야한다. */
+		  글 삭제를 하려면 원본글의 글암호와 삭제시 입력해준 암호가 일치할때만 
+		        글 삭제가 가능하도록 해야한다. 
 		String seq = request.getParameter("seq");
 		String pw = request.getParameter("pw");
 		
@@ -404,3 +404,4 @@ public class SeongsuController {
 	
 }	
 	
+*/
