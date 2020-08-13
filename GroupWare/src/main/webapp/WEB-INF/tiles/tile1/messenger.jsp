@@ -177,6 +177,8 @@
 
 	$(document).ready(function(){
 		
+		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
+		
 		$("#message").hide();
 		
 		// 초대하기 버튼 숨기기
@@ -209,7 +211,11 @@
 			});
 			
 			var allEmpSeq = arr.join(",");
-			console.log(allEmpSeq);
+		//	console.log(allEmpSeq);
+			
+			// 그룹채팅 방 생성
+			goGroupChattRoomCreate(allEmpSeq, sEmployee_seq);	
+		
 		});
 		
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
@@ -231,7 +237,7 @@
 		$("#msgBtn").click(function(){
 			var content = $("#content").val();
 			var roomNumber = $("#roomNumber").val()
-			var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
+		//	var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
 			if(content != null && content.trim() != ''){
 				goWriteMsg(roomNumber, sEmployee_seq, content);	
 			}
@@ -408,18 +414,18 @@
 				var html = "";
 				$.each(json, function(index,item){
 					
-					if(item.cnt > 2){
+					if(item.cnt > 2){ // 그룹채팅인 경우
 						html += "<tr class='msglist'>" +
 									"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
 									"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
-										"<div class='divText name'>" + employee_name + "외 " + Number(item.cnt)-1 +"명 </div>" +
+										"<div class='divText name'>" + employee_name + "외 "+Number(item.cnt-1)+"명 </div>" +
 										"<div class='divText roomText'>"+item.content+"</div>" +
 									"</td>" +
 									"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
 									"<td><img class='del' onclick='roomDelete("+item.roomNumber+");' src='/groupware/resources/msg_images/trash.png' width='28px;' height='28px;' /></td>" +
 								"</tr>";
 					}
-					else{
+					else{ // 1:1 채팅인 경우 또는 혼자
 					
 						html += "<tr class='msglist'>" +
 									"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
@@ -478,9 +484,35 @@
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 			
+		});	
+		
+	}
+	
+	
+	// 그룹채팅 방 생성하기
+	function goGroupChattRoomCreate(allEmpSeq, sEmployee_seq){
+		
+		$.ajax({
+			url:"/groupware/goGroupChattRoomCreate.top",
+			async: false,
+			data:{"allEmpSeq":allEmpSeq, "sEmployee_seq":sEmployee_seq},
+			type:"POST",
+			dataType:"JSON",
+			success:function(json){
+				
+				if(json.n >0 ){
+					alert("방생성완료");
+				}
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+			
 		});
 		
 	}
+	
 	
 </script>
 

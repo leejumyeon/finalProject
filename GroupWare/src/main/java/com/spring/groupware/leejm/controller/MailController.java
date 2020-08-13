@@ -525,7 +525,13 @@ public class MailController {
 			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
 			
 		}
+			
+	}
+	
+	// 읽음 or 안읽음 버튼 클릭시 readStatus 업데이트
+	@RequestMapping(value="/mail/readUpdate.top")
+	public ModelAndView readUpdate(ModelAndView mav, HttpServletRequest request) {
 		
-		
+		return mav;
 	}
 }

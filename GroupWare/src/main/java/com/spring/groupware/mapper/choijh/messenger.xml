@@ -107,6 +107,16 @@
 	</delete>
 	
 	
+	<!-- 그룹채팅 방 생성하기 -->
+	<insert id="groupChattRoomCreate" parameterType="HashMap">
+		insert into messengerRoom_table (roomNumber, fk_employee_seq, regDate)
+		values(#{roomNumber}, #{sEmployee_seq}, sysdate)
+		<foreach collection="array" index="index" item="item">
+			insert into messengerRoom_table(roomNumber, fk_employee_seq, regDate)
+			values('${roomNumber}', '${item}', sysdate)
+		</foreach>
+	</insert>
+	
 	
 	
 </mapper>
