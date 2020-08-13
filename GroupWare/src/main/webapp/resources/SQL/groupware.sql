@@ -455,8 +455,6 @@ create table messengerRoom_table
 );
 
 
-
-
 create SEQUENCE messengerRoom_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
