@@ -155,7 +155,7 @@
 		padding: 3px 5px;
 		text-align: center;
 		margin: 0 auto;
-	}
+	}	
 	
 	#info_th {
 		width: 120px;
@@ -204,8 +204,16 @@
 		$('#rsvtDateH').text($('#datepicker').val());
 		$('#rsvtDate').val($('#datepicker').val());
 		
+		var people = "";
+		var people_min = "";
+		var people_max = "";
+		
+		var flag = false;
+		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
+			
+			flag = true;
 			
 			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChoice");
@@ -215,6 +223,13 @@
 					
 			$("#roomName").text($(this).children('.roomName').text());			
 			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());	
+						
+			people = $(this).children('.people').text();
+			people_min = Number(people.substring(0, people.lastIndexOf("~")));
+			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
+			
+		//	alert($(this).children('.people').text());			
+			
 			showPossibleTime();
 			
 		}); // end of $(".room").click(function(event){})----------------------------
@@ -236,6 +251,7 @@
 		var end = "";		
 
 		$(".td_time").click(function(){	// 가능여부 부분 클릭했을 경우
+			
 			if($(this).hasClass("ability")){	
 				if(!$(this).hasClass("rChoice")) {	// 배경색이 없을 경우
 					$(this).addClass("rChoice");	// 배경색을 바꿈
@@ -420,6 +436,8 @@
 		
 	}); // end of $(document).ready(function(){})------------------------------------------------
 	
+
+	<%-- === 예약 가능한 시간 조회(Ajax) === --%>
 	function showPossibleTime() {		
 		
 		var fk_roomNumber = $("#fk_roomNumber").val();
@@ -430,9 +448,7 @@
 			data : {"fk_roomNumber":fk_roomNumber,
 					"rsvtDate":rsvtDate},
 			dataType : "JSON",
-			success:function(json){
-				var html = "";
-					
+			success:function(json){						
 				if(json.length > 0) {
 					$.each(json, function(index, item) {
 						console.log(item.startDate);
@@ -441,74 +457,74 @@
 				else {
 					console.log("예약내역 없음");
 					$(".whether").text("예약가능");
-				}
+				}						
 				
-  					html += '<table id="time" style="margin-left: 30px;">';
-			 		html += 	'<tr>';
-					html += 		'<th class="th_time times">시간</th>';
-					html += 		'<td class="td_time times time9"><span class="start">09:00</span> - <span class="end">10:00</span></td>';
-					html += 		'<td class="td_time times time10"><span class="start">10:00</span> - <span class="end">11:00</span></td>';
-					html += 		'<td class="td_time times time11"><span class="start">11:00</span> - <span class="end">12:00</span></td>';
-					html += 		'<td class="td_time times time12"><span class="start">12:00</span> - <span class="end">13:00</span></td>';								
-					html += 	'</tr>';
+				var html = 	'<table id="time" style="margin-left: 30px;">'+
+								 '<tr>'+
+									'<th class="th_time times">시간</th>'+
+									'<td class="td_time times time9"><span class="start">09:00</span> - <span class="end">10:00</span></td>'+
+									'<td class="td_time times time10"><span class="start">10:00</span> - <span class="end">11:00</span></td>'+
+									'<td class="td_time times time11"><span class="start">11:00</span> - <span class="end">12:00</span></td>'+
+									'<td class="td_time times time12"><span class="start">12:00</span> - <span class="end">13:00</span></td>'+							
+								'</tr>'+
 					
-					html += 	'<tr>';
-					html += 		'<th class="th_time">가능여부</th>';
-					html += 		'<td class="td_time ability tdOne time9">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="09:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="10:00" /><!-- hidden -->';
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdOne time10">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="10:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="11:00" /><!-- hidden -->';
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdOne time11">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="11:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="12:00" /><!-- hidden -->';						
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdOne time12">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="12:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="13:00" /><!-- hidden -->';					
-					html += 		'</td>';
-					html += 	'</tr>';
+								'<tr>'+
+									'<th class="th_time">가능여부</th>'+
+									'<td class="td_time ability tdOne time9">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="09:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="10:00" />'+
+									'</td>'+
+									'<td class="td_time ability tdOne time10">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="10:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="11:00" />'+
+									'</td>'+
+									'<td class="td_time ability tdOne time11">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="11:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="12:00" />'+						
+									'</td>'+
+									'<td class="td_time ability tdOne time12">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="12:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="13:00" />'+					
+									'</td>'+
+								'</tr>'+
 					
-					html += 	'<tr>';
-					html += 		'<th class="th_time times">시간</th>';
-					html += 		'<td class="td_time times time14"><span class="start">14:00</span> - <span class="end">15:00</span></td>';
-					html += 		'<td class="td_time times time15"><span class="start">15:00</span> - <span class="end">16:00</span></td>';
-					html += 		'<td class="td_time times time16"><span class="start">16:00</span> - <span class="end">17:00</span></td>';
-					html += 		'<td class="td_time times time17"><span class="start">17:00</span> - <span class="end">18:00</span></td>';								
-					html += 	'</tr>';
-					html += 	'<tr>';
-					html += 		'<th class="th_time">가능여부</th>';
-					html += 		'<td class="td_time ability tdTwo time14">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="14:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="15:00" /><!-- hidden -->';
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdTwo time15">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="15:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="16:00" /><!-- hidden -->';					
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdTwo time16">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="16:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="17:00" /><!-- hidden -->';						
-					html += 		'</td>';
-					html += 		'<td class="td_time ability tdTwo time17">';
-					html += 			'<div><span class="whether"></span></div>';
-					html += 			'<input type="hidden" class="startTime" name="startTime" value="17:00" /><!-- hidden -->';
-					html += 			'<input type="hidden" class="endTime" name="endTime" value="18:00" /><!-- hidden -->';						
-					html += 		'</td>';								
-					html += 	'</tr>';				
-					html += '</table>';				
-					
-					$("#timeWhether").html(html);
+								'<tr>'+
+									'<th class="th_time times">시간</th>'+
+								'<td class="td_time times time14"><span class="start">14:00</span> - <span class="end">15:00</span></td>'+
+									'<td class="td_time times time15"><span class="start">15:00</span> - <span class="end">16:00</span></td>'+
+									'<td class="td_time times time16"><span class="start">16:00</span> - <span class="end">17:00</span></td>'+
+									'<td class="td_time times time17"><span class="start">17:00</span> - <span class="end">18:00</span></td>'+								
+								'</tr>'+
+								'<tr>'+
+									'<th class="th_time">가능여부</th>'+
+									'<td class="td_time ability tdTwo time14">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="14:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="15:00" />'+
+									'</td>'+
+									'<td class="td_time ability tdTwo time15">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="15:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="16:00" />'+					
+									'</td>'+
+									'<td class="td_time ability tdTwo time16">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="16:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="17:00" />'+						
+									'</td>'+
+									'<td class="td_time ability tdTwo time17">'+
+										'<div><span class="whether"></span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="17:00" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="18:00" />'+						
+									'</td>'+								
+								'</tr>'+				
+							'</table>';
+			
+				$("#timeWhether").html(html);
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -521,11 +537,7 @@
 			object.value = object.value.slice(0, object.maxLength);
 		}    
 	}
-	
-	
-	
-	
-	
+
 </script>
 
 </head>
@@ -541,22 +553,22 @@
 				<div id="sbRooms">
 					<div class="small room" id="room_one">
 						<div class="text roomName">소회의실1</div>				
-						<div class="text">3~10인</div>
+						<div class="text people">3~10인</div>
 						<input class="fk_roomNumber" type="hidden" value="5" />
 					</div>
 					<div class="small room" id="room_two">
 						<div class="text roomName">소회의실2</div>
-						<div class="text">3~10인</div>
+						<div class="text people">3~10인</div>
 						<input class="fk_roomNumber" type="hidden" value="6" />					
 					</div>
 					<div class="small room" id="room_three">
 						<div class="text roomName">소회의실3</div>
-						<div class="text">3~10인</div>
+						<div class="text people">3~10인</div>
 						<input class="fk_roomNumber" type="hidden" value="7" />
 					</div>
 					<div class="big room" id="room_four">
 						<div class="text roomName">대회의실</div>
-						<div class="text">15~30인</div>
+						<div class="text people">15~30인</div>
 						<input class="fk_roomNumber" type="hidden" value="1" />					
 					</div>
 				</div>
@@ -568,17 +580,17 @@
 				<div id="mRooms">
 					<div class="medium room" id="room_five">
 						<div class="text roomName">중회의실A</div>
-						<div class="text">10~15인</div>
+						<div class="text people">10~15인</div>
 						<input class="fk_roomNumber" type="hidden" value="2" />						
 					</div>
 					<div class="medium room" id="room_six">
 						<div class="text roomName">중회의실B</div>
-						<div class="text">10~15인</div>	
+						<div class="text people">10~15인</div>	
 						<input class="fk_roomNumber" type="hidden" value="3" />										
 					</div>
 					<div class="medium room" id="room_seven">
 						<div class="text roomName">중회의실C</div>
-						<div class="text">10~15인</div>	
+						<div class="text people">10~15인</div>	
 						<input class="fk_roomNumber" type="hidden" value="4" />										
 					</div>
 				</div>	
@@ -598,7 +610,8 @@
 		<h4 style="margin-bottom: 20px; text-align: left;">2. 예약시간 선택</h4>
 			<div style="clear: both;"></div>
 			<div id="timeWhether">
-			<!-- 	<table id="time" style=" margin-left: 30px;">
+		
+<!-- 				<table id="time" style=" margin-left: 30px;">
 					<tr>
 						<th class="th_time times">시간</th>
 						<td class="td_time times time9">09:00 - 10:00</td>
@@ -609,24 +622,24 @@
 					<tr>
 						<th class="th_time">가능여부</th>
 						<td class="td_time ability tdOne time9">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="09:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="10:00" />hidden
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="09:00" />
+							<input type="hidden" class="endTime" name="endTime" value="10:00" />
 						</td>
 						<td class="td_time ability tdOne time10">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="10:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="11:00" />hidden
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="10:00" />
+							<input type="hidden" class="endTime" name="endTime" value="11:00" />
 						</td>
 						<td class="td_time ability tdOne time11">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="11:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="12:00" />hidden						
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="11:00" />
+							<input type="hidden" class="endTime" name="endTime" value="12:00" />			
 						</td>
 						<td class="td_time ability tdOne time12">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="12:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="13:00" />hidden						
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="12:00" />
+							<input type="hidden" class="endTime" name="endTime" value="13:00" />				
 						</td>								
 					</tr>
 					
@@ -640,27 +653,28 @@
 					<tr>
 						<th class="th_time">가능여부</th>
 						<td class="td_time ability tdTwo time14">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="14:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="15:00" />hidden
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="14:00" />
+							<input type="hidden" class="endTime" name="endTime" value="15:00" />
 						</td>
 						<td class="td_time ability tdTwo time15">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="15:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="16:00" />hidden						
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="15:00" />
+							<input type="hidden" class="endTime" name="endTime" value="16:00" />					
 						</td>
 						<td class="td_time ability tdTwo time16">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="16:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="17:00" />hidden						
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="16:00" />
+							<input type="hidden" class="endTime" name="endTime" value="17:00" />				
 						</td>
 						<td class="td_time ability tdTwo time17">
-							<div>예약 가능</div>
-							<input type="hidden" class="startTime" name="startTime" value="17:00" />hidden
-							<input type="hidden" class="endTime" name="endTime" value="18:00" />hidden						
+							<div><span class="whether"></span></div>
+							<input type="hidden" class="startTime" name="startTime" value="17:00" />
+							<input type="hidden" class="endTime" name="endTime" value="18:00" />				
 						</td>								
 					</tr>				
 				</table> -->
+
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -700,16 +714,15 @@
 				<tr id="info_tr">		
 					<th id="info_th">예약 신청자</th>
 					<td id="info_td">
-						<span id="rsvt_employee"></span>
-						<input type="text" style="width:200px;" readonly="readonly"/>
-						<input type="text" style="width:200px;" name="fk_employee_seq" value="${sessionScope.loginuser.fk_employee_seq}" /><!-- hidden -->
+						<span id="rsvt_employee">${sessionScope.loginEmployee.employee_name} &lt;${sessionScope.loginEmployee.department_name}/${sessionScope.loginEmployee.position_name}&gt;</span>
+						<input type="hidden" style="width:200px;" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" /><!-- hidden -->
 					</td>
 				</tr>
 				<tr id="info_tr">
 					<th id="info_th">예약 대표자</th>
 					<td id="info_td">
 						<div style="position: relative;">
-							<input type="text" name="searchHead" id="searchHead" autocomplete="off" style="width:200px; text-align:center;"/>
+							<input type="text" name="searchHead" id="searchHead" autocomplete="off" style="width:200px; text-align:center;" placeholder="성명 <부서명/직위>"/>
 							<input type="hidden" name="head_seq" id="head_seq"/><!-- hidden -->
 							<%-- === 검색어 입력 시 자동글 완성하기 1 === --%>
 							<div id="displayList" style="position: absolute; border:solid 1px gray; border-top:0px; width:200px; height:70px; margin-left:51px; margin-top:0px; padding: 4px; overflow: auto; background-color: #e7f5fd;"></div>
