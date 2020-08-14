@@ -73,4 +73,11 @@ public class MailDAO implements InterMailDAO{
 		return n;
 	}
 
+	// 메일 휴지통으로 이동
+	@Override
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = sqlsession.update("mail.mailDel",paraMap);
+		return n;
+	}
+
 }

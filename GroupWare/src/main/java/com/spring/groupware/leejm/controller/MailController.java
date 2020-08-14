@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -193,6 +194,10 @@ public class MailController {
 		}
 		
 		System.out.println("결과물 수 : "+mailList.size());
+		
+		if(request.getParameter("msg")!=null && !request.getParameter("msg").trim().isEmpty()) {
+			mav.addObject("msg",request.getParameter("msg"));
+		}
 		
 		mav.addObject("searchWord",searchWord);
 		mav.addObject("mailList",mailList);
@@ -416,11 +421,17 @@ public class MailController {
 		System.out.println("입력할 행의 수:"+count);
 		try{
 			n = service.mailSend(mailList);
+			if(n == count) {
+				mav.addObject("result",true);
+			}
+			else {
+				mav.addObject("result",false);
+			}
 		}catch(Throwable e) {
 			e.printStackTrace();
 		}
 		
-		mav.setViewName("mail/mailList.tiles2");
+		mav.setViewName("mail/mailWrite.tiles2");
 		return mav;
 	}
 	
@@ -528,6 +539,7 @@ public class MailController {
 		return "redirect:" + callback + "?callback_func="+callback_func+file_result;
 	}
 	
+	// 파일 다운로드
 	@RequestMapping(value="/mail/download.top",method = {RequestMethod.POST})
 	public void attachFileDownload(HttpServletRequest request, HttpServletResponse response) {
 		String fileName = request.getParameter("fileName");
@@ -591,6 +603,31 @@ public class MailController {
 		mav.addObject("type",type);
 		mav.addObject("read",read);
 		mav.addObject("selectCheck",selectCheck);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		return mav;
+	}
+	
+	// 메일 휴지통에 이동
+	@RequestMapping(value="/mail/del.top")
+	public ModelAndView mailDel(ModelAndView mav, HttpServletRequest request) {
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		String searchWord = request.getParameter("searchWord");
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		int n = service.mailDel(paraMap);
+		String msg = "삭제에 실패했습니다.";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 휴지통에 버렸습니다.";
+			mav.addObject("msg",msg);
+		}
+		
+		mav.addObject("searchWord",searchWord);
+		mav.addObject("type",type);
 		mav.addObject("currentShowPageNo",str_currentPageNo);
 		mav.setViewName("redirect:/mail/list.top");
 		return mav;

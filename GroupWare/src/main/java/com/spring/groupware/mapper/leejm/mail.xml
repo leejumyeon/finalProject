@@ -257,4 +257,12 @@
 			${selectCheck[i]}
 		</foreach>
 	</update>
+	
+	<!-- 메일 휴지통으로 삭제 -->
+	<update id="mailDel" parameterType="HashMap">
+		update mail_table set mailStatus = 0 where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</update>
 </mapper>

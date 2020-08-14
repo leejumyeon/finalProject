@@ -33,6 +33,9 @@ public interface InterMailDAO {
 	// 메일 읽음 / 안읽음 수정
 	int mailreadUpdate(HashMap<String, Object> paraMap);
 
+	// 메일 휴지통으로 이동
+	int mailDel(HashMap<String, String[]>paraMap);
+
 
 	
 }

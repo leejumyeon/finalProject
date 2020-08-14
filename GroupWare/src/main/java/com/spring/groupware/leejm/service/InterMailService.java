@@ -29,4 +29,7 @@ public interface InterMailService {
 	// 메일 읽음 / 안읽음 으로 readStatus 업데이트
 	int mailReadUpdate(HashMap<String, Object> paraMap);
 
+	// 메일 휴지통으로 삭제
+	int mailDel(HashMap<String, String[]>paraMap);
+
 }

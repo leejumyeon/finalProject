@@ -80,4 +80,11 @@ public class MailService implements InterMailService{
 		int n = dao.mailreadUpdate(paraMap);
 		return n;
 	}
+
+	// 메일 휴지통으로 이동
+	@Override
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = dao.mailDel(paraMap);
+		return n;
+	}
 }

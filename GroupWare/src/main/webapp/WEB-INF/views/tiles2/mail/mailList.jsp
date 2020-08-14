@@ -195,6 +195,10 @@
 		if(len == checkLen && len != 0){
 			$("#allCheck").prop("checked",true);
 		}
+		
+		if("${msg}" != ""){
+			alert("${msg}");
+		}
 	        
 	}); // end of $(document).ready(function())-----------------------------------------------------
 	
@@ -234,7 +238,19 @@
 		frm.method="post";
 		frm.action="<%=request.getContextPath()%>/mail/download.top";
 		frm.submit();
-	} 
+	}
+	
+	function mailDel(){
+		if($("input[name=selectCheck]:checked").length <= 0){
+			alert("삭제할 메일을 선택해주세요!");
+			return false;
+		}
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/del.top";
+		frm.method = "get";
+		frm.submit();
+		
+	}
 </script>
 <div style="margin-left:10px;">
 	<form name="mailFrm">
@@ -244,22 +260,24 @@
 	<div id="searchArea">
 		<input type="hidden" value="${currentShowPageNo}" name="currentShowPageNo" />
 		<div style="position: relative; display: inline;">
-			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
-			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>&nbsp;&nbsp;<span style="font-weight: bold;">${mailhamType} / ${total}</span>
+			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="${searchWord}" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
+			&nbsp;&nbsp;
+			<c:choose>
+				<c:when test="${not empty searchWord}">
+					<c:choose>
+						<c:when test="${type eq 'receive'}">보낸사람 검색: </c:when>
+						<c:when test="${type eq 'send'}">받은사람 검색: </c:when>
+						<c:when test="${type eq 'content'}">내용 검색: </c:when>
+						<c:when test="${type eq 'all'}">전체 검색 : </c:when>
+					</c:choose>
+					${searchWord}
+				</c:when>
+				<c:otherwise>
+					<span style="font-weight: bold;">${mailhamType} / ${total}</span>
+				</c:otherwise>	
+			</c:choose>
 			<input type="hidden" name="type" value="${type}" />
 			<div id="searchTypetArea"></div>
-		</div>
-		<div id="termSearch" class="hide">
-			<select id="mailDay" name="mailDay">
-				<option value="">전체</option>
-				<option value="week">1주</option>
-				<option value="month">1개월</option>
-				<option value="threeMonth">3개월</option>
-				<option value="sixMonth">6개월</option>
-				<option value="direct">직접입력</option>
-			</select>
-			<input type="text" class="datepicker prevday"> - <input type="text" class="datepicker today">
-			<button type="button">검색</button>
 		</div>
 		
 		<div id="mailFunctionArea">
@@ -272,10 +290,18 @@
 				<button type="button" class="read">읽음</button>
 				<input type="hidden" name="read" value="1" />
 			</c:if>
+		<c:choose>
+			<c:when test="${type eq 'del'}">
+				<button type="button" onclick = "mailDeletion()">영구삭제</button>
+				<button type="button" onclick = "mailRestore()">복구하기</button>
+			</c:when>
+			<c:otherwise>
+				<button type="button" onclick = "mailDel()">삭제</button>
+				<button type="button">전달</button>
+				<button type="button">답장</button>
+			</c:otherwise>
+		</c:choose>
 			
-			<button type="button">삭제</button>
-			<button type="button">전달</button>
-			<button type="button">답장</button>
 		</div>
 		<!-- 공통 부분 -->
 		
@@ -293,7 +319,6 @@
 								<%--제목에 메일의 종류가 표시되는 메일 리스트 시작 --%>	
 									<c:forEach var="mail" items="${mailList}" varStatus="status">
 										<c:if test="${temp != mail.mail_groupno}">
-											${mail.mail_seq}
 											<c:set var="temp" value="${mail.mail_groupno }" />
 											<c:choose>
 												<c:when test="${mail.readStatus eq 0 }">
@@ -307,7 +332,7 @@
 											
 											<c:choose>
 												<c:when test="${(mail.fk_employee_seq ne sessionScope.loginEmployee.employee_seq and (mail.status eq 0 or mail.status eq 1)) or mail.status eq 2}">
-												<td>${mail.mail_seq}
+												<td>
 													<c:set var="loop_flag" value="false" />
 													<c:forEach var="i" items="${selectCheck}">
 														<c:if test="${not loop_flag }">
@@ -325,7 +350,7 @@
 														<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/>
 													</c:if>
 												</td>
-												<td>${mail.employee_name} (${mail.email})${mail.mail_groupno }</td>
+												<td>${mail.employee_name} (${mail.email})</td>
 												
 												<c:choose>
 													<c:when test="${mail.status eq 2}">
@@ -385,7 +410,7 @@
 														</c:if>
 														
 													</td>
-													<td>${mail.employee_name} (${mail.email}) ${mail.mail_groupno}</td>
+													<td>${mail.employee_name} (${mail.email})</td>
 													<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
 													<td>${mail.regDate}</td>
 												</tr>
