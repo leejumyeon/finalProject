@@ -17,7 +17,7 @@
 		margin-left: 40px;
 	}
 	
-	.tr_body {
+	.column3 {
 		cursor: pointer;
 	}
 	
@@ -185,18 +185,20 @@
 		
 		
 		$("#btnRejected").click(function() {
-			
+
 			var documentSeqArr = new Array();
 			
-			documentSeqArr = $("input:checkbox[name=documentSeqList]:checked").val();
+			documentSeqArr.push($("input:checkbox[name=documentSeqList]:checked").val());
 			
-			var documentSeq = documentSeqArr.join(",");
+			var documentSeq = documentSeqArr.join(',');
+			
+			var frm = document.approveDocumentFrm;
+			frm.documentSeq.value = documentSeq;
+			frm.method = "POST";
+			frm.action = "<%= request.getContextPath()%>/documentRejected.top";
 			
 			if(confirm("정말 결재를 반려하시겠습니까?") == true) {
-				var frm = document.approveDocumentFrm;
-				frm.documentSeq.value = documentSeq;
-				frm.method = "POST";
-				frm.action = "<%= request.getContextPath()%>/documentRejected.top";
+				
 				frm.submit();
 			}
 			else {
@@ -206,19 +208,24 @@
 
 		});
 		
-		$("#btnRejected").click(function() {
+		$("#btnAccepted").click(function() {
 			
 			var documentSeqArr = new Array();
 			
-			documentSeqArr = $("input:checkbox[name=documentSeqList]:checked").val();
+			$("input:checkbox[name=documentSeqList]:checked").each(function() {
+				
+				documentSeqArr.push($(this).val());
+			});
+
+			var documentSeq = documentSeqArr.join(',');
 			
-			var documentSeq = documentSeqArr.join(",");
+			var frm = document.approveDocumentFrm;
+			frm.documentSeq.value = documentSeq;
+			frm.method = "POST";
+			frm.action = "<%= request.getContextPath()%>/documentAccepted.top";
 			
 			if(confirm("정말 결재를 완료하시겠습니까?") == true) {
-				var frm = document.approveDocumentFrm;
-				frm.documentSeq.value = documentSeq;
-				frm.method = "POST";
-				frm.action = "<%= request.getContextPath()%>/documentAccepted.top";
+				
 				frm.submit();
 			}
 			else {
@@ -244,17 +251,17 @@
 				var html = "";
 				var html2 = "";
 
-				if(json.size == 0) {
+				if(json.length != 0) {
 					
 					$.each(json, function(index, item) {
 						
 						
-						html += '<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">'
+						html += '<tr class="row100 tr_body">'
 							 +  '<td class="cell100 column1">' + item.groupno + '</td>'
-							 +  '<td class="cell100 column1">' + item.category_name + '</td>'
-							 +  '<td class="cell100 column1">' + item.subject + '</td>'
-							 +  '<td class="cell100 column1">' + item.employee_name + '</td>'
-							 +  '<td class="cell100 column1">' + item.regDate + '</td>'
+							 +  '<td class="cell100 column2">' + item.category_name + '</td>'
+							 +  '<td class="cell100 column3" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">' + item.subject + '</td>'
+							 +  '<td class="cell100 column4">' + item.employee_name + '</td>'
+							 +  '<td class="cell100 column5">' + item.regDate + '</td>'
 							 +  '</tr>';
 
 					});
@@ -269,7 +276,7 @@
 							  +  '<h4 class="modal-title">문서 내용</h4>'
 							  +  '</div>'
 							  +  '<div class="modal-body" style="height: 620px; width: 900px;">'
-							  +  '<div id="addDelivery">';
+							  +  '<div id="addDelivery">'
 							  +  '<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=' + item.document_seq + '">'
 							  +  '</iframe>'
 							  +  '</div>'
@@ -291,9 +298,7 @@
 						 + '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
 						 + '</td>'
 						 + '</tr>';
-				}	
-				
-				
+				}
 			
 				$("#ajaxDocumentList").html(html);
 				$("#comDocumentModal").html(html2);
@@ -327,10 +332,10 @@
 					<table>
 						<tbody>
 							<c:forEach var="docuvo" items="${regDocumentList}">
-								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">
+								<tr class="row100 tr_body">
 									<td class="cell100 column1">${docuvo.groupno}</td>
 									<td class="cell100 column2">${docuvo.category_name}</td>
-									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column3" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">${docuvo.subject}</td>
 									<td class="cell100 column4">${docuvo.employee_name}</td>
 									<td class="cell100 column5">${docuvo.regDate}</td>
 								</tr>
@@ -376,11 +381,11 @@
 					<table>
 						<tbody>
 							<c:forEach var="docuvo" items="${aproDocumentList}">
-								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">
+								<tr class="row100 tr_body">
 									<th class="cell100 column0"><input type="checkbox" name="documentSeqList" value="${docuvo.document_seq}"/></th>
 									<td class="cell100 column1">${docuvo.groupno}</td>
 									<td class="cell100 column2">${docuvo.category_name}</td>
-									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column3" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">${docuvo.subject}</td>
 									<td class="cell100 column4">${docuvo.employee_name}</td>
 									<td class="cell100 column5">${docuvo.regDate}</td>
 								</tr>
@@ -487,6 +492,6 @@
 	</div>
 	
 	<form name="approveDocumentFrm">
-		<input type="hidden" name="documentSeq"/>
+		<input type="text" name="documentSeq"/>
 	</form>
 </body>

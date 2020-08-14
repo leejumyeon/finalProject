@@ -417,4 +417,27 @@ public class LeeehService implements InterLeeehService {
 		dao.updateDocumentStatus(paraMap);
 	}
 
+	// === 휴가/출장 테이블에서 사원번호 얻어오기 === //
+	@Override
+	public String employeeSeqTripTable(HashMap<String, Object> paraMap) {
+
+		String employee_seq = dao.employeeSeqTripTable(paraMap);
+		
+		return employee_seq;
+	}
+
+	// === 휴가를 간 사원의 status 값 변경하기 === //
+	@Override
+	public void updateStatusEmployeesTableVacation(String employee_seq) {
+
+		dao.updateStatusEmployeesTableVacation(employee_seq);
+	}
+
+	// === 출장을 간 사원의 status 값 변경하기 === //
+	@Override
+	public void updateStatusEmployeesTableBusiness(String employee_seq) {
+
+		dao.updateStatusEmployeesTableBusiness(employee_seq);
+	}
+
 }

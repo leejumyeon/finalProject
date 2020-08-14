@@ -303,6 +303,7 @@
 		join document_category DC
 		on D.document_category = DC.document_category_seq
 		where D.approver_seq = #{fk_employee_seq} and D.parent_approver is null
+			  and status = '0'
 			  and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
 		UNION
 		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
@@ -310,7 +311,9 @@
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.approver_seq = '2' and D.parent_approver is not null and (select status from document_table where approver_seq in (select parent_approver from document_table where approver_seq = '2')) = '1'
+		where D.approver_seq = #{fk_employee_seq} and D.parent_approver is not null
+			  and groupno in (select groupno from document_table where approver_seq in (select parent_approver from document_table where approver_seq = #{fk_employee_seq}) and status = '1')
+			  and status = '0'
 		      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
 	</select>
 	
@@ -320,14 +323,14 @@
 		from
 		(
 			select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
-				 , D.fk_employee_seq, D.approver_seq
+				 , D.fk_employee_seq, D.approver_seq, D.parent_approver
 			from employees_table E join document_table D
 			on E.employee_seq = D.fk_employee_seq
 			join document_category DC
 			on D.document_category = DC.document_category_seq
 			where groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 		) V
-		where V.fk_employee_seq = #{fk_employee_seq} or V.approver_seq = #{fk_employee_seq}
+		where (V.fk_employee_seq = #{fk_employee_seq} and V.parent_approver is null) or V.approver_seq = #{fk_employee_seq}
 	</select>
 	
 	<!-- === 신청 완료된 신청한 문서 보여주기 === -->
@@ -337,7 +340,7 @@
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.fk_employee_seq = #{fk_employee_seq} and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
+		where D.fk_employee_seq = #{fk_employee_seq} and D.parent_approver is null and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 	</select>
 	
 	<!-- === 신청 완료된 결재한 문서 보여주기 === -->
@@ -347,7 +350,7 @@
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.fk_employee_seq = #{fk_employee_seq} and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
+		where D.approver_seq = #{fk_employee_seq} and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 	</select>
 	
 	<!-- === 결재 반려 테이블에 status 업데이트 하기 === -->
@@ -419,67 +422,79 @@
 	<!-- === 결재 완료 테이블에 status 업데이트 하기 === -->
 	<update id="updateStatusDocmenetTable2" parameterType="HashMap">
 		<foreach collection="document_seqArr" index="i">
-			update document_table set status = '1'
-			where document_seq = #{document_seqArr[i]}
+			update document_table set status = 1
+			where document_seq = '${document_seqArr[i]}'
 		</foreach>
 	</update>
 	
 	<!-- === 전체 결재 완료된 groupno와 cateory_seq 알아오기 === -->
 	<select id="getDocumentList2" parameterType="HashMap" resultType="com.spring.groupware.commonVO.DocumentVO">
-		select groupno, document_catogory
+		select groupno, document_category
 		from document_table
 		where document_seq in
 		<foreach collection="document_seqArr" index="i" open="(" separator="," close=")">
-			#{document_seqArr[i]}
+			'${document_seqArr[i]}'
 		</foreach>
 			  and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 	</select>
 	
 	<!-- === 전체 결재 완료된 테이블 documentStatus 업데이트하기 === -->
 	<update id="updateDocumentStatus" parameterType="HashMap">
-		<if test='document_category == "1"'>
-			update trip_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "2"'>
-			update trip_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "3"'>
-			update sales_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "4"'>
-			update equipment_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "5"'>
-			update project_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "6"'>
-			update project_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "7"'>
-			update project_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "8"'>
-			update fire_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "9"'>
-			update TA_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "10"'>
-			update club_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
-		<if test='document_category == "11"'>
-			update clubMember_table set documentStatus = '1'
-			where groupno = #{goupno)
-		</if>
+		update
+		<choose>
+			<when test='document_category == "1"'>
+				trip_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "2"'>
+				trip_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "3"'>
+				sales_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "4"'>
+				equipment_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "5"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "6"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "7"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "8"'>
+				fire_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "9"'>
+				TA_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "10"'>
+				club_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "11"'>
+				clubMember_table set documentStatus = '1'
+			</when>
+		</choose>
+		where groupno = #{groupno}
+	</update>
+	
+	<!-- === 휴가/출장 테이블에서 사원번호 얻어오기 === -->
+	<select id="employeeSeqTripTable" parameterType="HashMap" resultType="String">
+		select fk_employee_seq
+		from trip_table
+		where groupno = #{groupno}
+	</select>
+	
+	<!-- === 휴가를 간 사원의 status 값 변경하기 === -->
+	<update id="updateStatusEmployeesTableVacation" parameterType="String">
+		update employees_table set fk_status = '3'
+		where employee_seq = #{employee_seq}
+	</update>
+	
+	<!-- === 출장을 간 사원의 status 값 변경하기 === -->
+	<update id="updateStatusEmployeesTableBusiness" parameterType="String">
+		update employees_table set fk_status = '4'
+		where employee_seq = #{employee_seq}
 	</update>
 </mapper>

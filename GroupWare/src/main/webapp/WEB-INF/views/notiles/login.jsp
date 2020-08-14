@@ -94,11 +94,31 @@
 
 	$(document).ready(function() {
 		
+		$("#isLoginFalse").css("display","none");
+		
 		$("#btnLogin").click(function() {
-			var frm = document.loginFrm;
-			frm.method="POST";
-			frm.action="<%= request.getContextPath()%>/login.top";
-			frm.submit();
+			
+			$.ajax({
+				url:"<%= request.getContextPath()%>/loginEnd.top",
+				type:"GET",
+				data:{"employee_id":$("#employee_id").val()
+					, "employee_pw":$("#employee_pw").val()},
+				dataType:"JSON",
+				success: function(json) {
+					
+					if(json.isLogin == '0') {
+						
+						$("#isLoginFalse").css("display","");
+						
+					}
+					else if(json.isLogin == '1') {
+						
+						window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+					}
+				}
+				
+			});
+			
 		});
 		
 	});
@@ -108,15 +128,11 @@
 
 	<div id="loginContainer">
 		<img src="<%= request.getContextPath()%>/resources/images/logo.png" width="400px">
-		<form name="loginFrm" style="margin-top: 50px;">
-			<label for="employee_id">사원ID</label><br/>
-			<input type="text" id="employee_id" name="employee_id" autocomplete="off" /><br/>
-			<label for="employee_pw">사원비밀번호</label><br/>
-			<input type="password" id="employee_pw" name="employee_pw" />
-		</form>
-		<c:if test="${not empty isLogin && islogin == '0'}">
-			<div style="color: red; font-style: italic;">사원ID나 사원비밀번호를 잘못 입력하셨습니다.</div>
-		</c:if>
+		<label for="employee_id" style="display:block; margin-top: 50px;">사원ID</label>
+		<input type="text" id="employee_id" name="employee_id" autocomplete="off" /><br/>
+		<label for="employee_pw">사원비밀번호</label><br/>
+		<input type="password" id="employee_pw" name="employee_pw" />
+		<div id="isLoginFalse" style="color: red; font-style: italic;">사원ID나 사원비밀번호를 잘못 입력하셨습니다.</div>
 		<button type="button" id="btnLogin" class="snip1535">로그인</button>
 	</div>
 	

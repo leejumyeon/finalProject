@@ -416,4 +416,26 @@ public class LeeehDAO implements InterLeeehDAO {
 		sqlsession.update("leeeh.updateDocumentStatus", paraMap);
 	}
 
+	// === 휴가/출장 테이블에서 사원번호 얻어오기 === //
+	@Override
+	public String employeeSeqTripTable(HashMap<String, Object> paraMap) {
+
+		String employee_seq = sqlsession.selectOne("leeeh.employeeSeqTripTable", paraMap);
+		
+		return employee_seq;
+	}
+
+	// === 휴가를 간 사원의 status 값 변경하기 === //
+	@Override
+	public void updateStatusEmployeesTableVacation(String employee_seq) {
+
+		sqlsession.update("leeeh.updateStatusEmployeesTableVacation", employee_seq);
+	}
+
+	@Override
+	public void updateStatusEmployeesTableBusiness(String employee_seq) {
+
+		sqlsession.update("leeeh.updateStatusEmployeesTableBusiness", employee_seq);
+	}
+
 }
