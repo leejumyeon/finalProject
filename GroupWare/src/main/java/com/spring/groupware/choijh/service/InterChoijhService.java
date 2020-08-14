@@ -20,10 +20,15 @@ public interface InterChoijhService {
 
 	int goWriteMsg(HashMap<String, String> map); // 채팅방 글쓰기
 
-	List<HashMap<String, String>> msgRoomListView(String employee_seq); // 대화목록 보여주기 
-
+	List<HashMap<String, String>> msgRoomListView(HashMap<String,String> map); // 대화목록 보여주기 
+	
 	int roomDelete(HashMap<String, String> map); // 채팅 방 삭제하기
 
-	int groupChattRoomCreate(HashMap<String, Object> map); // 그룹채팅 방 생성하기
+	int groupChattRoomCreate_My(HashMap<String, Object> map); // 그룹채팅 방 생성하기(자신)
+
+	int groupChattRoomCreate_Other(HashMap<String, Object> map); // 그룹채팅 방 생성하기(상대방)
+
+	List<HashMap<String, String>> selectCnt(String employee_seq); // 대화방을 나간 방번호 조회하기
+	
 
 }
