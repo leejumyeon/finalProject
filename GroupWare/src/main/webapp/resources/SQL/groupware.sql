@@ -454,7 +454,6 @@ create table messengerRoom_table
 ,constraint fk_messengerRoom_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete cascade
 );
 
-
 create SEQUENCE messengerRoom_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
