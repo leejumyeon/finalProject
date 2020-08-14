@@ -335,7 +335,7 @@
 				<tr>
 					<th style="vertical-align: top">파일첨부</th>
 					<td class="receive" id="attachFile"><div><input type="file" name="fileName" style='display:inline-block;'/><span class='cancleFile'>X</span></div></td>
-					<td style="vertical-align: top"><div id="addFile">추가 업로드</div></td>
+					<td style="vertical-align: top;"><div id="addFile">추가 업로드</div></td>
 				</tr>
 				
 			</table>
