@@ -47,28 +47,7 @@ public class MailService implements InterMailService{
 	// 메일 리스트 조회
 	@Override
 	public List<MailVO> mailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = new ArrayList<MailVO>();
-		if("receive".equals(paraMap.get("type"))) {
-			mailList = dao.receiveMailList(paraMap);
-		}
-		else if("send".equals(paraMap.get("type"))) {
-			mailList = dao.sendMailList(paraMap);
-		}
-		else if("mine".equals(paraMap.get("type"))) {
-			mailList = dao.mineMailList(paraMap);
-		}
-		else if("read".equals(paraMap.get("type"))) {
-			mailList = dao.noReadMailList(paraMap);
-		}
-		else if("attach".equals(paraMap.get("type"))) {
-			mailList = dao.attachMailList(paraMap);
-		}
-		else if("search".equals(paraMap.get("type"))) {
-			mailList = dao.searchMailList(paraMap);
-		}
-		else if("del".equals(paraMap.get("type"))) {
-			mailList = dao.delMailList(paraMap);
-		}
+		List<MailVO> mailList = dao.mailList(paraMap);
 		return mailList;
 	}
 
@@ -87,30 +66,7 @@ public class MailService implements InterMailService{
 
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
-		int result = 0;
-		
-		if("receive".equals(paraMap.get("type"))) {
-			result = dao.receiveMailCount(paraMap);
-		}
-		else if("send".equals(paraMap.get("type"))) {
-			result = dao.sendMailCount(paraMap);
-		}
-		else if("mine".equals(paraMap.get("type"))) {
-			result = dao.mineMailCount(paraMap);
-		}
-		else if("read".equals(paraMap.get("type"))) {
-			result = dao.noReadMailCount(paraMap);
-		}
-		else if("attach".equals(paraMap.get("type"))) {
-			result = dao.attachMailCount(paraMap);
-		}
-		else if("search".equals(paraMap.get("type"))) {
-			result = dao.searchMailCount(paraMap);
-		}
-		else if("del".equals(paraMap.get("type"))) {
-			result = dao.delMailCount(paraMap);
-		}
-		
+		int result = dao.mailCount(paraMap);
 		return result;
 	}
 }

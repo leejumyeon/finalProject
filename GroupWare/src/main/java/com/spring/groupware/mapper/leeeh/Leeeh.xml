@@ -48,13 +48,13 @@
 	
 	<!-- === 문서 결재를 하기위해 문서번호에서 max값을 가져오기 === -->
 	<select id="getMaxOfGroupno" parameterType="String" resultType="String">
-		select nvl(max(substr(groupno, 11)), '00')
+		select nvl(max(substr(groupno, 12)), '00')
 		from document_table
 		where substr(groupno, 4, 8) = #{regDate}
 	</select>
 	
 	<!-- === 문서 결재 작성 페이지에서 사원들 정보 불러오기 === -->
-	<select id="showMemberByDepartment" parameterType="String" resultType="com.spring.groupware.commonVO.EmployeesVO">
+	<select id="showMemberByDepartment" parameterType="HashMap" resultType="com.spring.groupware.commonVO.EmployeesVO">
 		select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.position_name, D.department_name, V.gender
 		     , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade
 		from
@@ -66,7 +66,7 @@
 		where E.fk_department = #{seq}
 		) V join department_table D
 		on V.fk_department = D.department_seq
-		where V.fk_status != 2 and V.fk_status != 3
+		where V.fk_status != 2 and V.fk_status != 3 and employee_seq != #{employee_seq}
 	</select>
 	
 	<!-- === 클릭한 사원들 결재선에 올리기 === -->
@@ -155,7 +155,7 @@
 	<!-- === 비품 구매 정보를 배품 테이블에 집어 넣기 === -->
 	<insert id="insertEquipmentTable" parameterType="HashMap">
 		insert into equipment_table(equipment_seq, fk_department_seq, equipment_name, unit, equipment_price, equipment_count, reason, purchaseDate, groupno, documentStatus)
-		values(equipment_table_seq.nextval, #{fk_department_seq}, #{equipment_name}, #{unit}, #{equipment_price}, #{equipment_count}, to_date(#{purchaseDate}, 'yyyy. mm. dd'), #{groupno}, default)
+		values(equipment_table_seq.nextval, #{fk_department_seq}, #{equipment_name}, #{unit}, #{equipment_price}, #{equipment_count}, #{reason}, to_date(#{purchaseDate}, 'yyyy. mm. dd'), #{groupno}, default)
 	</insert>
 	
 	<!-- === 프로젝트 seq번호 체번해오기 === -->
@@ -211,7 +211,7 @@
 	<!-- === 근태 정보를 근태관리 테이블에 집어 넣기 === -->
 	<insert id="insertTATable" parameterType="HashMap">
 		insert into TA_table(ta_seq, groupno, fk_employee_seq, attendance, attitude, performance, manager, reason, regDate, documentStatus)
-		values(ta_table_seq.nextval, #{fk_employee_seq}, #{attendance}, #{attitude}, #{performance}, #{manager}, #{reason}, default, default)
+		values(ta_table_seq.nextval, #{groupno}, #{fk_employee_seq}, #{attendance}, #{attitude}, #{performance}, #{manager}, #{reason}, default, default)
 	</insert>
 	
 	<!-- === 동호회 정보를 종호회 테이블에 집어 넣기 === -->
@@ -235,13 +235,13 @@
 	<!-- === 클럽 번호 채번해오기 === -->
 	<select id="getClubSeq" resultType="String">
 		select club_table_seq.nextval
-		from dual;
+		from dual
 	</select>
 	
 	<!-- === 클럽 회장 정보 넣기 === -->
 	<insert id="insertClubMemberTableOfManager" parameterType="HashMap">
 		insert into clubMember_table(member_seq, groupno, fk_club, status, regDate, fk_employee_seq, documentStatus)
-		values(clubMember_table_seq.nextval, #{groupno}, #{club_seq}, '1', default, #{employee_seq}, default)
+		values(clubMember_table_seq.nextval, #{groupno}, #{club_seq}, '1', default, #{fk_employee_seq}, default)
 	</insert>
 	
 	<!-- === 클럽 지우기 === -->
@@ -258,7 +258,8 @@
 		join document_category DC
 		on D.document_category = DC.document_category_seq
 		where fk_employee_seq = #{fk_employee_seq} and parent_approver is null
-		      and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+		      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
+		order by document_seq desc
 	</select>
 	
 	<!-- === 문서 상세 내용 보여주기 === -->
@@ -302,26 +303,34 @@
 		join document_category DC
 		on D.document_category = DC.document_category_seq
 		where D.approver_seq = #{fk_employee_seq} and D.parent_approver is null
-			  and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+			  and status = '0'
+			  and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
 		UNION
 		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
 		from employees_table E join document_table D
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.approver_seq = '2' and D.parent_approver is not null and (select status from document_table where approver_seq = (select parent_approver from document_table where approver_seq = '2')) = '1'
-		      and (select sum(status) from document_table group by groupno) != (select count(*) from document_table group by groupno)
+		where D.approver_seq = #{fk_employee_seq} and D.parent_approver is not null
+			  and groupno in (select groupno from document_table where approver_seq in (select parent_approver from document_table where approver_seq = #{fk_employee_seq}) and status = '1')
+			  and status = '0'
+		      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
 	</select>
 	
 	<!-- === 신청 완료된 전체 문서 보여주기 === -->
 	<select id="allComDocumentList" parameterType="String" resultType="com.spring.groupware.commonVO.DocumentVO">
-		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
-		from employees_table E join document_table D
-		on E.employee_seq = D.fk_employee_seq
-		join document_category DC
-		on D.document_category = DC.document_category_seq
-		where ( D.approver_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno) )
-		or ( D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno) )
+		select V.document_seq, V.groupno, V.subject, V.regDate, V.employee_name, V.category_name
+		from
+		(
+			select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+				 , D.fk_employee_seq, D.approver_seq, D.parent_approver
+			from employees_table E join document_table D
+			on E.employee_seq = D.fk_employee_seq
+			join document_category DC
+			on D.document_category = DC.document_category_seq
+			where groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
+		) V
+		where (V.fk_employee_seq = #{fk_employee_seq} and V.parent_approver is null) or V.approver_seq = #{fk_employee_seq}
 	</select>
 	
 	<!-- === 신청 완료된 신청한 문서 보여주기 === -->
@@ -331,7 +340,7 @@
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno)
+		where D.fk_employee_seq = #{fk_employee_seq} and D.parent_approver is null and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 	</select>
 	
 	<!-- === 신청 완료된 결재한 문서 보여주기 === -->
@@ -341,6 +350,151 @@
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC
 		on D.document_category = DC.document_category_seq
-		where D.fk_employee_seq = #{fk_employee_seq} and (select sum(status) from document_table group by groupno) == (select count(*) from document_table group by groupno)
+		where D.approver_seq = #{fk_employee_seq} and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
 	</select>
+	
+	<!-- === 결재 반려 테이블에 status 업데이트 하기 === -->
+	<update id="updateStatusDocmenetTable" parameterType="HashMap">
+		<foreach collection="document_seqArr" index="i">
+			update document_table set status = '-1'
+			where document_seq = #{document_seqArr[i]}
+		</foreach>
+	</update>
+	
+	<!-- === 결재번호로 groupno와 cateory_seq 알아오기 === -->
+	<select id="getDocumentList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select groupno, document_catogory
+		from document_table
+		where document_seq in
+		<foreach collection="document_seqArr" index="i" open="(" separator="," close=")">
+			#{document_seqArr[i]}
+		</foreach>
+	</select>
+	
+	<!-- === 반려된 휴가/출장 정보 삭제하기 === -->
+	<delete id="deleteTripTable" parameterType="String">
+		delete from trip_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 매출 정보 삭제하기 === -->
+	<delete id="deleteSalesTable" parameterType="String">
+		delete from sales_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 비품 구매 정보 삭제하기 === -->
+	<delete id="deleteEquipmentTable" parameterType="String">
+		delete from equipment_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 프로젝트 정보 삭제하기 === -->
+	<delete id="deleteProjectTable" parameterType="String">
+		delete from project_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 퇴사 정조 삭제하기 === -->
+	<delete id="deleteFireTable" parameterType="String">
+		delete from fire_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 인사고과 정보 삭제하기 === -->
+	<delete id="deleteTATable" parameterType="String">
+		delete from TA_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 동호회 정보 삭제하기 === -->
+	<delete id="deleteClubTable" parameterType="String">
+		delete from club_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 반려된 동호회 회원 정보 삭제하기 === -->
+	<delete id="deleteClubMemberTable" parameterType="String">
+		delete from clubMember_table;
+		where groupno = #{groupno}
+	</delete>
+	
+	<!-- === 결재 완료 테이블에 status 업데이트 하기 === -->
+	<update id="updateStatusDocmenetTable2" parameterType="HashMap">
+		<foreach collection="document_seqArr" index="i">
+			update document_table set status = 1
+			where document_seq = '${document_seqArr[i]}'
+		</foreach>
+	</update>
+	
+	<!-- === 전체 결재 완료된 groupno와 cateory_seq 알아오기 === -->
+	<select id="getDocumentList2" parameterType="HashMap" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select groupno, document_category
+		from document_table
+		where document_seq in
+		<foreach collection="document_seqArr" index="i" open="(" separator="," close=")">
+			'${document_seqArr[i]}'
+		</foreach>
+			  and groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
+	</select>
+	
+	<!-- === 전체 결재 완료된 테이블 documentStatus 업데이트하기 === -->
+	<update id="updateDocumentStatus" parameterType="HashMap">
+		update
+		<choose>
+			<when test='document_category == "1"'>
+				trip_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "2"'>
+				trip_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "3"'>
+				sales_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "4"'>
+				equipment_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "5"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "6"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "7"'>
+				project_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "8"'>
+				fire_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "9"'>
+				TA_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "10"'>
+				club_table set documentStatus = '1'
+			</when>
+			<when test='document_category == "11"'>
+				clubMember_table set documentStatus = '1'
+			</when>
+		</choose>
+		where groupno = #{groupno}
+	</update>
+	
+	<!-- === 휴가/출장 테이블에서 사원번호 얻어오기 === -->
+	<select id="employeeSeqTripTable" parameterType="HashMap" resultType="String">
+		select fk_employee_seq
+		from trip_table
+		where groupno = #{groupno}
+	</select>
+	
+	<!-- === 휴가를 간 사원의 status 값 변경하기 === -->
+	<update id="updateStatusEmployeesTableVacation" parameterType="String">
+		update employees_table set fk_status = '3'
+		where employee_seq = #{employee_seq}
+	</update>
+	
+	<!-- === 출장을 간 사원의 status 값 변경하기 === -->
+	<update id="updateStatusEmployeesTableBusiness" parameterType="String">
+		update employees_table set fk_status = '4'
+		where employee_seq = #{employee_seq}
+	</update>
 </mapper>

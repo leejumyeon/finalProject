@@ -24,4 +24,6 @@ public interface InterChoijhService {
 
 	int roomDelete(HashMap<String, String> map); // 채팅 방 삭제하기
 
+	int groupChattRoomCreate(HashMap<String, Object> map); // 그룹채팅 방 생성하기
+
 }

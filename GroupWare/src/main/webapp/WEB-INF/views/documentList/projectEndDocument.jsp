@@ -129,7 +129,7 @@
 						<span style="font-weight: bold; font-size: 11pt;">완료금</span>
 					</td>
 					<td class="BCel" colspan="3">
-						<input type="text" name="completionPayment" style="width: 400px; height: 30px; border: none;"/>
+						<input type="text" name="completionPayment" style="width: 400px; height: 30px; border: none;" autocomplete="off"/>
 					</td>
 				</tr>
 				<tr>

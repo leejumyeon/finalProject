@@ -71,5 +71,13 @@ public class ChoijhDAO implements InterChoijhDAO {
 		int n = sqlsession.delete("messenger.roomDelete",map);
 		return n;
 	}
+
+	// 그룹채팅 방 생성하기
+	@Override
+	public int groupChattRoomCreate(HashMap<String, Object> map) {
+		int n = sqlsession.insert("messenger.groupChattRoomCreate", map);
+		return n;
+	}
+	
 	
 }

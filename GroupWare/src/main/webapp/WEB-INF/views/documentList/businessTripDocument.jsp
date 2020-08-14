@@ -95,13 +95,13 @@
 					</td>
 				</tr>
 				<tr class="copyRow1">
-					<td class="BCel" style="width: 170px; height: 30px;">
+					<td class="BCel" style="width: 170px; height: 30px; text-align: center;">
 						${sessionScope.loginEmployee.department_name}
 					</td>
-					<td class="BCel" style="width: 150px; height: 30px;">
-						${sessionScope.loginEmployee.podition_name}
+					<td class="BCel" style="width: 150px; height: 30px; text-align: center;">
+						${sessionScope.loginEmployee.position_name}
 					</td>
-					<td class="BCel" style="width: 150px; height: 30px;">
+					<td class="BCel" style="width: 150px; height: 30px; text-align: center;">
 						${sessionScope.loginEmployee.employee_name}
 					</td>
 				</tr>
@@ -137,7 +137,7 @@
 						<span style="font-weight: bold; font-size: 11pt;">출장지</span>
 					</td>
 					<td class="BCel" colspan="3">
-						<input type="text" name="triplocatioin" style="border: none; width: 290px; height: 30px;"/>
+						<input type="text" name="triplocation" style="border: none; width: 290px; height: 30px;"/>
 					</td>
 				</tr>
 				<tr>

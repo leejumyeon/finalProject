@@ -22,7 +22,7 @@
 			</table>
 		</div>
 		
-		<table width="570" style="border-collapse:collapse; margin-bottom: 15px;" class="form2" align="center">
+		<table width="540" style="border-collapse:collapse; margin-bottom: 15px;" class="form2" align="center">
 			<tr>
 				<td align="right">
 					<table border="1" style="border-collapse: collapse; display: inline-block;">
@@ -67,7 +67,7 @@
 									<c:if test="${docuvo.status == '1'}">
 										<img src="<%= request.getContextPath()%>/resources/images/acceptedStamp.png" width="70px">
 									</c:if>
-									<c:if test="${docuvo.status == '2'}">
+									<c:if test="${docuvo.status == '-1'}">
 										<img src="<%= request.getContextPath()%>/resources/images/rejectedStamp.png" width="70px">
 									</c:if>
 								</td>
@@ -82,6 +82,6 @@
 	<br/>
 	
 	<div id="documentContents">
-		<img src="<%= request.getContextPath()%>/resources/files/${documentContent.content}">
+		<img src="<%= request.getContextPath()%>/resources/files/${documentContent.content}" width="800px;" />
 	</div>
 </div>

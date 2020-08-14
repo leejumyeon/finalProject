@@ -5,16 +5,6 @@
 
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/css/documentStyle.css" />
 
-<style>
-
-	button {
-		background-color: #0099ff;
-		color: white;
-		border: none;
-	}
-
-</style>
-
 <script type="text/javascript">
 
 	var rowNum = 0;
@@ -170,8 +160,8 @@
 		<br/>
 		
 		<h3>2.수익 정보(금액은 +로 작성하셔야 합니다.)</h3>
-		<button type="button" onclick="addRow1()">행추가</button>
-		<button type="button" onclick="deleteRow1()">행삭제</button>
+		<button type="button" onclick="addRow1()" style="background-color: #0099ff; color: white; border: none;">행추가</button>
+		<button type="button" onclick="deleteRow1()" style="background-color: #0099ff; color: white; border: none;">행삭제</button>
 		<table style="border: 2px solid rgb(0, 0, 0); width: 800px; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; border-collapse: collapse;">
 			<tbody>
 				<tr>
@@ -191,8 +181,8 @@
 		</table>
 		 
 		<h3>3.지출 정보(금액은 -로 작성하셔야 합니다.)</h3>
-		<button type="button" onclick="addRow2()">행추가</button>
-		<button type="button" onclick="deleteRow2()">행삭제</button>
+		<button type="button" onclick="addRow2()" style="background-color: #0099ff; color: white; border: none;">행추가</button>
+		<button type="button" onclick="deleteRow2()" style="background-color: #0099ff; color: white; border: none;">행삭제</button>
 		<table style="border: 2px solid rgb(0, 0, 0); width: 100%; font-family: &quot;malgun gothic&quot;, dotum, arial, tahoma; margin-top: 1px; border-collapse: collapse;">
 			<tbody>
 				<tr>

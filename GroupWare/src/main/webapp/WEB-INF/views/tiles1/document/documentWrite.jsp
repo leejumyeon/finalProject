@@ -182,6 +182,12 @@
 		
 		$("#btnWrite").click(function() {
 			
+			sessionStorage.removeItem("seq1");
+			sessionStorage.removeItem("seq2");
+			sessionStorage.removeItem("seq3");
+			sessionStorage.removeItem("seq4");
+			sessionStorage.removeItem("seq5");
+			
 			html2canvas($("#documentContents")[0]).then(function(canvas) {
 				
 				$("#contentImage").val(canvas.toDataURL());
