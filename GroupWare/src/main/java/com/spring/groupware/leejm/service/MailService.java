@@ -32,6 +32,9 @@ public class MailService implements InterMailService{
 	public int mailSend(List<MailVO> mailList) throws Throwable{
 		int result = 0;
 		for(MailVO mail : mailList) {
+			
+			System.out.println("확인용 : " + mail.getFk_employee_seq());
+			
 			result += dao.mailSend(mail);
 		}
 		return result;
@@ -64,9 +67,17 @@ public class MailService implements InterMailService{
 		return mail;
 	}
 
+	// 메일 건 수 조회
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
 		int result = dao.mailCount(paraMap);
 		return result;
+	}
+
+	// 메일 읽음 안읽음 수정
+	@Override
+	public int mailReadUpdate(HashMap<String, Object> paraMap) {
+		int n = dao.mailreadUpdate(paraMap);
+		return n;
 	}
 }

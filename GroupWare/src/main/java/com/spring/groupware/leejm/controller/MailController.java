@@ -46,6 +46,21 @@ public class MailController {
 	@RequestMapping(value="/mail/list.top")
 	public ModelAndView mailList(ModelAndView mav, HttpServletRequest request) {
 		String type = request.getParameter("type");
+		String readStatus = request.getParameter("read");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		if(readStatus == null || readStatus.trim().isEmpty()) {
+			readStatus = "0";
+		}
+		
+		if(selectCheck != null) {
+			for(String select : selectCheck) {
+				System.out.println(select);
+			}
+			mav.addObject("selectCheck",selectCheck);
+		}
+		
+		
 		HttpSession session = request.getSession();
 		EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
 		
@@ -177,10 +192,13 @@ public class MailController {
 			mav.addObject("mailhamType","메일 검색");
 		}
 		
+		System.out.println("결과물 수 : "+mailList.size());
 		
 		mav.addObject("searchWord",searchWord);
 		mav.addObject("mailList",mailList);
 		mav.addObject("total",totalCount);
+		mav.addObject("type",type);
+		mav.addObject("readStatus",readStatus);
 		mav.setViewName("mail/mailList.tiles2");
 		
 		return mav;
@@ -213,9 +231,7 @@ public class MailController {
 		EmployeesVO empVO = (EmployeesVO)session.getAttribute("loginEmployee");
 		String sendSeq = empVO.getEmployee_seq();
 		String[] tempReceiveArr = mrequest.getParameterValues("receiveSeq");
-		for(String receiveSeq : tempReceiveArr) {
-			System.out.println("확인용 받는 메일번호:"+tempReceiveArr);
-		}
+		
 		
 		List<String> receiveArr = new ArrayList<>();
 		boolean flag = false;
@@ -232,7 +248,9 @@ public class MailController {
 			flag = false;
 		}
 		
-		
+		for(String receiveSeq : receiveArr) {
+			System.out.println("확인용 받는 메일번호:"+receiveSeq);
+		}
 		
 		String subject = mrequest.getParameter("subject");
 		String content = mrequest.getParameter("content");
@@ -359,16 +377,36 @@ public class MailController {
 		mailList.add(sendMail);
 		
 		if(receiveMail!=null) {
+			System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
 			mailList.add(receiveMail);
 			
-			// 받는 사람 복수일 경우
 			if(receiveArr.size()>1) {
 				for(int i=0; i<receiveArr.size(); i++) {
 					if(i>0) {
-						receiveMail.setFk_employee_seq(receiveArr.get(i));
-						mailList.add(receiveMail);
+						MailVO otherReceive = new MailVO();
+						otherReceive.setFk_employee_seq(receiveArr.get(i));
+						otherReceive.setSubject(receiveMail.getSubject());
+						otherReceive.setContent(receiveMail.getContent());
+						otherReceive.setFileName1(receiveMail.getFileName1());
+						otherReceive.setOrgFileName1(receiveMail.getOrgFileName1());
+						otherReceive.setFileSize1(receiveMail.getFileSize1());
+						otherReceive.setFileName2(receiveMail.getFileName2());
+						otherReceive.setOrgFileName2(receiveMail.getOrgFileName2());
+						otherReceive.setFileSize2(receiveMail.getFileSize2());
+						otherReceive.setFileName3(receiveMail.getFileName3());
+						otherReceive.setOrgFileName3(receiveMail.getOrgFileName3());
+						otherReceive.setFileSize3(receiveMail.getFileSize3());
+						otherReceive.setMail_groupno(mail_groupno);
+						otherReceive.setStatus(receiveMail.getStatus());
+						otherReceive.setReadStatus(receiveMail.getReadStatus());
+						
+						mailList.add(otherReceive);
 					}
 				}
+			}
+			
+			for(MailVO mvo:mailList) {
+				System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
 			}
 		}
 		
@@ -531,7 +569,30 @@ public class MailController {
 	// 읽음 or 안읽음 버튼 클릭시 readStatus 업데이트
 	@RequestMapping(value="/mail/readUpdate.top")
 	public ModelAndView readUpdate(ModelAndView mav, HttpServletRequest request) {
+		String read = request.getParameter("read");
+		String type = request.getParameter("type");
+		String searchWord = request.getParameter("searchWord");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
 		
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("read", read);
+		paraMap.put("selectCheck", selectCheck);
+		
+		for(String select : selectCheck) {
+			System.out.println(select);
+		}
+		
+		
+		int n = service.mailReadUpdate(paraMap);
+		
+		mav.addObject("searchWord",searchWord);
+		mav.addObject("type",type);
+		mav.addObject("read",read);
+		mav.addObject("selectCheck",selectCheck);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
 		return mav;
 	}
 }

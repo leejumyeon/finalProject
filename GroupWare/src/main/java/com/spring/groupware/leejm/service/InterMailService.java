@@ -26,4 +26,7 @@ public interface InterMailService {
 	// 메일 게시글 수 조회
 	int getTotalCount(HashMap<String, String> paraMap);
 
+	// 메일 읽음 / 안읽음 으로 readStatus 업데이트
+	int mailReadUpdate(HashMap<String, Object> paraMap);
+
 }

@@ -51,7 +51,7 @@ public class MailDAO implements InterMailDAO{
 		return mail;
 	}
 
-	// readCount 업데이트(0->1)
+	// readStatus 업데이트(0->1)
 	@Override
 	public void updateReadstatus(String mail_seq) {
 		sqlsession.update("mail.updateReadstatus",mail_seq);
@@ -64,6 +64,13 @@ public class MailDAO implements InterMailDAO{
 	public int mailCount(HashMap<String, String> paraMap) {
 		int result = sqlsession.selectOne("mail.mailCount",paraMap);
 		return result;
+	}
+
+	// readStatus 업데이트(복수개, 0->1 or 1->0)
+	@Override
+	public int mailreadUpdate(HashMap<String, Object> paraMap) {
+		int n = sqlsession.update("mail.mailreadUpdate",paraMap);
+		return n;
 	}
 
 }

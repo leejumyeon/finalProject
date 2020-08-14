@@ -48,7 +48,7 @@
 </script>
 
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
-	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
+	<a href="<%=ctxPath%>/main.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
 <div style="display: inline-block; border:solid 0px blue; width:1130px;" align="center">
 	<ul class="mynav" style="float:left;">

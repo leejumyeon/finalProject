@@ -30,6 +30,9 @@ public interface InterMailDAO {
 	// 메일 건 수
 	int mailCount(HashMap<String, String> paraMap);
 
+	// 메일 읽음 / 안읽음 수정
+	int mailreadUpdate(HashMap<String, Object> paraMap);
+
 
 	
 }
