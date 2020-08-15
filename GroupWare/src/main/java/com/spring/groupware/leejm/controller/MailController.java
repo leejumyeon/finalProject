@@ -687,4 +687,33 @@ public class MailController {
 		
 		return mav;
 	}
+	
+	// 메일 복구
+	@RequestMapping(value="/mail/mailRestore.top")
+	public ModelAndView mailRestore(ModelAndView mav, HttpServletRequest request) {
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		for(String check: selectCheck) {
+			System.out.println("확인용:"+check);
+		}
+		
+		int n = service.mailRestore(paraMap);
+		
+		String msg = "메일을 복구하는 도중 오류가 발생했습니다.";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 성공적으로 복구했습니다.";
+			
+		}
+		mav.addObject("msg",msg);
+		mav.addObject("type",type);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		
+		return mav;
+	}
 }

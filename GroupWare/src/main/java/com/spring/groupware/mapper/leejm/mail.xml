@@ -281,4 +281,12 @@
 			${selectCheck[i]}
 		</foreach>
 	</select>
+	
+	<!-- 메일 복구하기 -->
+	<update id="mailRestore" parameterType="HashMap">
+		update mail_table set mailStatus = 1 where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</update>
 </mapper>

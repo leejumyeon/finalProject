@@ -101,4 +101,11 @@ public class MailService implements InterMailService{
 		List<MailVO> deleteFileList = dao.deleteFileList(paraMap);
 		return deleteFileList;
 	}
+
+	// 메일 복구하기
+	@Override
+	public int mailRestore(HashMap<String, String[]> paraMap) {
+		int n = dao.mailResotre(paraMap);
+		return n;
+	}
 }

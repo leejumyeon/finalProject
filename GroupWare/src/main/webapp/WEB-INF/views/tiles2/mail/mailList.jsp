@@ -241,6 +241,18 @@
 		frm.method = "get";
 		frm.submit();
 	}
+	
+	// 메일 복구
+	function mailRestore(){
+		if($("input[name=selectCheck]:checked").length <= 0){
+			alert("삭제할 메일을 선택해주세요!");
+			return false;
+		}
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailRestore.top";
+		frm.method = "get";
+		frm.submit();
+	}
 </script>
 <div style="margin-left:10px;">
 	<form name="mailFrm">

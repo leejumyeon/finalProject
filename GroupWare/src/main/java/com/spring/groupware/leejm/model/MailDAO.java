@@ -94,4 +94,11 @@ public class MailDAO implements InterMailDAO{
 		return deleteFileList;
 	}
 
+	// 메일 복구하기
+	@Override
+	public int mailResotre(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.update("mail.mailResotre",paraMap);
+		return n;
+	}
+
 }

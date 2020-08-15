@@ -38,4 +38,7 @@ public interface InterMailService {
 	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
 	List<MailVO> deleteFileList(HashMap<String, String[]> paraMap);
 
+	// 메일 복구하기
+	int mailRestore(HashMap<String, String[]> paraMap);
+
 }
