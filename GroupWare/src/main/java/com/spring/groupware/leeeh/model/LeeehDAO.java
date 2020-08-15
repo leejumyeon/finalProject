@@ -488,4 +488,38 @@ public class LeeehDAO implements InterLeeehDAO {
 		return oneEmployee;
 	}
 
+	// === 사원 정보 업데이트하기 === //
+	@Override
+	public void employeeUpdate(HashMap<String, String> paraMap) {
+
+		sqlsession.update("leeeh.employeeUpdate", paraMap);
+	}
+
+	// === 사원 grade 업데이트하기 === //
+	@Override
+	public int updateGrade(HashMap<String, String> paraMap) {
+
+		int result = sqlsession.update("leeeh.updateGrade", paraMap);
+				
+		return result;
+	}
+
+	// === 사원 부서 변경하기 === //
+	@Override
+	public int updateDepartment(HashMap<String, String> paraMap) {
+
+		int result = sqlsession.update("leeeh.updateDepartment", paraMap);
+		
+		return result;
+	}
+
+	// === 사원 직위 변경하기 === //
+	@Override
+	public int updatePosition(HashMap<String, String> paraMap) {
+
+		int result = sqlsession.update("leeeh.updatePosition", paraMap);
+		
+		return result;
+	}
+
 }

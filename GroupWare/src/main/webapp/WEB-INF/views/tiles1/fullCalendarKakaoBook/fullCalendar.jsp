@@ -18,6 +18,67 @@
     <link rel= "stylesheet" href="./resources/calendar/css/main.css">
     
    
+   <style>
+
+		.snip1536 {
+			  background-color: #0099ff;
+			  border: none;
+			  color: #ffffff;
+			  cursor: pointer;
+			  display: inline-block;
+			  font-family: 'BenchNine', Arial, sans-serif;
+			  font-size: 1em;
+			  font-size: 10pt;
+			  line-height: 1em;
+			  margin: 8px 12px;
+			  outline: none;
+			  position: relative;
+			  text-transform: uppercase;
+			  font-weight: 700;
+			  width: 60px;
+			  height: 20px;
+			}
+			
+			.snip1536:before,
+			.snip1536:after {
+			  border-color: transparent;
+			  -webkit-transition: all 0.25s;
+			  transition: all 0.25s;
+			  border-style: solid;
+			  border-width: 0;
+			  content: "";
+			  height: 15px;
+			  position: absolute;
+			  width: 15px;
+			}
+			
+			.snip1536:before {
+			  border-color: #0099ff;
+			  border-right-width: 3px;
+			  border-top-width: 3px;
+			  right: -5px;
+			  top: -5px;
+			}
+			
+			.snip1536:after {
+			  border-bottom-width: 3px;
+			  border-color: #0099ff;
+			  border-left-width: 3px;
+			  bottom: -5px;
+			  left: -5px;
+			}
+			
+			.snip1536:hover {
+			  background-color: #0099ff;
+			}
+			
+			.snip1536:hover:before,
+			.snip1536:hover:after {
+			  height: 100%;
+			  width: 100%;
+			}
+			
+   </style>
 
 	<div class="container" style="width: 700px; display: inline-block; float: left;">
 				
@@ -40,10 +101,7 @@
 	            
 	               
 	        </div>
-	        
-	       
-	
-	
+
 	        <!-- 일정 추가 MODAL -->
 	        <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
 	            <div class="modal-dialog" role="document">
@@ -165,23 +223,33 @@
     </div>
     
     <div style="float: left; border: solid 0px green; width: 300px; height: 300px; padding-top: 22px;" >
-    	<div style="border: solid 1px blue; width: 730px; height: 267px;">
+    	<div style="border: solid 1px blue; width: 500px; height: 267px;">
 	        <h3>개인정보</h3>
+	        	사번 : ${sessionScope.loginEmployee.employee_id}<br/>
+	        	직급 : ${sessionScope.loginEmployee.position_name}<br/>
+	        	부서명 : ${sessionScope.loginEmployee.department_name}<br/>
+	        	이름	: ${sessionScope.loginEmployee.employee_name}<br/>
+	        	입사날짜 : ${sessionScope.loginEmployee.hire_date}
         </div>
         <br/>
-        <div style="border: solid 1px red; width: 730px; height: 267px;">
-        	<h3>동호회</h3>
+        <div style="width: 730px; height: 267px;">
+        	<h3 style="display: inline-block; width: 120px;">도서 추천</h3>
+        	<input id="bookName" type="text">
+			<button id="search" class="snip1536">검색</button>
+			
+			<div id="p" style="width: 500px;"></div>
         </div> 	                     
     </div>
 	<div style="clear: both;"></div>
 	<br/>
-    <div style="padding-left: 15px;">   
-	    <div style="border: solid 1px red; width: 1415px; height: 148px; ">
-	        <h3>도서추천</h3>
-			<input id="bookName" type="text">
-			<button id="search">검색</button>
-			
-			<div id="p" style="border: solid 1px red; display: inline-block;">피카츄라이츄파이리꼬북이</div>			
+    <div style="padding-left: 15px; float: left;">   
+	    <div style="border: solid 1px red; width: 670px; height: 148px; ">
+	        <h3>동호회</h3>	
+	    </div>    
+    </div>
+    <div style="float: left;">   
+	    <div style="border: solid 1px red; width: 300px; height: 148px; margin-left: 15px;">
+	        <h3>예약 현황</h3>	
 	    </div>    
     </div>
     <!-- /.container -->
@@ -189,7 +257,19 @@
      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
   	
   	<script>
+
 	  $(function () {
+		  
+		  $("#bookName").keydown(function(event) {
+			 
+			  var code = event.keyCode;
+			  
+			  if(code == '13') {
+				  
+				  $("#search").click();
+			  }
+		  });
+		  
 	      $("#search").click(function () {
 	    	      	     	  
 	          $.ajax({
@@ -202,25 +282,92 @@
 	            	 
 	            var html ="";
 	            
-	           	for(var i = 0; i<10 ; i++) {
-	           		
-	           		html += "<div style='display:inline-block; min-width:300px;'>";
-		           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
-		           		html += "제목&nbsp;:&nbsp;<strong>" + msg.documents[i].title + "</strong><br />";
-		       			html +=	"저자&nbsp;:&nbsp;<strong>" + msg.documents[i].authors + "</strong><br />";
-		     			html += "판매가&nbsp;:&nbsp;<strong>" + msg.documents[i].price + "</strong><br />";
-		           		html += "판매현황&nbsp;:&nbsp;<strong>" + msg.documents[i].status + "</strong><br />";
-		           		html += "출간일자&nbsp;:&nbsp;<strong>" + msg.documents[i].datetime + "</strong><br />";
-		           		html += "바코드&nbsp;:&nbsp;<strong>" + msg.documents[i].isbn + "</strong><br />";
+           		html += '<div id="myCarousel" class="carousel slide" data-ride="carousel">';
+           		html += '<ol class="carousel-indicators">';
+           		html += '<li data-target="#myCarousel" data-slide-to="0" class="active"></li>';
+           		html += '<li data-target="#myCarousel" data-slide-to="1"></li>';
+           		html += '<li data-target="#myCarousel" data-slide-to="2"></li>';
+           		html += '</ol>';
+           		
+           		html += '<div class="carousel-inner">';
+           		
+           		html += '<div class="item active">';
+           		html += "<div style='display:inline-block; min-width:300px;'>";
+	           	for(var i = 0; i<3 ; i++) {
+
+	           		html += "<div style='display: inline-block; margin-right: 30px;'>";
+	           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
+	           		html += "제목&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].title) + "</strong><br />";
+	       			html +=	"저자&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].authors[0]) + "</strong><br />";
+	     			html += "판매가&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].price) + "</strong><br />";
+	           		html += "</div>";
+				          		                         
+	           	}
+	           	
+           		html += "</div>";
+           		html += '</div>';
+	           	
+           		html += '<div class="item">';
+           		html += "<div style='display:inline-block; min-width:300px;'>";
+           		
+	           	for(var i = 3; i<6 ; i++) {
+
+	           		html += "<div style='display: inline-block; margin-right: 30px;'>";
+	           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
+	           		html += "제목&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].title) + "</strong><br />";
+	       			html +=	"저자&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].authors[0]) + "</strong><br />";
+	     			html += "판매가&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].price) + "</strong><br />";
 	           		html += "</div>";
 	           							          		                         
 	           	}
+	           	
+	           	html += "</div>";
+           		html += '</div>';
+	           	
+           		html += '<div class="item">';
+           		html += "<div style='display:inline-block; min-width:300px;'>";
+           		
+	           	for(var i = 6; i<9 ; i++) {
+
+	           		html += "<div style='display: inline-block;  margin-right: 30px;'>";
+	           		html += "<span><img src='" + msg.documents[i].thumbnail + "'></span><br />";
+	           		html += "제목&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].title) + "</strong><br />";
+	       			html +=	"저자&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].authors[0]) + "</strong><br />";
+	     			html += "판매가&nbsp;:&nbsp;<strong>" + numberMaxLength(msg.documents[i].price) + "</strong><br />";
+	           		html += "</div>";
+	           							          		                         
+	           	}
+	           	
+           		html += "</div>";
+           		html += '</div>';
+	           	
+	           	html += ' <a class="left carousel-control" href="#myCarousel" data-slide="prev">';
+	           	html += '<span class="glyphicon glyphicon-chevron-left"></span>';
+	           	html += '<span class="sr-only">Previous</span>';
+	           	html += '</a>';
+	           	html += '<a class="right carousel-control" href="#myCarousel" data-slide="next">';
+	           	html += '<span class="glyphicon glyphicon-chevron-right"></span>';
+	           	html += '<span class="sr-only">Next</span>';
+	           	html += '</a>';
+	           	html += '</div>';
+	           	html += '</div>';
 	           	
 	           	$("#p").html(html);
 	           	
 	           });
 	      })
 	  });
+	  
+	function numberMaxLength(e){
+		
+		if(e.length > 6){
+			
+			e = e.substring(0, 6) + "..";
+		}
+		
+		return e;
+	}
+	
 	</script>  
 
 	<script src="./resources/calendar/vendor/js/jquery.min.js"></script>

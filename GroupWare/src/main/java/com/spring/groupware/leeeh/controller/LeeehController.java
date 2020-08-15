@@ -201,7 +201,7 @@ public class LeeehController {
 		mav.addObject("employee_pw", employee_pw);
 		mav.addObject("email", email);
 		mav.addObject("departmentList", departmentList);
-		mav.setViewName("/HR/idIssued.tiles3");
+		mav.setViewName("admin/HR/idIssued.tiles3");
 
 		return mav;
 	}
@@ -257,7 +257,7 @@ public class LeeehController {
 
 		service.insertEmployeeTable(paraMap);
 
-		mav.setViewName("redirect:/idIssued.top");
+		mav.setViewName("redirect:/manager/HR/list.top");
 		return mav;
 	}
 
@@ -1277,7 +1277,6 @@ public class LeeehController {
 		return mav;
 	}
 	
-	
 	// === 관리자-인사 관리(사원정보-리스트)페이지 이동 === //
 	@RequestMapping(value="/manager/HR/list.top")
 	public ModelAndView managerHRlist(ModelAndView mav, HttpServletRequest request) {
@@ -1289,17 +1288,190 @@ public class LeeehController {
 		return mav;
 	}
 	
-	// === 관리자-인사 관리(사원정보-리스트)페이지 이동 === //
-	@RequestMapping(value="/employeeUpdate.top")
+	
+	// === 회원 정보 수정 페이지로 이동 === //
+	@RequestMapping(value="/employeeUpdate.top", method = {RequestMethod.GET})
 	public ModelAndView employeeUpdate(ModelAndView mav, HttpServletRequest request) {
 		
 		String employee_seq = request.getParameter("employee_seq");
 		
 		EmployeesVO oneEmployee = service.getOneEmployee(employee_seq);
 		
+		Random rnd = new Random();
+
+		String employee_pw = "";
+
+		char randchar = ' ';
+		for (int i = 0; i < 1; i++) {
+			randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
+			employee_pw += randchar;
+		}
+
+		int randnum = 0;
+		for (int i = 0; i < 3; i++) {
+			randnum = rnd.nextInt(9 - 0 + 1) + 0;
+			employee_pw += randnum;
+		}
+
+		randchar = ' ';
+		for (int i = 0; i < 1; i++) {
+			randchar = (char) (rnd.nextInt('z' - 'a' + 1) + 'a');
+			employee_pw += randchar;
+		}
+
+		randnum = 0;
+		for (int i = 0; i < 3; i++) {
+			randnum = rnd.nextInt(9 - 0 + 1) + 0;
+			employee_pw += randnum;
+		}
+		
+		try {
+			aes = new AES256(key);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			
+			oneEmployee.setPhone(aes.decrypt(oneEmployee.getPhone()));
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
 		mav.addObject("oneEmployee", oneEmployee);
-		mav.setViewName("idUpdate.totiles");
+		mav.addObject("employee_pw", employee_pw);
+		mav.setViewName("idUpdate.notiles");
 		return mav;
 	}
 
+	// === 사원 정보 수정 페이지로 이동 === //
+	@RequestMapping(value="/employeeUpdate.top", method = {RequestMethod.POST})
+	public ModelAndView employeeUpdateEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String employee_id = request.getParameter("employee_id");
+		String employee_pw = request.getParameter("employee_pw");
+		String phone = request.getParameter("phone");
+		String postcode = request.getParameter("postcode");
+		String address = request.getParameter("address");
+		String detailaddress = request.getParameter("detailaddress");
+		String extraaddress = request.getParameter("extraaddress");
+		String position_seq = request.getParameter("position_seq");
+		
+		employee_pw = Sha256.encrypt(employee_pw);
+
+		try {
+			aes = new AES256(key);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			phone = aes.encrypt(phone);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("employee_pw", employee_pw);
+		paraMap.put("phone", phone);
+		paraMap.put("postcode", postcode);
+		paraMap.put("address", address);
+		paraMap.put("detailaddress", detailaddress);
+		paraMap.put("extraaddress", extraaddress);
+		paraMap.put("position_seq", position_seq);
+		
+		service.employeeUpdate(paraMap);
+		
+		String message = "사원 정보를 수정했습니다.";
+		String loc = request.getContextPath() + "/manager/HR/list.top";
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		return mav;
+	}
+	
+	// === 사원 grade 변경하기 === //
+	@ResponseBody
+	@RequestMapping(value = "/updateGrade.top", method = {RequestMethod.POST})
+	public String updateGrade(HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		String grade = request.getParameter("grade");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_seq", employee_seq);
+		paraMap.put("grade", grade);
+		
+		boolean flag = false;
+				
+		int result = service.updateGrade(paraMap);
+		
+		if(result > 0) {
+			
+			flag = true;
+		}
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("flag", flag);
+		
+		return jsObj.toString();
+	}
+
+	// === 사원 department 변경하기 === //
+	@ResponseBody
+	@RequestMapping(value = "/updateDepartment.top", method = {RequestMethod.POST})
+	public String updateDepartment(HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		String fk_department = request.getParameter("fk_department");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_seq", employee_seq);
+		paraMap.put("fk_department", fk_department);
+		
+		boolean flag = false;
+				
+		int result = service.updateDepartment(paraMap);
+		
+		if(result > 0) {
+			
+			flag = true;
+		}
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("flag", flag);
+		
+		return jsObj.toString();
+	}
+		
+	// === 사원 grade 변경하기 === //
+	@ResponseBody
+	@RequestMapping(value = "/updatePosition.top", method = {RequestMethod.POST})
+	public String updatePosition(HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		String fk_position = request.getParameter("fk_position");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_seq", employee_seq);
+		paraMap.put("fk_position", fk_position);
+		
+		boolean flag = false;
+				
+		int result = service.updatePosition(paraMap);
+		
+		if(result > 0) {
+			
+			flag = true;
+		}
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("flag", flag);
+		
+		return jsObj.toString();
+	}
 }

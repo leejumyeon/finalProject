@@ -112,11 +112,86 @@
 		   "paging"을 false로 바꿀 수 있다. */
 			
 		});
-		
-		
-		
-				
+
 	});
+	
+	function closeModal() {
+		
+		$(".modal .myclose").click();
+		
+		setTimeout(function() {
+			
+			location.reload();
+			
+		}, 300);
+		
+	}
+	
+	function changeGrade(employee_seq, selectTag) {
+		
+		var grade = selectTag.value;
+		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/updateGrade.top",
+			type:"POST",
+			data:{"employee_seq":employee_seq
+				, "grade":grade},
+			dataType:"JSON",
+			success: function(json) {
+				
+				if(json.flag) {
+					
+					location.reload();
+					
+				}
+				
+			}
+		});
+	}
+	
+	function changeDepartment(employee_seq, selectTag) {
+		
+		var fk_department = selectTag.value;
+		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/updateDepartment.top",
+			type:"POST",
+			data:{"employee_seq":employee_seq
+				, "fk_department":fk_department},
+			dataType:"JSON",
+			success: function(json) {
+				
+				if(json.flag) {
+					
+					location.reload();
+					
+				}
+				
+			}
+		});
+	}
+	
+	function changePosition(employee_seq, selectTag) {
+		
+		var fk_position = selectTag.value;
+		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/updatePosition.top",
+			type:"POST",
+			data:{"employee_seq":employee_seq
+				, "fk_position":fk_position},
+			dataType:"JSON",
+			success: function(json) {
+				
+				if(json.flag) {
+					
+					location.reload();
+					
+				}
+				
+			}
+		});
+	}
 </script>
 
 
@@ -133,6 +208,7 @@
 				<th>사원명</th>
 				<th>직책</th>
 				<th>부서</th>
+				<th>급여</th>
 				<th>메일</th>
 				<th>입사한 날짜</th>
 				<th>회원상태</th>
@@ -146,7 +222,7 @@
 					<td>${evo.employee_id}</td>
 					<td>${evo.employee_name}</td>
 					<td>
-						<select name="fk_position" style="width: 60px; height: 30px;">
+						<select name="fk_position" style="width: 60px; height: 30px;" onchange="changePosition('${evo.employee_seq}', this)">
 							<c:if test="${evo.fk_position == '1'}">
 								<option value="1" selected>사원</option>
 								<option value="2">대리</option>
@@ -198,7 +274,7 @@
 						</select>
 					</td>
 					<td>
-						<select name="fk_department" style="width: 100px; height: 30px;">
+						<select name="fk_department" style="width: 100px; height: 30px;" onchange="changeDepartment('${evo.employee_seq}', this)">
 							<c:if test="${evo.fk_department == '1'}">
 								<option value="1" selected>디자인팀</option>
 								<option value="2">개발팀</option>
@@ -236,11 +312,12 @@
 							</c:if>
 						</select>
 					</td>
+					<td>${evo.position_salary}</td>
 					<td>${evo.email}</td>
 					<td>${evo.hire_date}</td>
 					<td>${evo.status_name}</td>
 					<td>
-						<select name="grade" style="width: 35px;">
+						<select name="grade" style="width: 35px;" onchange="changeGrade('${evo.employee_seq}', this)">
 							<c:if test="${evo.grade == '1'}">
 								<option selected>1</option>
 								<option>2</option>
@@ -286,7 +363,7 @@
 	
 	<c:forEach var="evo" items="${allEmployeeList}">
 	<div class="modal fade" id="employeeUpdate${evo.employee_seq}" role="dialog">
-		<div class="modal-dialog" style="width: 900px;">
+		<div class="modal-dialog" style="width: 590px;">
 		  
 			    <!-- Modal content-->
 			<div class="modal-content">
@@ -294,7 +371,7 @@
 					<button type="button" class="close myclose" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title">사원 수정</h4>
 				</div>
-				<div class="modal-body" style="height: 620px; width: 900px;">
+				<div class="modal-body" style="height: 480px; width: 590px;">
 					<div id="addDelivery">
 						<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/employeeUpdate.top?employee_seq=${evo.employee_seq}">
 						</iframe>

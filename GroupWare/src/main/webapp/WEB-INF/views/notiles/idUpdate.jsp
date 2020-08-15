@@ -127,11 +127,9 @@
 
 		});
 		
-		$(".datepicker").datepicker({
-			minDate: +1
-		});
+		$(".datepicker").datepicker({});
 		
-		$("#btnIssued").click(function() {
+		$("#btnUpdate").click(function() {
 			
 			$(".required").each(function() {
 				
@@ -144,25 +142,23 @@
 			
 			var frm = document.registerFrm;
 			frm.method="POST";
-			frm.action="<%= request.getContextPath()%>/idIssued.top";
+			frm.action="<%= request.getContextPath()%>/employeeUpdate.top";
 			frm.submit();
 		});
 	});
 </script>
 
 <div class="row" id="divRegisterFrm">
-
-	<h2>사원 발급</h2>
 	
 	<form name="registerFrm">
 	
-		<table id="tblMemberRegister" style="width:700px;">
+		<table id="tblMemberRegister" style="width:550px;">
 			<tbody>
 			
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">성명</td>
 					<td style="width: 80%; text-align: left;">
-					    <input type="text" name="employee_name" class="required" autocomplete="off" /> 
+					    <input type="text" name="employee_name" value="${oneEmployee.employee_name}"  readonly autocomplete="off" /> 
 					</td>
 				</tr>
 
@@ -183,21 +179,21 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">이메일</td>
 					<td style="width: 80%; text-align: left;">
-						<input type="text" name="email"  value="${email}" readonly />
+						<input type="text" name="email" value="${oneEmployee.email}" readonly />
 					</td>
 				</tr>
 
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">핸드폰 번호</td>
 					<td style="width: 80%; text-align: left;">
-					    <input type="text" name="phone" class="required" placeholder="핸드폰 번호는 - 없이 작성해주십시요" autocomplete="off" />
+					    <input type="text" name="phone" value="${oneEmployee.phone}" />
 					</td>
 				</tr>
 
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">우편번호</td>
 					<td style="width: 80%; text-align: left;">
-					   <input type="text" id="postcode" name="postcode" size="6" maxlength="5" style="width: 130px;" autocomplete="off" />&nbsp;&nbsp;
+					   <input type="text" id="postcode" name="postcode" value="${oneEmployee.postcode}" size="6" maxlength="5" style="width: 130px;" autocomplete="off" />&nbsp;&nbsp;
 					   <button type="button" id="zipcodeSearch" style="background-color: #0099ff; border: none; color: #fff; cursor: pointer;">우편주소찾기</button>
 					</td>
 				</tr>
@@ -205,47 +201,8 @@
 				<tr>
 					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">주소</td>
 					<td style="width: 80%; text-align: left;">
-					   <input type="text" id="address" name="address" size="40" placeholder="주소" autocomplete="off" /><br/>
-					   <input type="text" id="detailAddress" name="detailaddress" size="40" placeholder="상세주소" style="width: 200px;" autocomplete="off" />&nbsp;<input type="text" id="extraAddress" name="extraaddress" size="40" placeholder="참고항목" style="width: 200px;" autocomplete="off"/> 
-					</td>
-				</tr>
-
-				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">성별</td>
-					<td style="width: 80%; text-align: left;">
-					   <input type="radio" id="male" name="gender" value="1" /><label for="male" style="margin-left: 2%;">남자</label>
-					   <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
-					</td>
-				</tr>
-
-				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">생년월일</td>
-					<td style="width: 80%; text-align: left;">
-					   <input type="text" name="birthday" class="datepicker" style="width: 150px;" class="required" autocomplete="off">
-					</td>
-				</tr>
-				
-				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">직책명</td>
-					<td style="width: 80%; text-align: left;">
-						<select name="position_seq" style="width: 60px; height: 30px;">
-							<option value="1" selected>사원</option>
-							<option value="2">대리</option>
-							<option value="3">과장</option>
-							<option value="4">부장</option>
-						</select>
-					</td>
-				</tr>
-				
-				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">직책명</td>
-					<td style="width: 80%; text-align: left;">
-						<select name="department_seq" style="width: 170px; height: 30px;">
-							<option value="" selected>==부서를 선택하세요==</option>
-							<c:forEach var="departVO" items="${departmentList}">
-								<option value="${departVO.department_seq}">${departVO.department_name}</option>
-							</c:forEach>
-						</select>
+					   <input type="text" id="address" name="address" value="${oneEmployee.address}" size="40" placeholder="주소" autocomplete="off" /><br/>
+					   <input type="text" id="detailAddress" value="${oneEmployee.detailaddress}" name="detailaddress" size="40" placeholder="상세주소" style="width: 200px;" autocomplete="off" />&nbsp;<input type="text" id="extraAddress" value="${oneEmployee.extraaddress}" name="extraaddress" size="40" placeholder="참고항목" style="width: 200px;" autocomplete="off"/> 
 					</td>
 				</tr>
 
@@ -254,5 +211,5 @@
 		
 	</form>
 	
-	<button type="button" id="btnIssued" class="snip1535">발급하기</button>
+	<button type="button" id="btnUpdate" class="snip1535" style="margin-left: 160px;">수정하기</button>
 </div>
