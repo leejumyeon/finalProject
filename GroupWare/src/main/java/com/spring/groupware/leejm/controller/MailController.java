@@ -178,10 +178,6 @@ public class MailController {
 				mav.addObject("mailhamType","첨부파일 있는 메일");
 			}
 			
-			else if("search".equals(type)) {
-				mav.addObject("mailhamType","검색");
-			}
-			
 			else if("del".equals(type)) {
 				mav.addObject("mailhamType","휴지통");
 			}
@@ -609,7 +605,7 @@ public class MailController {
 	}
 	
 	// 메일 휴지통에 이동
-	@RequestMapping(value="/mail/del.top")
+	@RequestMapping(value="/mail/mailDel.top")
 	public ModelAndView mailDel(ModelAndView mav, HttpServletRequest request) {
 		String[] selectCheck = request.getParameterValues("selectCheck");
 		String searchWord = request.getParameter("searchWord");
@@ -630,6 +626,65 @@ public class MailController {
 		mav.addObject("type",type);
 		mav.addObject("currentShowPageNo",str_currentPageNo);
 		mav.setViewName("redirect:/mail/list.top");
+		return mav;
+	}
+	
+	// 메일 영구삭제
+	@RequestMapping(value="/mail/mailDeletion.top")
+	public ModelAndView mailDeletion(ModelAndView mav, HttpServletRequest request) {
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		// 업로드 파일 삭제과정
+		//1. 업로드 경로 지정(send or receive + fileName)
+		List<MailVO> deleteFileList = service.deleteFileList(paraMap);
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator;
+		
+		for(MailVO deleteFile : deleteFileList) {
+			if("1".equals(deleteFile.getStatus())) {
+				path += "receiveFiles";
+			}
+			else {
+				path += "sendFiles";
+			}
+			
+			try {
+				fileManager.doFileDelete(deleteFile.getFileName1(), path); // fileName1삭제
+				
+				// fileName2가 존재할 경우 fileName2도 삭제
+				if(deleteFile.getFileName2()!=null && !deleteFile.getFileName2().trim().isEmpty()) {
+					fileManager.doFileDelete(deleteFile.getFileName2(), path);
+				}
+				
+				// fileName3이 존재할 경우 fileName3도 삭제
+				if(deleteFile.getFileName3()!=null && !deleteFile.getFileName3().trim().isEmpty()) {
+					fileManager.doFileDelete(deleteFile.getFileName3(), path);
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// DB에서 삭제
+		int n = service.mailDeletion(paraMap);
+		String msg = "";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 휴지통에서 지웠습니다.";
+			
+		}
+		mav.addObject("msg",msg);
+		mav.addObject("type",type);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		
 		return mav;
 	}
 }

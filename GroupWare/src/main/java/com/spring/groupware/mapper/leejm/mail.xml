@@ -265,4 +265,20 @@
 			${selectCheck[i]}
 		</foreach>
 	</update>
+	
+	<!-- 메일 영구삭제 -->
+	<delete id="mailDeletion" parameterType="HashMap">
+		delete from mail_table where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</delete>
+	
+	<!-- 삭제할 메일의 첨부파일 조회 -->
+	<select id="deleteFileList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.MailVO">
+		select status, fileName1, fileName2, fileName3 from mail_table where fileName1 is not null and mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</select>
 </mapper>

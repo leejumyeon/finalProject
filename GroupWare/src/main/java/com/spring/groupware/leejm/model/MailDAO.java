@@ -80,4 +80,18 @@ public class MailDAO implements InterMailDAO{
 		return n;
 	}
 
+	// 메일 영구삭제
+	@Override
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.delete("mail.mailDeletion",paraMap);
+		return n;
+	}
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	@Override
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = sqlsession.selectList("mail.deleteFileList",paraMap);
+		return deleteFileList;
+	}
+
 }

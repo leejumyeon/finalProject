@@ -87,4 +87,18 @@ public class MailService implements InterMailService{
 		int n = dao.mailDel(paraMap);
 		return n;
 	}
+
+	// 메일 영구삭제
+	@Override
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = dao.mailDeletion(paraMap);
+		return n;
+	}
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	@Override
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = dao.deleteFileList(paraMap);
+		return deleteFileList;
+	}
 }

@@ -36,6 +36,12 @@ public interface InterMailDAO {
 	// 메일 휴지통으로 이동
 	int mailDel(HashMap<String, String[]>paraMap);
 
+	// 메일 영구삭제
+	int mailDeletion(HashMap<String, String[]> paraMap);
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	List<MailVO> deleteFileList(HashMap<String, String[]> paraMap);
+
 
 	
 }

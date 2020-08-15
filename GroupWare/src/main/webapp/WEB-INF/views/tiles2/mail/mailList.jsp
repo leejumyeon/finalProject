@@ -35,7 +35,6 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".datepicker").datepicker({});
 		
         // 메일 검색 창 포커스 시 함수 실행
 		$("#mailSearch").focus(function(){
@@ -48,11 +47,12 @@
         	$("#searchTypetArea").css({"display":"none","border":"none"});
         });
         
+         // 메일 검색창에 키보드로 값 입력할 때 실행
         $("#mailSearch").keyup(function(event){
         	var txtVal = $(this).val();
         	var code = event.keyCode;
         	console.log(code);
-        	if(code == 13){	
+        	if(code == 13){	// enter키 입력했을 경우
 				if(txtVal.length>0){
 					if($(".select").hasClass("all")){
 						goSearch(txtVal, "all");
@@ -69,7 +69,7 @@
 						
 				}
 			}
-        	else if(code == 40 || code == 38){
+        	else if(code == 40 || code == 38){ // 위, 아래 방향키 입력했을 경우
 				if(!$("#findEmail").hasClass("hide")){
 					var currentSelect = $(".select");
 					var nextSelect = currentSelect.next();
@@ -95,47 +95,19 @@
 				}
 				console.log("방향키");
 			}
-        	else{
+        	else{ // 그 이외의 값을 입력했을 경우
         		func_searchTypeFind(txtVal);
         	}
         	
         });
           
         
-        // 기간 선택
-        $("#mailDay").change(function(){
-        	if($(this).val()!="" && $(this).val()!="direct"){
-        		$(".today").datepicker('setDate', 'today');
-	        	
-        		if($(this).val()=="week"){
-        			$(".prevday").datepicker('setDate', '-7D');
-        		}
-        		else if($(this).val()=="month"){
-	        		$(".prevday").datepicker('setDate', '-1M');
-	        	}
-	        	else if($(this).val()=="threeMonth"){
-	        		$(".prevday").datepicker('setDate', '-3M');
-	        	}
-	        	else if($(this).val()=="sixMonth"){
-	        		$(".prevday").datepicker('setDate', '-6M');
-	        	}
-        	}
-        	else{
-        		$(".datepicker").val("");
-        		// $(".datepicker").datepicker('setDate', '');
-        		console.log("초기화");
-        	}
-        	
-        });
-        
-        $(".datepicker").change(function(){
-        	$("#mailDay").val("direct");
-        });
-        
+        // 검색 아이콘 클릭시 전체검색으로 자동 실행
         $(".icon").click(function(){
         	goSearch( $("#mailSearch").val(),"all");
         });
         
+        // 읽음 버튼 클릭시 readStatus 1로업데이트
         $(".read").click(function(){
         	if($("input[name=selectCheck]:checked").length  == 0){
         		alert("메일을 선택해주세요!");
@@ -150,6 +122,7 @@
         	frm.submit();
         });
         
+        // 안읽음 버튼 클릭 시 readStatus 0으로 업데이트
         $(".noread").click(function(){
         	if($("input[name=selectCheck]:checked").length  == 0){
         		alert("메일을 선택해주세요!");
@@ -164,6 +137,7 @@
         	frm.submit();
         });
         
+        // 체크박스 선택(전체)
         $("#allCheck").click(function(){
         	var bool = $(this).prop("checked");
         	$("input[name=selectCheck]").each(function(index,item){
@@ -171,6 +145,7 @@
         	});
         });
         
+        // 체크박스 선택(개별)
         $("input[name=selectCheck]").each(function(index, item){
         	$(item).click(function(){
         		console.log($(this).prop("checked"));
@@ -188,7 +163,7 @@
         });
        
         
-        
+        // 페이지 호출하기 전에 전체 선택이 되어있을 시에 페이지 호출 후에도 전체선택 상태로 유지하기
        	var len = $("input[name=selectCheck]").length;
 		var checkLen =  $("input[name=selectCheck]:checked").length;
 		console.log(len+"/"+checkLen);
@@ -202,6 +177,7 @@
 	        
 	}); // end of $(document).ready(function())-----------------------------------------------------
 	
+	// 메일 검색 타입 선택
 	function func_searchTypeFind(val){
 		var len = val.length;
 		console.log(len);
@@ -222,12 +198,13 @@
 		$("#searchTypetArea").html(html);
 	}
 	
+	// 메일 검색
 	function goSearch(val, category){
 		console.log(category);
 		location.href = "<%=request.getContextPath()%>/mail/list.top?searchWord="+val+"&type="+category;
 	}
 	
-	
+	// 파일 다운로드
 	function func_download(fileName, orgFileName, status){
 		console.log(fileName+"/"+orgFileName+"/"+status);
 		var frm = document.mailFrm;
@@ -240,16 +217,29 @@
 		frm.submit();
 	}
 	
+	//메일 삭제(메일함 -> 휴지통)
 	function mailDel(){
 		if($("input[name=selectCheck]:checked").length <= 0){
 			alert("삭제할 메일을 선택해주세요!");
 			return false;
 		}
 		var frm = mailFrm;
-		frm.action = "<%=request.getContextPath()%>/mail/del.top";
+		frm.action = "<%=request.getContextPath()%>/mail/mailDel.top";
 		frm.method = "get";
 		frm.submit();
 		
+	}
+	
+	// 메일 삭제(영구삭제)
+	function mailDeletion(){
+		if($("input[name=selectCheck]:checked").length <= 0){
+			alert("삭제할 메일을 선택해주세요!");
+			return false;
+		}
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailDeletion.top";
+		frm.method = "get";
+		frm.submit();
 	}
 </script>
 <div style="margin-left:10px;">
