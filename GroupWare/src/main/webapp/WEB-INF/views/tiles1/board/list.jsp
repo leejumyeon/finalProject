@@ -79,7 +79,7 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href=''">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top?seq=${board.seq}'">앨범</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>						
@@ -90,8 +90,7 @@
 						<option value="all">전체</option>
 						<option value="subject">제목</option>
 						<option value="content">내용</option>
-						<option value="writer">작성자</option>
-						<option value="readCnt">조회수</option>						
+						<option value="writer">작성자</option>					
 					</select>	
 					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
 					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>

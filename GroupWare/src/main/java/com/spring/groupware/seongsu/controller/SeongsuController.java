@@ -1,4 +1,4 @@
-/*package com.spring.groupware.seongsu.controller;
+package com.spring.groupware.seongsu.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +50,7 @@ public class SeongsuController {
 		return mav;
 	}
 	
-	
+/*
 <<<<<<< HEAD
 =======
 	// === #77. 글삭제 페이지 완료하기 ==
@@ -96,8 +96,6 @@ public class SeongsuController {
 		   // 댓글쓰기(insert) 및 
 		   // 원게시물(tblBoard 테이블)에 댓글의 갯수 증가(update 1씩 증가)하기  
 >>>>>>> 34e8f93b4056cc994ac3708350dab48c4929c87a
+*/	
 	
-	
-}	
-	
-*/
+}

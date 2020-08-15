@@ -77,7 +77,7 @@
 		<div id="in">	
 			<div id="side">
 				<div class="comunity">커뮤니티</div>			
-				<div class="sidebar2" onclick="javascript:location.href=''">앨범</div>
+				<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top?seq=${board.seq}'">앨범</div>
 				<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
 				<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 			</div>	
