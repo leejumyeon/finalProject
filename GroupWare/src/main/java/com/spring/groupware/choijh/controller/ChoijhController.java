@@ -1,5 +1,7 @@
 package com.spring.groupware.choijh.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +16,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.common.FileManager;
 import com.spring.groupware.choijh.service.InterChoijhService;
+import com.spring.groupware.commonVO.AttachFileVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -25,6 +32,9 @@ public class ChoijhController {
 
 	@Autowired
 	private InterChoijhService service;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 	@ResponseBody
@@ -269,18 +279,101 @@ public class ChoijhController {
 		return jsonObj.toString();
 	}
 	
-	
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	// 자유 게시판 //
-	@RequestMapping(value="/freeboard/freeboardlist.top")
-	public ModelAndView freeboardlist(ModelAndView mav) {
-		
-		mav.setViewName("freeboard/freeboardlist.tiles1");
-		
+	
+	
+	// 자유 게시판 글 보여주기
+	@RequestMapping(value="/freeboard/list.top")
+	public ModelAndView list(ModelAndView mav) {
+		mav.setViewName("freeboard/list.tiles1");
 		return mav;
+	}
+	
+	
+	// 자유게시판 글쓰기 폼페이지 보여주기
+	@RequestMapping(value="/freeboard/write.top")
+	public ModelAndView write(ModelAndView mav) {
+		mav.setViewName("freeboard/write.tiles1");
+		return mav;
+	}
+	
+	
+	// 자유게시판 글쓰기완료 
+	@RequestMapping(value="/freeboard/writeEnd.top", method= {RequestMethod.POST})
+	public String writeEnd(HttpServletRequest request, BoardVO bvo, AttachFileVO attachvo, MultipartHttpServletRequest mrequest) throws Exception {
+		
+	//  === !!! 첨부파일이 있는지 없는지 알아오기 시작 !!! ===
+		MultipartFile attach = attachvo.getAttach();
+		if( !attach.isEmpty() ) { // 첨부파일이 있는 경우
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator +"freeboard";
+			
+			System.out.println("~~~~ 확인용 path => " + path);
+			// ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\freeboard
+			
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명 
+			
+			byte[] bytes = null;
+			// 첨부파일을 WAS(톰캣)의 디스크에 저장할때 사용되는 용도.
+			
+			long fileSize = 0;
+			// 파일크기를 읽어오기 위한 용도
+			
+			try {
+				bytes = attach.getBytes();
+
+				newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+				
+				System.out.println(">>>> 확인용 newFileName ==> " + newFileName);
+				
+				attachvo.setFileName(newFileName);
+			
+				attachvo.setOrgFileName(attach.getOriginalFilename());
+				
+				fileSize = attach.getSize();
+				attachvo.setFileSize(String.valueOf(fileSize));
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	//  === !!! 첨부파일이 있는지 없는지 알아오기 끝 !!! ===	
+		
+		int n = 0;
+		if( attach.isEmpty() ) {
+			// 첨부파일이 없는 경우이라면
+			n = service.add(bvo); // 글쓰기(첨부파일이 없는 경우) 
+		}
+		else {
+			// 첨부파일이 있는 경우이라면
+			
+			int num = service.getBordNum(); // 게시판 글번호 채번해오기
+			
+			String number = String.valueOf(num);
+			
+			bvo.setBoard_seq(number);
+			attachvo.setFk_board_seq(number);
+			
+			n = service.add_withFile(bvo, attachvo); // 글쓰기(첨부파일이 있는 경우)
+		}
+		
+		if(n==1) { // 글쓰기 성공
+			
+			return "redirect:/freeboard/list.top";
+			
+		}
+		else { // 글쓰기 실패
+			
+			return "redirect:/freeboard/write.top";
+		}
+		
 	}
 	
 	
