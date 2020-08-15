@@ -26,128 +26,103 @@
 		cursor: pointer; 
 	}
 	
+	.select{
+		background-color: #f5f5f5;
+	}
+	
 	.hide{
 		display:none;
 	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		// === jQuery UI 의 datepicker === //
-		$(".datepicker").datepicker({
-                 dateFormat: 'yy-mm-dd'  //Input Display Format 변경
-                ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-                ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-                ,changeYear: true        //콤보박스에서 년 선택 가능
-                ,changeMonth: true       //콤보박스에서 월 선택 가능                
-                ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시  
-                ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-                ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-                ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-                ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
-                ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-                ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-                ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-                ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-              //,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-              //,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
-            });                    
-            
-            //초기값을 오늘 날짜로 설정
-           // $('.today').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후) 
-		/////////////////////////////////////////////////////
-		
-		// === 전체 datepicker 옵션 일괄 설정하기 ===  
-		//     한번의 설정으로 $("#fromDate"), $('#toDate')의 옵션을 모두 설정할 수 있다.
-		$(function() {
-		          //모든 datepicker에 대한 공통 옵션 설정
-		          $.datepicker.setDefaults({
-		              dateFormat: 'yy-mm-dd' //Input Display Format 변경
-		              ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-		              ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-		              ,changeYear: true //콤보박스에서 년 선택 가능
-		              ,changeMonth: true //콤보박스에서 월 선택 가능                
-		              ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시 ^ both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시  
-		              ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-		              ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-		              ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-		              ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-		              ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-		              ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-		              ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-		              ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-		           // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-		           // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-		          });
-		
-		          //input을 datepicker로 선언
-		          $("#fromDate").datepicker();                    
-		          $("#toDate").datepicker();
-		          
-		          //From의 초기값을 오늘 날짜로 설정
-		          $('#fromDate').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-		          //To의 초기값을 내일로 설정
-		          $('#toDate').datepicker('setDate', '+1D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-		      });
            
-	        // 메일 검색 창 포커스 시 함수 실행
-			$("#mailSearch").focus(function(){
-				$("#searchTypetArea").css({"display":"block","border":"solid 1px yellowgreen"});
-				var txtVal = $(this).val();
-				func_searchTypeFind(txtVal);
-			});
-	        
-	        $("#mailSearch").blur(function(){
-	        	$("#searchTypetArea").css({"display":"none","border":"none"});
-	        	
-	        });
-	        
-	        $("#mailSearch").keyup(function(){
-	        	var txtVal = $(this).val();
-	        	func_searchTypeFind(txtVal);
-	        });
+		// 메일 검색 창 포커스 시 함수 실행
+		$("#mailSearch").focus(function(){
+			$("#searchTypetArea").css({"display":"block","border":"solid 1px yellowgreen"});
+			var txtVal = $(this).val();
+			func_searchTypeFind(txtVal);
+		});
+        
+         $("#mailSearch").blur(function(){
+        	$("#searchTypetArea").css({"display":"none","border":"none"});
+        });
+        
+         // 메일 검색창에 키보드로 값 입력할 때 실행
+        $("#mailSearch").keyup(function(event){
+        	var txtVal = $(this).val();
+        	var code = event.keyCode;
+        	console.log(code);
+        	if(code == 13){	// enter키 입력했을 경우
+				if(txtVal.length>0){
+					if($(".select").hasClass("all")){
+						goSearch(txtVal, "all");
+					}
+					else if($(".select").hasClass("send")){
+						goSearch(txtVal, "send");
+					}
+					else if($(".select").hasClass("receive")){
+						goSearch(txtVal, "receive");
+					}
+					else if($(".select").hasClass("content")){
+						goSearch(txtVal, "content");
+					}
+						
+				}
+			}
+        	else if(code == 40 || code == 38){ // 위, 아래 방향키 입력했을 경우
+				if(!$("#findEmail").hasClass("hide")){
+					var currentSelect = $(".select");
+					var nextSelect = currentSelect.next();
+					var prevSelect = currentSelect.prev();
+					
+					if(code == 40){
+						if(currentSelect.hasClass("content")){
+							$(".all").addClass("select");
+						}else{
+							nextSelect.addClass("select");
+						}
+						
+						currentSelect.removeClass("select");
+						
+					}else{
+						if(currentSelect.hasClass("all")){
+							$(".content").addClass("select");
+						}else{
+							prevSelect.addClass("select");
+						}
+						currentSelect.removeClass("select");
+					}
+				}
+				console.log("방향키");
+			}
+        	else{ // 그 이외의 값을 입력했을 경우
+        		func_searchTypeFind(txtVal);
+        	}
+        	
+        });
+          
+        
+        // 검색 아이콘 클릭시 전체검색으로 자동 실행
+        $(".icon").click(function(){
+        	goSearch( $("#mailSearch").val(),"all");
+        });
            
 	        
-	        // 기간 선택
-	        $("#mailDay").change(function(){
-	        	if($(this).val()!="" && $(this).val()!="direct"){
-	        		$(".today").datepicker('setDate', 'today');
-		        	
-	        		if($(this).val()=="week"){
-	        			$(".prevday").datepicker('setDate', '-7D');
-	        		}
-	        		else if($(this).val()=="month"){
-		        		$(".prevday").datepicker('setDate', '-1M');
-		        	}
-		        	else if($(this).val()=="threeMonth"){
-		        		$(".prevday").datepicker('setDate', '-3M');
-		        	}
-		        	else if($(this).val()=="sixMonth"){
-		        		$(".prevday").datepicker('setDate', '-6M');
-		        	}
-	        	}
-	        	else{
-	        		$(".datepicker").val("");
-	        		// $(".datepicker").datepicker('setDate', '');
-	        		console.log("초기화");
-	        	}
-	        	
-	        });
-	        
-	        $(".datepicker").change(function(){
-	        	$("#mailDay").val("direct");
-	        });
 	}); // end of $(document).ready(function())-----------------------------------------------------
 	
+	// 메일 검색 타입 선택
 	function func_searchTypeFind(val){
 		var len = val.length;
 		console.log(len);
+		console.log(val +"/"+ typeof(val));
 		var html = "";
 		if(len>0){
 			html += "<ul id='searchTypeList'>";
-			html+="<li onclick='goSearch("+val+", all)'><div>"+val+"-<span style='font-size:8pt; color:gray;'>전체검색</span></div></li>";
-			html+="<li onclick='goSearch("+val+", sender)'><div>보낸사람: "+val+"-<span style='font-size:8pt; color:gray;'>보낸사람을 찾기</span></div></li>";
-			html+="<li onclick='goSearch("+val+", receiver)'><div>받은사람: "+val+"-<span style='font-size:8pt; color:gray;'>받은사람을 찾기</span></div></li>";
-			html+="<li onclick='goSearch("+val+", content)'><div>내용: "+val+"-<span style='font-size:8pt; color:gray;'>제목, 본문내용, 첨부파일을 찾기</span></div></li>";
+			html+="<li onclick='goSearch(\""+val+"\", \"all\")' class='all select'><div>"+val+"-<span style='font-size:8pt; color:gray;'>전체검색</span></div></li>";
+			html+="<li onclick='goSearch(\""+val+"\", \"send\")' class='receive'><div>보낸사람: "+val+"-<span style='font-size:8pt; color:gray;'>보낸사람을 찾기</span></div></li>";
+			html+="<li onclick='goSearch(\""+val+"\", \"recieve\")' class='send'><div>받은사람: "+val+"-<span style='font-size:8pt; color:gray;'>받은사람을 찾기</span></div></li>";
+			html+="<li onclick='goSearch(\""+val+"\", \"content\")' class='content'><div>내용: "+val+"-<span style='font-size:8pt; color:gray;'>제목, 본문내용, 첨부파일을 찾기</span></div></li>";
 		}
 		else{
 			
@@ -157,54 +132,121 @@
 		$("#searchTypetArea").html(html);
 	}
 	
-	function goSearch(val, type){
-		console.log(val+"/"+type);
+	// 메일 검색
+	function goSearch(val, category){
+		console.log(category);
+		location.href = "<%=request.getContextPath()%>/mail/list.top?searchWord="+val+"&type="+category;
+	}
+	
+	// 파일 다운로드
+	function func_download(fileName, orgFileName, status){
+		console.log(fileName+"/"+orgFileName+"/"+status);
+		var frm = document.mailFrm;
+		$("input[name=fileName]").val(fileName);
+		$("input[name=orgFileName]").val(orgFileName);
+		$("input[name=status]").val(status);
+		
+		frm.method="post";
+		frm.action="<%=request.getContextPath()%>/mail/download.top";
+		frm.submit();
+	}
+	
+	//메일 삭제(메일함 -> 휴지통)
+	function mailDel(){
+		$("input[name=selectCheck]").val("${mail.mail_seq}")
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailDel.top";
+		frm.method = "get";
+		frm.submit();
+	}
+	
+	// 읽기페이지 이동(메일함 별로 읽기페이지에서 보여질 다음글 / 이전글 내용 달리 줘야 함)
+	function goRead(value){
+		$("input[name=readSeq]").val(value);
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/read.top";
+		frm.method = "get";
+		frm.submit();
 	}
 </script>
 <div style="margin-left:10px;">
+	<form name="mailFrm" >
 	<div id="searchArea">
+		<input type="hidden" value="" name="readSeq" />
+		<input type="hidden" value="" name="selectCheck" />
+		<input type="hidden" name="fileName" />
+		<input type="hidden" name="orgFileName" />
+		<input type="hidden" name="status" />
 		<div style="position: relative; display: inline;">
-			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" style="border: none;"/><span style="background-color: white">아이콘</span></div>
-			<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>
+			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="${searchWord}" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
+			&nbsp;&nbsp;
+			<c:choose>
+				<c:when test="${not empty searchWord}">
+					<c:choose>
+						<c:when test="${type eq 'receive'}">보낸사람 검색: </c:when>
+						<c:when test="${type eq 'send'}">받은사람 검색: </c:when>
+						<c:when test="${type eq 'content'}">내용 검색: </c:when>
+						<c:when test="${type eq 'all'}">전체 검색 : </c:when>
+					</c:choose>
+					${searchWord}
+				</c:when>
+				<c:otherwise>
+					<span style="font-weight: bold;">${mailhamType} / ${total}</span>
+				</c:otherwise>	
+			</c:choose>
+			<input type="hidden" name="type" value="${type}" />
 			<div id="searchTypetArea"></div>
-		</div>
-		<div id="termSearch" class="hide">
-			<select id="mailDay" name="mailDay">
-				<option value="">전체</option>
-				<option value="week">1주</option>
-				<option value="month">1개월</option>
-				<option value="threeMonth">3개월</option>
-				<option value="sixMonth">6개월</option>
-				<option value="direct">직접입력</option>
-			</select>
-			<input type="text" class="datepicker prevday"> - <input type="text" class="datepicker today">
-			<button type="button">검색</button>
 		</div>
 		
 		<div id="mailFunctionArea">
-			<button type="button">삭제</button>
+			<button type="button" onclick = "mailDel()">삭제</button>
 			<button type="button">전달</button>
 			<button type="button">답장</button>
 		</div>
 		<div id="mailDetail">
 			<div id="subject">
-				<h3>제목</h3>
+				<h3>${mail.subject}</h3>
 			</div>
-			<div id="send">
-				<h6>보낸사람</h6>
-				<h6>받은사람</h6>
+			<div id="sender">
+				<span>보낸사람 : </span> ${sender.employee_name}(${sender.email})
 			</div>
+			<div id="receiver">
+				<span>받은사람 :</span>
+				<c:forEach var="receive" items="${receiver}" varStatus="status">
+					<c:if test="${status.index == 0}">
+						${receive.employee_name}(${receive.email})
+					</c:if>
+					<c:if test="${status.index != 0 }">
+						, ${receive.employee_name}(${receive.email})
+					</c:if>
+				</c:forEach>
+			</div>
+			<div>
+				<div style="display: inline-block;">첨부파일</div>
+				<div style="display: inline-block;">
+					<c:if test="${not empty mail.fileName1}">
+						<div onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1}</div>
+					</c:if>	
+					<c:if test="${not empty mail.fileName2}">
+						<div onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}</div>
+					</c:if>	
+					<c:if test="${not empty mail.fileName3}">
+						<div onclick="func_download('${mail.fileName3}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}</div>
+					</c:if>		
+				</div>
+			</div>
+			
 			<div id="content">
-				내용
+				${mail.content}
 			</div>
 		</div>
 		
 		<div id="other">
 			<ul>
-				<li>이전글 | </li>
-				<li>다음글 | </li>
+				<li onclick="goRead('${mail.next_seq}')">다음글 | ${mail.next_subject}</li>
+				<li onclick="goRead('${mail.prev_seq}')">이전글 | ${mail.prev_subject}</li>
 			</ul>
 		</div>
 	</div>
-	
+	</form>
 </div>

@@ -21,7 +21,7 @@ public interface InterMailDAO {
 	List<MailVO> mailList(HashMap<String, String> paraMap);
 
 	// 메일 읽기 
-	MailVO mailRead(String mail_seq);
+	List<MailVO> mailRead(HashMap<String, String> paraMap);
 
 	// readCount 업데이트(0->1)
 	void updateReadstatus(String mail_seq);
@@ -44,6 +44,12 @@ public interface InterMailDAO {
 
 	// 메일 복구하기
 	int mailResotre(HashMap<String, String[]> paraMap);
+
+	// 보낸 사람 찾기
+	MailVO mailSenderFind(String mail_groupno);
+
+	// 받는 사람들 찾기
+	List<MailVO> mailReceiverFind(String mail_groupno);
 
 
 	

@@ -21,7 +21,7 @@ public interface InterMailService {
 	List<MailVO> mailList(HashMap<String, String> paraMap);
 
 	// 메일 읽기 페이지 이동
-	MailVO mailRead(String mail_seq) throws Throwable;
+	MailVO mailRead(HashMap<String, String> paraMap) throws Throwable;
 
 	// 메일 게시글 수 조회
 	int getTotalCount(HashMap<String, String> paraMap);
@@ -40,5 +40,12 @@ public interface InterMailService {
 
 	// 메일 복구하기
 	int mailRestore(HashMap<String, String[]> paraMap);
+
+	// 보낸사람 찾기
+	MailVO mailSenderFind(String mail_groupno);
+
+	// 받는 사람 찾기
+	List<MailVO> mailReceiverFind(String mail_groupno);
+
 
 }

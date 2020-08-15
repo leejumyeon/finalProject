@@ -453,14 +453,81 @@ public class MailController {
 	// 메일 읽기 페이지 이동
 	@RequestMapping(value="/mail/read.top")
 	public ModelAndView mailRead(ModelAndView mav, HttpServletRequest request) {
-		String mail_seq = request.getParameter("mail_seq");
+		String mail_seq = request.getParameter("readSeq");
+		String type = request.getParameter("type");
+		String searchWord = request.getParameter("searchWord");
+		if(searchWord == null || searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		
+
+		if(searchWord.trim().isEmpty()) {
+			if("receive".equals(type)) {
+				mav.addObject("mailhamType","받은메일");
+			}
+			else if("send".equals(type)) {
+				mav.addObject("mailhamType","보낸메일");
+			}
+			
+			else if("mine".equals(type)) {
+				mav.addObject("mailhamType","내게 쓴 메일");
+			}
+			
+			else if("noRead".equals(type)) {
+				mav.addObject("mailhamType","안 읽은 메일");
+			}
+			
+			else if("attach".equals(type)) {
+				mav.addObject("mailhamType","첨부파일 있는 메일");
+			}
+			
+			else if("del".equals(type)) {
+				mav.addObject("mailhamType","휴지통");
+			}
+			
+			else if("all".equals(type)) {
+				mav.addObject("mailhamType","전체메일");
+			}
+		}else {
+			mav.addObject("mailhamType","메일 검색");
+		}
+		
+		HttpSession session = request.getSession();
+		EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("mail_seq", mail_seq);
+		paraMap.put("type", type);
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("loginSeq", emp.getEmployee_seq());
+		
+		int totalCount = service.getTotalCount(paraMap);
+		mav.addObject("total",totalCount);
+		
 		MailVO mail = null;
 		try {
-			mail = service.mailRead(mail_seq);
+			mail = service.mailRead(paraMap);
+			if(mail!= null && !"2".equals(mail.getStatus())) {
+				MailVO sender = service.mailSenderFind(mail.getMail_groupno());
+				List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno());
+				
+				for(MailVO rec : receiver) {
+					System.out.println("받는사람:"+rec.getEmployee_name());
+				}
+				
+				mav.addObject("sender",sender);
+				mav.addObject("receiver",receiver);
+			}
 		}catch(Throwable e) {
 			e.printStackTrace();
 		}
-		if(mail != null) mav.addObject("mail",mail);
+		if(mail != null) {
+			mav.addObject("mail",mail);
+		}
+		mav.addObject("type",type);
+		mav.addObject("searchWord",searchWord);
+		
 		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
 	}
@@ -604,13 +671,17 @@ public class MailController {
 		return mav;
 	}
 	
-	// 메일 휴지통에 이동
+	// 메일 휴지통에 이동(선택)
 	@RequestMapping(value="/mail/mailDel.top")
 	public ModelAndView mailDel(ModelAndView mav, HttpServletRequest request) {
 		String[] selectCheck = request.getParameterValues("selectCheck");
 		String searchWord = request.getParameter("searchWord");
 		String type = request.getParameter("type");
 		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		
+		if(str_currentPageNo == null || str_currentPageNo.trim().isEmpty()) {
+			str_currentPageNo = "1";
+		}
 		
 		HashMap<String, String[]> paraMap = new HashMap<>();
 		paraMap.put("selectCheck", selectCheck);
