@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +32,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.service.InterLeeehService;
 
 @Controller
@@ -51,6 +51,55 @@ public class LeeehController {
 	// === 로그인 페이지 보여주기 === //
 	@RequestMapping(value = "/login.top", method = { RequestMethod.GET })
 	public ModelAndView goLogin(ModelAndView mav) {
+		
+		Calendar currentDate = Calendar.getInstance();
+		int year = currentDate.get(Calendar.YEAR);
+		int month = (currentDate.get(Calendar.MONTH) + 1);
+		String strMonth = (month < 10) ? "0" + month : String.valueOf(month);
+
+		int day = currentDate.get(Calendar.DATE);
+		String strDay = day < 10 ? "0" + day : String.valueOf(day);
+		
+		String sysdate = year + ". " + strMonth + ". " + strDay;
+		
+		List<TripVO> tripEmployeeList = service.getTripList();
+		
+		for(TripVO tvo : tripEmployeeList) {
+			
+			String employee_seq = tvo.getFk_employee_seq();
+			
+			if(sysdate.equals(tvo.getTrip_start())) {
+
+				if("1".equals(tvo.getTrip_category())
+				|| "2".equals(tvo.getTrip_category())
+				|| "3".equals(tvo.getTrip_category())
+				|| "4".equals(tvo.getTrip_category())
+				|| "5".equals(tvo.getTrip_category())) {
+
+					service.getUpdateEmployeeStatusVacation(employee_seq);
+				}
+				else {
+					
+					service.getUpdateEmployeeStatusBusiness(employee_seq);
+				}
+			}
+			else if(sysdate.equals(tvo.getTrip_end())) {
+				
+				service.getUpdateEmployeeStatusDefault(employee_seq);
+			}
+		}
+		
+		List<EmployeesVO> fireEemployeeList = service.employeeList();
+		
+		for(EmployeesVO evo : fireEemployeeList) {
+			
+			String employee_seq = evo.getEmployee_seq();
+			
+			if(sysdate.equals(evo.getFire_date())) {
+				
+				service.getUpdateEmployeeStatusFire(employee_seq);
+			}
+		}
 
 		mav.setViewName("login.notiles");
 
@@ -152,7 +201,7 @@ public class LeeehController {
 		mav.addObject("employee_pw", employee_pw);
 		mav.addObject("email", email);
 		mav.addObject("departmentList", departmentList);
-		mav.setViewName("idIssued.notiles");
+		mav.setViewName("/HR/idIssued.tiles3");
 
 		return mav;
 	}
@@ -1011,14 +1060,18 @@ public class LeeehController {
 			String reason = request.getParameter("reason");
 			String interviewer_seq = loginEmployee.getEmployee_seq();
 			String interview_content = request.getParameter("interview_content");
+			String fire_date = request.getParameter("fire_date");
 			
 			paraMap.put("fk_employee_seq", fk_employee_seq);
 			paraMap.put("groupno", groupno);
 			paraMap.put("reason", reason);
 			paraMap.put("interviewer_seq", interviewer_seq);
 			paraMap.put("interview_content", interview_content);
+			paraMap.put("fire_date", fire_date);
 			
 			service.insertFireTable(paraMap);
+			
+			service.updateFireDate(paraMap);
 		}
 		else if("9".equals(documentCategory)) {
 			
@@ -1215,19 +1268,38 @@ public class LeeehController {
 				service.updateDocumentStatus(paraMap);
 			}
 			
-			String employee_seq = service.employeeSeqTripTable(paraMap);
-			
-			if("1".equals(docuvo.getDocument_category())) {
-				
-				service.updateStatusEmployeesTableVacation(employee_seq);
-			}
-			else if("2".equals(docuvo.getDocument_category())) {
-				
-				service.updateStatusEmployeesTableBusiness(employee_seq);
+			if("8".equals(docuvo.getDocument_category())) {
+				service.deleteClubTable(groupno);
 			}
 		}
 		
 		mav.setViewName("redirect:/documentPayment.top");
 		return mav;
 	}
+	
+	
+	// === 관리자-인사 관리(사원정보-리스트)페이지 이동 === //
+	@RequestMapping(value="/manager/HR/list.top")
+	public ModelAndView managerHRlist(ModelAndView mav, HttpServletRequest request) {
+		
+		List<EmployeesVO> allEmployeeList = service.getAllEmployeeList();
+		
+		mav.addObject("allEmployeeList", allEmployeeList);
+		mav.setViewName("admin/HR/list.tiles3");
+		return mav;
+	}
+	
+	// === 관리자-인사 관리(사원정보-리스트)페이지 이동 === //
+	@RequestMapping(value="/employeeUpdate.top")
+	public ModelAndView employeeUpdate(ModelAndView mav, HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		
+		EmployeesVO oneEmployee = service.getOneEmployee(employee_seq);
+		
+		mav.addObject("oneEmployee", oneEmployee);
+		mav.setViewName("idUpdate.totiles");
+		return mav;
+	}
+
 }

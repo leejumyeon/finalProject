@@ -8,6 +8,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TripVO;
 
 public interface InterLeeehService {
 
@@ -111,10 +112,22 @@ public interface InterLeeehService {
 
 	void updateDocumentStatus(HashMap<String, Object> paraMap);	// 전체 결재 완료된 테이블 documentStatus 업데이트하기
 
-	String employeeSeqTripTable(HashMap<String, Object> paraMap);	// 휴가/출장 테이블에서 사원번호 얻어오기
+	List<TripVO> getTripList();	// 휴가/출장을 시작한 사람과 끝난 사람을 알아오이
 
-	void updateStatusEmployeesTableVacation(String employee_seq);	// 휴가를 간 사원의 status 값 변경하기
+	void getUpdateEmployeeStatusVacation(String employee_seq);	// 휴가 시작한 사람 업데이트하기
 
-	void updateStatusEmployeesTableBusiness(String employee_seq);	// 출장을 간 사원의 status 값 변경하기
+	void getUpdateEmployeeStatusBusiness(String employee_seq);	// 출장 시작한 사람 업데이트하기
+
+	void getUpdateEmployeeStatusDefault(String employee_seq);	// 휴가/출장 끝난 사람들 업데이트하기
+
+	void updateFireDate(HashMap<String, Object> paraMap);	// 퇴사 날짜 업데이트하기
+
+	List<EmployeesVO> employeeList();	// 퇴사날짜가 있는 사원 얻어오기
+
+	void getUpdateEmployeeStatusFire(String employee_seq);	// 퇴사인 사람들 업데이트하기
+
+	List<EmployeesVO> getAllEmployeeList();	// 모든 사원 정보 가져오기
+
+	EmployeesVO getOneEmployee(String employee_seq);	// 회원번호로 회원정보 가져오기
 
 }

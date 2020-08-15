@@ -159,42 +159,42 @@
 			<tbody>
 			
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">성명</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">성명</td>
 					<td style="width: 80%; text-align: left;">
 					    <input type="text" name="employee_name" class="required" autocomplete="off" /> 
 					</td>
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">아이디</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">아이디</td>
 					<td style="width: 80%; text-align: left;">
 					    <input type="text" name="employee_id" value="${employee_id}" readonly />
 					</td> 
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">비밀번호</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">비밀번호</td>
 					<td style="width: 80%; text-align: left;">
 						<input type="text" name="employee_pw" value="${employee_pw}" readonly />
 					</td>
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">이메일</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">이메일</td>
 					<td style="width: 80%; text-align: left;">
 						<input type="text" name="email"  value="${email}" readonly />
 					</td>
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">핸드폰 번호</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">핸드폰 번호</td>
 					<td style="width: 80%; text-align: left;">
 					    <input type="text" name="phone" class="required" placeholder="핸드폰 번호는 - 없이 작성해주십시요" autocomplete="off" />
 					</td>
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">우편번호</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">우편번호</td>
 					<td style="width: 80%; text-align: left;">
 					   <input type="text" id="postcode" name="postcode" size="6" maxlength="5" style="width: 130px;" autocomplete="off" />&nbsp;&nbsp;
 					   <button type="button" id="zipcodeSearch" style="background-color: #0099ff; border: none; color: #fff; cursor: pointer;">우편주소찾기</button>
@@ -202,7 +202,7 @@
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">주소</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">주소</td>
 					<td style="width: 80%; text-align: left;">
 					   <input type="text" id="address" name="address" size="40" placeholder="주소" autocomplete="off" /><br/>
 					   <input type="text" id="detailAddress" name="detailaddress" size="40" placeholder="상세주소" style="width: 200px;" autocomplete="off" />&nbsp;<input type="text" id="extraAddress" name="extraaddress" size="40" placeholder="참고항목" style="width: 200px;" autocomplete="off"/> 
@@ -210,7 +210,7 @@
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">성별</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">성별</td>
 					<td style="width: 80%; text-align: left;">
 					   <input type="radio" id="male" name="gender" value="1" /><label for="male" style="margin-left: 2%;">남자</label>
 					   <input type="radio" id="female" name="gender" value="2" style="margin-left: 10%;" /><label for="female" style="margin-left: 2%;">여자</label>
@@ -218,14 +218,14 @@
 				</tr>
 
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">생년월일</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">생년월일</td>
 					<td style="width: 80%; text-align: left;">
 					   <input type="text" name="birthday" class="datepicker" style="width: 150px;" class="required" autocomplete="off">
 					</td>
 				</tr>
 				
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">직책명</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">직책명</td>
 					<td style="width: 80%; text-align: left;">
 						<select name="position_seq" style="width: 60px; height: 30px;">
 							<option value="1" selected>사원</option>
@@ -237,7 +237,7 @@
 				</tr>
 				
 				<tr>
-					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3;">직책명</td>
+					<td style="width: 20%; font-weight: bold; background-color: #4da6ff; border: solid 0.5px #0059b3; border-right: solid 4px #0059b3; color: white;">직책명</td>
 					<td style="width: 80%; text-align: left;">
 						<select name="department_seq" style="width: 170px; height: 30px;">
 							<option value="" selected>==부서를 선택하세요==</option>

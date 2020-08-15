@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -189,13 +190,6 @@ public class ManagerController {
 	@RequestMapping(value="/manager/HR/review.top")
 	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
 		mav.setViewName("admin/HR/review.tiles3");
-		return mav;
-	}
-	
-	// 관리자-인사 관리(사원정보-리스트)페이지 이동
-	@RequestMapping(value="/manager/HR/list.top")
-	public ModelAndView managerHRlist(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/HR/list.tiles3");
 		return mav;
 	}
 		

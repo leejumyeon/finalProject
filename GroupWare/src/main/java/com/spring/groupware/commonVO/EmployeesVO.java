@@ -10,7 +10,9 @@ public class EmployeesVO { // 사원정보VO
 	private String status_name; // 회원상태 (employeeStatus_table이랑 join)
 	private String hire_date; // 입사날짜
 	private String fire_date; // 퇴사날짜
+	private String fk_position; // 직책번호
 	private String position_name; // 직책명 (position_table이랑 join)
+	private String fk_department; // 부서번호
 	private String department_name; // 부서명 (department_table이랑 join)
 	private String gender; //성별(남, 여)
 	private String birthday; //생년월일(YYYYMMDD)
@@ -68,7 +70,7 @@ public class EmployeesVO { // 사원정보VO
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public String getStatus_name() {
 		return status_name;
 	}
@@ -172,9 +174,21 @@ public class EmployeesVO { // 사원정보VO
 	public void setClub_name(String club_name) {
 		this.club_name = club_name;
 	}
-	
-	
-	
-	
-	
+
+	public String getFk_position() {
+		return fk_position;
+	}
+
+	public void setFk_position(String fk_position) {
+		this.fk_position = fk_position;
+	}
+
+	public String getFk_department() {
+		return fk_department;
+	}
+
+	public void setFk_department(String fk_department) {
+		this.fk_department = fk_department;
+	}
+
 }

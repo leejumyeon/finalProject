@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.DocumentVO;
+import com.spring.groupware.commonVO.EmployeesVO;
 
 
 public interface InterManagerService {
@@ -20,7 +21,6 @@ public interface InterManagerService {
 	
 	// 관리자-결재 관리(결재현황 리스트)페이지 이동[글목록]
 	List<DocumentVO> managerApprovalList();
-
 	
 	
 }

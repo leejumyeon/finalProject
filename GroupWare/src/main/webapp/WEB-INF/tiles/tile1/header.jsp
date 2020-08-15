@@ -61,16 +61,7 @@
 		</li>
 			
 		<li class="dropdown"><a class=""
-			data-toggle="dropdown" href="#">문서결재 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/list.action">목록보기</a></li>
-								
-				<c:if test="${sessionScope.loginuser != null}">
-					<li><a href="<%=ctxPath%>/add.action">글쓰기</a></li>
-				</c:if>
-				
-				<li><a href="#">Submenu 1-3</a></li>
-			</ul>
+			data-toggle="dropdown" href="<%= ctxPath%>/documentPayment.top">문서결재 <span class="caret"></span></a>
 		</li>
 		
 		<li class="dropdown">
