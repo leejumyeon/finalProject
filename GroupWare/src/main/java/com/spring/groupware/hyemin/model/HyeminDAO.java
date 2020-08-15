@@ -32,6 +32,10 @@ public class HyeminDAO implements InterHyeminDAO {
 		return headList;
 	}
 
-	
+	// === 회의실 예약하기(insert) ===
+	@Override
+	public void reserveRoomEnd(HashMap<String, String> paraMap) {
+		sqlsession.insert("hyemin.reserveRoomEnd", paraMap);
+	}
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,6 +37,7 @@ public class HyeminController {
 		return mav;
 	}
 	
+	
 	// === 예약 가능한 시간 조회(Ajax) ===
 	@ResponseBody
 	@RequestMapping(value = "/showPossibleTime.top", produces = "text/plain;charset=UTF-8")
@@ -54,6 +56,7 @@ public class HyeminController {
 
 		for (ReservationVO vo : rsvtvoList) {
 			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("employee_name", vo.getEmployee_name());
 			jsonObj.put("startDate", vo.getStartDate());
 			jsonObj.put("endDate", vo.getEndDate());
 			jsonObj.put("status", vo.getStatus());
@@ -64,6 +67,7 @@ public class HyeminController {
 		return jsonArr.toString();
 
 	}
+	
 	
 	// === 검색어 입력 시 자동글 완성하기 3 ===
 	@ResponseBody
@@ -89,5 +93,33 @@ public class HyeminController {
 		return jsonArr.toString();
 	}
 
+	
+	// === 회의실 예약하기(insert) === //
+	@RequestMapping(value = "/reserveRoomEnd.top", method = { RequestMethod.POST })
+	public ModelAndView reserveRoomEnd(ModelAndView mav, HttpServletRequest request) {
+		
+		String fk_employee_seq = request.getParameter("fk_employee_seq");
+		String fk_roomNumber = request.getParameter("fk_roomNumber");
+		String startDate = request.getParameter("rsvtDate") + " " + request.getParameter("startTimeH");
+		String endDate = request.getParameter("rsvtDate") + " " + request.getParameter("endTimeH");
+		String head_seq = request.getParameter("head_seq");
+		String memberCount = request.getParameter("memberCount");
+		String reason = request.getParameter("reason");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("fk_roomNumber", fk_roomNumber);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("head_seq", head_seq);
+		paraMap.put("memberCount", memberCount);
+		paraMap.put("reason", reason);
+		
+		service.reserveRoomEnd(paraMap);
+
+		mav.setViewName("/reservation/reserveRoom");
+		return mav;
+	}
+	
 	
 }

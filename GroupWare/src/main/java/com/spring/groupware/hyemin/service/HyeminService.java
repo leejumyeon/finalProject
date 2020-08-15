@@ -30,5 +30,11 @@ public class HyeminService implements InterHyeminService {
 		List<HashMap<String, String>> headList = dao.headSearchShow(searchHead);
 		return headList;
 	}
+
+	// === 회의실 예약하기(insert) ===
+	@Override
+	public void reserveRoomEnd(HashMap<String, String> paraMap) {
+		dao.reserveRoomEnd(paraMap);
+	}
 	
 }

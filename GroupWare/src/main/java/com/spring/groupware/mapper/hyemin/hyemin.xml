@@ -8,11 +8,13 @@
 	
 	<!-- === 예약 가능한 시간 조회(Ajax) === -->
 	<select id="select_possibleTime" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
-		select to_char(startDate, 'hh24:mi') as startDate
-			 , to_char(endDate, 'hh24:mi') as endDate
-			 , status
-		from reservation_table
-		where fk_roomNumber = #{fk_roomNumber} and to_char(startDate, 'yyyy. mm. dd') = #{rsvtDate}
+		select E.employee_name as employee_name
+			 , to_char(R.startDate, 'hh24:mi') as startDate
+			 , to_char(R.endDate, 'hh24:mi') as endDate
+			 , R.status as status
+		from reservation_table R join employees_table E
+		on R.fk_employee_seq = E.employee_seq
+		where R.fk_roomNumber = #{fk_roomNumber} and to_char(R.startDate, 'yyyy. mm. dd') = #{rsvtDate}
 	</select>
 	
 	<!-- === 검색어 입력 시 자동글 완성하기 6 === -->
@@ -33,4 +35,11 @@
 		) V
 		where lower(searchResult) like '%' || lower(#{searchHead}) || '%'		   
 	</select>
+	
+	<!-- === 회의실 예약하기(insert) === -->
+	<insert id="reserveRoomEnd" parameterType="HashMap">
+		insert into reservation_table(reservation_seq, fk_employee_seq, fk_roomNumber, startDate, endDate, head_seq, memberCount, reason, status)
+		values(reservation_table_seq.nextval, #{fk_employee_seq}, #{fk_roomNumber}, to_date(#{startDate}, 'yyyy. mm. dd hh24:mi'), to_date(#{endDate}, 'yyyy. mm. dd hh24:mi'), #{head_seq}, #{memberCount}, #{reason}, default)
+	</insert>
+	
 </mapper>
