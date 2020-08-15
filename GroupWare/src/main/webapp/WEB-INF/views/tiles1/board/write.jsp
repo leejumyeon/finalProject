@@ -10,31 +10,31 @@
 		width: 1000px;
 		margin: 0 auto;
 	}
-	table{
+	#ablwrite {
 		width: 750px;
 		
 	}
-	table, th, td {
+	#ablwrite, #ablwrite th, #ablwrite td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
-	th{
+	#ablwrite th{
 		width: 130px;
 		font-size: 11pt;
 		background-color: #3399ff;
 		color: white;
 	}	
-	th, td {
+	#ablwrite th, #ablwrite td {
 		height: 40px;
 	} 
-	button {
+	#btnWrite, #btnWrite2 {
 		border-radius: 0;
 		border-style: none;
 		background-color: #3399ff;
 		padding: 5px;
 		width: 50px;		
 	}
-	input {
+	#inputname {
 		height: 20px;
 		border: 1px solid #b3b3b3;
 	}
@@ -170,7 +170,7 @@
 			<div id="post">
 			<h3>앨범게시판</h3>
 			<form name="writeFrm" enctype="multipart/form-data">
-				<table>
+				<table id="ablwrite">
 					<tbody>
 						<tr>
 							<th style="text-align: center;">항목</th>
@@ -185,7 +185,7 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">성명</th>
-							<td>&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" value="${sessionScope.loginEmployee.employee_seq}" /></td>
+							<td>&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" id="inputname" value="${sessionScope.loginEmployee.employee_seq}" /></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">제목</th>
@@ -200,7 +200,7 @@
 				<div style="margin-top: 10px;" id="btn">	
 					<div style="clear:both"></div>						
 					<button type="button" id="btnWrite" style="color: white;">쓰기</button>
-					<button type="button" onclick="javascript:history.back()" style="color: white;">취소</button>
+					<button type="button" id="btnWrite2" onclick="javascript:history.back()" style="color: white;">취소</button>
 				</div>			
 			</form>
 			</div>				

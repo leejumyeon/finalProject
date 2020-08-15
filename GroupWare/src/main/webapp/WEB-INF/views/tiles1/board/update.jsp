@@ -10,26 +10,26 @@
 		width: 1000px;
 		margin: 0 auto;
 	}
-	table {
+	#ablupdate {
 		width: 750px;
 		margin: 0 auto;
 	}
-	table, th, td {
+	#ablupdate, #ablupdate th, #ablupdate td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
-	th{
+	#ablupdate th{
 		width: 120px;
 		font-size: 11pt;
 		background-color: #3399ff;
 		height: 40px;
 		color: white;
 	}
-	td{
+	#ablupdate td{
 		padding: 10px;
 		width: 468px;		
 	}
-	button {
+	.updateBtn {
 		border-radius: 0;
 		border-style: none;
 		background-color: #3399ff;
@@ -79,7 +79,7 @@
 		<div id="post">	
 			<h3>앨범게시판</h3>
 			<form>	
-				<table>
+				<table id="ablupdate">
 					<tbody>
 						<tr>
 							<th style="text-align: center;">앨범항목</th>
@@ -106,8 +106,8 @@
 			</form>	
 			<br/>
 			<div id="button" style="text-align: center;">
-				<button style="color: white;" type="button" onclick="javascript:location.href=''">수정</button>
-				<button style="color: white;" type="button" onclick="javascript:location.href=''">취소</button>
+				<button class="updateBtn" style="color: white;" type="button" onclick="javascript:location.href=''">수정</button>
+				<button class="updateBtn" style="color: white;" type="button" onclick="javascript:location.href=''">취소</button>
 			</div>
 			</div>
 		</div>
