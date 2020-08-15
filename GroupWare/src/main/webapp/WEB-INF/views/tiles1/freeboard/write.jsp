@@ -68,7 +68,7 @@
 	#side {
 		float: left;
 	}
-	#searchType {
+	#fk_category_num {
 		height: 28px;
 		vertical-align: middle;
 	}
@@ -106,23 +106,13 @@
 	        obj.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
 			<%-- === 스마트에디터 구현 끝 === --%>
 			
-			/* // 글제목 유효성 검사
+			// 글제목 유효성 검사
 			var subjectVal = $("#subject").val().trim();
 			if(subjectVal == "") {
 				alert("글제목을 입력하세요!!");
 				return;
 			}
-			if("${receive}"==""){
-				var receiver = $("#inputArea li").length;
-				console.log(receiver);
-				if(receiver <= 0){
-					alert("받는 사람의 메일을 선택하세요");
-					return ;
-				}
-			}
-			else{
-				
-			} */
+			
 			
 			<%-- === 스마트에디터 구현 시작 === --%>
 			// 스마트에디터 사용시 무의미하게 생기는 p태그 제거
@@ -153,7 +143,7 @@
 			// 폼(form) 을 전송(submit)
 			var frm = document.writeFrm;
 			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/board/write.top";
+			frm.action = "<%= ctxPath%>/freeboard/writeEnd.top";
 			frm.submit();	 		
 		}); // end of $(".btnWrite").click() ------------------------------------------------------------
 		
@@ -163,23 +153,20 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top?seq=${board.seq}'">앨범</div>
-			<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top'">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/list.top'">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>			
 			<div id="post">
-			<h3>앨범게시판</h3>
+			<h3>자유게시판</h3>
 			<form name="writeFrm" enctype="multipart/form-data">
 				<table id="ablwrite">
 					<tbody>
 						<tr>
 							<th style="text-align: center;">항목</th>
 							<td colspan="3">
-								&nbsp;&nbsp;<select name="searchType" id="searchType">
-									<option value="all">전체</option>
-									<option value="subject">사내</option>
-									<option value="content">봉사활동</option>
-									<option value="writer">동호회</option>					
+								&nbsp;&nbsp;<select name="fk_category_num" id="fk_category_num">
+									<option value="3">자유게시판</option>				
 								</select>
 							</td>
 						</tr>
@@ -189,7 +176,11 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">제목</th>
-							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" class="long"></td>
+							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" ></td>
+						</tr>
+						<tr>
+							<th style="text-align: center;">첨부파일</th>
+							<td><input type="file" name="attach" style="margin-left: 7px;" /></td>
 						</tr>
 						<tr style="height: 400px;">
 							<th style="text-align: center;">내용</th>
@@ -201,7 +192,8 @@
 					<div style="clear:both"></div>						
 					<button type="button" id="btnWrite" style="color: white;">쓰기</button>
 					<button type="button" id="btnWrite2" onclick="javascript:history.back()" style="color: white;">취소</button>
-				</div>			
+				</div>
+				<input type="hidden" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" />			
 			</form>
 			</div>				
 		</div>

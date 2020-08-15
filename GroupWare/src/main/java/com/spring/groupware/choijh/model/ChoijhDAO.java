@@ -7,6 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.AttachFileVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -99,6 +101,43 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return cntMapList;
 	}
 
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 자유 게시판 //
+	
+	
+	// 글쓰기(첨부파일이 없는 경우)
+	@Override
+	public int add(BoardVO bvo) {
+		int n = sqlsession.insert("freeboard.add", bvo);
+		return n;
+	}
+
+	// 게시판 글번호 채번해오기
+	@Override
+	public int getBordNum() {
+		int n = sqlsession.selectOne("freeboard.getBordNum");
+		return n;
+	}
+	
+	// 글쓰기(첨부파일이 있는 경우)
+	@Override
+	public int add_withFile(BoardVO bvo) {
+		int n = sqlsession.insert("freeboard.add_withFile", bvo);
+		return n;
+	}
+
+	// 첨부파일 테이블 insert하기
+	@Override
+	public int addFile(AttachFileVO attachvo) {
+		int m = sqlsession.insert("freeboard.addFile", attachvo);
+		return m;
+	}
+
+	
+
+	
 
 	
 }

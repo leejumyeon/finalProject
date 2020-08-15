@@ -253,6 +253,15 @@
 		frm.method = "get";
 		frm.submit();
 	}
+	
+	// 읽기페이지 이동(메일함 별로 읽기페이지에서 보여질 다음글 / 이전글 내용 달리 줘야 함)
+	function goRead(value){
+		$("input[name=readSeq]").val(value);
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/read.top";
+		frm.method = "get";
+		frm.submit();
+	}
 </script>
 <div style="margin-left:10px;">
 	<form name="mailFrm">
@@ -261,6 +270,7 @@
 	
 	<div id="searchArea">
 		<input type="hidden" value="${currentShowPageNo}" name="currentShowPageNo" />
+		<input type="hidden" value="" name="readSeq" />
 		<div style="position: relative; display: inline;">
 			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="${searchWord}" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
 			&nbsp;&nbsp;
@@ -324,10 +334,10 @@
 											<c:set var="temp" value="${mail.mail_groupno }" />
 											<c:choose>
 												<c:when test="${mail.readStatus eq 0 }">
-												<tr style="color:blue;">
+												<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
 												</c:when>
 												<c:otherwise>
-												<tr>
+												<tr onclick="goRead('${mail.mail_seq}')">
 												</c:otherwise>
 											</c:choose>
 											
@@ -356,13 +366,13 @@
 												
 												<c:choose>
 													<c:when test="${mail.status eq 2}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[내게 쓴 메일]${mail.subject}</a></td>
+														<td>[내게 쓴 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 1}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[받은 메일]${mail.subject}</a></td>
+														<td>[받은 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 0}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[보낸 메일]${mail.subject}</a></td>
+														<td>[보낸 메일]${mail.subject}</td>
 													</c:when>
 												</c:choose>
 												
@@ -389,10 +399,10 @@
 											<c:set var="temp" value="${mail.mail_groupno}"></c:set>
 											<c:choose>
 												<c:when test="${mail.readStatus eq 0 }">
-												<tr style="color:blue;">
+												<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
 												</c:when>
 												<c:otherwise>
-												<tr>
+												<tr onclick="goRead('${mail.mail_seq}')">
 												</c:otherwise>
 											</c:choose>
 													<td>
@@ -431,10 +441,10 @@
 										<c:set var="temp" value="${mail.mail_groupno}"></c:set>
 										<c:choose>
 											<c:when test="${mail.readStatus eq 0 }">
-											<tr style="color:blue;">
+											<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
 											</c:when>
 											<c:otherwise>
-											<tr>
+											<tr onclick="goRead('${mail.mail_seq}')">
 											</c:otherwise>
 										</c:choose>
 											<c:choose>
@@ -460,13 +470,13 @@
 												
 												<c:choose>
 													<c:when test="${mail.status eq 2}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[내게 쓴 메일]${mail.subject}</a></td>
+														<td>[내게 쓴 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 1}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[받은 메일]${mail.subject}</a></td>
+														<td>[받은 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 0}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[보낸 메일]${mail.subject}</a></td>
+														<td>[보낸 메일]${mail.subject}</td>
 													</c:when>
 												</c:choose>
 												

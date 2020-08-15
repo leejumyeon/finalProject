@@ -25,10 +25,10 @@
 	        <div id="contextMenu" class="dropdown clearfix">
 	            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
 	                style="display:block;position:static;margin-bottom:5px;">
-	                <li><a tabindex="-1" href="#">카테고리1</a></li>
-	                <li><a tabindex="-1" href="#">카테고리2</a></li>
-	                <li><a tabindex="-1" href="#">카테고리3</a></li>
-	                <li><a tabindex="-1" href="#">카테고리4</a></li>
+	                <li><a tabindex="-1" href="#">경조사</a></li>
+	                <li><a tabindex="-1" href="#">워크샵</a></li>
+	                <li><a tabindex="-1" href="#">협력일정</a></li>
+	                <li><a tabindex="-1" href="#">채용일정</a></li>
 	                <li class="divider"></li>
 	                <li><a tabindex="-1" href="#" data-role="close">Close</a></li>
 	            </ul>
@@ -82,10 +82,10 @@
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">구분</label>
 	                                <select class="inputModal" type="text" name="edit-type" id="edit-type">
-	                                    <option value="1">경조사</option>
-	                                    <option value="2">워크샵</option>
-	                                    <option value="3">협력일정</option>
-	                                    <option value="4">채용일정</option>
+	                                    <option value="경조사">경조사</option>
+	                                    <option value="워크샵">워크샵</option>
+	                                    <option value="협력일정">협력일정</option>
+	                                    <option value="채용일정">채용일정</option>
 	                                </select>
 	                            </div>
 	                        </div>
@@ -150,11 +150,11 @@
                 <div class="col-lg-6">
                     <label for="calendar_view">구분별</label>
                     <div class="input-group">
-                        <select class="filter" id="type_filter" multiple="multiple">
-                            <option value="카테고리1">카테고리1</option>
-                            <option value="카테고리2">카테고리2</option>
-                            <option value="카테고리3">카테고리3</option>
-                            <option value="카테고리4">카테고리4</option>
+                        <select class="filter" id="type_filter" multiple="multiple" style="width: 300px;">
+                            <option value="경조사">경조사</option>
+                            <option value="워크샵">워크샵</option>
+                            <option value="협력일정">협력일정</option>
+                            <option value="채용일정">채용일정</option>
                         </select>
                     </div>
                 </div>

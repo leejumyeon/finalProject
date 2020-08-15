@@ -79,12 +79,12 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top?seq=${board.seq}'">앨범</div>
-			<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top'">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/list.top'">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>						
 			<div id="post">	
-				<h3>앨범게시판</h3>
+				<h3>자유게시판</h3>
 				<form>
 					<select name="searchType" id="searchType">
 						<option value="all">전체</option>
@@ -94,7 +94,7 @@
 					</select>	
 					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
 					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
-					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
+					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/write.top'">글쓰기</button>		
 				</form>
 				<div style="margin-top: 15px;">
 					<table id="abl">

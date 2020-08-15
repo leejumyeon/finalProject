@@ -46,9 +46,9 @@ public class MailDAO implements InterMailDAO{
 	
 	// 메일 읽기
 	@Override
-	public MailVO mailRead(String mail_seq) {
-		MailVO mail = sqlsession.selectOne("mail.mailRead",mail_seq);
-		return mail;
+	public List<MailVO> mailRead(HashMap<String,String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.mailRead",paraMap);
+		return mailList;
 	}
 
 	// readStatus 업데이트(0->1)
@@ -99,6 +99,20 @@ public class MailDAO implements InterMailDAO{
 	public int mailResotre(HashMap<String, String[]> paraMap) {
 		int n = sqlsession.update("mail.mailResotre",paraMap);
 		return n;
+	}
+
+	// 보낸 사람 찾기
+	@Override
+	public MailVO mailSenderFind(String mail_groupno) {
+		MailVO sender = sqlsession.selectOne("mail.mailSenderFind",mail_groupno);
+		return sender;
+	}
+
+	// 받는 사람 찾기
+	@Override
+	public List<MailVO> mailReceiverFind(String mail_groupno) {
+		List<MailVO> receiver = sqlsession.selectList("mail.mailReceiverFind",mail_groupno);
+		return receiver;
 	}
 
 }

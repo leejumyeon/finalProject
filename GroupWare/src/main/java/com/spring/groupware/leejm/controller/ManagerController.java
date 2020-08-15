@@ -115,17 +115,18 @@ public class ManagerController {
 			return "admin/approval/garbage.tiles3";
 		}
 		
+		// 관리자-결재 관리(문서함)페이지 이동
+		@RequestMapping(value="/manager/approval/approvalList.top")
+		public String managerDocumentList(HttpServletRequest request) {
+			
+			return "admin/approval/approvalList.tiles3";
+			
+		}
+		
 		// 관리자-결재 관리(결재현황 상세)페이지 이동
 		@RequestMapping(value="/manager/approval/approvalDetail.top")
 		public ModelAndView managerApprovalDetail(ModelAndView mav, HttpServletRequest request) {
 			mav.setViewName("admin/approval/approvalDetail.tiles3");
-			return mav;
-		}
-		
-		// 관리자-결재 관리(문서함)페이지 이동
-		@RequestMapping(value="/manager/approval/approvalList.top")
-		public ModelAndView managerDocumentList(ModelAndView mav, HttpServletRequest request) {
-			mav.setViewName("admin/approval/approvalList.tiles3");
 			return mav;
 		}
 		

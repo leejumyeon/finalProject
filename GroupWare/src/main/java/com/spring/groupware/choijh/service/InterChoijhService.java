@@ -3,6 +3,8 @@ package com.spring.groupware.choijh.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.groupware.commonVO.AttachFileVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -29,6 +31,19 @@ public interface InterChoijhService {
 	int groupChattRoomCreate_Other(HashMap<String, Object> map); // 그룹채팅 방 생성하기(상대방)
 
 	List<HashMap<String, String>> selectCnt(String employee_seq); // 대화방을 나간 방번호 조회하기
+
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 자유 게시판 //
+	
+	
+	int add(BoardVO bvo); // 글쓰기(첨부파일이 없는 경우)
+
+	int getBordNum(); // 게시판 글번호 채번해오기
+	int add_withFile(BoardVO bvo, AttachFileVO attachvo); // 글쓰기(첨부파일이 있는 경우)
+
+	
 	
 
 }

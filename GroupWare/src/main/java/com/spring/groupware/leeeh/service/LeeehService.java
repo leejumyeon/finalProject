@@ -489,4 +489,38 @@ public class LeeehService implements InterLeeehService {
 		return oneEmployee;
 	}
 
+	// === 사원 정보 업데이트하기 === //
+	@Override
+	public void employeeUpdate(HashMap<String, String> paraMap) {
+
+		dao.employeeUpdate(paraMap);
+	}
+
+	// === 사원 grade 업데이트하기 === //
+	@Override
+	public int updateGrade(HashMap<String, String> paraMap) {
+
+		int result = dao.updateGrade(paraMap);
+		
+		return result;
+	}
+
+	// === 사원 부서 변경하기 === //
+	@Override
+	public int updateDepartment(HashMap<String, String> paraMap) {
+
+		int result = dao.updateDepartment(paraMap);
+		
+		return result;
+	}
+
+	// === 사원 직위 변경하기 === //
+	@Override
+	public int updatePosition(HashMap<String, String> paraMap) {
+
+		int result = dao.updatePosition(paraMap);
+		
+		return result;
+	}
+
 }

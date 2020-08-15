@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="freeboard">
+
+	<!-- 글쓰기(첨부파일이 없는 경우) -->
+	<insert id="add" parameterType="com.spring.groupware.commonVO.BoardVO">
+		insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+		values(board_table_seq.nextval, #{fk_category_num}, #{subject}, #{content}, default, default, #{fk_employee_seq}, default, default)
+	</insert>
+
+	
+	<!-- 게시판 글번호 채번해오기 -->
+	<select id="getBordNum" resultType="int">
+		select board_table_seq.nextval
+		from dual
+	</select>
+	
+	
+	<!-- 글쓰기(첨부파일이 있는 경우) -->
+	<insert id="add_withFile" parameterType="com.spring.groupware.commonVO.BoardVO">
+		insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+		values(#{board_seq}, #{fk_category_num}, #{subject}, #{content}, default, default, #{fk_employee_seq}, default, default)
+	</insert>
+	
+	
+	<!-- 첨부파일 테이블 insert하기 -->
+	<insert id="addFile" parameterType="com.spring.groupware.commonVO.AttachFileVO">
+		insert into attachFile_table(file_seq, fk_board_seq, fileName, orgFileName, fileSize)
+		values(attachFile_table_seq.nextval, #{fk_board_seq}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	
+</mapper>

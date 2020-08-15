@@ -130,4 +130,14 @@ public interface InterLeeehService {
 
 	EmployeesVO getOneEmployee(String employee_seq);	// 회원번호로 회원정보 가져오기
 
+	void employeeUpdate(HashMap<String, String> paraMap);	// 사원 정보 업데이트하기
+
+	int updateGrade(HashMap<String, String> paraMap);	// 사원 grade 업데이트하기
+	
+	int updateDepartment(HashMap<String, String> paraMap);	// 사원 부서 변경하기
+
+	int updatePosition(HashMap<String, String> paraMap);	// 사원 직위 변경하기
+
+	
+
 }

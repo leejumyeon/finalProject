@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.groupware.choijh.model.InterChoijhDAO;
+import com.spring.groupware.commonVO.AttachFileVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -108,6 +110,45 @@ public class ChoijhService implements InterChoijhService {
 		List<HashMap<String,String>> cntMapList = dao.selectCnt(employee_seq);
 		return cntMapList;
 	}
+
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 자유 게시판 //
+	
+
+	// 글쓰기(첨부파일이 없는 경우)
+	@Override
+	public int add(BoardVO bvo) {
+		int n = dao.add(bvo);
+		return n;
+	}
+
+	
+	// 게시판 글번호 채번해오기
+	@Override
+	public int getBordNum() {
+		int n = dao.getBordNum();
+		return n;
+	}
+
+	
+	// 글쓰기(첨부파일이 있는 경우)
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public int add_withFile(BoardVO bvo, AttachFileVO attachvo) {
+		
+		int n = dao.add_withFile(bvo);
+		
+		int m = dao.addFile(attachvo); // 첨부파일 테이블 insert하기
+		
+		n = m*n;
+		
+		return n;
+	}
+
+
+	
 
 	
 
