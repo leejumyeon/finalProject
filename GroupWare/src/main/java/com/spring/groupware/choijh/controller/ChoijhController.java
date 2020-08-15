@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.groupware.choijh.service.InterChoijhService;
 import com.spring.groupware.commonVO.EmployeesVO;
@@ -267,7 +268,22 @@ public class ChoijhController {
 		
 		return jsonObj.toString();
 	}
+	
+	
 		
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// 자유 게시판 //
+	@RequestMapping(value="/freeboard/freeboardlist.top")
+	public ModelAndView freeboardlist(ModelAndView mav) {
+		
+		mav.setViewName("freeboard/freeboardlist.tiles1");
+		
+		return mav;
+	}
+	
+	
 	
 	
 }

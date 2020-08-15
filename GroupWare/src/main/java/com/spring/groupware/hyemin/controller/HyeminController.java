@@ -27,10 +27,10 @@ public class HyeminController {
 	@Autowired
 	private InterHyeminService service;
 	
-	@RequestMapping(value = "/rsvt/rsvtRoom.top")
+	@RequestMapping(value = "/reservation/reserveRoom.top")
 	public ModelAndView hmTest(ModelAndView mav) {
 		
-		mav.setViewName("rsvt/rsvtRoom.tiles1");
+		mav.setViewName("reservation/reserveRoom.tiles1");
 		// /WEB-INF/views/rsvt/rsvtRoom.jsp 페이지를 만들어야 한다.
 		
 		return mav;

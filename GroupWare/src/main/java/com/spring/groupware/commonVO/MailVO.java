@@ -25,6 +25,11 @@ public class MailVO {//메일함 VO
 	private String position_name;
 	private String department_name;
 	
+	private String prev_seq;
+	private String prev_subject;
+	private String next_seq;
+	private String next_subject;
+	
 	// 보낸 메일함, 받은 메일함 모두 제목 내용 보여주는것은 똑같고 수신 발신 이메일만 다르게 적용)
 	
 	public String getMail_seq() {
@@ -176,6 +181,31 @@ public class MailVO {//메일함 VO
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
+	public String getPrev_seq() {
+		return prev_seq;
+	}
+	public void setPrev_seq(String prev_seq) {
+		this.prev_seq = prev_seq;
+	}
+	public String getPrev_subject() {
+		return prev_subject;
+	}
+	public void setPrev_subject(String prev_subject) {
+		this.prev_subject = prev_subject;
+	}
+	public String getNext_seq() {
+		return next_seq;
+	}
+	public void setNext_seq(String next_seq) {
+		this.next_seq = next_seq;
+	}
+	public String getNext_subject() {
+		return next_subject;
+	}
+	public void setNext_subject(String next_subject) {
+		this.next_subject = next_subject;
+	}
+	
 	
 	
 	

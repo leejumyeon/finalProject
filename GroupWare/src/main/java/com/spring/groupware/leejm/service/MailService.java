@@ -57,11 +57,38 @@ public class MailService implements InterMailService{
 	// 메일 읽기 페이지 이동(트랜잭션 처리 - 페이지 이동과 동시에 readStatus값 업데이트)
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = {Throwable.class})
-	public MailVO mailRead(String mail_seq) throws Throwable {
-		MailVO mail = dao.mailRead(mail_seq);
+	public MailVO mailRead(HashMap<String, String> paraMap) throws Throwable {
+		List<MailVO> mailList = dao.mailRead(paraMap); // 읽을 메일이 들어가 있는 메일 리스트 조회
+		int index = 0;
+		MailVO mail = null;
+		// 메일리스트 중에서 읽을 메일 조회
+		for(int i=0; i<mailList.size(); i++) {
+			if(paraMap.get("mail_seq").equals(mailList.get(i).getMail_seq())) {
+				index = i;
+				mail = mailList.get(i);
+			}
+		}
+		
+		String groupNo = mail.getMail_groupno();
+		
+		// 다음 글번호 채번하기
+		for(int i=mailList.size()-1; i>index; i--) {
+			if(!mailList.get(i).getMail_groupno().equals(groupNo)) {
+				mail.setNext_seq(mailList.get(i).getMail_seq());
+				mail.setNext_subject(mailList.get(i).getSubject());
+			}
+		}
+		
+		// 이전 글번호 채번하기
+		for(int i=0; i<index; i++) {
+			if(!mailList.get(i).getMail_groupno().equals(groupNo)) {
+				mail.setPrev_seq(mailList.get(i).getMail_seq());
+				mail.setPrev_subject(mailList.get(i).getSubject());
+			}
+		}
 		
 		if(mail!=null) {
-			dao.updateReadstatus(mail_seq);
+			dao.updateReadstatus(paraMap.get("mail_seq"));
 		}
 		
 		return mail;
@@ -107,5 +134,19 @@ public class MailService implements InterMailService{
 	public int mailRestore(HashMap<String, String[]> paraMap) {
 		int n = dao.mailResotre(paraMap);
 		return n;
+	}
+
+	// 보낸 사람 찾기
+	@Override
+	public MailVO mailSenderFind(String mail_seq) {
+		MailVO sender = dao.mailSenderFind(mail_seq);
+		return sender;
+	}
+
+	// 받는 사람 찾기
+	@Override
+	public List<MailVO> mailReceiverFind(String mail_groupno) {
+		List<MailVO> receiver = dao.mailReceiverFind(mail_groupno);
+		return receiver;
 	}
 }
