@@ -13,6 +13,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TripVO;
 
 @Repository
 public class LeeehDAO implements InterLeeehDAO {
@@ -415,27 +416,76 @@ public class LeeehDAO implements InterLeeehDAO {
 
 		sqlsession.update("leeeh.updateDocumentStatus", paraMap);
 	}
-
-	// === 휴가/출장 테이블에서 사원번호 얻어오기 === //
+	
+	// === 휴가/출장을 시작한 사람과 끝난 사람을 알아오이 === //
 	@Override
-	public String employeeSeqTripTable(HashMap<String, Object> paraMap) {
+	public List<TripVO> getTripList() {
 
-		String employee_seq = sqlsession.selectOne("leeeh.employeeSeqTripTable", paraMap);
+		List<TripVO> tripEmployeeList = sqlsession.selectList("leeeh.getTripList");
 		
-		return employee_seq;
+		return tripEmployeeList;
 	}
 
-	// === 휴가를 간 사원의 status 값 변경하기 === //
+	// === 휴가 시작한 사람 업데이트하기 === //
 	@Override
-	public void updateStatusEmployeesTableVacation(String employee_seq) {
+	public void getUpdateEmployeeStatusVacation(String employee_seq) {
 
-		sqlsession.update("leeeh.updateStatusEmployeesTableVacation", employee_seq);
+		sqlsession.update("leeeh.getUpdateEmployeeStatusVacation", employee_seq);
 	}
 
+	// === 출장 시작한 사람 업데이트하기 === //
 	@Override
-	public void updateStatusEmployeesTableBusiness(String employee_seq) {
+	public void getUpdateEmployeeStatusBusiness(String employee_seq) {
 
-		sqlsession.update("leeeh.updateStatusEmployeesTableBusiness", employee_seq);
+		sqlsession.update("leeeh.getUpdateEmployeeStatusBusiness", employee_seq);
+	}
+
+	// === 휴가/출장 끝난 사람들 업데이트하기 === //
+	@Override
+	public void getUpdateEmployeeStatusDefault(String employee_seq) {
+
+		sqlsession.update("leeeh.getUpdateEmployeeStatusDefault", employee_seq);
+	}
+
+	// === 퇴사 날짜 업데이트하기 === //
+	@Override
+	public void updateFireDate(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateFireDate", paraMap);
+	}
+
+	// === 퇴사날짜가 있는 사원 얻어오기 === //
+	@Override
+	public List<EmployeesVO> employeeList() {
+
+		List<EmployeesVO> fireEmployeeList = sqlsession.selectList("leeeh.employeeList");
+		
+		return fireEmployeeList;
+	}
+
+	// === 퇴사인 사람들 업데이트하기 === //
+	@Override
+	public void getUpdateEmployeeStatusFire(String employee_seq) {
+
+		sqlsession.update("leeeh.getUpdateEmployeeStatusFire", employee_seq);
+	}
+
+	// === 모든 회원 정보 가져오기 === //
+	@Override
+	public List<EmployeesVO> getAllEmployeeList() {
+
+		List<EmployeesVO> allEmployeeList = sqlsession.selectList("leeeh.getAllEmployeeList");
+		
+		return allEmployeeList;
+	}
+
+	// === 회원번호로 회원정보 가져오기 === //
+	@Override
+	public EmployeesVO getOneEmployee(String employee_seq) {
+		
+		EmployeesVO oneEmployee = sqlsession.selectOne("leeeh.getOneEmployee", employee_seq);
+		
+		return oneEmployee;
 	}
 
 }

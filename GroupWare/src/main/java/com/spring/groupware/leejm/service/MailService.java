@@ -32,6 +32,9 @@ public class MailService implements InterMailService{
 	public int mailSend(List<MailVO> mailList) throws Throwable{
 		int result = 0;
 		for(MailVO mail : mailList) {
+			
+			System.out.println("확인용 : " + mail.getFk_employee_seq());
+			
 			result += dao.mailSend(mail);
 		}
 		return result;
@@ -64,9 +67,45 @@ public class MailService implements InterMailService{
 		return mail;
 	}
 
+	// 메일 건 수 조회
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
 		int result = dao.mailCount(paraMap);
 		return result;
+	}
+
+	// 메일 읽음 안읽음 수정
+	@Override
+	public int mailReadUpdate(HashMap<String, Object> paraMap) {
+		int n = dao.mailreadUpdate(paraMap);
+		return n;
+	}
+
+	// 메일 휴지통으로 이동
+	@Override
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = dao.mailDel(paraMap);
+		return n;
+	}
+
+	// 메일 영구삭제
+	@Override
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = dao.mailDeletion(paraMap);
+		return n;
+	}
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	@Override
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = dao.deleteFileList(paraMap);
+		return deleteFileList;
+	}
+
+	// 메일 복구하기
+	@Override
+	public int mailRestore(HashMap<String, String[]> paraMap) {
+		int n = dao.mailResotre(paraMap);
+		return n;
 	}
 }

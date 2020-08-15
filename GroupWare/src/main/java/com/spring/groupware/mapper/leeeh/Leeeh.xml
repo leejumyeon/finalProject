@@ -479,22 +479,84 @@
 		where groupno = #{groupno}
 	</update>
 	
-	<!-- === 휴가/출장 테이블에서 사원번호 얻어오기 === -->
-	<select id="employeeSeqTripTable" parameterType="HashMap" resultType="String">
-		select fk_employee_seq
+	<!-- === 휴가/출장을 시작한 사람과 끝난 사람을 알아오이 === -->
+	<select id="getTripList" resultType="com.spring.groupware.commonVO.TripVO">
+		select trip_category
+			 , to_char(trip_start, 'yyyy. mm. dd') AS trip_start
+			 , to_char(trip_end, 'yyyy. mm. dd') AS trip_end
+			 , fk_employee_seq
 		from trip_table
-		where groupno = #{groupno}
 	</select>
 	
-	<!-- === 휴가를 간 사원의 status 값 변경하기 === -->
-	<update id="updateStatusEmployeesTableVacation" parameterType="String">
-		update employees_table set fk_status = '3'
+	<!-- === 휴가 시작한 사람 업데이트하기 === -->
+	<update id="getUpdateEmployeeStatusVacation" parameterType="String">
+		update employees_table set fk_status = 3
 		where employee_seq = #{employee_seq}
 	</update>
 	
-	<!-- === 출장을 간 사원의 status 값 변경하기 === -->
-	<update id="updateStatusEmployeesTableBusiness" parameterType="String">
-		update employees_table set fk_status = '4'
+	<!-- === 출장 시작한 사람 업데이트하기 === -->
+	<update id="getUpdateEmployeeStatusBusiness" parameterType="String">
+		update employees_table set fk_status = 4
 		where employee_seq = #{employee_seq}
 	</update>
+	
+	<!-- === 휴가/출장 끝난 사람들 업데이트하기 === -->
+	<update id="getUpdateEmployeeStatusDefault" parameterType="String">
+		update employees_table set fk_status = 1
+		where employee_seq = #{employee_seq}
+	</update>
+	
+	<!-- === 퇴사 날짜 업데이트하기 === -->
+	<update id="updateFireDate" parameterType="HashMap">
+		update employees_table set fire_date = to_date(#{fire_date}, 'yyyy. mm. dd')
+		where employee_seq = #{fk_employee_seq}	
+	</update>
+	
+	<!-- === 퇴사날짜가 있는 사원 얻어오기 === -->
+	<select id="employeeList" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select fire_date, employee_seq
+		from employees_table
+		where fire_date is not null
+	</select>
+	
+	<!-- === 퇴사인 사람들 업데이트하기 === -->
+	<update id="getUpdateEmployeeStatusFire" parameterType="String">
+		update employees_table set fk_status = 2
+		where employee_seq = #{employee_seq}
+	</update>
+	
+	<!-- === 모든 회원 정보 가져오기 === -->
+	<select id="getAllEmployeeList" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select T.employee_seq, T.employee_name, T.employee_id, T.email, T.hire_date, T.fk_position, T.fk_department
+		     , T.grade, ES.status_name
+		from
+		(
+		    select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.fk_position, V.position_name, V.fk_department, D.department_name, V.gender
+		         , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade, V.fk_status
+		    from
+		    (
+		        select E.employee_seq, E.employee_name, E.employee_id, E.employee_pw, E.email, E.phone, to_char(E.hire_date, 'yyyy. mm. dd') AS hire_date, E.fk_position, P.position_name, E.fk_department, E.gender
+		             , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade, E.fk_status
+		        from employees_table E join position_table P
+		        on E.fk_position = P.position_seq
+		        order by E.fk_department desc, E.fk_position desc
+		    ) V join department_table D
+		    on V.fk_department = D.department_seq
+		) T join employeeStatus_table ES
+		on T.fk_status = ES.status_seq
+	</select>
+	
+	<!-- === 회원번호로 회원정보 가져오기 === -->
+	<select id="getOneEmployee" parameterType="String">
+	    select V.employee_seq, V.employee_name, V.employee_id, V.email, V.phone, V.hire_date, V.position_name, D.department_name, V.gender
+	         , V.birthday, V.address, V.postcode, V.detailaddress, V.extraaddress, V.grade,
+	    from
+	    (
+	        select E.employee_seq, E.employee_name, E.employee_id, E.employee_pw, E.email, E.phone, E.hire_date, P.position_name, E.fk_department, E.gender
+	             , E.birthday, E.address, E.postcode, E.detailaddress, E.extraaddress, E.grade,
+	        from employees_table E join position_table P
+	        on E.fk_position = P.position_seq
+	    ) V join department_table D
+	    on V.fk_department = D.department_seq
+	</select>
 </mapper>

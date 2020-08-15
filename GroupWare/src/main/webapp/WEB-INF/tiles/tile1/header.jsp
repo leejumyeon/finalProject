@@ -48,7 +48,7 @@
 </script>
 
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
-	<a href="<%=ctxPath%>/test.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
+	<a href="<%=ctxPath%>/main.top"><img src="<%=ctxPath%>/resources/images/logo2.png" style=" height:40px;"/></a>
 </div>
 <div style="display: inline-block; border:solid 0px blue; width:1130px;" align="center">
 	<ul class="mynav" style="float:left;">
@@ -61,16 +61,7 @@
 		</li>
 			
 		<li class="dropdown"><a class=""
-			data-toggle="dropdown" href="#">문서결재 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/list.action">목록보기</a></li>
-								
-				<c:if test="${sessionScope.loginuser != null}">
-					<li><a href="<%=ctxPath%>/add.action">글쓰기</a></li>
-				</c:if>
-				
-				<li><a href="#">Submenu 1-3</a></li>
-			</ul>
+			data-toggle="dropdown" href="<%= ctxPath%>/documentPayment.top">문서결재 <span class="caret"></span></a>
 		</li>
 		
 		<li class="dropdown">

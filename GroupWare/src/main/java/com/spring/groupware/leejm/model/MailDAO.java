@@ -51,7 +51,7 @@ public class MailDAO implements InterMailDAO{
 		return mail;
 	}
 
-	// readCount 업데이트(0->1)
+	// readStatus 업데이트(0->1)
 	@Override
 	public void updateReadstatus(String mail_seq) {
 		sqlsession.update("mail.updateReadstatus",mail_seq);
@@ -64,6 +64,41 @@ public class MailDAO implements InterMailDAO{
 	public int mailCount(HashMap<String, String> paraMap) {
 		int result = sqlsession.selectOne("mail.mailCount",paraMap);
 		return result;
+	}
+
+	// readStatus 업데이트(복수개, 0->1 or 1->0)
+	@Override
+	public int mailreadUpdate(HashMap<String, Object> paraMap) {
+		int n = sqlsession.update("mail.mailreadUpdate",paraMap);
+		return n;
+	}
+
+	// 메일 휴지통으로 이동
+	@Override
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = sqlsession.update("mail.mailDel",paraMap);
+		return n;
+	}
+
+	// 메일 영구삭제
+	@Override
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.delete("mail.mailDeletion",paraMap);
+		return n;
+	}
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	@Override
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = sqlsession.selectList("mail.deleteFileList",paraMap);
+		return deleteFileList;
+	}
+
+	// 메일 복구하기
+	@Override
+	public int mailResotre(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.update("mail.mailResotre",paraMap);
+		return n;
 	}
 
 }

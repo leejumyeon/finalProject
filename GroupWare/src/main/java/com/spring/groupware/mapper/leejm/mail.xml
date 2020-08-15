@@ -48,7 +48,7 @@
 	<!-- 메일함 조회 -->
 	<select id="mailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
 		select Ron, mail_seq, mail_groupno, subject, mailStatus, readStatus, status, regDate, fk_employee_seq, employee_name, email, position_name, department_name, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3
-		from(select row_number() over(order by My.mail_seq desc) as Ron, My.mail_seq, My.mail_groupno, My.subject, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
+		from(select row_number() over(order by My.mail_seq desc, You.fk_employee_seq asc) as Ron, My.mail_seq, My.mail_groupno, My.subject, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
 		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
 		from
 		<choose>
@@ -71,7 +71,7 @@
 						    from mail_table M 
 						    join employees_table E on M.fk_employee_seq = E.employee_seq 
 						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 1 and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}))You
+						    join department_table D on E.fk_department = D.department_seq  where M.status = 1 and mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}))You
 						on My.mail_groupno = You.mail_groupno)
 					</when>
 					<when test='type == "mine"'> <!-- 내게 쓴 메일 -->
@@ -101,7 +101,7 @@
 						    from mail_table M 
 						    join employees_table E on M.fk_employee_seq = E.employee_seq 
 						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq}))You
+						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq}))You
 						on My.mail_groupno = You.mail_groupno)
 					</when>
 					<when test='type == "attach"'> <!-- 첨부파일 있는 메일 -->
@@ -111,7 +111,7 @@
 						    from mail_table M 
 						    join employees_table E on M.fk_employee_seq = E.employee_seq 
 						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}))You
+						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}))You
 						on My.mail_groupno = You.mail_groupno)
 					</when>
 					<when test='type == "all"'> <!-- 전체메일 -->
@@ -121,7 +121,7 @@
 						    from mail_table M 
 						    join employees_table E on M.fk_employee_seq = E.employee_seq 
 						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
+						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
 						on My.mail_groupno = You.mail_groupno)
 					</when>
 				</choose> 
@@ -246,10 +246,47 @@
 					<when test='type == "all"'>
 						((status in(0,1) and fk_employee_seq != #{loginSeq}) or status = 2)and (content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%' or employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
 					</when>
-				</choose>
-				
-		</if>
-			
+				</choose>	
+		</if>		
 	</select>
 	
+	<!-- mail ReadStatus 업데이트 (복수개) -->
+	<update id="mailreadUpdate" parameterType="HashMap">
+		update mail_table set readStatus = #{read} where mail_seq in 
+		<foreach collection="selectCheck" open="(" close=")" index="i" separator=",">
+			${selectCheck[i]}
+		</foreach>
+	</update>
+	
+	<!-- 메일 휴지통으로 삭제 -->
+	<update id="mailDel" parameterType="HashMap">
+		update mail_table set mailStatus = 0 where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</update>
+	
+	<!-- 메일 영구삭제 -->
+	<delete id="mailDeletion" parameterType="HashMap">
+		delete from mail_table where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</delete>
+	
+	<!-- 삭제할 메일의 첨부파일 조회 -->
+	<select id="deleteFileList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.MailVO">
+		select status, fileName1, fileName2, fileName3 from mail_table where fileName1 is not null and mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</select>
+	
+	<!-- 메일 복구하기 -->
+	<update id="mailRestore" parameterType="HashMap">
+		update mail_table set mailStatus = 1 where mail_seq in
+		<foreach collection="selectCheck" open="(" index="i" separator="," close=")">
+			${selectCheck[i]}
+		</foreach>
+	</update>
 </mapper>

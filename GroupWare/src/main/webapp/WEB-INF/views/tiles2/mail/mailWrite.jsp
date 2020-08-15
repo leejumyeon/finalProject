@@ -300,49 +300,64 @@
 </script>
 
 <div style="margin-left:10px;" align="left">
-	<div id="writeArea">
-		<span class="writeBtn">보내기</span> <span class="writeBtn">미리보기</span>
-	</div>
-	<div id="frmArea">
-		<form name="mailFrm" enctype="multipart/form-data">
-			<table>
-				<c:if test="${empty(receive)}">
+<c:choose>
+	<c:when test="${empty result}">
+		<div id="writeArea">
+			<span class="writeBtn">보내기</span> <span class="writeBtn">미리보기</span>
+		</div>
+		<div id="frmArea">
+			<form name="mailFrm" enctype="multipart/form-data">
+				<table>
+					<c:if test="${empty(receive)}">
+						<tr>
+							<th>받는 사람</th>
+							<td class="receive" colspan="2">
+							<div style="display:inline-block;position:relative;">
+								<div style="border:solie 1px black;"><ul id="inputArea" style="list-style: none; padding:0; display:inline-block;"></ul><textarea rows="1" cols="10" class="searchEmail" style="resize: none;"></textarea></div>
+								<div style="" id="findEmail" class="hide"></div>
+							</div>
+							</td>
+						</tr>
+						<tr>
+							<th>제목</th>
+							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
+						</tr>
+					</c:if>
+					
+					<c:if test="${not empty(receive) && sessionScope.loginEmployee.employee_seq == receive.employee_seq}">
+						<tr>
+							<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
+						</tr>
+						<tr>
+							<th>제목</th>
+							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
+						</tr>
+					</c:if>
+					
 					<tr>
-						<th>받는 사람</th>
-						<td class="receive" colspan="2">
-						<div style="display:inline-block;position:relative;">
-							<div style="border:solie 1px black;"><ul id="inputArea" style="list-style: none; padding:0; display:inline-block;"></ul><textarea rows="1" cols="10" class="searchEmail" style="resize: none;"></textarea></div>
-							<div style="" id="findEmail" class="hide"></div>
-						</div>
-						</td>
+						<th style="vertical-align: top">파일첨부</th>
+						<td class="receive" id="attachFile"><div><input type="file" name="fileName" style='display:inline-block;'/><span class='cancleFile'>X</span></div></td>
+						<td style="vertical-align: top;"><div id="addFile">추가 업로드</div></td>
 					</tr>
-					<tr>
-						<th>제목</th>
-						<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
-					</tr>
-				</c:if>
-				
-				<c:if test="${not empty(receive) && sessionScope.loginEmployee.employee_seq == receive.employee_seq}">
-					<tr>
-						<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
-					</tr>
-					<tr>
-						<th>제목</th>
-						<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
-					</tr>
-				</c:if>
-				
-				<tr>
-					<th style="vertical-align: top">파일첨부</th>
-					<td class="receive" id="attachFile"><div><input type="file" name="fileName" style='display:inline-block;'/><span class='cancleFile'>X</span></div></td>
-					<td style="vertical-align: top"><div id="addFile">추가 업로드</div></td>
-				</tr>
-				
-			</table>
-			<div id="contentArea" style="width: 800px;">
-				<textarea name="content" id="content" style="width: 800px;"></textarea>
-			</div>
-		</form>
-	</div>
+					
+				</table>
+				<div id="contentArea" style="width: 800px;">
+					<textarea name="content" id="content" style="width: 800px;"></textarea>
+				</div>
+			</form>
+		</div>
+	</c:when>
+	<c:otherwise>
+		<div id="resultArea" align="center">
+			<c:if test="${result}">
+				<h3>메일을 성공적으로 보냈습니다.</h3>
+			</c:if>
+			<c:if test="${not result}">
+				<h3>메일을 보내는데 실패했습니다.</h3>
+			</c:if>
+		</div>
+	</c:otherwise>
+</c:choose>
+	
 	
 </div>

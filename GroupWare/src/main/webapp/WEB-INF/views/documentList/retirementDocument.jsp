@@ -17,7 +17,7 @@
 
 <div id="divCustomWrapper" style="font-family: &quot;맑은 고딕&quot;; font-size: 10pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;">
 
-	<div class="titleSection">사직서</div>
+	<div class="titleSection">퇴사 기안서</div>
 	
 	<div class="partition">
 		

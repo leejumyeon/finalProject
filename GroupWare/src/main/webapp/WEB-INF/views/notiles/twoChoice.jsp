@@ -134,6 +134,22 @@
 	
 </style>
 
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		$("#btnGoaAdminHome").click(function() {
+			
+			location.href="<%= request.getContextPath()%>/adminMain.top";
+		});
+		
+		$("#btnGoMainHome").click(function() {
+			
+			location.href="<%= request.getContextPath()%>/main.top"
+		})
+		
+	});
+</script>
 <body>
 
 	<div id="choiceContainer">

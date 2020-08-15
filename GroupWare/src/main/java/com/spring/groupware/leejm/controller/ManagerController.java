@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -110,9 +110,9 @@ public class ManagerController {
 		
 		// 관리자-결재 관리(휴지통)페이지 이동
 		@RequestMapping(value="/manager/approval/garbage.top")
-		public ModelAndView managerGarbage(ModelAndView mav, HttpServletRequest request) {
-			mav.setViewName("admin/approval/garbage.tiles3");
-			return mav;
+		public String managerGarbage(HttpServletRequest request) {
+			
+			return "admin/approval/garbage.tiles3";
 		}
 		
 		// 관리자-결재 관리(결재현황 상세)페이지 이동
@@ -189,13 +189,6 @@ public class ManagerController {
 	@RequestMapping(value="/manager/HR/review.top")
 	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
 		mav.setViewName("admin/HR/review.tiles3");
-		return mav;
-	}
-	
-	// 관리자-인사 관리(사원정보-리스트)페이지 이동
-	@RequestMapping(value="/manager/HR/list.top")
-	public ModelAndView managerHRlist(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/HR/list.tiles3");
 		return mav;
 	}
 		
