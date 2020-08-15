@@ -467,6 +467,11 @@ create table messenger_table
 ,constraint pk_messenger_table primary key(message_seq)
 );
 
+
+select * from messengerRoom_table;
+select * from messenger_table;
+
+
 create SEQUENCE messenger_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
