@@ -1,4 +1,4 @@
-package com.spring.common;
+ package com.spring.common;
 
 import javax.servlet.http.HttpServletRequest;
 

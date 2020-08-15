@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -111,9 +110,9 @@ public class ManagerController {
 		
 		// 관리자-결재 관리(휴지통)페이지 이동
 		@RequestMapping(value="/manager/approval/garbage.top")
-		public ModelAndView managerGarbage(ModelAndView mav, HttpServletRequest request) {
-			mav.setViewName("admin/approval/garbage.tiles3");
-			return mav;
+		public String managerGarbage(HttpServletRequest request) {
+			
+			return "admin/approval/garbage.tiles3";
 		}
 		
 		// 관리자-결재 관리(결재현황 상세)페이지 이동

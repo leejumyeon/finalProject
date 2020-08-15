@@ -151,6 +151,17 @@
 	#inviteBtn {
 		float: right;
     	margin-top: 12px;
+    	margin-left: 10px;
+    	border-style: none;
+		color: white;
+		background-color: #33adff;
+		padding: 7px 7px;
+		cursor: pointer;
+	}
+	
+	#resetBtn{
+		float: right;
+    	margin-top: 12px;
     	border-style: none;
 		color: white;
 		background-color: #33adff;
@@ -184,19 +195,35 @@
 		// 초대하기 버튼 숨기기
 		$("#inviteBtn").hide();
 		
+		// 취소 버튼 숨기기
+		$("#resetBtn").hide();
+		
 		// 그룹채팅하기 버튼 클릭시
 		$("#groupchatBtn").click(function(){
-			$(".hide").removeClass(); // 체크박스 보여주기
+			$(".hide").removeClass("hide"); // 체크박스 보여주기
 			$(this).hide(); // 그룹채팅하기 버튼 숨김
-			$("#inviteBtn").show(); // 초대하기 버튼 보임
+			$("#inviteBtn").show(); // 초대하기 버튼 보이기
+			$("#resetBtn").show(); // 취소버튼 보이기
+		});
+		
+		// 취소 버튼 클릭시
+		$("#resetBtn").click(function(){
+			$(".gCheck").addClass("hide");
+			$("#inviteBtn").hide(); // 초대하기 버튼 숨기기
+			$("#resetBtn").hide(); // 취소버튼 숨기기
+			$("#groupchatBtn").show(); // 그룹채팅하기 버튼 보이기
 		});
 		
 		// 초대하기 버튼 클릭시
 		$("#inviteBtn").click(function(){
 			
 			var len = $("input:checkbox[name=groupChat]:checked").length;
-			if(len == 0){
+			if(len == 0 ){
 				alert("초대할 상대를 선택해주세요.");
+				return;
+			}
+			else if(len == 1){
+				alert("초대할 상대 2명이상 선택해주세요.");
 				return;
 			}
 			
@@ -216,7 +243,7 @@
 			// 그룹채팅 방 생성
 			goGroupChattRoomCreate(allEmpSeq, sEmployee_seq);	
 		
-		});
+		});// end of $("#inviteBtn").click()--------------------
 		
 		// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 		allEmployeeView();
@@ -267,7 +294,7 @@
 						$.each(json,function(index, item){
 							
 							html += "<tr>" +
-										"<td style='width: 20px;' class='hide' ><input type='checkbox' name='groupChat' class='groupChat ' value='"+item.employee_seq+"' /></td>" +
+										"<td style='width: 20px;' class='hide gCheck' ><input type='checkbox' name='groupChat' class='groupChat ' value='"+item.employee_seq+"' /></td>" +
 			            				"<td align='center' style='width: 60px;'>" +
 			            					"<img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' />" +
 			            				"</td>" +
@@ -418,7 +445,7 @@
 						html += "<tr class='msglist'>" +
 									"<td align='center' style='width: 60px;'><img src='/groupware/resources/msg_images/user2.png' width='40px;' height='40px;' /></td>" +
 									"<td style='cursor: pointer' onclick='goMsgWriteView("+item.roomNumber+","+${sessionScope.loginEmployee.employee_seq}+")'>" +
-										"<div class='divText name'>" + employee_name + "외 "+Number(item.cnt-1)+"명 </div>" +
+										"<div class='divText name'>" + item.employee_name + "외 "+Number(item.cnt-1)+"명 </div>" +
 										"<div class='divText roomText'>"+item.content+"</div>" +
 									"</td>" +
 									"<td align='right' style='color: #aaa;'>"+item.regDate+"</td>" +
@@ -500,8 +527,15 @@
 			dataType:"JSON",
 			success:function(json){
 				
-				if(json.n >0 ){
+				if(json.roomNumber != -1 ){
 					alert("방생성완료");
+					
+					var roomNumber = json.roomNumber;
+					
+					$("#roomNumber").val(roomNumber);
+					
+					// 1초마다 채팅방 내용 읽어오기
+					timerId = setInterval(contentView, 1000, roomNumber, sEmployee_seq);
 				}
 				
 			},
@@ -553,6 +587,7 @@
       			</table>
       			<button type="button" id="groupchatBtn">그룹채팅하기</button>
       			<button type="button" id="inviteBtn">초대하기</button>
+      			<button type="button" id="resetBtn">취소</button>
       			<div style="clear: both;"></div>	
     		</div>
     		<!-- ===###profile end###=== -->

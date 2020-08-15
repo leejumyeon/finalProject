@@ -1,260 +1,120 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-    
 <% String ctxPath = request.getContextPath(); %>
-    
 <style type="text/css">
-	table, th, td {border: solid 1px gray;}
-
-    #table {width: 970px; border-collapse: collapse;}
-    #table th, #table td {padding: 5px;}
-    #table th {background-color: #DDD;}
-     
-    .subjectStyle {font-weight: bold;
-                   color: navy;
-                   cursor: pointer;} 
+	#container {
+		width: 1240px;
+		margin: 0 auto;
+	}
+	#in {
+		width: 1000px;
+		margin: 0 auto;
+	}
+	table, th, td {
+		border: 0.1px solid #d9d9d9;
+		border-collapse: collapse;
+	}
+	th {
+		font-size: 11pt;
+		background-color: #3399ff;
+		color: white;
+	}
+	th, td {
+		height: 27px;
+	}
+	#searchType {
+		height: 28px;
+		vertical-align: middle;
+	}
+	#searchWord {
+		vertical-align: middle;
+		height: 28px;
+	}
+	button {
+		height: 28px;
+		vertical-align: middle;
+		color: white;
+		background-color: #3399ff;
+		border: none;
+	}
+	.sidebar2 {
+		border: 1px solid white;
+		width: 100px;
+		height: 52px;
+		margin-left: 30px;
+		cursor: pointer;
+		padding-top: 15px;
+		text-align: center;
+		background-color: #3399ff;		
+		color: white;
+	}	
+	.comunity {
+		padding-top: 18px;
+		width: 100px;
+		height: 55px;
+		margin-left: 30px;
+		text-align: center;
+		font-weight: bold;		
+	}
+	#post {
+		margin-right: 30px;
+		width: 750px;
+		float: right;		
+	}	
+	#btnS {
+		margin-left: -44px;
+	}
+	#btnW {
+		float: right;
+		width: 70px;
+	}
+	#side {
+		float: left;
+	}
 </style>
-
 <script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		$(".subject").bind("mouseover", function(event){
-			var $target = $(event.target);
-			$target.addClass("subjectStyle");
-		});
-		
-		$(".subject").bind("mouseout", function(event){
-			var $target = $(event.target);
-			$target.removeClass("subjectStyle");
-		});
-		
-		$("#searchWord").keydown(function(event) {
-			 if(event.keyCode == 13) {
-				 // 엔터를 했을 경우
-				 goSearch();
-			 }
-		});
-		
-		// 검색시 검색조건 및 검색어 값 유지시키기 
-		if(${paraMap != null}) {
-			$("#searchType").val("${paraMap.searchType}");
-			$("#searchWord").val("${paraMap.searchWord}");
-		}
-		
-		<%-- === #105. 검색어 입력시 자동글 완성하기 2 === --%>
-		$("#displayList").hide();
-		
-		$("#searchWord").keyup(function(){
-			
-			var wordLength = $(this).val().length;
-			// 검색어의 길이를 알아온다.
-			
-			if(wordLength == 0) {
-				$("#displayList").hide();
-				// 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
-			}
-			else {
-				
-				$.ajax({
-					url:"<%= request.getContextPath()%>/wordSearchShow.top",
-					type:"GET",
-					data:{"searchType":$("#searchType").val()
-						, "searchWord":$("#searchWord").val()},
-					dataType:"JSON",
-					success:function(json){
-						
-						<%-- === #110. 검색어 입력시 자동글 완성하기 7 === --%>
-						if(json.length > 0) {
-							// 검색된 데이터가 있는 경우임.
-							
-							var html = "";
-							
-							$.each(json,function(entryIndex, item){
-								var word = item.word;
-								
-								var index = word.toLowerCase().indexOf( $("#searchWord").val().toLowerCase() );
-							//	console.log("index : " + index);
-								
-								var len = $("#searchWord").val().length;
-							
-								var result = "";
-								
-							//	console.log( word.substr(0,index) );	// 검색어 앞까지의 글자
-							//	console.log( word.substr(index,len) );	// 검색어 글자
-							//	console.log( word.substr(index+len) );	// 검색어 뒤부터 끝까지의 글자
-								
-								result = "<span style='color:blue;'>"+word.substr(0,index)+"</span>" + "<span style='color:red;'>"+word.substr(index,len)+"</span>" + "<span style='color:blue;'>"+word.substr(index+len)+"</span>";
-								
-								html += "<span style='cursor:pointer;' class='result'>"+result+"</span><br/>";
-							});
-							
-							$("#displayList").html(html);
-							$("#displayList").show();
-						}
-						else {
-							// 검색된 데이터가 존재하지 않는 경우임.
-							$("#displayList").hide();
-						}
-						
-						
-					},
-					error: function(request, status, error){
-						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					}
-				});
-				
-			}
-		
-		});// end of $("#searchWord").keyup()----------------------------------
-		
-		
-		<%-- === #111. 검색어 입력시 자동글 완성하기 8 === --%>
-		$(document).on('click','.result',function(){
-			var word = $(this).text();
-			$("#searchWord").val(word); // 텍스트박스에 검색된 결과의 문자열을 입력해준다.
-			$("#displayList").hide();
-			goSearch();
-		})
-		
-	 }); // end of $(document).ready(function(){})-------------------
- 
-	 
-	 function goView(seq) { // 글 1개 보여주기
-		 <%-- location.href="<%= ctxPath%>/view.top?seq="+seq; --%>
-		 
-		// === #122. 페이징 처리되어진 후 특정글제목을 클릭하여 상세내용을 본 이후
-		// 			  사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
-		// 			  현재 페이지 주소를 뷰단으로 넘겨준다.
-		var frm = document.goViewFrm;
-		frm.seq.value = seq;
-		
-		frm.method = "GET";
-		frm.top = "view.top";
-		frm.submit();
-	 }// end of function goView(seq)---------------------------------
-	 
-	 
-	 function goSearch() { // 검색어에 따른 글 보여주기 
-		 var frm = document.searchFrm;
-		 frm.method = "GET";
-		 frm.top = "<%= request.getContextPath()%>/list.top";
-		 frm.submit();
-	 }// end of function goSearch()----------------------------------
-	 
+	
 </script>
-	
-<div style="padding-left: 3%;">
-	<h2 style="margin-bottom: 30px;">글목록</h2>
-	
-	<table id="table">
-		<tr>
-			<th style="width: 70px;  text-align: center;">글번호</th>
-			<th style="width: 360px; text-align: center;">제목</th>
-			<th style="width: 70px;  text-align: center;">성명</th>
-			<th style="width: 150px; text-align: center;">날짜</th>
-			<th style="width: 70px;  text-align: center;">조회수</th>
-			
-			<%-- === #155. 첨부파일이 있는지 없는지 보여주도록 한다. === --%>
-			<th style="width: 70px;  text-align: center;">첨부파일</th>
-		</tr>	
-		<c:forEach var="boardvo" items="${boardList}" varStatus="status">
-			<tr>
-				<td align="center">${boardvo.seq}</td>
-				<td align="left">
-					<%-- === 댓글쓰기가 없는 게시판 시작 === --%>
-					<%-- <span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}</span> --%>
-					<%-- === 댓글쓰기가 없는 게시판 끝 === --%>
-					
-					
-					<%-- === 댓글쓰기가 있는 게시판 시작 === --%>
-					<%-- 
-					<c:if test="${boardvo.commentCount > 0}">
-						<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}&nbsp;<span style="vertical-align: super;">[<span style="font-family: italic; font-size: 9pt; color: red; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
-					</c:if>
-					
-					<c:if test="${boardvo.commentCount == 0}">
-						<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}</span>
-				 	</c:if>
-				 	--%>
-				 	<%-- === 댓글쓰기가 있는 게시판 끝 === --%>
-				 	
-				 	
-				 	<%-- === 댓글쓰기 및 답변형 게시판 시작 === --%>
-				 	<%-- 답변글이 아닌 원글인 경우 --%> 
-				 	<c:if test="${boardvo.depthno == 0}">
-						<c:if test="${boardvo.commentCount > 0}">
-							<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}&nbsp;<span style="vertical-align: super;">[<span style="font-family: italic; font-size: 9pt; color: red; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
-						</c:if>
-						<c:if test="${boardvo.commentCount == 0}">
-							<span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}</span>
-					 	</c:if>
-					</c:if>
-					
-					<%-- 답변글인 경우 --%>
-					<c:if test="${boardvo.depthno > 0}">
-						<c:if test="${boardvo.commentCount > 0}">
-							<span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}&nbsp;<span style="vertical-align: super;">[<span style="font-family: italic; font-size: 9pt; color: red; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
-						</c:if>
-						<c:if test="${boardvo.commentCount == 0}">
-							<span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}</span>
-					 	</c:if>
-				 	</c:if>
-				 	<%-- === 댓글쓰기 및 답변형 게시판 끝 === --%>
-				</td>
-				<td align="center">${boardvo.name}</td>
-				<td align="center">${boardvo.regDate}</td>
-				<td align="center">${boardvo.readCount}</td>
-				
-				<%-- === #156. 첨부파일이 있는지 없는지 보여주도록 한다. === 
-					/Board/src/main/webapp/resources/images/disk.gif 이미지 파일을 보여주도록 한다. 
-				--%>
-				<td align="center">
-					<c:if test="${not empty boardvo.fileName}">
-						<img src="<%= request.getContextPath() %>/resources/images/disk.gif" />
-					</c:if>
-				</td>
-				
-		</c:forEach>
-	</table>
-	
-	<%-- === #120. 페이지바 보여주기 === --%> 
-	<div align="center" style="width: 70%; border: solid 0px gray; margin: 20px auto;">
-		${pageBar}
+	<div id="container">
+		<div id="in">
+		<div id="side">
+			<div class="comunity">커뮤니티</div>			
+			<div class="sidebar2" onclick="javascript:location.href=''">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
+			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
+		</div>						
+			<div id="post">	
+				<h3>앨범게시판</h3>
+				<form>
+					<select name="searchType" id="searchType">
+						<option value="all">전체</option>
+						<option value="subject">제목</option>
+						<option value="content">내용</option>
+						<option value="writer">작성자</option>
+						<option value="readCnt">조회수</option>						
+					</select>	
+					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
+					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
+					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
+				</form>
+				<div style="margin-top: 15px;">
+					<table>
+						<tbody>
+							<tr>
+								<th style="height: 40px; text-align: center;" align="center" width="80px">글번호</th>
+								<th style="text-align: center;" width="80px">작성자</th>
+								<th style="text-align: center;" width="360px">제목</th>
+								<th style="text-align: center;" width="155px">작성날짜</th>
+								<th style="text-align: center;" width="80px">조회수</th>
+							</tr> 
+								<!-- td 들어갈곳 -->				
+						</tbody>					
+					</table>
+					<div id="pagebar">
+						<!-- 페이지바들어갈곳 -->
+					</div>
+					<div style="clear:both"></div>
+				</div>
+			</div>
+		</div>
 	</div>
-	
-	<%-- === #99. 글검색 폼 추가하기 : 글제목, 글쓴이로 검색을 하도록 한다. === --%> 
-	<form name="searchFrm" style="margin-top: 20px;">
-		<select name="searchType" id="searchType" style="height: 26px;">
-			<option value="subject">글제목</option>
-			<option value="name">글쓴이</option>
-		</select>
-		<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" /> 
-		<button type="button" onclick="goSearch()">검색</button>
-	</form>
-	
-	<%-- === #104. 검색어 입력시 자동글 완성하기 1 === --%>
-	<div id="displayList" style="border: solid 1px gray; border-top: 0px; width: 318px; height: 100px; margin-left: 70px; margin-top: -1px; overflow: auto;">
-	</div>
-	
-	<%-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-		  페이징 처리되어진 후 특정글제목을 클릭하여 상세내용을 본 이후
-		  사용자가 목록보기 버튼을 클릭했을때 돌아갈 페이지를 알려주기 위해
-		  현재 페이지 주소를 뷰단으로 넘겨준다. --%>
-	<form name="goViewFrm">
-		<input type="hidden" name="seq"/>
-		<input type="hidden" name="gobackURL" value="${gobackURL}" />
-	</form>	  
-	
-</div>		
-
-
-
-
-
-
-
-
-
