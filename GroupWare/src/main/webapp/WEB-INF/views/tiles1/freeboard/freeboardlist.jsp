@@ -10,16 +10,16 @@
 		width: 1000px;
 		margin: 0 auto;
 	}
-	#abl, #abl th, #abl td {
+	#boardTbl, #boardTbl th, #boardTbl td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
-	#abl th {
+	#boardTbl th {
 		font-size: 11pt;
 		background-color: #3399ff;
 		color: white;
 	}
-	#abl th, #abl td {
+	#boardTbl th td {
 		height: 27px;
 	}
 	#searchType {
@@ -30,7 +30,7 @@
 		vertical-align: middle;
 		height: 28px;
 	}
-	#btnS, #btnW  {
+	#btnS, #btnW {
 		height: 28px;
 		vertical-align: middle;
 		color: white;
@@ -79,7 +79,7 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top?seq=${board.seq}'">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href=''">앨범</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>						
@@ -90,14 +90,15 @@
 						<option value="all">전체</option>
 						<option value="subject">제목</option>
 						<option value="content">내용</option>
-						<option value="writer">작성자</option>					
+						<option value="writer">작성자</option>
+						<option value="readCnt">조회수</option>						
 					</select>	
 					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
 					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
 					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
 				</form>
 				<div style="margin-top: 15px;">
-					<table id="abl">
+					<table id="">
 						<tbody>
 							<tr>
 								<th style="height: 40px; text-align: center;" align="center" width="80px">글번호</th>

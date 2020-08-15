@@ -109,7 +109,7 @@
 		    on T.roomNumber = Z.roomNumber
 		) X join employees_table E
 		on X.fk_employee_seq = E.employee_seq
-		where X.roomNumber in (select roomNumber from messengerRoom_table where fk_employee_seq = #{roomNumber})
+		where X.roomNumber in (select roomNumber from messengerRoom_table where fk_employee_seq = #{Employee_seq})
 	</select>
 	
 	<!-- 채팅 방 삭제하기 -->

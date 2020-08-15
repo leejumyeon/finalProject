@@ -201,7 +201,7 @@ public class LeeehController {
 		mav.addObject("employee_pw", employee_pw);
 		mav.addObject("email", email);
 		mav.addObject("departmentList", departmentList);
-		mav.setViewName("/HR/idIssued.tiles3");
+		mav.setViewName("admin/HR/idIssued.tiles3");
 
 		return mav;
 	}

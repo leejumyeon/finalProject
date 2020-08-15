@@ -208,7 +208,7 @@
 		
 		// 취소 버튼 클릭시
 		$("#resetBtn").click(function(){
-			$(".gCheck").addClass("hide");
+			$(".gCheck").addClass("hide"); // 체크박스 숨기기
 			$("#inviteBtn").hide(); // 초대하기 버튼 숨기기
 			$("#resetBtn").hide(); // 취소버튼 숨기기
 			$("#groupchatBtn").show(); // 그룹채팅하기 버튼 보이기
@@ -273,7 +273,23 @@
 			}
 		});	
 		
-		$("#conversationPerson").click(function(){clearInterval(timerId);});
+		// 대화상대 클릭 시
+		$("#conversationPerson").click(function(){
+			clearInterval(timerId);
+			$(".gCheck").addClass("hide"); // 체크박스 숨기기
+			$("#inviteBtn").hide(); // 초대하기 버튼 숨기기
+			$("#resetBtn").hide(); // 취소버튼 숨기기
+			$("#groupchatBtn").show(); // 그룹채팅하기 버튼 보이기
+			
+			$(".groupChat").each(function(index,item){
+				if($(this).prop("checked") == true){
+					$(this).prop("checked",false);
+				}
+			});
+			
+		});
+		
+		// 대화목록 클릭 시
 		$("#conversationList").click(function(){clearInterval(timerId);});
 		
 	});// end of $(document).ready()----------------------
@@ -489,29 +505,34 @@
 	// 채팅 방 삭제하기
 	function roomDelete(roomNumber) {
 		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
-		alert("삭제하시겠습니까?");
 		
-		$.ajax({
-			
-			url:"/groupware/roomDelete.top",
-			async: false,
-			data:{"roomNumber":roomNumber, "sEmployee_seq":sEmployee_seq},
-			type:"POST",
-			dataType:"JSON",
-			success:function(json){
-				if(json.n == 1){ // 삭제가 된 경우
-					alert("삭제가 되었습니다");
-					msgRoomListView(); // 대화목록 보여주기
+		if (confirm("정말 삭제하시겠습니까??") == true){    //확인
+			$.ajax({
+				
+				url:"/groupware/roomDelete.top",
+				async: false,
+				data:{"roomNumber":roomNumber, "sEmployee_seq":sEmployee_seq},
+				type:"POST",
+				dataType:"JSON",
+				success:function(json){
+					if(json.n == 1){ // 삭제가 된 경우
+						alert("삭제가 되었습니다");
+						msgRoomListView(); // 대화목록 보여주기
+					}
+					else { // 삭제가 되지 않은 경우 
+						alert("삭제가 안됬습니다.");
+					}
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				}
-				else { // 삭제가 되지 않은 경우 
-					alert("삭제가 안됬습니다.");
-				}
-			},
-			error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			}
-			
-		});	
+				
+			});	
+		}else{   //취소
+
+		    return;
+
+		}
 		
 	}
 	
