@@ -60,16 +60,45 @@ public class ChoijhDAO implements InterChoijhDAO {
 
 	// 대화목록 보여주기
 	@Override
-	public List<HashMap<String, String>> msgRoomListView(String employee_seq) {
-		List<HashMap<String, String>> mapList = sqlsession.selectList("messenger.msgRoomListView", employee_seq);
+	public List<HashMap<String, String>> msgRoomListView(HashMap<String,String> map) {
+		List<HashMap<String, String>> mapList = sqlsession.selectList("messenger.msgRoomListView", map);
 		return mapList;
 	}
-
+	
 	// 채팅 방 삭제하기
 	@Override
 	public int roomDelete(HashMap<String, String> map) {
 		int n = sqlsession.delete("messenger.roomDelete",map);
 		return n;
 	}
+
+	// 채팅방 나갈시 메시지 띄우기
+	@Override
+	public void roomOutMsgInsert(HashMap<String, String> map) {
+		sqlsession.insert("messenger.roomOutMsgInsert", map);
+	}
+	
+	// 그룹채팅 방 생성하기(자신)
+	@Override
+	public int groupChattRoomCreate_My(HashMap<String, Object> map) {
+		int n = sqlsession.insert("messenger.groupChattRoomCreate_My", map);
+		return n;
+	}
+
+	// 그룹채팅 방 생성하기(상대방)
+	@Override
+	public int groupChattRoomCreate_Other(HashMap<String, Object> map) {
+		int m = sqlsession.insert("messenger.groupChattRoomCreate_Other", map);
+		return m;
+	}
+
+	// 대화방을 나간 방번호 조회하기
+	@Override
+	public List<HashMap<String, String>> selectCnt(String employee_seq) {
+		List<HashMap<String, String>> cntMapList = sqlsession.selectList("messenger.selectCnt", employee_seq);
+		return cntMapList;
+	}
+
+
 	
 }

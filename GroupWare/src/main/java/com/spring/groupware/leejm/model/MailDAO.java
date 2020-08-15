@@ -36,48 +36,14 @@ public class MailDAO implements InterMailDAO{
 		return mail_groupno;
 	}
 
-	// 받은 메일 조회
+	// 메일 조회
 	@Override
-	public List<MailVO> receiveMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.receiveMailList",paraMap);
+	public List<MailVO> mailList(HashMap<String, String> paraMap) {
+		List<MailVO> mailList = sqlsession.selectList("mail.mailList",paraMap);
 		return mailList;
 	}
 
-	// 보낸 메일 조회
-	@Override
-	public List<MailVO> sendMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.sendMailList",paraMap);
-		return mailList;
-	}
-
-	// 검색 메일 조회
-	@Override
-	public List<MailVO> searchMailList(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// 내게 쓴 메일 조회
-	@Override
-	public List<MailVO> mineMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.mineMailList",paraMap);
-		return mailList;
-	}
-
-	// 안 읽은 메일 조회
-	@Override
-	public List<MailVO> noReadMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.noReadMailList", paraMap);
-		return mailList;
-	}
-
-	// 첨부파일 있는 메일 조회
-	@Override
-	public List<MailVO> attachMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.attachMailList",paraMap);
-		return mailList;
-	}
-
+	
 	// 메일 읽기
 	@Override
 	public MailVO mailRead(String mail_seq) {
@@ -85,66 +51,54 @@ public class MailDAO implements InterMailDAO{
 		return mail;
 	}
 
-	// readCount 업데이트(0->1)
+	// readStatus 업데이트(0->1)
 	@Override
 	public void updateReadstatus(String mail_seq) {
 		sqlsession.update("mail.updateReadstatus",mail_seq);
 		
 	}
 
-	// 휴지통 이동
-	@Override
-	public List<MailVO> delMailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = sqlsession.selectList("mail.delMailList",paraMap);
-		return mailList;
-	}
 
-	// 받은 메일 건 수
+	// 메일 건 수
 	@Override
-	public int receiveMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.receiveMailCount",paraMap);
+	public int mailCount(HashMap<String, String> paraMap) {
+		int result = sqlsession.selectOne("mail.mailCount",paraMap);
 		return result;
 	}
 
-	// 보낸 메일 건 수
+	// readStatus 업데이트(복수개, 0->1 or 1->0)
 	@Override
-	public int sendMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.sendMailCount",paraMap);
-		return result;
+	public int mailreadUpdate(HashMap<String, Object> paraMap) {
+		int n = sqlsession.update("mail.mailreadUpdate",paraMap);
+		return n;
 	}
 
-	// 내게 쓴 메일 건 수
+	// 메일 휴지통으로 이동
 	@Override
-	public int mineMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.mineMailCount",paraMap);
-		return result;
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = sqlsession.update("mail.mailDel",paraMap);
+		return n;
 	}
 
-	// 안 읽은 메일 건 수
+	// 메일 영구삭제
 	@Override
-	public int noReadMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.noReadMailCount",paraMap);
-		return result;
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.delete("mail.mailDeletion",paraMap);
+		return n;
 	}
 
-	// 첨부파일 있는 메일 건 수
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
 	@Override
-	public int attachMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.attachMailCount",paraMap);
-		return result;
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = sqlsession.selectList("mail.deleteFileList",paraMap);
+		return deleteFileList;
 	}
 
-	// 검색 메일 건 수
+	// 메일 복구하기
 	@Override
-	public int searchMailCount(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int mailResotre(HashMap<String, String[]> paraMap) {
+		int n = sqlsession.update("mail.mailResotre",paraMap);
+		return n;
 	}
 
-	// 휴지통 메일 건 수
-	@Override
-	public int delMailCount(HashMap<String, String> paraMap) {
-		int result = sqlsession.selectOne("mail.delMailCount",paraMap);
-		return result;
-	}
 }

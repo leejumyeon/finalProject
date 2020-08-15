@@ -54,7 +54,7 @@
 <div style="clear: both; display: inline-block; margin-left: 25px;">
    <div style="width: 600px; height: 630px; border: 1px solid red;">
    
-<div class="container" style=" width: 600px; height: 1300px;" >				
+<div class="container" style=" width: 600px;" >				
 	   <%--    
 	      <div id="contextMenu" class="dropdown clearfix">
 	            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"

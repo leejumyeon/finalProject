@@ -1,13 +1,18 @@
 package com.spring.groupware.leejm.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +47,21 @@ public class MailController {
 	@RequestMapping(value="/mail/list.top")
 	public ModelAndView mailList(ModelAndView mav, HttpServletRequest request) {
 		String type = request.getParameter("type");
+		String readStatus = request.getParameter("read");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		if(readStatus == null || readStatus.trim().isEmpty()) {
+			readStatus = "0";
+		}
+		
+		if(selectCheck != null) {
+			for(String select : selectCheck) {
+				System.out.println(select);
+			}
+			mav.addObject("selectCheck",selectCheck);
+		}
+		
+		
 		HttpSession session = request.getSession();
 		EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
 		
@@ -52,14 +72,11 @@ public class MailController {
 		String str_currentPageNo = request.getParameter("currentShowPageNo");
 		
 		String searchWord = request.getParameter("searchWord");
-		String searchType = request.getParameter("searchType");
 		if(searchWord == null || searchWord.trim().isEmpty()) {
 			searchWord = "";
-			searchType = "";
 		}
 		paraMap.put("searchWord", searchWord);
-		paraMap.put("searchType", searchType);
-		
+		System.out.println(type+"/"+searchWord);
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
 		int totalCount = 0;        // 총게시물 건수
@@ -93,10 +110,6 @@ public class MailController {
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
 		
-		
-		
-		List<MailVO> mailList = service.mailList(paraMap);
-		
 		// === #119. 페이지바 만들기 === //
 		String pageBar = "<ul style='list-style: none; text-align:center;'>";
 		
@@ -109,15 +122,16 @@ public class MailController {
 		*/
 		
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
-		// *** !! 공식이다. !! *** //
 		System.out.println("총 게시글 수:"+totalCount+"/ pageNo:"+pageNo+"/ currentPage:"+currentShowPageNo);
-	
+		
+		// 리스트 조회 //
+		List<MailVO> mailList = service.mailList(paraMap);
 		
 		String url = request.getContextPath()+"/mail/list.top";
 		
 		// === [이전] 만들기 === 
 		if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"&type="+type+"'>[이전]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"&type="+type+"'>[이전]</a></li>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -126,7 +140,7 @@ public class MailController {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
 			}
 			else {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>"+pageNo+"</a></li>";
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>"+pageNo+"</a></li>";
 			}
 			
 			loop++;
@@ -137,42 +151,55 @@ public class MailController {
 		
 		// === [다음] 만들기 ===
 		if( !(pageNo > totalPage) ) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"&type="+type+"'>[다음]</a></li>";
 		}
 		
 		pageBar += "</ul>";
 		
 		mav.addObject("pageBar", pageBar);
 		
-		if("receive".equals(type)) {
-			mav.addObject("mailhamType","받은메일");
-		}
-		else if("send".equals(type)) {
-			mav.addObject("mailhamType","보낸메일");
+		if(searchWord.trim().isEmpty()) {
+			if("receive".equals(type)) {
+				mav.addObject("mailhamType","받은메일");
+			}
+			else if("send".equals(type)) {
+				mav.addObject("mailhamType","보낸메일");
+			}
+			
+			else if("mine".equals(type)) {
+				mav.addObject("mailhamType","내게 쓴 메일");
+			}
+			
+			else if("noRead".equals(type)) {
+				mav.addObject("mailhamType","안 읽은 메일");
+			}
+			
+			else if("attach".equals(type)) {
+				mav.addObject("mailhamType","첨부파일 있는 메일");
+			}
+			
+			else if("del".equals(type)) {
+				mav.addObject("mailhamType","휴지통");
+			}
+			
+			else if("all".equals(type)) {
+				mav.addObject("mailhamType","전체메일");
+			}
+		}else {
+			mav.addObject("mailhamType","메일 검색");
 		}
 		
-		else if("mine".equals(type)) {
-			mav.addObject("mailhamType","내게 쓴 메일");
+		System.out.println("결과물 수 : "+mailList.size());
+		
+		if(request.getParameter("msg")!=null && !request.getParameter("msg").trim().isEmpty()) {
+			mav.addObject("msg",request.getParameter("msg"));
 		}
 		
-		else if("read".equals(type)) {
-			mav.addObject("mailhamType","안 읽은 메일");
-		}
-		
-		else if("attach".equals(type)) {
-			mav.addObject("mailhamType","첨부파일 있는 메일");
-		}
-		
-		else if("search".equals(type)) {
-			mav.addObject("mailhamType","검색");
-		}
-		
-		else if("del".equals(type)) {
-			mav.addObject("mailhamType","휴지통");
-		}
-		
+		mav.addObject("searchWord",searchWord);
 		mav.addObject("mailList",mailList);
 		mav.addObject("total",totalCount);
+		mav.addObject("type",type);
+		mav.addObject("readStatus",readStatus);
 		mav.setViewName("mail/mailList.tiles2");
 		
 		return mav;
@@ -199,12 +226,29 @@ public class MailController {
 	}
 	
 	// 메일 보내기 기능 //
-	@RequestMapping(value="mail/mailSend.top")
+	@RequestMapping(value="/mail/mailSend.top")
 	public ModelAndView mailSend(ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		HttpSession session = mrequest.getSession();
 		EmployeesVO empVO = (EmployeesVO)session.getAttribute("loginEmployee");
 		String sendSeq = empVO.getEmployee_seq();
-		String[] receiveArr = mrequest.getParameterValues("receiveSeq");
+		String[] tempReceiveArr = mrequest.getParameterValues("receiveSeq");
+		
+		
+		List<String> receiveArr = new ArrayList<>();
+		boolean flag = false;
+		for(int i=0; i<tempReceiveArr.length; i++) {
+			for(int j=i+1; j<tempReceiveArr.length; j++) {
+				if(tempReceiveArr[i].equals(tempReceiveArr[j])) {
+					flag = true;
+					break;
+				}
+			}
+			if(!flag) {
+				receiveArr.add(tempReceiveArr[i]);
+			}
+			flag = false;
+		}
+		
 		for(String receiveSeq : receiveArr) {
 			System.out.println("확인용 받는 메일번호:"+receiveSeq);
 		}
@@ -227,7 +271,7 @@ public class MailController {
 		if(!"mine".equals(sendType)) {
 			// 받는 메일 VO 생성 //
 			receiveMail = new MailVO();
-			receiveMail.setFk_employee_seq(receiveArr[0]);
+			receiveMail.setFk_employee_seq(receiveArr.get(0));
 			receiveMail.setContent(content);
 			receiveMail.setSubject(subject);
 			receiveMail.setStatus("1");
@@ -334,16 +378,36 @@ public class MailController {
 		mailList.add(sendMail);
 		
 		if(receiveMail!=null) {
+			System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
 			mailList.add(receiveMail);
 			
-			// 받는 사람 복수일 경우
-			if(receiveArr.length>1) {
-				for(int i=0; i<receiveArr.length; i++) {
+			if(receiveArr.size()>1) {
+				for(int i=0; i<receiveArr.size(); i++) {
 					if(i>0) {
-						receiveMail.setFk_employee_seq(receiveArr[i]);
-						mailList.add(receiveMail);
+						MailVO otherReceive = new MailVO();
+						otherReceive.setFk_employee_seq(receiveArr.get(i));
+						otherReceive.setSubject(receiveMail.getSubject());
+						otherReceive.setContent(receiveMail.getContent());
+						otherReceive.setFileName1(receiveMail.getFileName1());
+						otherReceive.setOrgFileName1(receiveMail.getOrgFileName1());
+						otherReceive.setFileSize1(receiveMail.getFileSize1());
+						otherReceive.setFileName2(receiveMail.getFileName2());
+						otherReceive.setOrgFileName2(receiveMail.getOrgFileName2());
+						otherReceive.setFileSize2(receiveMail.getFileSize2());
+						otherReceive.setFileName3(receiveMail.getFileName3());
+						otherReceive.setOrgFileName3(receiveMail.getOrgFileName3());
+						otherReceive.setFileSize3(receiveMail.getFileSize3());
+						otherReceive.setMail_groupno(mail_groupno);
+						otherReceive.setStatus(receiveMail.getStatus());
+						otherReceive.setReadStatus(receiveMail.getReadStatus());
+						
+						mailList.add(otherReceive);
 					}
 				}
+			}
+			
+			for(MailVO mvo:mailList) {
+				System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
 			}
 		}
 		
@@ -353,11 +417,17 @@ public class MailController {
 		System.out.println("입력할 행의 수:"+count);
 		try{
 			n = service.mailSend(mailList);
+			if(n == count) {
+				mav.addObject("result",true);
+			}
+			else {
+				mav.addObject("result",false);
+			}
 		}catch(Throwable e) {
 			e.printStackTrace();
 		}
 		
-		mav.setViewName("mail/mailList.tiles2");
+		mav.setViewName("mail/mailWrite.tiles2");
 		return mav;
 	}
 	
@@ -463,5 +533,187 @@ public class MailController {
 		}
 	    
 		return "redirect:" + callback + "?callback_func="+callback_func+file_result;
+	}
+	
+	// 파일 다운로드
+	@RequestMapping(value="/mail/download.top",method = {RequestMethod.POST})
+	public void attachFileDownload(HttpServletRequest request, HttpServletResponse response) {
+		String fileName = request.getParameter("fileName");
+		String orgFileName = request.getParameter("orgFileName");
+		String status = request.getParameter("status");
+		
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator;
+		if("1".equals(status)) {
+			path += "receiveFiles";
+		}
+		else {
+			path += "sendFiles";
+		}
+		
+		boolean flag = false;
+		flag = fileManager.doFileDownload(fileName, orgFileName, path, response);
+
+		if(!flag) {
+			// 다운로드가 실패할 경우 메시지를 띄워준다.
+			
+			response.setContentType("text/html; charset=UTF-8"); 
+			PrintWriter writer = null;
+			
+			try {
+				writer = response.getWriter();
+				// 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+			} catch (IOException e) {
+				
+			}
+			
+			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
+			
+		}
+			
+	}
+	
+	// 읽음 or 안읽음 버튼 클릭시 readStatus 업데이트
+	@RequestMapping(value="/mail/readUpdate.top")
+	public ModelAndView readUpdate(ModelAndView mav, HttpServletRequest request) {
+		String read = request.getParameter("read");
+		String type = request.getParameter("type");
+		String searchWord = request.getParameter("searchWord");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("read", read);
+		paraMap.put("selectCheck", selectCheck);
+		
+		for(String select : selectCheck) {
+			System.out.println(select);
+		}
+		
+		
+		int n = service.mailReadUpdate(paraMap);
+		
+		mav.addObject("searchWord",searchWord);
+		mav.addObject("type",type);
+		mav.addObject("read",read);
+		mav.addObject("selectCheck",selectCheck);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		return mav;
+	}
+	
+	// 메일 휴지통에 이동
+	@RequestMapping(value="/mail/mailDel.top")
+	public ModelAndView mailDel(ModelAndView mav, HttpServletRequest request) {
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		String searchWord = request.getParameter("searchWord");
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		int n = service.mailDel(paraMap);
+		String msg = "삭제에 실패했습니다.";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 휴지통에 버렸습니다.";
+			mav.addObject("msg",msg);
+		}
+		
+		mav.addObject("searchWord",searchWord);
+		mav.addObject("type",type);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		return mav;
+	}
+	
+	// 메일 영구삭제
+	@RequestMapping(value="/mail/mailDeletion.top")
+	public ModelAndView mailDeletion(ModelAndView mav, HttpServletRequest request) {
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		// 업로드 파일 삭제과정
+		//1. 업로드 경로 지정(send or receive + fileName)
+		List<MailVO> deleteFileList = service.deleteFileList(paraMap);
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator;
+		
+		for(MailVO deleteFile : deleteFileList) {
+			if("1".equals(deleteFile.getStatus())) {
+				path += "receiveFiles";
+			}
+			else {
+				path += "sendFiles";
+			}
+			
+			try {
+				fileManager.doFileDelete(deleteFile.getFileName1(), path); // fileName1삭제
+				
+				// fileName2가 존재할 경우 fileName2도 삭제
+				if(deleteFile.getFileName2()!=null && !deleteFile.getFileName2().trim().isEmpty()) {
+					fileManager.doFileDelete(deleteFile.getFileName2(), path);
+				}
+				
+				// fileName3이 존재할 경우 fileName3도 삭제
+				if(deleteFile.getFileName3()!=null && !deleteFile.getFileName3().trim().isEmpty()) {
+					fileManager.doFileDelete(deleteFile.getFileName3(), path);
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// DB에서 삭제
+		int n = service.mailDeletion(paraMap);
+		String msg = "";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 휴지통에서 지웠습니다.";
+			
+		}
+		mav.addObject("msg",msg);
+		mav.addObject("type",type);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		
+		return mav;
+	}
+	
+	// 메일 복구
+	@RequestMapping(value="/mail/mailRestore.top")
+	public ModelAndView mailRestore(ModelAndView mav, HttpServletRequest request) {
+		String type = request.getParameter("type");
+		String str_currentPageNo = request.getParameter("currentShowPageNo");
+		String[] selectCheck = request.getParameterValues("selectCheck");
+		
+		HashMap<String, String[]> paraMap = new HashMap<>();
+		paraMap.put("selectCheck", selectCheck);
+		
+		for(String check: selectCheck) {
+			System.out.println("확인용:"+check);
+		}
+		
+		int n = service.mailRestore(paraMap);
+		
+		String msg = "메일을 복구하는 도중 오류가 발생했습니다.";
+		if(n == selectCheck.length) {
+			msg = "선택한 메일을 성공적으로 복구했습니다.";
+			
+		}
+		mav.addObject("msg",msg);
+		mav.addObject("type",type);
+		mav.addObject("currentShowPageNo",str_currentPageNo);
+		mav.setViewName("redirect:/mail/list.top");
+		
+		return mav;
 	}
 }

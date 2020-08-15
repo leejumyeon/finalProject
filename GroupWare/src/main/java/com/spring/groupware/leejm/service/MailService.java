@@ -32,6 +32,9 @@ public class MailService implements InterMailService{
 	public int mailSend(List<MailVO> mailList) throws Throwable{
 		int result = 0;
 		for(MailVO mail : mailList) {
+			
+			System.out.println("확인용 : " + mail.getFk_employee_seq());
+			
 			result += dao.mailSend(mail);
 		}
 		return result;
@@ -47,28 +50,7 @@ public class MailService implements InterMailService{
 	// 메일 리스트 조회
 	@Override
 	public List<MailVO> mailList(HashMap<String, String> paraMap) {
-		List<MailVO> mailList = new ArrayList<MailVO>();
-		if("receive".equals(paraMap.get("type"))) {
-			mailList = dao.receiveMailList(paraMap);
-		}
-		else if("send".equals(paraMap.get("type"))) {
-			mailList = dao.sendMailList(paraMap);
-		}
-		else if("mine".equals(paraMap.get("type"))) {
-			mailList = dao.mineMailList(paraMap);
-		}
-		else if("read".equals(paraMap.get("type"))) {
-			mailList = dao.noReadMailList(paraMap);
-		}
-		else if("attach".equals(paraMap.get("type"))) {
-			mailList = dao.attachMailList(paraMap);
-		}
-		else if("search".equals(paraMap.get("type"))) {
-			mailList = dao.searchMailList(paraMap);
-		}
-		else if("del".equals(paraMap.get("type"))) {
-			mailList = dao.delMailList(paraMap);
-		}
+		List<MailVO> mailList = dao.mailList(paraMap);
 		return mailList;
 	}
 
@@ -85,32 +67,45 @@ public class MailService implements InterMailService{
 		return mail;
 	}
 
+	// 메일 건 수 조회
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
-		int result = 0;
-		
-		if("receive".equals(paraMap.get("type"))) {
-			result = dao.receiveMailCount(paraMap);
-		}
-		else if("send".equals(paraMap.get("type"))) {
-			result = dao.sendMailCount(paraMap);
-		}
-		else if("mine".equals(paraMap.get("type"))) {
-			result = dao.mineMailCount(paraMap);
-		}
-		else if("read".equals(paraMap.get("type"))) {
-			result = dao.noReadMailCount(paraMap);
-		}
-		else if("attach".equals(paraMap.get("type"))) {
-			result = dao.attachMailCount(paraMap);
-		}
-		else if("search".equals(paraMap.get("type"))) {
-			result = dao.searchMailCount(paraMap);
-		}
-		else if("del".equals(paraMap.get("type"))) {
-			result = dao.delMailCount(paraMap);
-		}
-		
+		int result = dao.mailCount(paraMap);
 		return result;
+	}
+
+	// 메일 읽음 안읽음 수정
+	@Override
+	public int mailReadUpdate(HashMap<String, Object> paraMap) {
+		int n = dao.mailreadUpdate(paraMap);
+		return n;
+	}
+
+	// 메일 휴지통으로 이동
+	@Override
+	public int mailDel(HashMap<String, String[]>paraMap) {
+		int n = dao.mailDel(paraMap);
+		return n;
+	}
+
+	// 메일 영구삭제
+	@Override
+	public int mailDeletion(HashMap<String, String[]> paraMap) {
+		int n = dao.mailDeletion(paraMap);
+		return n;
+	}
+
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	@Override
+	public List<MailVO> deleteFileList(HashMap<String, String[]> paraMap) {
+		List<MailVO> deleteFileList = dao.deleteFileList(paraMap);
+		return deleteFileList;
+	}
+
+	// 메일 복구하기
+	@Override
+	public int mailRestore(HashMap<String, String[]> paraMap) {
+		int n = dao.mailResotre(paraMap);
+		return n;
 	}
 }

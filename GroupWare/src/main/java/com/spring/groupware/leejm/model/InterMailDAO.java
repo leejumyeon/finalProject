@@ -17,23 +17,8 @@ public interface InterMailDAO {
 	// 메일 그룹번호 채번하기
 	String getMail_groupno();
 
-	// 받은 메일 조회
-	List<MailVO> receiveMailList(HashMap<String, String> paraMap);
-
-	// 보낸 메일 조회
-	List<MailVO> sendMailList(HashMap<String, String> paraMap);
-
-	// 검색 메일 조회
-	List<MailVO> searchMailList(HashMap<String, String> paraMap);
-
-	// 내게 쓴 메일 조회
-	List<MailVO> mineMailList(HashMap<String, String> paraMap);
-
-	// 안 읽은 메일 조회
-	List<MailVO> noReadMailList(HashMap<String, String> paraMap);
-
-	// 첨부파일 있는 메일 조회
-	List<MailVO> attachMailList(HashMap<String, String> paraMap);
+	// 메일 조회
+	List<MailVO> mailList(HashMap<String, String> paraMap);
 
 	// 메일 읽기 
 	MailVO mailRead(String mail_seq);
@@ -41,29 +26,25 @@ public interface InterMailDAO {
 	// readCount 업데이트(0->1)
 	void updateReadstatus(String mail_seq);
 
-	// 휴지통 메일 조회
-	List<MailVO> delMailList(HashMap<String, String> paraMap);
 
-	// 받는 메일 건 수
-	int receiveMailCount(HashMap<String, String> paraMap);
+	// 메일 건 수
+	int mailCount(HashMap<String, String> paraMap);
 
-	// 보낸 메일 건 수
-	int sendMailCount(HashMap<String, String> paraMap);
+	// 메일 읽음 / 안읽음 수정
+	int mailreadUpdate(HashMap<String, Object> paraMap);
 
-	// 내게 쓴 메일 건 수
-	int mineMailCount(HashMap<String, String> paraMap);
+	// 메일 휴지통으로 이동
+	int mailDel(HashMap<String, String[]>paraMap);
 
-	// 안 읽은 메일 건 수
-	int noReadMailCount(HashMap<String, String> paraMap);
+	// 메일 영구삭제
+	int mailDeletion(HashMap<String, String[]> paraMap);
 
-	// 첨부파일 있는 메일 건 수 
-	int attachMailCount(HashMap<String, String> paraMap);
+	// 삭제할 메일의 첨부파일 조회(status도 같이 조회 = 업로드 경로 확정시키기 위한 요소)
+	List<MailVO> deleteFileList(HashMap<String, String[]> paraMap);
 
-	// 검색 메일 건 수
-	int searchMailCount(HashMap<String, String> paraMap);
+	// 메일 복구하기
+	int mailResotre(HashMap<String, String[]> paraMap);
 
-	// 휴지통 메일 건 수
-	int delMailCount(HashMap<String, String> paraMap);
 
 	
 }

@@ -17,7 +17,7 @@
 		margin-left: 40px;
 	}
 	
-	.tr_body {
+	.column3 {
 		cursor: pointer;
 	}
 	
@@ -183,6 +183,58 @@
 			getComDocumentList();
 		});
 		
+		
+		$("#btnRejected").click(function() {
+
+			var documentSeqArr = new Array();
+			
+			documentSeqArr.push($("input:checkbox[name=documentSeqList]:checked").val());
+			
+			var documentSeq = documentSeqArr.join(',');
+			
+			var frm = document.approveDocumentFrm;
+			frm.documentSeq.value = documentSeq;
+			frm.method = "POST";
+			frm.action = "<%= request.getContextPath()%>/documentRejected.top";
+			
+			if(confirm("정말 결재를 반려하시겠습니까?") == true) {
+				
+				frm.submit();
+			}
+			else {
+				
+				return false;
+			}
+
+		});
+		
+		$("#btnAccepted").click(function() {
+			
+			var documentSeqArr = new Array();
+			
+			$("input:checkbox[name=documentSeqList]:checked").each(function() {
+				
+				documentSeqArr.push($(this).val());
+			});
+
+			var documentSeq = documentSeqArr.join(',');
+			
+			var frm = document.approveDocumentFrm;
+			frm.documentSeq.value = documentSeq;
+			frm.method = "POST";
+			frm.action = "<%= request.getContextPath()%>/documentAccepted.top";
+			
+			if(confirm("정말 결재를 완료하시겠습니까?") == true) {
+				
+				frm.submit();
+			}
+			else {
+				
+				return false;
+			}
+
+		});
+		
 	});
 	
 	function getComDocumentList() {
@@ -198,18 +250,20 @@
 				
 				var html = "";
 				var html2 = "";
-				
-				if(json != null) {
 
+				if(json.length != 0) {
+					
 					$.each(json, function(index, item) {
 						
-						html += '<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">'
+						
+						html += '<tr class="row100 tr_body">'
 							 +  '<td class="cell100 column1">' + item.groupno + '</td>'
-							 +  '<td class="cell100 column1">' + item.category_name + '</td>'
-							 +  '<td class="cell100 column1">' + item.subject + '</td>'
-							 +  '<td class="cell100 column1">' + item.employee_name + '</td>'
-							 +  '<td class="cell100 column1">' + item.regDate + '</td>'
+							 +  '<td class="cell100 column2">' + item.category_name + '</td>'
+							 +  '<td class="cell100 column3" data-toggle="modal" data-target="#documentContent3' + item.document_seq + '" data-dismiss="modal">' + item.subject + '</td>'
+							 +  '<td class="cell100 column4">' + item.employee_name + '</td>'
+							 +  '<td class="cell100 column5">' + item.regDate + '</td>'
 							 +  '</tr>';
+
 					});
 
 					$.each(json, function(index, item) {
@@ -222,7 +276,7 @@
 							  +  '<h4 class="modal-title">문서 내용</h4>'
 							  +  '</div>'
 							  +  '<div class="modal-body" style="height: 620px; width: 900px;">'
-							  +  '<div id="addDelivery">';
+							  +  '<div id="addDelivery">'
 							  +  '<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=' + item.document_seq + '">'
 							  +  '</iframe>'
 							  +  '</div>'
@@ -233,15 +287,19 @@
 							  +  '</div>'
 							  +  '</div>'
 							  +  '</div>';
-	
-					});
 
+					});
+					
 				}
 				else {
-					
-					html = '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
+
+					html += '<tr>'
+						 + '<td style="text-align: center;">'
+						 + '<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">완료된 결재 문서가 없습니다.</span>';
+						 + '</td>'
+						 + '</tr>';
 				}
-				
+			
 				$("#ajaxDocumentList").html(html);
 				$("#comDocumentModal").html(html2);
 			}
@@ -254,7 +312,7 @@
 
 	<div id="myContainer">
 		<h5 style="color: #0099ff">1. 신청한 결재 문서</h5>
-		<div class="table100 ver2 m-b-110">
+		<div class="table100 ver2 m-b-35">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -274,10 +332,10 @@
 					<table>
 						<tbody>
 							<c:forEach var="docuvo" items="${regDocumentList}">
-								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">
+								<tr class="row100 tr_body">
 									<td class="cell100 column1">${docuvo.groupno}</td>
 									<td class="cell100 column2">${docuvo.category_name}</td>
-									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column3" data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal">${docuvo.subject}</td>
 									<td class="cell100 column4">${docuvo.employee_name}</td>
 									<td class="cell100 column5">${docuvo.regDate}</td>
 								</tr>
@@ -286,15 +344,23 @@
 					</table>
 				</c:if>
 				<c:if test="${empty regDocumentList}">
-					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">신청한 결재 문서가 없습니다.</span>
+					<table>
+						<tbody>
+							<tr>
+								<td style="text-align: center;">
+									<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">신청한 결재 문서가 없습니다.</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</c:if>
 			</div>
 		</div>
 		
 		<h5 style="color: #0099ff; display: inline-block; float: reft; width: 150px;">2. 결재할 결재 문서</h5>
-		<button class="snip1535" style="float: right;">반려하기</button>
-		<button class="snip1536" style="float: right;">결재하기</button>
-		<div class="table100 ver2 m-b-110" style="clear: both;">
+		<button class="snip1535" style="float: right;" id="btnRejected">반려하기</button>
+		<button class="snip1536" style="float: right;" id="btnAccepted">결재하기</button>
+		<div class="table100 ver2 m-b-35" style="clear: both;">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -315,11 +381,11 @@
 					<table>
 						<tbody>
 							<c:forEach var="docuvo" items="${aproDocumentList}">
-								<tr class="row100 tr_body" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">
+								<tr class="row100 tr_body">
 									<th class="cell100 column0"><input type="checkbox" name="documentSeqList" value="${docuvo.document_seq}"/></th>
 									<td class="cell100 column1">${docuvo.groupno}</td>
 									<td class="cell100 column2">${docuvo.category_name}</td>
-									<td class="cell100 column3">${docuvo.subject}</td>
+									<td class="cell100 column3" data-toggle="modal" data-target="#documentContent2${docuvo.document_seq}" data-dismiss="modal">${docuvo.subject}</td>
 									<td class="cell100 column4">${docuvo.employee_name}</td>
 									<td class="cell100 column5">${docuvo.regDate}</td>
 								</tr>
@@ -328,7 +394,15 @@
 					</table>
 				</c:if>
 				<c:if test="${empty aproDocumentList}">
-					<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">결재할 결재 문서가 없습니다.</span>
+					<table>
+						<tbody>
+							<tr>
+								<td style="text-align: center;">
+									<span style="color: #0099ff; font-style: italic; font-weight: bold; font-size: 15pt;">결재할 결재 문서가 없습니다.</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</c:if>
 			</div>
 		</div>
@@ -337,7 +411,7 @@
 		<input type="radio" id="allComDocumentList" name="DocumentList" value="0" checked/><label for="allComDocumentList" class="labelDocumentList">전체 문서</label>
 		<input type="radio" id="senComDocumentList" name="DocumentList" value="1" /><label for="senComDocumentList" class="labelDocumentList">신청한 문서</label>
 		<input type="radio" id="recComDocumentList" name="DocumentList" value="2" /><label for="recComDocumentList" class="labelDocumentList">결재한 문서</label>
-		<div class="table100 ver2 m-b-110" style="clear: both;">
+		<div class="table100 ver2 m-b-35" style="clear: both;">
 			<div class="table100-head">
 				<table>
 					<thead>
@@ -361,7 +435,7 @@
 		</div>
 	</div>
 
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal1 *** --%>
 	<c:forEach var="docuvo" items="${regDocumentList}">
 	<div class="modal fade" id="documentContent${docuvo.document_seq}" role="dialog">
 		<div class="modal-dialog" style="width: 900px;">
@@ -387,7 +461,7 @@
 	</div>
 	</c:forEach>
 	
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal2 *** --%>
 	<c:forEach var="docuvo" items="${aproDocumentList}">
 	<div class="modal fade" id="documentContent2${docuvo.document_seq}" role="dialog">
 		<div class="modal-dialog" style="width: 900px;">
@@ -413,8 +487,11 @@
 	</div>
 	</c:forEach>
 	
-	<%-- *** 문서 내용  modal *** --%>
+	<%-- *** 문서 내용  modal3 *** --%>
 	<div id="comDocumentModal">
 	</div>
 	
+	<form name="approveDocumentFrm">
+		<input type="text" name="documentSeq"/>
+	</form>
 </body>

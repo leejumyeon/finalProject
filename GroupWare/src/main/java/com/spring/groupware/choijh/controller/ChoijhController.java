@@ -1,5 +1,6 @@
 package com.spring.groupware.choijh.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -148,21 +149,54 @@ public class ChoijhController {
 		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
 		String Employee_seq = loginEmployee.getEmployee_seq();
 		
-		List<HashMap<String,String>> mapList = service.msgRoomListView(Employee_seq);
+		List<HashMap<String,String>> cntMapList = service.selectCnt(Employee_seq); // 대화방을 나간 방번호 조회하기
+		
+		HashMap<String,String> map = new HashMap<>();
+		map.put("Employee_seq", Employee_seq);
+		
+		List<HashMap<String,String>> mapList = new ArrayList<>();
 		
 		JSONArray jsArr = new JSONArray();
 		
-		for(HashMap<String,String> map : mapList) {
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("roomNumber", map.get("roomNumber"));
-			jsonObj.put("fk_employee_seq", map.get("fk_employee_seq"));
-			jsonObj.put("employee_name", map.get("employee_name"));
-			jsonObj.put("content", map.get("content"));
-			jsonObj.put("regDate", map.get("regDate"));
-			jsonObj.put("cnt", map.get("cnt"));
+		for(HashMap<String,String> cntMap : cntMapList) {
+			
+			if( cntMap.get("cnt").equals("1") ) { // 상대방이 채팅방을 나간 경우
+				
+				map.put("roomNumber", cntMap.get("roomNumber"));
+				
+				mapList = service.msgRoomListView(map); // 대화목록 보여주기
+				
+				for(HashMap<String,String> m : mapList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("roomNumber", m.get("roomNumber"));
+					jsonObj.put("fk_employee_seq", m.get("fk_employee_seq"));
+					jsonObj.put("employee_name", m.get("employee_name"));
+					jsonObj.put("content", m.get("content"));
+					jsonObj.put("regDate", m.get("regDate"));
+					jsonObj.put("cnt", m.get("cnt"));
+					
+					jsArr.put(jsonObj);
+				}
+			}
+			else { 
+				
+				map.put("roomNumber", cntMap.get("roomNumber"));
+				mapList = service.msgRoomListView(map); // 대화목록 보여주기
+				
+				for(HashMap<String,String> m : mapList) {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("roomNumber", m.get("roomNumber"));
+					jsonObj.put("fk_employee_seq", m.get("fk_employee_seq"));
+					jsonObj.put("employee_name", m.get("employee_name"));
+					jsonObj.put("content", m.get("content"));
+					jsonObj.put("regDate", m.get("regDate"));
+					jsonObj.put("cnt", m.get("cnt"));
+					
+					jsArr.put(jsonObj);
+				}
+			}
 		
-			jsArr.put(jsonObj);
-		} 
+		}// end of for(HashMap<String,String> cnt : cntMap)----------------
 		
 		return jsArr.toString();
 	}
@@ -176,9 +210,15 @@ public class ChoijhController {
 		String roomNumber = request.getParameter("roomNumber");
 		String sEmployee_seq = request.getParameter("sEmployee_seq");
 		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		;
+		
 		HashMap<String,String> map = new HashMap<>();
 		map.put("roomNumber", roomNumber);
 		map.put("sEmployee_seq", sEmployee_seq);
+		map.put("employee_name", loginEmployee.getEmployee_name());
+		map.put("content", loginEmployee.getEmployee_name()+" 님이 채팅방에 나가셨습니다.");
 		
 		int n = service.roomDelete(map);
 		
@@ -190,6 +230,44 @@ public class ChoijhController {
 	}
 	
 	
+	// 그룹채팅 방 생성하기
+	@ResponseBody
+	@RequestMapping(value="goGroupChattRoomCreate.top", produces="text/plain;charset=UTF-8", method= {RequestMethod.POST})
+	public String goGroupChattRoomCreate(HttpServletRequest request) {
+		
+		String allEmpSeq = request.getParameter("allEmpSeq");
+		String sEmployee_seq = request.getParameter("sEmployee_seq");
+		
+		String[] allEmpSeqArr = allEmpSeq.split(",");
+		
+		// 채번해오기
+		int roomNum = service.getRoomNumber();
+		String roomNumber = String.valueOf(roomNum);
+		
+		HashMap<String, Object> map = new HashMap<>();	
+		map.put("roomNumber", roomNumber);
+		map.put("sEmployee_seq", sEmployee_seq);
+
+		int n = service.groupChattRoomCreate_My(map); // 그룹채팅 방 생성하기(자신) 
+		
+		int m = 0;
+		for(int i=0; i<allEmpSeqArr.length; i++) {
+			map.put("allEmpSeq", allEmpSeqArr[i]);
+			m = service.groupChattRoomCreate_Other(map); // 그룹채팅 방 생성하기(자신) 
+		}
+		
+		System.out.println("m : " + m + " n : " + n);
+		  
+		if(m*n == 0) { // 자신과 상대방 둘중 하나라도 방 생성이 안된경우
+			roomNumber = "-1";
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("roomNumber", roomNumber);
+		
+		return jsonObj.toString();
+	}
+		
 	
 	
 }
