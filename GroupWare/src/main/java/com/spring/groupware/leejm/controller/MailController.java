@@ -460,8 +460,6 @@ public class MailController {
 			searchWord = "";
 		}
 		
-		
-
 		if(searchWord.trim().isEmpty()) {
 			if("receive".equals(type)) {
 				mav.addObject("mailhamType","받은메일");
@@ -505,6 +503,8 @@ public class MailController {
 		int totalCount = service.getTotalCount(paraMap);
 		mav.addObject("total",totalCount);
 		
+		System.out.println("mail_seq:"+mail_seq+"/type:"+type+"/searchWord:"+searchWord+"/loginSeq:"+emp.getEmployee_seq());
+		
 		MailVO mail = null;
 		try {
 			mail = service.mailRead(paraMap);
@@ -527,6 +527,7 @@ public class MailController {
 		}
 		mav.addObject("type",type);
 		mav.addObject("searchWord",searchWord);
+		mav.addObject("mail_seq",mail_seq);
 		
 		mav.setViewName("mail/mailRead.tiles2");
 		return mav;

@@ -62,7 +62,7 @@ public class LeeehController {
 		
 		String sysdate = year + ". " + strMonth + ". " + strDay;
 		
-		List<TripVO> tripEmployeeList = service.getTripList();
+		/*List<TripVO> tripEmployeeList = service.getTripList();
 		
 		for(TripVO tvo : tripEmployeeList) {
 			
@@ -99,7 +99,7 @@ public class LeeehController {
 				
 				service.getUpdateEmployeeStatusFire(employee_seq);
 			}
-		}
+		}*/
 
 		mav.setViewName("login.notiles");
 

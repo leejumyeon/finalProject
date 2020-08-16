@@ -32,4 +32,30 @@
 	</insert>
 	
 	
+	<!-- 게시판 글 보여주기 -->
+	<select id="boardlistView" resultType="com.spring.groupware.commonVO.BoardVO">
+		select V.board_seq, E.employee_name, V.subject, V.content, V.regDate, V.commentCnt, V.orgFileName, V.readCnt
+		from 
+		(
+			select B.board_seq, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, A.orgFileName, fk_employee_seq
+			from board_table B left join attachFile_table A
+			on   B.board_seq = A.fk_board_seq
+		) V join employees_table E
+		on  V.fk_employee_seq = E.employee_seq
+	</select>
+	
+	
+	<!-- 자유게시판 상세 글 보여주기  -->
+	<select id="detailView" parameterType="String" resultType="com.spring.groupware.commonVO.BoardVO">
+		select V.board_seq, E.employee_name, V.subject, V.content, V.regDate, V.commentCnt, V.orgFileName, V.fileName, V.fileSize, V.readCnt
+		from 
+		(
+			select B.board_seq, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, A.orgFileName, A.fileName, A.fileSize, B.fk_employee_seq
+			from board_table B left join attachFile_table A
+			on   B.board_seq = A.fk_board_seq
+			where B.board_seq = #{board_seq}
+		) V join employees_table E
+		on  V.fk_employee_seq = E.employee_seq
+	</select>
+	
 </mapper>

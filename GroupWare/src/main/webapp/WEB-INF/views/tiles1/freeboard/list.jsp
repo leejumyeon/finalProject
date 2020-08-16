@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    
 <% String ctxPath = request.getContextPath(); %>
+
 <style type="text/css">
+
 	#container {
 		width: 1240px;
 		margin: 0 auto;
@@ -70,17 +75,34 @@
 	}
 	#side {
 		float: left;
+		
 	}
+	
 </style>
+
 <script type="text/javascript">
+	
+	// 게시글 상세보기 페이지로 이동
+	function goDetailView(board_seq) {
+		
+		alert(board_seq);
+		
+		var frm = document.detailViewFrm;
+		frm.board_seq.value = board_seq;
+		
+		frm.method = "GET";
+		frm.action = "<%= ctxPath%>/freeboard/detailView.top";
+		frm.submit();
+		
+	}
 	
 </script>
 	<div id="container">
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top'">앨범</div>
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/list.top'">자유게시판</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>						
 			<div id="post">	
@@ -94,7 +116,7 @@
 					</select>	
 					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
 					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
-					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/write.top'">글쓰기</button>		
+					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/write.top'">글쓰기</button>		
 				</form>
 				<div style="margin-top: 15px;">
 					<table id="abl">
@@ -105,8 +127,26 @@
 								<th style="text-align: center;" width="360px">제목</th>
 								<th style="text-align: center;" width="155px">작성날짜</th>
 								<th style="text-align: center;" width="80px">조회수</th>
+								<th style="text-align: center;" width="80px">파일첨부</th>
 							</tr> 
-								<!-- td 들어갈곳 -->				
+								<!-- td 들어갈곳 -->
+							<c:forEach var="bvo" items="${boardList}">	
+							<tr>
+								<td style="height: 40px; text-align: center;" align="center" width="80px">${bvo.board_seq}</td>
+								<td style="text-align: center;" width="80px">${bvo.employee_name}</td>
+								<td style="text-align: center; cursor: pointer;" width="360px" onclick="goDetailView('${bvo.board_seq}');">${bvo.subject}</td>
+								<td style="text-align: center;" width="155px">${bvo.regDate}</td>
+								<td style="text-align: center;" width="80px">${bvo.readCnt}</td>
+								
+							<c:if test="${not empty bvo.orgFileName}">
+								<td style="text-align: center;" width="80px"><img src="<%= ctxPath%>/resources/freeboardImg/disk.gif" /></td>
+							</c:if>
+							<c:if test="${empty bvo.orgFileName}">
+								<td style="text-align: center;" width="80px"></td>
+							</c:if>
+							
+							</tr>
+							</c:forEach>					
 						</tbody>					
 					</table>
 					<div id="pagebar">
@@ -116,4 +156,9 @@
 				</div>
 			</div>
 		</div>
+		
+		<form name="detailViewFrm">
+			<input type="hidden" name="board_seq"/>
+		</form>
+		
 	</div>

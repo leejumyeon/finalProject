@@ -39,11 +39,15 @@ public interface InterChoijhDAO {
 	// 자유 게시판 //
 	
 	
-	int add(BoardVO bvo); // 글쓰기(첨부파일이 없는 경우)
+	int add(BoardVO bvo); // 자유게시판 글쓰기(첨부파일이 없는 경우)
 
-	int getBordNum(); // 게시판 글번호 채번해오기
-	int add_withFile(BoardVO bvo); // 글쓰기(첨부파일이 있는 경우)
-	int addFile(AttachFileVO attachvo); // 첨부파일 테이블 insert하기
+	int getBordNum(); // 자유게시판 글번호 채번해오기
+	int add_withFile(BoardVO bvo); // 자유게시판 글쓰기(첨부파일이 있는 경우)
+	int addFile(AttachFileVO attachvo); // 자유게시판 첨부파일 테이블 insert하기
+
+	List<BoardVO> boardlistView(); // 자유게시판 글 보여주기
+
+	BoardVO detailView(String board_seq); // 자유게시판 상세 글 보여주기 
 
 
 }

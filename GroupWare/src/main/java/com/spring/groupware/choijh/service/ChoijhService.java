@@ -117,7 +117,7 @@ public class ChoijhService implements InterChoijhService {
 	// 자유 게시판 //
 	
 
-	// 글쓰기(첨부파일이 없는 경우)
+	// 자유게시판 글쓰기(첨부파일이 없는 경우)
 	@Override
 	public int add(BoardVO bvo) {
 		int n = dao.add(bvo);
@@ -125,7 +125,7 @@ public class ChoijhService implements InterChoijhService {
 	}
 
 	
-	// 게시판 글번호 채번해오기
+	// 자유게시판 글번호 채번해오기
 	@Override
 	public int getBordNum() {
 		int n = dao.getBordNum();
@@ -133,7 +133,7 @@ public class ChoijhService implements InterChoijhService {
 	}
 
 	
-	// 글쓰기(첨부파일이 있는 경우)
+	// 자유게시판 글쓰기(첨부파일이 있는 경우)
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
 	public int add_withFile(BoardVO bvo, AttachFileVO attachvo) {
@@ -145,6 +145,22 @@ public class ChoijhService implements InterChoijhService {
 		n = m*n;
 		
 		return n;
+	}
+
+
+	// 자유게시판 글 보여주기
+	@Override
+	public List<BoardVO> boardlistView() {
+		List<BoardVO> boardList = dao.boardlistView();
+		return boardList;
+	}
+
+
+	// 자유게시판 상세 글 보여주기 
+	@Override
+	public BoardVO detailView(String board_seq) {
+		BoardVO bvo = dao.detailView(board_seq);
+		return bvo;
 	}
 
 
