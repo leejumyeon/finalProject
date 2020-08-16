@@ -115,4 +115,11 @@ public class MailDAO implements InterMailDAO{
 		return receiver;
 	}
 
+	// 1개 메일 찾기
+	@Override
+	public MailVO findMail(String mail_seq) {
+		MailVO mail = sqlsession.selectOne("mail.findMail",mail_seq);
+		return mail;
+	}
+
 }

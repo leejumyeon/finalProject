@@ -788,4 +788,16 @@ public class MailController {
 		
 		return mav;
 	}
+	
+	// 메일 전달or답장 페이지 이동
+	@RequestMapping(value="/mail/mailUpdate.top",method= {RequestMethod.GET})
+	public ModelAndView mailUpdate(ModelAndView mav, HttpServletRequest request) {
+		String mail_seq = request.getParameter("readSeq"); //메일 번호
+		String secendType = request.getParameter("secendType"); //메일 타입(전달 or 답장)
+		
+		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
+		
+		mav.setViewName("mail/mailUpdate.tiles2");
+		return mav;
+	}
 }

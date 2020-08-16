@@ -149,4 +149,11 @@ public class MailService implements InterMailService{
 		List<MailVO> receiver = dao.mailReceiverFind(mail_groupno);
 		return receiver;
 	}
+
+	// 1개 메일 찾기
+	@Override
+	public MailVO findMail(String mail_seq) {
+		MailVO mail = dao.findMail(mail_seq);
+		return mail;
+	}
 }

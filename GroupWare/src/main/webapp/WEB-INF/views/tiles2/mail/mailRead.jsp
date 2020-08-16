@@ -168,6 +168,27 @@
 		frm.method = "get";
 		frm.submit();
 	}
+	
+	// 답장 페이지 이동
+	function mailRelay(){
+		$("input[name=secendType]").val('relay');
+		$("input[name=readSeq]").val('${mail.mail_seq}');
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
+		frm.method = "get";
+		frm.submit();
+		
+	}
+	
+	// 전달 페이지 이동
+	function mailReply(){
+		$("input[name=secendType]").val('reply');
+		$("input[name=readSeq]").val('${mail.mail_seq}');
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
+		frm.method = "get";
+		frm.submit();
+	}
 </script>
 <div style="margin-left:10px;">
 	
@@ -201,8 +222,8 @@
 				</c:when>
 				<c:otherwise>
 					<button type="button" onclick = "mailDel()">삭제</button>
-					<button type="button">전달</button>
-					<button type="button">답장</button>
+					<button type="button" onclick = "mailRelay()">전달</button>
+					<button type="button" onclick = "mailReply()">답장</button>
 				</c:otherwise>
 			</c:choose>
 			
@@ -210,6 +231,7 @@
 	</div>
 		<form name="mailFrm" >
 		<input type="hidden" name="type" value="${type}" />
+		<input type="hidden" name="secendType" value="" />
 		<input type="hidden" value="" name="readSeq" />
 		<input type="hidden" value="" name="selectCheck" />
 		<input type="hidden" name="fileName" />
