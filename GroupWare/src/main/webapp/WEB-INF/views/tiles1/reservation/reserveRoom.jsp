@@ -202,18 +202,23 @@
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 		$('#rsvtDateH').text($('#datepicker').val());
-		$('#rsvtDate').val($('#datepicker').val());
+		$('#rsvtDate').val($('#datepicker').val());				
 		
+		var flag = false;
 		var people = "";
 		var people_min = "";
 		var people_max = "";
 		
-		var flag = false;
-		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
 			
-			flag = true;
+			flag = true;			
+			
+			people = $(this).children('.people').text();
+			people_min = Number(people.substring(0, people.lastIndexOf("~")));
+			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
+			
+			alert(people_min+", "+people_max);
 			
 			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChoice");
@@ -223,14 +228,12 @@
 					
 			$("#roomName").text($(this).children('.roomName').text());			
 			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());	
-						
-			people = $(this).children('.people').text();
-			people_min = Number(people.substring(0, people.lastIndexOf("~")));
-			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
 			
-		//	alert($(this).children('.people').text());			
-			
-			showPossibleTime();
+		//	alert($(this).children('.people').text());		
+		
+			if($("#fk_roomNumber").val().trim() != "" && $("#rsvtDate").val().trim() != "") {
+				showPossibleTime();	
+			}
 			
 		}); // end of $(".room").click(function(event){})----------------------------
 		
@@ -240,10 +243,12 @@
 		$("#datepicker").change(function(event){
 			
 			$("#rsvtDateH").text($("#datepicker").val());
-			$('#rsvtDate').val($('#datepicker').val());
-			showPossibleTime();			
+			$('#rsvtDate').val($('#datepicker').val());			
+	
+			if($("#fk_roomNumber").val().trim() != "" && $("#rsvtDate").val().trim() != "") {
+				showPossibleTime();	
+			}
 		});
-		
 		
 		// 시간 선택하기	
 		var start = "";
@@ -434,23 +439,93 @@
 							// 검색된 데이터가 존재하지 않는 경우
 							$("#displayList").hide();
 						}
+						
 						console.log(json);												
-					},
+					},					
 					error: function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					}				
+					}	
+					
 				});
 				
+			}	
+			
+		});
+			
+		var checkFlag = false;
+		var memberCount = 0;
+		
+		$("#rsvt_btn").click(function(){	
+			
+			memberCount = Number($("#memberCount").val());
+			
+			// 회의실 유효성 검사
+			if($("#fk_roomNumber").val().trim() == "") {					
+				if(!checkFlag) {					
+					alert("예약할 회의실을 선택하세요.");					
+					checkFlag = true;
+				}
 			}
 			
-			$("#rsvt_btn").click(function(){
+			// 예약일 유효성 검사
+			if($("#rsvtDate").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약일을 선택하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			// 예약 시간 유효성 검사
+			if($("#startTimeH").val().trim() == "" || $("#endTimeH").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약시간을 선택하세요.");
+					checkFlag = true;
+				}
+			}
+		
+			// 신청자 유효성 검사
+			if($("#fk_employee_seq").val().trim() == "") {
+				if(!checkFlag) {
+					alert("로그인을 하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			// 대표자 유효성 검사
+			if($("#head_seq").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약 대표자를 입력하세요.");
+					checkFlag = true;
+				}
+			}						
+			
+			// 사용 인원 유효성 검사
+			if(memberCount < people_min || memberCount > people_max) {
+				if(!checkFlag) {
+					alert("선택한 회의실의 사용가능 인원은 "+people_min+"인~"+people_max+"인입니다.");
+					checkFlag = true;
+				}
+			}
+			
+			// 사유 유효성 검사
+			if($("#reason").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약 사유를 입력하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			if(!checkFlag) {
 				var frm = document.reserveRoomFrm;
 				frm.method="POST";
-				frm.action="<%= request.getContextPath()%>/reservation/reserveRoom.top";
-				frm.submit();
-			});
+				frm.action="<%= request.getContextPath()%>/reserveRoomEnd.top";
+				frm.submit();	
+			}
+			else {
+				checkFlag = false;
+			}
 			
-		});// end of $("#searchHead").keyup()------------------
+		});// end of $("#rsvt_btn").click(function(){})------------------
 		
 		<%-- === 검색어 입력 시 자동글 완성하기 8 === --%>
 		$(document).on("click", ".result", function(){

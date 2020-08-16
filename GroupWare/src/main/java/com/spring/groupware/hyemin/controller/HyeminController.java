@@ -116,8 +116,7 @@ public class HyeminController {
 		paraMap.put("reason", reason);
 		
 		service.reserveRoomEnd(paraMap);
-
-		mav.setViewName("/reservation/reserveRoom");
+		
 		return mav;
 	}
 	
