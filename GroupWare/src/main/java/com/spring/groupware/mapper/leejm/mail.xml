@@ -47,265 +47,236 @@
 	
 	<!-- 메일함 조회 -->
 	<select id="mailList" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select Ron, mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, regDate, fk_employee_seq, employee_name, email, position_name, department_name, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3
+		select T.Ron, T.mail_seq, T.mail_groupno, T.subject, T.content, T.mailStatus, T.readStatus, T.status, T.regDate, T.fk_employee_seq, T.employee_name, T.email, T.position_name, T.department_name, T.fileName1, T.orgFileName1, T.fileSize1, T.fileName2, T.orgFileName2, T.fileSize2, T.fileName3, T.orgFileName3, T.fileSize3
 		from(select row_number() over(order by My.mail_seq desc, You.fk_employee_seq asc) as Ron, My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
 		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-		from
+		from 
 		<choose>
 			<when test='searchWord==""'>
+			(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
+				from mail_table where 
 				<choose>
 					<when test='type == "receive"'> <!-- 받은 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 0 and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "send"'> <!-- 보낸 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 1 and mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "mine"'> <!-- 내게 쓴 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 2 and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "noRead"'> <!-- 안 읽은 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "del"'> <!-- 휴지통 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "attach"'> <!-- 첨부파일 있는 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3  from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "all"'> <!-- 전체메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						 mailStatus !=0 and fk_employee_seq = #{loginSeq}
 					</when>
-				</choose> 
-				T where T.Ron between #{startRno} and #{endRno} 
+				</choose>
+				<choose>
+					<when test='type != "del"'>
+						)My 
+						join (select Origin.mail_groupno, Origin.fk_employee_seq, E.employee_name, E.email, D.department_name, P.position_name 
+								                              from (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mailStatus !=0 and (status = 2 and fk_employee_seq = #{loginSeq}) or (status in(0,1) and fk_employee_seq !=#{loginSeq}) group by mail_groupno ) Origin 
+								                              join employees_table E on Origin.fk_employee_seq = E.employee_seq 
+								                              join position_table P on E.fk_position = P.position_seq 
+								                              join department_table D on E.fk_department = D.department_seq
+								                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})
+								      )You
+						on My.mail_groupno = You.mail_groupno)
+						T where T.Ron between #{startRno} and #{endRno} 
+					</when>
+					<otherwise>
+						)My 
+						join (select Origin.mail_groupno, Origin.fk_employee_seq, E.employee_name, E.email, D.department_name, P.position_name 
+								                              from (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mailStatus =0 and (status = 2 and fk_employee_seq = #{loginSeq}) or (status in(0,1) and fk_employee_seq !=#{loginSeq}) group by mail_groupno ) Origin 
+								                              join employees_table E on Origin.fk_employee_seq = E.employee_seq 
+								                              join position_table P on E.fk_position = P.position_seq 
+								                              join department_table D on E.fk_department = D.department_seq
+								                              where mail_groupno in (select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq})
+								      )You
+						on My.mail_groupno = You.mail_groupno)
+						T where T.Ron between #{startRno} and #{endRno} 
+					</otherwise>
+				</choose>
+				
 			</when>
 			<otherwise>
+				(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
+					from mail_table where mailStatus !=0
 				<choose>
 					<when test='type == "receive"'> <!-- 보낸사람 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status in(0,2) and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and status in(1,2) and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=0 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "send"'> <!-- 받은사람 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status in(1,2) and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and status in(0,2) and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=1 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "content"'> <!-- 내용 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3  from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%')
+						and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno
+						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
 					</when>
 					<when test='type == "all"'> <!-- 전체 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, content, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno
+						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
 					</when>
 				</choose> 
 				T where T.Ron between #{startRno} and #{endRno} 
 			</otherwise>
 		</choose>
-			                                                                 
-
-		
 	</select>
 	
 	
 	
 	<!-- 메일 읽기 -->
 	<select id="mailRead" resultType="com.spring.groupware.commonVO.MailVO" parameterType="HashMap">
-		select Ron, mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, regDate, fk_employee_seq, employee_name, email, position_name, department_name, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3
+		select T.Ron, T.mail_seq, T.mail_groupno, T.subject, T.content, T.mailStatus, T.readStatus, T.status, T.regDate, T.fk_employee_seq, T.employee_name, T.email, T.position_name, T.department_name, T.fileName1, T.orgFileName1, T.fileSize1, T.fileName2, T.orgFileName2, T.fileSize2, T.fileName3, T.orgFileName3, T.fileSize3
 		from(select row_number() over(order by My.mail_seq desc, You.fk_employee_seq asc) as Ron, My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
 		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-		from
+		from 
 		<choose>
 			<when test='searchWord==""'>
+			(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
+				from mail_table where 
 				<choose>
 					<when test='type == "receive"'> <!-- 받은 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 0 and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 1 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "send"'> <!-- 보낸 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 1 and mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "mine"'> <!-- 내게 쓴 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status = 2 and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and status = 2 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "noRead"'> <!-- 안 읽은 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and readStatus = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "del"'> <!-- 휴지통 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus = 0 and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "attach"'> <!-- 첨부파일 있는 메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3  from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						mailStatus !=0 and fileName1 is not null and fk_employee_seq = #{loginSeq}
 					</when>
 					<when test='type == "all"'> <!-- 전체메일 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno)
+						 mailStatus !=0 and fk_employee_seq = #{loginSeq}
 					</when>
-				</choose> 
-				T 
+				</choose>
+				<choose>
+					<when test='type != "del"'>
+						)My 
+						join (select Origin.mail_groupno, Origin.fk_employee_seq, E.employee_name, E.email, D.department_name, P.position_name 
+								                              from (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mailStatus !=0 and (status = 2 and fk_employee_seq = #{loginSeq}) or (status in(0,1) and fk_employee_seq !=#{loginSeq}) group by mail_groupno ) Origin 
+								                              join employees_table E on Origin.fk_employee_seq = E.employee_seq 
+								                              join position_table P on E.fk_position = P.position_seq 
+								                              join department_table D on E.fk_department = D.department_seq
+								                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})
+								      )You
+						on My.mail_groupno = You.mail_groupno)
+						T
+					</when>
+					<otherwise>
+						)My 
+						join (select Origin.mail_groupno, Origin.fk_employee_seq, E.employee_name, E.email, D.department_name, P.position_name 
+								                              from (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mailStatus =0 and (status = 2 and fk_employee_seq = #{loginSeq}) or (status in(0,1) and fk_employee_seq !=#{loginSeq}) group by mail_groupno ) Origin 
+								                              join employees_table E on Origin.fk_employee_seq = E.employee_seq 
+								                              join position_table P on E.fk_position = P.position_seq 
+								                              join department_table D on E.fk_department = D.department_seq
+								                              where mail_groupno in (select mail_groupno from mail_table where mailStatus =0 and fk_employee_seq = #{loginSeq})
+								      )You
+						on My.mail_groupno = You.mail_groupno)
+						T 
+					</otherwise>
+				</choose>
+				
 			</when>
 			<otherwise>
+				(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
+					from mail_table where mailStatus !=0
 				<choose>
 					<when test='type == "receive"'> <!-- 보낸사람 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status in(0,2) and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and status in(1,2) and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=0 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "send"'> <!-- 받은사람 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where M.status in(1,2) and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and status in(0,2) and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=1 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "content"'> <!-- 내용 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3  from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%')
+						and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno
+						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
 					</when>
 					<when test='type == "all"'> <!-- 전체 검색 -->
-						(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, content, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq})My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}))You
-						on My.mail_groupno = You.mail_groupno where My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%')
+						and fk_employee_seq = #{loginSeq})My
+						join (select mail_groupno, mail_seq, fk_employee_seq, employee_name, email, position_name, department_name 
+						from mail_table M
+                              join employees_table E on M.fk_employee_seq = E.employee_seq 
+                              join position_table P on E.fk_position = P.position_seq 
+                              join department_table D on E.fk_department = D.department_seq
+                              where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
+						      )You
+						 on My.mail_groupno = You.mail_groupno
+						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
 					</when>
 				</choose> 
-				T 
+				T
 			</otherwise>
 		</choose>
 	</select> 
@@ -354,10 +325,10 @@
 			where 
 				<choose>
 					<when test='type == "receive"'>
-						status in(0,2) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}) 
+						(status = 2 and fk_employee_seq = #{loginSeq})or(status = 0 and fk_employee_seq!=#{loginSeq}) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}) 
 					</when>
 					<when test='type == "send"'>
-						status in(1,2) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}) 
+						(status = 2 and fk_employee_seq = #{loginSeq})or(status = 1 and fk_employee_seq!=#{loginSeq}) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}) 
 					</when>
 					<when test='type == "content"'>
 						((status in(0,1) and fk_employee_seq != #{loginSeq}) or status = 2)and(content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
