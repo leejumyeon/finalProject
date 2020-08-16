@@ -107,32 +107,46 @@ public class ChoijhDAO implements InterChoijhDAO {
 	// 자유 게시판 //
 	
 	
-	// 글쓰기(첨부파일이 없는 경우)
+	// 자유게시판 글쓰기(첨부파일이 없는 경우)
 	@Override
 	public int add(BoardVO bvo) {
 		int n = sqlsession.insert("freeboard.add", bvo);
 		return n;
 	}
 
-	// 게시판 글번호 채번해오기
+	// 자유게시판 글번호 채번해오기
 	@Override
 	public int getBordNum() {
 		int n = sqlsession.selectOne("freeboard.getBordNum");
 		return n;
 	}
 	
-	// 글쓰기(첨부파일이 있는 경우)
+	// 자유게시판 글쓰기(첨부파일이 있는 경우)
 	@Override
 	public int add_withFile(BoardVO bvo) {
 		int n = sqlsession.insert("freeboard.add_withFile", bvo);
 		return n;
 	}
 
-	// 첨부파일 테이블 insert하기
+	// 자유게시판 첨부파일 테이블 insert하기
 	@Override
 	public int addFile(AttachFileVO attachvo) {
 		int m = sqlsession.insert("freeboard.addFile", attachvo);
 		return m;
+	}
+
+	// 자유게시판 글 보여주기
+	@Override
+	public List<BoardVO> boardlistView() {
+		List<BoardVO> boardList = sqlsession.selectList("freeboard.boardlistView");
+		return boardList;
+	}
+
+	// 자유게시판 상세 글 보여주기 
+	@Override
+	public BoardVO detailView(String board_seq) {
+		BoardVO bvo = sqlsession.selectOne("freeboard.detailView", board_seq);
+		return bvo;
 	}
 
 	

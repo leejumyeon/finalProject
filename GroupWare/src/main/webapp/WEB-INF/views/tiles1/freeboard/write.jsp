@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <% String ctxPath = request.getContextPath(); %>
+
 <style type="text/css">
 	#container {
 		width: 1240px;
@@ -86,7 +88,7 @@
 	    nhn.husky.EZCreator.createInIFrame({
 	        oAppRef: obj,
 	        elPlaceHolder: "content",
-	        sSkinURI: "<%= request.getContextPath() %>/resources/smarteditor/SmartEditor2Skin.html",
+	        sSkinURI: "<%= ctxPath%>/resources/smarteditor/SmartEditor2Skin.html",
 	        htParams : {
 	            // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
 	            bUseToolbar : true,            
@@ -153,8 +155,8 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top'">앨범</div>
-			<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/list.top'">자유게시판</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">앨범</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자유게시판</div>
 			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
 		</div>			
 			<div id="post">
