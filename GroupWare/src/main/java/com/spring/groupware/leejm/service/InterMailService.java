@@ -47,5 +47,8 @@ public interface InterMailService {
 	// 받는 사람 찾기
 	List<MailVO> mailReceiverFind(String mail_groupno);
 
+	// 1개 메일 찾기
+	MailVO findMail(String mail_seq);
+
 
 }

@@ -13,6 +13,9 @@ public interface InterHyeminService {
 	// 검색어 입력 시 자동글 완성하기
 	List<HashMap<String, String>> headSearchShow(String searchHead);
 
+	// 회의실 예약하기(insert)
+	void reserveRoomEnd(HashMap<String, String> paraMap);
+
 	
 	
 }

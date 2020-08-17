@@ -97,7 +97,7 @@ public class MailDAO implements InterMailDAO{
 	// 메일 복구하기
 	@Override
 	public int mailResotre(HashMap<String, String[]> paraMap) {
-		int n = sqlsession.update("mail.mailResotre",paraMap);
+		int n = sqlsession.update("mail.mailRestore",paraMap);
 		return n;
 	}
 
@@ -113,6 +113,13 @@ public class MailDAO implements InterMailDAO{
 	public List<MailVO> mailReceiverFind(String mail_groupno) {
 		List<MailVO> receiver = sqlsession.selectList("mail.mailReceiverFind",mail_groupno);
 		return receiver;
+	}
+
+	// 1개 메일 찾기
+	@Override
+	public MailVO findMail(String mail_seq) {
+		MailVO mail = sqlsession.selectOne("mail.findMail",mail_seq);
+		return mail;
 	}
 
 }

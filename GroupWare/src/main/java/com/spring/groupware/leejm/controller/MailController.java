@@ -460,8 +460,6 @@ public class MailController {
 			searchWord = "";
 		}
 		
-		
-
 		if(searchWord.trim().isEmpty()) {
 			if("receive".equals(type)) {
 				mav.addObject("mailhamType","받은메일");
@@ -505,6 +503,8 @@ public class MailController {
 		int totalCount = service.getTotalCount(paraMap);
 		mav.addObject("total",totalCount);
 		
+		System.out.println("mail_seq:"+mail_seq+"/type:"+type+"/searchWord:"+searchWord+"/loginSeq:"+emp.getEmployee_seq());
+		
 		MailVO mail = null;
 		try {
 			mail = service.mailRead(paraMap);
@@ -527,6 +527,7 @@ public class MailController {
 		}
 		mav.addObject("type",type);
 		mav.addObject("searchWord",searchWord);
+		mav.addObject("mail_seq",mail_seq);
 		
 		mav.setViewName("mail/mailRead.tiles2");
 		return mav;
@@ -785,6 +786,18 @@ public class MailController {
 		mav.addObject("currentShowPageNo",str_currentPageNo);
 		mav.setViewName("redirect:/mail/list.top");
 		
+		return mav;
+	}
+	
+	// 메일 전달or답장 페이지 이동
+	@RequestMapping(value="/mail/mailUpdate.top",method= {RequestMethod.GET})
+	public ModelAndView mailUpdate(ModelAndView mav, HttpServletRequest request) {
+		String mail_seq = request.getParameter("readSeq"); //메일 번호
+		String secendType = request.getParameter("secendType"); //메일 타입(전달 or 답장)
+		
+		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
+		
+		mav.setViewName("mail/mailUpdate.tiles2");
 		return mav;
 	}
 }
