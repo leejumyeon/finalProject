@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,11 +38,6 @@ public class MailController {
 	@Autowired
 	private FileManager fileManager;
 	
-	@RequestMapping(value="/test.top")
-	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("board/detailBoard.tiles1");
-		return mav;
-	}
 	
 	// 메일 리스트 페이지 이동(받은 메일함, 보낸 메일함, 전체 메일함, 내게 쓴 메일함)
 	@RequestMapping(value="/mail/list.top")
@@ -212,9 +208,6 @@ public class MailController {
 		if("normal".equals(writeType)) { // 메일쓰기 버튼 클릭 해서 입장할 경우
 			
 		}
-		else if("reply".equals(writeType)) { // 답장버튼 클릭해서 입장할 경우
-			mav.addObject("receive","특정상대 메일");
-		}
 		else if("mine".equals(writeType)) {
 			HttpSession session = request.getSession();
 			EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
@@ -296,9 +289,8 @@ public class MailController {
 		
 		if(!attachList.isEmpty()) {
 			String root = session.getServletContext().getRealPath("/");
-			String sendPath = root + "resources" + File.separator + "sendFiles";
+			String path = root + "resources" + File.separator + "mailUpload";
 			String newSendFileName = "";
-			String receivePath = root + "resources" + File.separator + "receiveFiles";
 			String newReceiveFileName = "";
 			
 			int cnt = 0;
@@ -315,14 +307,15 @@ public class MailController {
 						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
 						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
 						
-						newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), sendPath);
+						newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
 						if(!"mine".equals(sendType)) {
-							newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), receivePath);
+							newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
 						}
 						// 위의 것이 파일 올리기를 해주는 것이다.
 						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
 						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+						System.out.println(">>>> 확인용 newFileName ==> " + newReceiveFileName);
 				
 					/*
 					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
@@ -335,7 +328,7 @@ public class MailController {
 							sendMail.setFileSize1(String.valueOf(fileSize));
 							
 							if(receiveMail != null) {
-								receiveMail.setFileName1(newSendFileName);
+								receiveMail.setFileName1(newReceiveFileName);
 								receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
 								receiveMail.setFileSize1(String.valueOf(fileSize));
 							}
@@ -353,7 +346,7 @@ public class MailController {
 							}
 						}
 						else {
-							sendMail.setFileName3(newReceiveFileName);
+							sendMail.setFileName3(newSendFileName);
 							sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
 							sendMail.setFileSize3(String.valueOf(fileSize));
 							
@@ -612,33 +605,29 @@ public class MailController {
 		
 		HttpSession session = request.getSession();
 		String root = session.getServletContext().getRealPath("/");
-		String path = root+"resources"+File.separator;
-		if("1".equals(status)) {
-			path += "receiveFiles";
-		}
-		else {
-			path += "sendFiles";
-		}
+		String path = root+"resources"+File.separator + "mailUpload";
+		
 		
 		boolean flag = false;
 		flag = fileManager.doFileDownload(fileName, orgFileName, path, response);
-
+		response.setContentType("text/html; charset=UTF-8"); 
+		PrintWriter writer = null;
+		try {
+			writer = response.getWriter();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(!flag) {
 			// 다운로드가 실패할 경우 메시지를 띄워준다.
-			
-			response.setContentType("text/html; charset=UTF-8"); 
-			PrintWriter writer = null;
-			
-			try {
-				writer = response.getWriter();
-				// 웹브라우저상에 메시지를 쓰기 위한 객체생성.
-			} catch (IOException e) {
-				
-			}
-			
-			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
+			writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");  
 			
 		}
+		else {
+			writer.println("<javascript type='text/javascript'>history.go(0)</javascript>"); 
+		}
+		
+		writer.close();
 			
 	}
 	
@@ -795,9 +784,409 @@ public class MailController {
 		String mail_seq = request.getParameter("readSeq"); //메일 번호
 		String secendType = request.getParameter("secendType"); //메일 타입(전달 or 답장)
 		
-		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
+		System.out.println("mail_seq:"+mail_seq+"/ secendType:"+secendType);
 		
+		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
+		MailVO sender = service.mailSenderFind(mail.getMail_groupno()); //발신자
+		List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno()); // 수신자
+		
+		String origin = "-----Originer Messeage-----<br>";
+		origin += "<b>From</b>: \""+sender.getEmployee_name()+"\"("+sender.getEmail()+")<br>";
+		origin += "<b>To</b>: ";
+		
+		for(MailVO receive : receiver) {
+			origin += "\""+receive.getEmployee_name()+"\"("+receive.getEmail()+");";
+		}
+		
+		origin += "<br>";
+		origin += "<b>Sent</b>: "+mail.getRegDate()+"<br>";
+		origin += "<b>subject</b>: "+mail.getSubject() +"<br>";
+		
+		mav.addObject("origin",origin);
+		mav.addObject("secendType",secendType);
+		mav.addObject("mail",mail);
+		mav.addObject("sender",sender);
 		mav.setViewName("mail/mailUpdate.tiles2");
 		return mav;
 	}
+	
+	// 메일 답장 or 전달 기능 //
+	@RequestMapping(value="/mail/mailReSend.top")
+	public ModelAndView mailReSend(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+		HttpSession session = mrequest.getSession();
+		EmployeesVO empVO = (EmployeesVO)session.getAttribute("loginEmployee");
+		String sendSeq = empVO.getEmployee_seq();
+		String[] tempReceiveArr = mrequest.getParameterValues("receiveSeq");
+		
+		
+		List<String> receiveArr = new ArrayList<>();
+		boolean flag = false;
+		for(int i=0; i<tempReceiveArr.length; i++) {
+			for(int j=i+1; j<tempReceiveArr.length; j++) {
+				if(tempReceiveArr[i].equals(tempReceiveArr[j])) {
+					flag = true;
+					break;
+				}
+			}
+			if(!flag) {
+				receiveArr.add(tempReceiveArr[i]);
+			}
+			flag = false;
+		}
+		
+		for(String receiveSeq : receiveArr) {
+			System.out.println("확인용 받는 메일번호:"+receiveSeq);
+		}
+		
+		String subject = mrequest.getParameter("subject");
+		String content = mrequest.getParameter("content");
+		String sendType = mrequest.getParameter("sendType");
+		List<MultipartFile> newAttachList = mrequest.getFiles("newFileName"); //새롭게 추가
+		
+		List<MultipartFile> attachList = mrequest.getFiles("file"); //기존에 있던 첨부파일에서 수정한 것들
+		String[] fileNameList = mrequest.getParameterValues("fileName"); // 기존 파일명
+		String[] orgFileNameList = mrequest.getParameterValues("orgFileName");
+		String[] fileSizeList = mrequest.getParameterValues("fileSize");
+		
+		
+		
+		
+		List<MailVO> mailList = new ArrayList<>();
+		
+		// 보내는 메일 VO 생성 //
+		MailVO sendMail = new MailVO();
+		sendMail.setFk_employee_seq(sendSeq);
+		sendMail.setStatus("0"); // 발신 상태
+		sendMail.setContent(content);
+		sendMail.setSubject(subject);
+		sendMail.setReadStatus("1");
+		
+		MailVO receiveMail = null;
+		
+		// 받는 메일 VO 생성 //
+		receiveMail = new MailVO();
+		receiveMail.setFk_employee_seq(receiveArr.get(0));
+		receiveMail.setContent(content);
+		receiveMail.setSubject(subject);
+		receiveMail.setStatus("1");
+		receiveMail.setReadStatus("0");
+		
+				
+		// 메일 그룹번호 채번하기
+		String mail_groupno = service.getMail_groupno();
+		mail_groupno = String.valueOf(Integer.parseInt(mail_groupno)+1);
+		sendMail.setMail_groupno(mail_groupno);
+		
+		if(!"mine".equals(sendType)) {
+			receiveMail.setMail_groupno(mail_groupno);
+		}
+		
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "mailUpload";
+		String newSendFileName = "";
+		String newReceiveFileName = "";
+		
+		if(!attachList.isEmpty()) {
+			for(int i=0; i<attachList.size(); i++) {
+				if(!attachList.get(i).isEmpty()) {
+					byte[] bytes = null;
+					long fileSize = 0;
+					
+					try {
+						bytes = newAttachList.get(i).getBytes();
+						// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+						
+						newSendFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
+						if(!"mine".equals(sendType)) {
+							newReceiveFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
+						}
+						// 위의 것이 파일 올리기를 해주는 것이다.
+						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
+						
+						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+				
+					/*
+					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
+					*/
+						fileSize = newAttachList.get(i).getSize();
+						
+						if(i==0) {
+							sendMail.setFileName1(newSendFileName);
+							sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize1(String.valueOf(fileSize));
+							
+							receiveMail.setFileName1(newReceiveFileName);
+							receiveMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize1(String.valueOf(fileSize));
+							
+						}
+						else if(i==1) {
+							sendMail.setFileName2(newSendFileName);
+							sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize2(String.valueOf(fileSize));
+							
+							receiveMail.setFileName2(newReceiveFileName);
+							receiveMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize2(String.valueOf(fileSize));
+							
+						}
+						else {
+							sendMail.setFileName3(newSendFileName);
+							sendMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+							sendMail.setFileSize3(String.valueOf(fileSize));
+							
+							receiveMail.setFileName3(newReceiveFileName);
+							receiveMail.setOrgFileName3(attachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize3(String.valueOf(fileSize));
+							
+							
+						}
+											
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					if(i==0) {
+						sendMail.setFileName1(fileNameList[i]);
+						sendMail.setOrgFileName1(orgFileNameList[i]);
+						sendMail.setFileSize1(fileSizeList[i]);
+						
+						receiveMail.setFileName1(fileNameList[i]);
+						receiveMail.setOrgFileName1(orgFileNameList[i]);
+						receiveMail.setFileSize1(fileSizeList[i]);
+					}
+					else if(i==1) {
+						sendMail.setFileName2(fileNameList[i]);
+						sendMail.setOrgFileName2(orgFileNameList[i]);
+						sendMail.setFileSize1(fileSizeList[i]);
+						
+						receiveMail.setFileName2(fileNameList[i]);
+						receiveMail.setOrgFileName2(orgFileNameList[i]);
+						receiveMail.setFileSize2(fileSizeList[i]);
+					}
+					else if(i==2) {
+						sendMail.setFileName1(fileNameList[i]);
+						sendMail.setOrgFileName1(orgFileNameList[i]);
+						sendMail.setFileSize1(fileSizeList[i]);
+						
+						receiveMail.setFileName1(fileNameList[i]);
+						receiveMail.setOrgFileName1(orgFileNameList[i]);
+						receiveMail.setFileSize1(fileSizeList[i]);
+					}
+				}
+				
+			}
+		}
+		
+		
+		if(!newAttachList.isEmpty()) {
+			int cnt = 0;
+			
+			for(int i=0; i<newAttachList.size(); i++) {
+				if(!newAttachList.get(i).isEmpty()) {
+					System.out.println("파일 업로드");
+					byte[] bytes = null;
+					long fileSize = 0;
+					
+					try {
+						bytes = newAttachList.get(i).getBytes();
+						// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
+						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
+						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
+						
+						newSendFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
+						if(!"mine".equals(sendType)) {
+							newReceiveFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
+						}
+						// 위의 것이 파일 올리기를 해주는 것이다.
+						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
+						
+						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+				
+					/*
+					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
+					*/
+						fileSize = newAttachList.get(i).getSize();
+						
+						if(cnt==0) {
+							sendMail.setFileName1(newSendFileName);
+							sendMail.setOrgFileName1(newAttachList.get(i).getOriginalFilename());
+							sendMail.setFileSize1(String.valueOf(fileSize));
+							
+							receiveMail.setFileName1(newReceiveFileName);
+							receiveMail.setOrgFileName1(newAttachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize1(String.valueOf(fileSize));
+							
+						}
+						else if(cnt==1) {
+							sendMail.setFileName2(newSendFileName);
+							sendMail.setOrgFileName2(newAttachList.get(i).getOriginalFilename());
+							sendMail.setFileSize2(String.valueOf(fileSize));
+							
+							receiveMail.setFileName2(newReceiveFileName);
+							receiveMail.setOrgFileName2(newAttachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize2(String.valueOf(fileSize));
+							
+						}
+						else {
+							sendMail.setFileName3(newSendFileName);
+							sendMail.setOrgFileName3(newAttachList.get(i).getOriginalFilename());
+							sendMail.setFileSize3(String.valueOf(fileSize));
+							
+							receiveMail.setFileName3(newReceiveFileName);
+							receiveMail.setOrgFileName3(newAttachList.get(i).getOriginalFilename());
+							receiveMail.setFileSize3(String.valueOf(fileSize));
+							
+							
+						}
+						cnt++;
+						// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+								
+									
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} // end of if(!attachList.isEmpty())-------------------------------------------------
+		
+		mailList.add(sendMail);
+		if(receiveMail!=null) {
+			System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
+			mailList.add(receiveMail);
+			
+			if(receiveArr.size()>1) {
+				for(int i=0; i<receiveArr.size(); i++) {
+					if(i>0) {
+						MailVO otherReceive = new MailVO();
+						otherReceive.setFk_employee_seq(receiveArr.get(i));
+						otherReceive.setSubject(receiveMail.getSubject());
+						otherReceive.setContent(receiveMail.getContent());
+						otherReceive.setFileName1(receiveMail.getFileName1());
+						otherReceive.setOrgFileName1(receiveMail.getOrgFileName1());
+						otherReceive.setFileSize1(receiveMail.getFileSize1());
+						otherReceive.setFileName2(receiveMail.getFileName2());
+						otherReceive.setOrgFileName2(receiveMail.getOrgFileName2());
+						otherReceive.setFileSize2(receiveMail.getFileSize2());
+						otherReceive.setFileName3(receiveMail.getFileName3());
+						otherReceive.setOrgFileName3(receiveMail.getOrgFileName3());
+						otherReceive.setFileSize3(receiveMail.getFileSize3());
+						otherReceive.setMail_groupno(mail_groupno);
+						otherReceive.setStatus(receiveMail.getStatus());
+						otherReceive.setReadStatus(receiveMail.getReadStatus());
+						
+						mailList.add(otherReceive);
+					}
+				}
+			}
+			
+			for(MailVO mvo:mailList) {
+				System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
+			}
+		}
+		
+		
+		int count = mailList.size();
+		int n = 0;
+		System.out.println("입력할 행의 수:"+count);
+		try{
+			n = service.mailSend(mailList);
+			if(n == count) {
+				mav.addObject("result",true);
+			}
+			else {
+				mav.addObject("result",false);
+			}
+		}catch(Throwable e) {
+			e.printStackTrace();
+		}
+		
+		mav.setViewName("mail/mailWrite.tiles2");
+		return mav;
+	}
+	
+	// 사이드에 있는 메일바에 표시할 카운트 수 조회 //
+	@ResponseBody
+	@RequestMapping(value="/mail/noRead.top", produces="text/plain;charset=UTF-8")
+	public String mailNoRead(HttpServletRequest request) {
+		String loginSeq = request.getParameter("loginSeq");
+		String type="noRead";
+		String searchWord = "";
+		
+		HashMap<String, String>paraMap = new HashMap<>();
+		paraMap.put("loginSeq", loginSeq);
+		paraMap.put("type", type);
+		paraMap.put("searchWord", searchWord);
+		
+		
+		int noReadCount = service.getTotalCount(paraMap);
+		
+		type="del";
+		paraMap.put("type", type);
+		int delCount = service.getTotalCount(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("noReadCount", String.valueOf(noReadCount));
+		jsonObj.put("delCount", delCount);
+		
+		return jsonObj.toString();
+	}
+	
+	//휴지통 비우기 기능
+	@ResponseBody
+	@RequestMapping(value="/mail/drop.top", produces="text/plain;charset=UTF-8")
+	public String mailDrop(HttpServletRequest request) {
+		String loginSeq = request.getParameter("loginSeq");
+		String type = "del";
+		String searchWord = "";
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("type", type);
+		paraMap.put("loginSeq", loginSeq);
+		paraMap.put("searchWord", searchWord);
+		
+		int cnt = service.getTotalCount(paraMap);
+		int result = service.mailDrop(loginSeq);
+		
+		System.out.println("cnt:"+cnt+"/result:"+result);
+		
+		String msg = "";
+		if(cnt == 0) {
+			msg = "이미 휴지통이 비워져있습니다.";
+		}
+		
+		else if(cnt == result) {
+			msg = "휴지통을 비웠습니다.";
+		}
+		else {
+			msg="휴지통을 비우는데 실패했습니다.";
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("msg", msg);
+		return json.toString();
+	}
+	
+	// 1분마다 계속 실행하는 내용(새로온 메일이 있는지 확인)
+	@ResponseBody
+	@RequestMapping(value="/mail/newMailFind.top",produces="text/plain;charset=UTF-8")
+	public String newMailFind(HttpServletRequest request) {
+		String type = "noRead";
+		String loginSeq = request.getParameter("loginSeq");
+		String searchWord = "";
+		
+		HashMap<String, String>paraMap = new HashMap<>();
+		paraMap.put("type", type);
+		paraMap.put("loginSeq", loginSeq);
+		paraMap.put("searchWord", searchWord);
+		
+		int result = service.getTotalCount(paraMap);
+		JSONObject json = new JSONObject();
+		json.put("result", result);
+		return json.toString();
+	}
+	
+	
 }

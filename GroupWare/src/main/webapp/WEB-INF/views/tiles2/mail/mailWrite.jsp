@@ -303,7 +303,7 @@
 <c:choose>
 	<c:when test="${empty result}">
 		<div id="writeArea">
-			<span class="writeBtn">보내기</span> <span class="writeBtn">미리보기</span>
+			<span class="writeBtn">보내기</span>
 		</div>
 		<div id="frmArea">
 			<form name="mailFrm" enctype="multipart/form-data">

@@ -24,14 +24,7 @@ import com.spring.groupware.leejm.service.InterManagerService;
 public class ManagerController {
 	
 	@Autowired
-	private InterManagerService service;
-	
-	// 관리자-예약관리 페이지 이동
-	@RequestMapping(value="/manager/reservation.top")
-	public ModelAndView managerReservation(ModelAndView mav) {
-		mav.setViewName("admin/reservation.tiles3");
-		return mav;
-	}
+	private InterManagerService service;	
 	
 	// ---------------------------------- 공지 사항 / FAQ시작 -------------------------------------------------------
 	

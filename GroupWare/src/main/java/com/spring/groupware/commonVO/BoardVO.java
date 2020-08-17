@@ -14,16 +14,16 @@ public class BoardVO { //게시글 VO
 	private String status; //게시글 상태
 	private String commentCnt; //댓글 수	
 	
-	private String orgFileName; // 첨부파일 원본명
-	private String fileName; // 첨부파일 업로드 파일명
-	private String fileSize; // 첨부파일 크기
+	private String previousseq;      // 이전글번호
+	private String previoussubject;  // 이전글제목
+	private String nextseq;          // 다음글번호
+	private String nextsubject;      // 다음글제목
 	
 	public BoardVO() {}
 	
 	public BoardVO(String board_seq, String fk_category_num, String category_name, String subject, String content,
 			String readCnt, String regDate, String fk_employee_seq, String employee_name, String employee_id,
-			String status, String commentCnt, 
-			String orgFileName, String fileName, String fileSize) {
+			String status, String commentCnt) {
 		super();
 		this.board_seq = board_seq;
 		this.fk_category_num = fk_category_num;
@@ -37,9 +37,6 @@ public class BoardVO { //게시글 VO
 		this.employee_id = employee_id;
 		this.status = status;
 		this.commentCnt = commentCnt;
-		this.orgFileName = orgFileName;
-		this.fileName = fileName;
-		this.fileSize = fileSize;
 	}
 
 	public String getBoard_seq() {
@@ -138,30 +135,39 @@ public class BoardVO { //게시글 VO
 		this.commentCnt = commentCnt;
 	}
 
-	public String getOrgFileName() {
-		return orgFileName;
+	public String getPreviousseq() {
+		return previousseq;
 	}
 
-	public void setOrgFileName(String orgFileName) {
-		this.orgFileName = orgFileName;
+	public void setPreviousseq(String previousseq) {
+		this.previousseq = previousseq;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getPrevioussubject() {
+		return previoussubject;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setPrevioussubject(String previoussubject) {
+		this.previoussubject = previoussubject;
 	}
 
-	public String getFileSize() {
-		return fileSize;
+	public String getNextseq() {
+		return nextseq;
 	}
 
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
+	public void setNextseq(String nextseq) {
+		this.nextseq = nextseq;
 	}
 
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
+	public void setNextsubject(String nextsubject) {
+		this.nextsubject = nextsubject;
+	}
+
+	
 	
 	
 }

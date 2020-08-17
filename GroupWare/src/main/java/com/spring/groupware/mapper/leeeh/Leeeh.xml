@@ -376,49 +376,49 @@
 	
 	<!-- === 반려된 휴가/출장 정보 삭제하기 === -->
 	<delete id="deleteTripTable" parameterType="String">
-		delete from trip_table;
+		delete from trip_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 매출 정보 삭제하기 === -->
 	<delete id="deleteSalesTable" parameterType="String">
-		delete from sales_table;
+		delete from sales_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 비품 구매 정보 삭제하기 === -->
 	<delete id="deleteEquipmentTable" parameterType="String">
-		delete from equipment_table;
+		delete from equipment_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 프로젝트 정보 삭제하기 === -->
 	<delete id="deleteProjectTable" parameterType="String">
-		delete from project_table;
+		delete from project_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 퇴사 정조 삭제하기 === -->
 	<delete id="deleteFireTable" parameterType="String">
-		delete from fire_table;
+		delete from fire_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 인사고과 정보 삭제하기 === -->
 	<delete id="deleteTATable" parameterType="String">
-		delete from TA_table;
+		delete from TA_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 동호회 정보 삭제하기 === -->
 	<delete id="deleteClubTable" parameterType="String">
-		delete from club_table;
+		delete from club_table
 		where groupno = #{groupno}
 	</delete>
 	
 	<!-- === 반려된 동호회 회원 정보 삭제하기 === -->
 	<delete id="deleteClubMemberTable" parameterType="String">
-		delete from clubMember_table;
+		delete from clubMember_table
 		where groupno = #{groupno}
 	</delete>
 	
@@ -490,7 +490,7 @@
 			 , to_char(trip_end, 'yyyy. mm. dd') AS trip_end
 			 , fk_employee_seq
 		from trip_table
-		where documentStatus = 1;
+		where documentStatus = 1
 	</select>
 	
 	<!-- === 휴가 시작한 사람 업데이트하기 === -->
