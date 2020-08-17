@@ -579,9 +579,6 @@ create table board_table
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
-select * from board_table;
-select * from attachFile_table;
-
 create SEQUENCE board_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -623,6 +620,7 @@ create table comment_table
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
+
 create sequence comment_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값

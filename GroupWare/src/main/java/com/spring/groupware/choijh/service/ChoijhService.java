@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.groupware.choijh.model.InterChoijhDAO;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -155,13 +156,33 @@ public class ChoijhService implements InterChoijhService {
 	}
 
 
-	// 자유게시판 상세 글 보여주기 
+	// 자유게시판 글조회수 증가와 함께 글1개를 조회를 해주는 것 
 	@Override
-	public BoardVO detailView(String board_seq) {
+	public BoardVO detailView(String board_seq, String employee_seq) {
+		
 		BoardVO bvo = dao.detailView(board_seq);
+		
+		if(bvo != null && 
+		   employee_seq != null && 
+		   !bvo.getFk_employee_seq().equals(employee_seq)) {
+			// 글조회수 증가는 다른 사람의 글을 읽을때만 증가하도록 해야 한다.
+			// 로그인 하지 않은 상태에서는 글 조회수 증가는 없다.
+			
+			dao.setAddReadCount(board_seq); // 글 조회수 1증가 하기
+			bvo = dao.detailView(board_seq);
+		}
+		
 		return bvo;
 	}
 
+	
+	// 자유게시판 글 조회수 증가 없이 단순히 글1개 조회하기
+	@Override
+	public BoardVO detailViewNoAddCount(String board_seq) {
+		BoardVO bvo = dao.detailView(board_seq);
+		return bvo;
+	}
+	
 
 	// 해당게시글의 첨부파일 읽어오기 
 	@Override
@@ -185,6 +206,33 @@ public class ChoijhService implements InterChoijhService {
 		int n = dao.edit(bvo);
 		return n;
 	}
+
+	
+	// 댓글 쓰기 및 원글게시물 댓글수 +1 증가
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public int addComment(CommentVO cvo) {
+		int n = 0;
+		int result = 0;
+		
+		n = dao.addComment(cvo); // 자유게시판 댓글쓰기
+		
+		if(n ==1) {
+			result = dao.updateCommentCnt(cvo.getFk_board_seq()); // 해당 댓글의 게시물에 댓글 수 증가
+		}
+		
+		return result;
+	}
+
+
+	// 댓글 내용(페이징처리 x) 보여주기
+	@Override
+	public List<CommentVO> goReadComment(String fk_board_seq) {
+		List<CommentVO> commentList = dao.goReadComment(fk_board_seq);
+		return commentList;
+	}
+
+	
 
 	
 

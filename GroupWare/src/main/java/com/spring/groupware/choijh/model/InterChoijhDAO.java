@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -47,12 +48,24 @@ public interface InterChoijhDAO {
 
 	List<BoardVO> boardlistView(); // 자유게시판 글 보여주기
 
-	BoardVO detailView(String board_seq); // 자유게시판 상세 글 보여주기 
+	BoardVO detailView(String board_seq); // 자유게시판 글1개를 조회를 해주는 것
+	void setAddReadCount(String board_seq); // 글 조회수 1증가 하기
 	
 	List<AttachFileVO> getfileView(String board_seq); // 해당게시글의 첨부파일 읽어오기
 	
 	int del(String board_seq); // 자유게시판 글 삭제
 
 	int edit(BoardVO bvo); // 자유게시판 글 수정 하기 
+
+	int addComment(CommentVO cvo); // 자유게시판 댓글쓰기
+	int updateCommentCnt(String fk_board_seq); // 해당 댓글의 게시물에 댓글 수 증가
+
+	List<CommentVO> goReadComment(String fk_board_seq); // 댓글 내용(페이징처리 x) 보여주기
+
+	
+
+	
+
+	
 
 }
