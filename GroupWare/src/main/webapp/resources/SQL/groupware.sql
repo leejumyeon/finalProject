@@ -80,7 +80,6 @@ create table position_table
 ,constraint pk_position_seq primary key(position_seq)
 ); 
 
-
  -- 사원상태 테이블(employeeStatus_table) --
 create table employeeStatus_table
 (status_seq     number not null -- 사원 상태번호
@@ -278,7 +277,7 @@ create table grade_table
 ,grade_name     varchar2(50)
 ,constraint pk_grade_table primary key(grade_level)
 );
-
+select * from grade_table;
 -- 휴가/출장 항목 테이블(trip_category)--
 create table trip_category
 (category_num   number not null -- 휴가/출장 항목 번호
@@ -534,10 +533,13 @@ create table reservation_table
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
 ,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
+,regDate    date default sysdate not null
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
 );
+
+
 create SEQUENCE reservation_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -576,6 +578,9 @@ create table board_table
 ,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq)
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
+
+select * from board_table;
+select * from attachFile_table;
 
 create SEQUENCE board_table_seq
 start with 1 -- 시작값
@@ -740,10 +745,32 @@ commit;
 
 
 
-
-
-
-
+-- 예약 신청 조회 (혜민)
+select R.reservation_seq
+     , E.employee_name
+     , D.department_name
+     , P.position_name
+     , V.roomName
+     , to_char(R.startDate, 'yyyy.mm.dd hh24:mi') as startDate
+     , to_char(R.endDate, 'yyyy.mm.dd hh24:mi') as endDate
+     , R.memberCount
+     , to_char(R.startDate, 'yyyy.mm.dd')
+     , case R.status when 0 then '승인대기중'
+                     when 1 then '승인완료'
+                     when 2 then '반려'
+       end AS status
+     , reason  
+     , to_char(R.regDate , 'yyyy.mm.dd hh24:mi:ss') as regDate
+from reservation_table R join employees_table E
+on R.fk_employee_seq = E.employee_seq
+join department_table D
+on E.fk_department = D.department_seq
+join position_table P
+on E.fk_position = P.position_seq
+join reservationRoom_table V
+on R.fk_roomNumber = V.roomNumber
+where R.status = 0
+order by R.reservation_seq desc;
 
 
 

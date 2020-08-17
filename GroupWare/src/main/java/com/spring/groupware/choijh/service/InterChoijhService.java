@@ -41,11 +41,22 @@ public interface InterChoijhService {
 	int add(BoardVO bvo); // 자유게시판 글쓰기(첨부파일이 없는 경우)
 
 	int getBordNum(); // 자유게시판 글번호 채번해오기
-	int add_withFile(BoardVO bvo, AttachFileVO attachvo); // 자유게시판 글쓰기(첨부파일이 있는 경우)
-
+	int add_withFile(BoardVO bvo); // 자유게시판 글쓰기(첨부파일이 있는 경우)
+	void addFile(AttachFileVO attachvo); // 자유게시판 첨부파일 테이블 insert하기
+	
 	List<BoardVO> boardlistView(); // 자유게시판 글 보여주기
 
 	BoardVO detailView(String board_seq); // 자유게시판 상세 글 보여주기 
+
+	List<AttachFileVO> getfileView(String board_seq); // 해당 게시글의 첨부파일 읽어오기 
+	
+	int del(String board_seq); // 자유게시판 글 삭제
+
+	int edit(BoardVO bvo); // 자유게시판 글 수정 하기 
+
+	
+
+	
 
 	
 	

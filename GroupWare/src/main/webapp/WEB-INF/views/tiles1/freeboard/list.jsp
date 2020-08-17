@@ -127,7 +127,6 @@
 								<th style="text-align: center;" width="360px">제목</th>
 								<th style="text-align: center;" width="155px">작성날짜</th>
 								<th style="text-align: center;" width="80px">조회수</th>
-								<th style="text-align: center;" width="80px">파일첨부</th>
 							</tr> 
 								<!-- td 들어갈곳 -->
 							<c:forEach var="bvo" items="${boardList}">	
@@ -137,16 +136,9 @@
 								<td style="text-align: center; cursor: pointer;" width="360px" onclick="goDetailView('${bvo.board_seq}');">${bvo.subject}</td>
 								<td style="text-align: center;" width="155px">${bvo.regDate}</td>
 								<td style="text-align: center;" width="80px">${bvo.readCnt}</td>
-								
-							<c:if test="${not empty bvo.orgFileName}">
-								<td style="text-align: center;" width="80px"><img src="<%= ctxPath%>/resources/freeboardImg/disk.gif" /></td>
-							</c:if>
-							<c:if test="${empty bvo.orgFileName}">
-								<td style="text-align: center;" width="80px"></td>
-							</c:if>
-							
-							</tr>
-							</c:forEach>					
+						   </tr>
+						   </c:forEach>			
+						   		
 						</tbody>					
 					</table>
 					<div id="pagebar">

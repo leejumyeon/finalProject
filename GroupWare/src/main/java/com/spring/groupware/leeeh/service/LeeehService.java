@@ -11,6 +11,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.model.InterLeeehDAO;
 
@@ -521,6 +522,63 @@ public class LeeehService implements InterLeeehService {
 		int result = dao.updatePosition(paraMap);
 		
 		return result;
+	}
+
+	// === 인사고과 리스트 얻어오기 === //
+	@Override
+	public List<TimeAndAttVO> getTAList() {
+
+		List<TimeAndAttVO> TAList = dao.getTAList();
+		
+		return TAList;
+	}
+
+	// === 결재 현황 모든 결재 리스트 얻어오기 === //
+	@Override
+	public List<DocumentVO> allDocumentList() {
+
+		List<DocumentVO> allDocumentList = dao.allDocumentList();
+		
+		return allDocumentList;
+	}
+
+	// === 결재 완료된 모든 결재 리스트 얻어오기 === //
+	@Override
+	public List<DocumentVO> getAllComDocumentList() {
+
+		List<DocumentVO> allComDocumentList = dao.getAllComDocumentList();
+		
+		return allComDocumentList;
+	}
+
+	// === 문서함 휴지통으로 보내기 === //
+	@Override
+	public void updateDocumentTableStatus(String groupno) {
+
+		dao.updateDocumentTableStatus(groupno);
+	}
+
+	// === 휴지통에 있는 문서들 불러오기 === //
+	@Override
+	public List<DocumentVO> delDocumentList() {
+
+		List<DocumentVO> delDocumentList = dao.delDocumentList();
+		
+		return delDocumentList;
+	}
+
+	// === 휴지통에 있는 문서 복구하기 === //
+	@Override
+	public void rollbackDocument(String groupno) {
+
+		dao.rollbackDocument(groupno);
+	}
+
+	// === 휴지통에 있는 문서 영구 삭제하기 === //
+	@Override
+	public void shiftDelDocument(String groupno) {
+
+		dao.shiftDelDocument(groupno);
 	}
 
 }

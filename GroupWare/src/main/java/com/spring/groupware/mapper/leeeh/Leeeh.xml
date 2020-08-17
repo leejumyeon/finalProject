@@ -271,9 +271,12 @@
 		<result property="department_name" column="department_name" javaType="String"/>
 		<result property="employee_name" column="employee_name" javaType="String"/>
 		<result property="category_name" column="category_name" javaType="String"/>
+		<result property="fileName" column="fileName" javaType="String"/>
+		<result property="orgFileName" column="orgFileName" javaType="String"/>
+		<result property="fileSize" column="fileSize" javaType="String"/>
 	</resultMap>
 	<select id="goDocumentContent" parameterType="String" resultMap="documentMap">
-		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_name
+		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_namem, DE.fileName, DE.orgFileName, DE.fileSize
 		from department_table DE join employees_table E  
 		on DE.department_seq = E.fk_department
 		join document_table D
@@ -423,6 +426,7 @@
 	<update id="updateStatusDocmenetTable2" parameterType="HashMap">
 		<foreach collection="document_seqArr" index="i">
 			update document_table set status = 1
+									, approveDate = sysdate
 			where document_seq = '${document_seqArr[i]}'
 		</foreach>
 	</update>
@@ -486,6 +490,7 @@
 			 , to_char(trip_end, 'yyyy. mm. dd') AS trip_end
 			 , fk_employee_seq
 		from trip_table
+		where documentStatus = 1;
 	</select>
 	
 	<!-- === 휴가 시작한 사람 업데이트하기 === -->
@@ -590,4 +595,88 @@
 		update employees_table set fk_position = #{fk_position}
 		where employee_seq = #{employee_seq}	
 	</update>
+	
+	<!-- === 인사고과 리스트 얻어오기 === -->
+	<select id="getTAList" resultType="com.spring.groupware.commonVO.TimeAndAttVO">
+		select V.fk_employee_seq, V.employee_name, V.department_name, V.position_name, V.attitude, V.attendance, V.performance, V.regDate, E2.employee_name AS manager
+		from 
+		(
+		    select TA.fk_employee_seq, E.employee_name, D.department_name, P.position_name, TA.attitude, TA.attendance, TA.performance, TA.manager, to_char(TA.regDate, 'yyyy. mm. dd') AS regDate
+		    from TA_table TA join employees_table E
+		    on TA.fk_employee_seq = E.employee_seq
+		    join department_table D
+		    on E.fk_department = D.department_seq
+		    join position_table P
+		    on E.fk_position = P.position_seq
+		) V join employees_table E2
+		on V.manager = E2.employee_seq
+	</select>
+	
+	<!-- === 결재 현황 모든 결재 리스트 얻어오기 === -->
+	<select id="allDocumentList" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select V.document_seq, V.groupno, V.fk_employee_seq, V.employee_name, V.department_name, V.position_name, V.subject, V.regDate, V.approver_seq, E2.employee_name AS approver_name, V.status, V.document_category, DC.category_name
+		from
+		(
+		    select DO.document_seq, DO.groupno, DO.fk_employee_seq, E.employee_name, DE.department_name, P.position_name, DO.subject, to_char(DO.regDate, 'yyyy. mm. dd') AS regDate, DO.approver_seq, DO.status, DO.document_category
+		    from document_table DO join employees_table E
+		    on DO.fk_employee_seq = E.employee_seq
+		    join department_table DE
+		    on E.fk_department = DE.department_seq
+		    join position_table P
+		    on E.fk_position = P.position_seq
+		) V join employees_table E2
+		on V.approver_seq = E2.employee_seq
+		join document_category DC
+		on V.document_category = DC.document_category_seq
+	</select>
+	
+	<!-- === 결재 완료된 모든 결재 리스트 얻어오기 === -->
+	<select id="getAllComDocumentList" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DE.department_name, P.position_name, DC.category_name
+			 , D.fk_employee_seq, to_char(D.approveDate, 'yyyy. mm. dd') AS approveDate
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join department_table DE
+		on E.fk_department = DE.department_seq
+		join position_table P
+		on E.fk_position = P.position_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where groupno in (select groupno from document_table group by groupno having sum(status) = count(status))
+			  and D.parent_approver is null
+	</select>
+	
+	<!-- === 문서함 휴지통으로 보내기 === -->
+	<update id="updateDocumentTableStatus" parameterType="String">
+		update document_table set status = -1
+		wherer groupno = #{groupno}
+	</update>
+	
+	<!-- === 휴지통에 있는 문서들 불러오기 === -->
+	<select id="delDocumentList" resultType="com.spring.groupware.commonVO.DocumentVO">
+		select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DE.department_name, P.position_name, DC.category_name
+			 , D.fk_employee_seq, to_char(D.approveDate, 'yyyy. mm. dd') AS approveDate
+		from employees_table E join document_table D
+		on E.employee_seq = D.fk_employee_seq
+		join department_table DE
+		on E.fk_department = DE.department_seq
+		join position_table P
+		on E.fk_position = P.position_seq
+		join document_category DC
+		on D.document_category = DC.document_category_seq
+		where D.status = '-1'
+			  and D.parent_approver is null
+	</select>
+	
+	<!-- === 휴지통에 있는 문서 복구하기 === -->
+	<update id="rollbackDocument" parameterType="String">
+		update document_table set status = 1
+		where groupno = #{groupno}
+	</update>
+	
+	<!-- === 휴지통에 있는 문서 영구 삭제하기 === -->
+	<delete id="shiftDelDocument" parameterType="String">
+		delete from document_table
+		where groupno = #{groupno}
+	</delete>
 </mapper>
