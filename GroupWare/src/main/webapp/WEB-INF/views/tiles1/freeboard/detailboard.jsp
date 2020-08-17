@@ -1,27 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    
 <% String ctxPath = request.getContextPath(); %>
 
 <meta charset="UTF-8">
 <title>album board</title>
 <style type="text/css">
+
 	#container {
 		width: 1240px;
 		margin: 0 auto;
 	}	
+	
 	#in {
 		width: 1000px;
 		margin: 0 auto;
 	}
+	
 	#detail {
 		width: 750px;
 		margin: 0 auto;
 	}
+	
 	#detail, #detail th, #detail td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
+	
 	#detail th{
 		width: 120px;
 		font-size: 11pt;
@@ -29,10 +36,12 @@
 		height: 40px;
 		color: white;
 	}
+	
 	#detail td{
 		padding: 10px;
 		width: 468px;		
 	}
+	
 	.detailbtn3 {
 		border-radius: 0;
 		border-style: none;
@@ -40,6 +49,7 @@
 		padding: 5px;
 		float: right;
 	}
+	
 	.sidebar2 {
 		border: 1px solid white;
 		width: 100px;
@@ -51,11 +61,13 @@
 		background-color: #3399ff;		
 		color: white;
 	}
+	
 	#post {
 		margin-right: 30px;
 		width: 750px;
 		float: right;		
 	}	
+	
 	.comunity {
 		padding-top: 18px;
 		width: 100px;
@@ -64,17 +76,79 @@
 		text-align: center;
 		font-weight: bold;		
 	}
+	
 	#side {
 		float: left;
 	}
+	
 	p {
 		font-size: 11pt;
 		font-weight: bold;
 	}
+	
 	#content {
 		max-height: 250px;
 	}
+	
+	#commentContent {
+		border: solid 1px gray;
+		margin-top: 130px;
+	}
+	
+	#commentWrite {
+		float: right;
+		color: white;
+		font-size: 9pt;
+    	padding: 5px;
+		background-color: #3399ff;
+		cursor: pointer;
+	}
+	
 </style>
+
+<script type="text/javascript">
+
+	// 삭제 버튼 클릭 시 
+	function goDelete() {
+		
+		if (confirm("정말 삭제하시겠습니까?") == true){
+			var frm = document.delFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/freeboard/del.top";
+			frm.submit();
+		}
+		else{
+			return;
+		}
+		
+	}
+	
+	// 댓글 쓰기 버튼 클릭시 
+	function goCommentWrite(board_seq) {
+		
+		var commentContent = $("#commentContent").val();
+		
+		alert(commentContent);
+		
+		$.ajax({
+			
+			url:"<%= ctxPath%>/freeboard/goCommentWrite.top",
+			data:{"board_seq":board_seq,"commentContent":commentContent},
+			type:"POST",
+			dataType:"JSON",
+			success:function(json) {
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+			
+		}); 
+		
+	}
+	
+</script>
+
 	<div id="container">
 		<div id="in">	
 			<div id="side">
@@ -98,12 +172,16 @@
 							<th style="text-align: center;">작성날짜</th>
 							<td>${bvo.regDate}</td>
 						</tr>
+						
+						<c:forEach var="attachvo" items="${attachvoList}">
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
-							<td><a href="<%= ctxPath%>/freeboard/download.top?board_seq=${bvo.board_seq}">${bvo.orgFileName}</a></td>
+							<td><a href="<%= ctxPath%>/freeboard/download.top?fk_board_seq=${attachvo.fk_board_seq}&fileName=${attachvo.fileName}&orgFileName=${attachvo.orgFileName}">${attachvo.orgFileName}</a></td>
 							<th style="text-align: center;">파일크기</th>
-							<td>${bvo.fileSize}&nbsp;byte</td>
+							<td>&nbsp;${attachvo.fileSize}byte</td>
 						</tr>
+						</c:forEach>
+						
 						<tr>
 							<th colspan="5" style="text-align: center;">내용</th>					
 						</tr>			
@@ -115,18 +193,31 @@
 			</form>	
 			<br/>
 			<div>
-				<p>이전글&nbsp;:&nbsp;</p>
-				<span class="move" onclick="javascript:location.href=''"></span>
+				<p><span class="move" onclick="javascript:location.href='?board_seq=${bvo.previousseq}'" style="cursor: pointer;">이전글&nbsp;:&nbsp;${bvo.previoussubject}</span></p>
 			</div>
 			<div>
-				<p>다음글&nbsp;:&nbsp;</p>
-				<span class="move" onclick="javascript:location.href=''"></span>
+				<p><span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">다음글&nbsp;:&nbsp;${bvo.nextsubject}</span></p>
 			</div>
 			<div id="button" >
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href=''">목록보기</button>
-				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href=''">수정</button>
-				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href=''">삭제</button>
+				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/editView.top?board_seq=${bvo.board_seq}'">수정</button>
+				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="goDelete();">삭제</button>
 			</div>
+			
+			<div style="clear: both;"></div>
+			
+			<%-- 댓글 쓰기  --%>
+			<div>
+				<textarea rows="5" cols="104" name="commentContent" id="commentContent" ></textarea>
 			</div>
+			<div id="commentWrite" onclick="goCommentWrite('${bvo.board_seq}')">댓글 쓰기</div>
+			<div style="clear: both;"></div>
+			
 		</div>
+		</div>
+		
+		<form name="delFrm">
+			<input type="hidden" name="board_seq" value="${bvo.board_seq}" />
+		</form>
+		
 	</div>	

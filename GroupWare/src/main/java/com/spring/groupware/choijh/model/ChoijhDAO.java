@@ -130,9 +130,8 @@ public class ChoijhDAO implements InterChoijhDAO {
 
 	// 자유게시판 첨부파일 테이블 insert하기
 	@Override
-	public int addFile(AttachFileVO attachvo) {
-		int m = sqlsession.insert("freeboard.addFile", attachvo);
-		return m;
+	public void addFile(AttachFileVO attachvo) {
+		sqlsession.insert("freeboard.addFile", attachvo);
 	}
 
 	// 자유게시판 글 보여주기
@@ -148,8 +147,31 @@ public class ChoijhDAO implements InterChoijhDAO {
 		BoardVO bvo = sqlsession.selectOne("freeboard.detailView", board_seq);
 		return bvo;
 	}
+	
+	
+	// 해당게시글의 첨부파일 읽어오기
+	@Override
+	public List<AttachFileVO> getfileView(String board_seq) {
+		List<AttachFileVO> attachvoList = sqlsession.selectList("freeboard.getfileView", board_seq);
+		return attachvoList;
+	}
+	
+
+	// 자유게시판 글 삭제
+	@Override
+	public int del(String board_seq) {
+		int n = sqlsession.delete("freeboard.del", board_seq);
+		return n;
+	}
 
 	
+	// 자유게시판 글 수정 하기 
+	@Override
+	public int edit(BoardVO bvo) {
+		int n = sqlsession.update("freeboard.edit", bvo);
+		return n;
+	}
+
 
 	
 
