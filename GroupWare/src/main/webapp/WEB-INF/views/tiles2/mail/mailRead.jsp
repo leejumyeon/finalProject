@@ -141,11 +141,13 @@
 	// 파일 다운로드
 	function func_download(fileName, orgFileName, status){
 		console.log(fileName+"/"+orgFileName+"/"+status);
-		var frm = document.mailFrm;
-		$("input[name=fileName]").val(fileName);
+		var frm = document.fileFrm;
+		/* $("input[name=fileName]").val(fileName);
 		$("input[name=orgFileName]").val(orgFileName);
-		$("input[name=status]").val(status);
-		
+		$("input[name=status]").val(status); */
+		frm.fileName.value = fileName;
+		frm.orgFileName.value = orgFileName;
+		frm.status.value = status;
 		frm.method="post";
 		frm.action="<%=request.getContextPath()%>/mail/download.top";
 		frm.submit();
@@ -153,8 +155,9 @@
 	
 	//메일 삭제(메일함 -> 휴지통)
 	function mailDel(){
-		$("input[name=selectCheck]").val("${mail.mail_seq}")
+		//$("input[name=selectCheck]").val("${mail.mail_seq}")
 		var frm = mailFrm;
+		frm.selectCheck.value = "${mail.mail_seq}";
 		frm.action = "<%=request.getContextPath()%>/mail/mailDel.top";
 		frm.method = "get";
 		frm.submit();
@@ -162,29 +165,30 @@
 	
 	// 읽기페이지 이동(메일함 별로 읽기페이지에서 보여질 다음글 / 이전글 내용 달리 줘야 함)
 	function goRead(value){
-		$("input[name=readSeq]").val(value);
+		//$("input[name=readSeq]").val(value);
 		var frm = mailFrm;
+		frm.readSeq.value = value;
 		frm.action = "<%=request.getContextPath()%>/mail/read.top";
 		frm.method = "get";
 		frm.submit();
 	}
 	
-	// 답장 페이지 이동
+	// 전달 페이지 이동
 	function mailRelay(){
-		$("input[name=secendType]").val('relay');
-		$("input[name=readSeq]").val('${mail.mail_seq}');
 		var frm = mailFrm;
+		frm.readSeq.value = "${mail.mail_seq}";
+		frm.secendType.value = "relay";
 		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
 		frm.method = "get";
 		frm.submit();
 		
 	}
 	
-	// 전달 페이지 이동
+	// 답장 페이지 이동
 	function mailReply(){
-		$("input[name=secendType]").val('reply');
-		$("input[name=readSeq]").val('${mail.mail_seq}');
 		var frm = mailFrm;
+		frm.readSeq.value = "${mail.mail_seq}";
+		frm.secendType.value = "reply";
 		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
 		frm.method = "get";
 		frm.submit();
@@ -223,21 +227,14 @@
 				<c:otherwise>
 					<button type="button" onclick = "mailDel()">삭제</button>
 					<button type="button" onclick = "mailRelay()">전달</button>
-					<button type="button" onclick = "mailReply()">답장</button>
+					<c:if test="${type eq 'receive' or (type eq 'all' and mail.status eq '1')}">
+						<button type="button" onclick = "mailReply()">답장</button>
+					</c:if>
 				</c:otherwise>
 			</c:choose>
 			
 		</div>
 	</div>
-		<form name="mailFrm" >
-		<input type="hidden" name="type" value="${type}" />
-		<input type="hidden" name="secendType" value="" />
-		<input type="hidden" value="" name="readSeq" />
-		<input type="hidden" value="" name="selectCheck" />
-		<input type="hidden" name="fileName" />
-		<input type="hidden" name="orgFileName" />
-		<input type="hidden" name="status" />
-		<input type="hidden" name="searchWord" value="${searchWord}" />
 		<div id="mailDetail">
 			<div id="subject">
 				<h3>${mail.subject}</h3>
@@ -256,6 +253,11 @@
 					</c:if>
 				</c:forEach>
 			</div>
+			
+			<form name="fileFrm">
+			<input type="hidden" name="fileName" />
+			<input type="hidden" name="orgFileName" />
+			<input type="hidden" name="status" />
 			<div>
 				<div style="display: inline-block;">첨부파일</div>
 				<div style="display: inline-block;">
@@ -267,15 +269,21 @@
 					</c:if>	
 					<c:if test="${not empty mail.fileName3}">
 						<div onclick="func_download('${mail.fileName3}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}</div>
-					</c:if>		
+					</c:if>	
 				</div>
 			</div>
+			</form>
 			
 			<div id="content">
 				${mail.content}
 			</div>
 		</div>
-		
+	<form name="mailFrm" >
+		<input type="hidden" name="type" value="${type}" />
+		<input type="hidden" name="secendType" value="" />
+		<input type="hidden" value="" name="readSeq" />
+		<input type="hidden" value="" name="selectCheck" />
+		<input type="hidden" name="searchWord" value="${searchWord}" />
 		<div id="other">
 			<ul>
 				<c:if test="${mail.next_seq != null}">

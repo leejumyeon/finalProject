@@ -738,46 +738,6 @@ delete from mail_table;
 commit;
 
 
-select T.Ron, T.mail_seq, T.mail_groupno, T.subject, T.content, T.mailStatus, T.readStatus, T.status, T.regDate, T.fk_employee_seq, T.employee_name, T.email, T.position_name, T.department_name, T.fileName1, T.orgFileName1, T.fileSize1, T.fileName2, T.orgFileName2, T.fileSize2, T.fileName3, T.orgFileName3, T.fileSize3
-		from(select row_number() over(order by V.mail_seq desc, V.fk_employee_seq asc) as Ron, V.mail_seq, V.mail_groupno, V.subject, V.content, V.mailStatus, V.readStatus, V.status, V.regDate, V.fileName1, V.orgFileName1, V.fileSize1, V.fileName2, V.orgFileName2, V.fileSize2, V.fileName3, V.orgFileName3,V.fileSize3
-		       ,V.fk_employee_seq, V.employee_name, V.email, V.department_name, V.position_name
-        from(select distinct My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
-		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-		from ((select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = 5)My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))You
-						on My.mail_groupno = You.mail_groupno where (My.status = 2) or (My.status in (0,1) and You.fk_employee_seq != 5)
-                        )th
-                        join
-                        (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mail_groupno in())Origin
-                        on Origin.fk_employee_seq = th.fk_employee_seq
-                        )V
-                )T;
-
-select mail_seq, mail_groupno, subject, status, fk_employee_seq from mail_table order by mail_seq desc;
-
-select there.mail_seq, there.mail_groupno, Origin.fk_employee_seq, there.subject, there.employee_name, there.department_name, there.position_name
-from 
-    (select My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
-                   ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-    from
-        (select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3
-        from mail_table where mailStatus != 0 and fk_employee_seq = 5) My
-        join 
-        (select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-                                    from mail_table M 
-                                    join employees_table E on M.fk_employee_seq = E.employee_seq 
-                                    join position_table P on E.fk_position = P.position_seq 
-                                    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))You
-        on My.mail_groupno = You.mail_groupno where (My.status = 2) or (My.status in (0,1) and You.fk_employee_seq != 5)
-    )there
-    join (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))Origin on Origin.fk_employee_seq = th.fk_employee_seq
-
-;
 
 
 
