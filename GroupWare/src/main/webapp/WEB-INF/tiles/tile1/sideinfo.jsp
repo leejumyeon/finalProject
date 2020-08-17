@@ -16,9 +16,10 @@
 		
 	}
 	
-	.sideNavi > li > div{
+	.sideNavi > div{
 		cursor: pointer;
 	}
+	
 	
 	.receiveCnt{
 		border: solid 1px black;
@@ -38,6 +39,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	newMailFind();
+	//newPaymentFind();
 }); // end of $(document).ready()-------------------------------------
 
 function newMailFind(){
@@ -57,34 +59,59 @@ function newMailFind(){
 			
 		}
 	});
-	setTimeout('newMailFind()',5000);
+	setTimeout('newMailFind()',30000);
+}
+
+function newPaymentFind(){
+	$.ajax({
+		url:"<%=request.getContextPath()%>/",
+		data:{},
+		dataType:"JSON",
+		success:function(json){
+			
+		},
+		error:function(e){
+			
+		}
+	});
+	
+	setTimeout('newPaymentFind()',30000);
 }
 
 function goMail(){
 	location.href="<%=request.getContextPath()%>/mail/list.top?type=receive";
 }
+
+function goMailSend(){
+	location.href="<%=request.getContextPath()%>/mail/write.top?type=normal";
+}
+
+function goReservation(){
+	location.href="<%=request.getContextPath()%>/reservation/reserveRoom.top";
+}
 </script>
-<div style="margin: 0 auto;" align="center">
-	<ul style="list-style: none; padding: 0;" class="sideNavi">
-		<li>
+<div style="margin: 0 auto;" align="center" class="sideNavi">
+	
 			<div style="position: relative;" onclick="goMail();">
 				<div style="position: absolute;" class="receiveCnt" align="center"></div>
 				<img src="<%=request.getContextPath()%>/resources/sideImg/받은메일.png" />
 			</div>
-		</li>
-		<li>
-			<div style="position: relative;">
+		
+			<div style="position: relative;" onclick="goMailSend()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/메일보내기.png" />
 				<div style="position: absolute;"></div>
 			</div>
-		</li>
-		<li>
-			<div style="position: relative;">
+		
+			<div style="position: relative;" onclick="goReservation()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/예약.png" />
 				<div style="position: absolute;"></div>
 			</div>
-		</li>
-	</ul>
+	
+			<div style="position: relative;" onclick="goReservation()">
+				<img src="<%=request.getContextPath()%>/resources/sideImg/결재.png" />
+				<div style="position: absolute;"></div>
+			</div>
+		
 </div>
 
 

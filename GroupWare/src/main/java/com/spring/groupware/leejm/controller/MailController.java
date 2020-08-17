@@ -38,11 +38,6 @@ public class MailController {
 	@Autowired
 	private FileManager fileManager;
 	
-	@RequestMapping(value="/test.top")
-	public ModelAndView test(ModelAndView mav) {
-		mav.setViewName("board/detailBoard.tiles1");
-		return mav;
-	}
 	
 	// 메일 리스트 페이지 이동(받은 메일함, 보낸 메일함, 전체 메일함, 내게 쓴 메일함)
 	@RequestMapping(value="/mail/list.top")
@@ -212,9 +207,6 @@ public class MailController {
 		String writeType = request.getParameter("type");
 		if("normal".equals(writeType)) { // 메일쓰기 버튼 클릭 해서 입장할 경우
 			
-		}
-		else if("reply".equals(writeType)) { // 답장버튼 클릭해서 입장할 경우
-			mav.addObject("receive","특정상대 메일");
 		}
 		else if("mine".equals(writeType)) {
 			HttpSession session = request.getSession();
