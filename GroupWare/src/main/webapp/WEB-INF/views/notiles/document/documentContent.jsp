@@ -84,4 +84,12 @@
 	<div id="documentContents">
 		<img src="<%= request.getContextPath()%>/resources/files/${documentContent.content}" width="800px;" />
 	</div>
+	
+	<c:if test="${documentContent.fileName != null}">
+		<table style="width:800px; height:130px;">
+			<tbody>
+				<tr><td class="ACel">첨부파일</td><td class="BCel">${documentContent.fileName}</td></tr>
+			</tbody>
+		</table>
+	</c:if>
 </div>

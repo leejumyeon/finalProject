@@ -8,6 +8,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 
 public interface InterLeeehService {
@@ -129,5 +130,27 @@ public interface InterLeeehService {
 	List<EmployeesVO> getAllEmployeeList();	// 모든 사원 정보 가져오기
 
 	EmployeesVO getOneEmployee(String employee_seq);	// 회원번호로 회원정보 가져오기
+
+	void employeeUpdate(HashMap<String, String> paraMap);	// 사원 정보 업데이트하기
+
+	int updateGrade(HashMap<String, String> paraMap);	// 사원 grade 업데이트하기
+	
+	int updateDepartment(HashMap<String, String> paraMap);	// 사원 부서 변경하기
+
+	int updatePosition(HashMap<String, String> paraMap);	// 사원 직위 변경하기
+
+	List<TimeAndAttVO> getTAList();	// 인사고과 리스트 얻어오기
+
+	List<DocumentVO> allDocumentList();	// 결재 현황 모든 결재 리스트 얻어오기
+
+	List<DocumentVO> getAllComDocumentList();	// 결재 완료된 모든 결재 리스트 얻어오기
+
+	void updateDocumentTableStatus(String groupno);	// 문서함 휴지통으로 보내기
+
+	List<DocumentVO> delDocumentList();	// 휴지통에 있는 문서들 불러오기
+
+	void rollbackDocument(String groupno);	// 휴지통에 있는 문서 다시 복구하기
+
+	void shiftDelDocument(String groupno);	// 휴지통에 있는 문서 영구 삭제하기
 
 }

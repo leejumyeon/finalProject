@@ -168,17 +168,33 @@
 		frm.method = "get";
 		frm.submit();
 	}
+	
+	// 답장 페이지 이동
+	function mailRelay(){
+		$("input[name=secendType]").val('relay');
+		$("input[name=readSeq]").val('${mail.mail_seq}');
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
+		frm.method = "get";
+		frm.submit();
+		
+	}
+	
+	// 전달 페이지 이동
+	function mailReply(){
+		$("input[name=secendType]").val('reply');
+		$("input[name=readSeq]").val('${mail.mail_seq}');
+		var frm = mailFrm;
+		frm.action = "<%=request.getContextPath()%>/mail/mailUpdate.top";
+		frm.method = "get";
+		frm.submit();
+	}
 </script>
 <div style="margin-left:10px;">
-	<form name="mailFrm" >
+	
 	<div id="searchArea">
-		<input type="hidden" value="" name="readSeq" />
-		<input type="hidden" value="" name="selectCheck" />
-		<input type="hidden" name="fileName" />
-		<input type="hidden" name="orgFileName" />
-		<input type="hidden" name="status" />
 		<div style="position: relative; display: inline;">
-			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="${searchWord}" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
+			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
 			&nbsp;&nbsp;
 			<c:choose>
 				<c:when test="${not empty searchWord}">
@@ -199,10 +215,29 @@
 		</div>
 		
 		<div id="mailFunctionArea">
-			<button type="button" onclick = "mailDel()">삭제</button>
-			<button type="button">전달</button>
-			<button type="button">답장</button>
+			<c:choose>
+				<c:when test="${type eq 'del'}">
+					<button type="button" onclick = "mailDeletion()">영구삭제</button>
+					<button type="button" onclick = "mailRestore()">복구하기</button>
+				</c:when>
+				<c:otherwise>
+					<button type="button" onclick = "mailDel()">삭제</button>
+					<button type="button" onclick = "mailRelay()">전달</button>
+					<button type="button" onclick = "mailReply()">답장</button>
+				</c:otherwise>
+			</c:choose>
+			
 		</div>
+	</div>
+		<form name="mailFrm" >
+		<input type="hidden" name="type" value="${type}" />
+		<input type="hidden" name="secendType" value="" />
+		<input type="hidden" value="" name="readSeq" />
+		<input type="hidden" value="" name="selectCheck" />
+		<input type="hidden" name="fileName" />
+		<input type="hidden" name="orgFileName" />
+		<input type="hidden" name="status" />
+		<input type="hidden" name="searchWord" value="${searchWord}" />
 		<div id="mailDetail">
 			<div id="subject">
 				<h3>${mail.subject}</h3>
@@ -243,10 +278,13 @@
 		
 		<div id="other">
 			<ul>
-				<li onclick="goRead('${mail.next_seq}')">다음글 | ${mail.next_subject}</li>
-				<li onclick="goRead('${mail.prev_seq}')">이전글 | ${mail.prev_subject}</li>
+				<c:if test="${mail.next_seq != null}">
+					<li onclick="goRead('${mail.next_seq}')">다음글 | ${mail.next_subject}</li>
+				</c:if>
+				<c:if test="${mail.prev_seq != null}">
+					<li onclick="goRead('${mail.prev_seq}')">다음글 | ${mail.prev_subject}</li>
+				</c:if>
 			</ul>
 		</div>
-	</div>
 	</form>
 </div>

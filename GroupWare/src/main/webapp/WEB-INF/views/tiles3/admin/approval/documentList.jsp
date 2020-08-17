@@ -30,7 +30,7 @@
 		display:none;
 	}
 	
-	.managerBtn{
+	#managerBtn{
 		width: 80px;
 		padding: 15px 5px;
 		cursor: pointer;
@@ -56,8 +56,7 @@
 		    "info" : false,					   // 좌측 하단에 보여지는 Showing 1 to 10 of 22 entries를 보여줄것인지 말것인지 결정하는 것
 		    "filter" : true,				   // 우측 상단에 보여지는 검색을 보여줄것인지 말것인지를 결정하는 것
 		    "lengthChange" : true,			   // 좌측상단에 보여지는 한페이지당 행의 갯수를 결정하는 것
-		  //"order" : [[0, "desc"]],		   // 기본 컬럼 정령 설정 숫자 0은 첫번쨰 컬럼을 말하며, "asc" 또는 "desc"를 설정할 수 있다.
-		    "order" : [[2, "asc"],[0, "desc"]],
+		    "order" : [[0, "desc"]],		   // 기본 컬럼 정령 설정 숫자 0은 첫번쨰 컬럼을 말하며, "asc" 또는 "desc"를 설정할 수 있다.
 		    "stateSave" : false,
 		  //"stateSave" : true,
 		  /*
@@ -75,40 +74,27 @@
 		   "paging"을 false로 바꿀 수 있다. */
 			
 		}); // end of $("#datatables").DataTable({})
-        
 		
-		$(".prevday").datepicker({});
-	    $(".today").datepicker({});   
-	        // 기간 선택
-	        $("#documentDay").change(function(){
-	        	if($(this).val()!="" && $(this).val()!="direct"){
-	        		$(".today").datepicker('setDate', '-7D');
-		        	
-	        		if($(this).val()=="week"){
-	        			console.log("1주");
-	        			$(".prevday").datepicker('setDate', '-7D');
-	        		}
-	        		else if($(this).val()=="month"){
-	        			console.log("1달");
-		        		$(".prevday").datepicker('setDate', '-1M');
-		        	}
-		        	else if($(this).val()=="threeMonth"){
-		        		$(".prevday").datepicker('setDate', '-3M');
-		        	}
-		        	else if($(this).val()=="sixMonth"){
-		        		$(".prevday").datepicker('setDate', '-6M');
-		        	}
-	        	}
-	        	else{
-	        		$(".datepicker").val("");
-	        		// $(".datepicker").datepicker('setDate', '');
-	        		console.log("초기화");
-	        	}
-	        	
-	        });
-	      	
-	        
+        $("#managerBtnDelete").click(function() {
+        	
+        	var groupnoArr = new Array();
+        	
+			$("input:checkbox[name=delCheck]:checked").each(function() {
+				
+				groupnoArr.push($(this).val());
+			});
+        	
+        	var groupno = groupnoArr.join(",");
+        	
+        	var frm = document.approveDocumentFrm;
+        	frm.groupno.value = groupno;
+        	frm.method = "GET";
+        	frm.action = "<%= request.getContextPath()%>/updateStatusDocumentDelete.top";
+        	frm.submit();
+        });
 	}); // end of $(document).ready(function())-----------------------------------------------------
+	
+	
 </script>
 
 <div>
@@ -116,75 +102,69 @@
 	<h3>문서함</h3>
 	</div>
 </div>
-<form name="documentFrm">
-<div id="searchArea">
-	<div style="position: relative; display: inline;">
-		<select name="documentType">
-			<option>==문서종류==</option>
-			<option>휴가신청</option>
-			<option>출장신청</option>
-			<option>매출</option>
-			<option>비품구매</option>
-			<option>프로젝트 시작</option>
-			<option>프로젝트 중단</option>
-			<option>프로젝트 완료</option>
-			<option>퇴사</option>
-			<option>인사고과</option>
-			<option>동호회 신청</option>
-			<option>동호회 가입</option>
-			<option>동호회 해체</option>
-		</select><br/>
-		
-		<select name="searchType">
-			<option>신청자</option>
-			<option>결재자</option>
-			<option>제목</option>
-			<option>내용</option>
-		</select>
-		<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" name="searchWord" style="border: none;"/><span style="background-color: white">아이콘</span></div>
-		
-		<span onclick="javascript:$('#termSearch').toggleClass('hide')" style="cursor:pointer">기간</span>
-	</div>
-	<div id="termSearch" class="hide">
-			<select id="documentDay" name="documentDay">
-				<option value="">전체</option>
-				<option value="week">1주</option>
-				<option value="month">1개월</option>
-				<option value="threeMonth">3개월</option>
-				<option value="sixMonth">6개월</option>
-				<option value="direct">직접입력</option>
-			</select>
-		<input type="text" class="datepicker prevday"> - <input type="text" class="datepicker today">
-		<button type="button">검색</button>
-	</div>
-</div>
-</form>
+
 <div>
-	<table id = "datatables" class="table">
+	<table id="datatables" class="table">
 		<thead>
 			<tr>
+				<th>문서번호</th>
+				<th>신청자부서</th>
+				<th>신청자직위</th>
 				<th>신청자</th>
-				<th>신청날짜</th>
-				<th>문서항목</th>
+				<th>결재종류</th>
 				<th>제목</th>
+				<th>신청날짜</th>
 				<th>결제날짜</th>
 				<th>삭제</th>
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="document" items="${dpmList}">	
-				<tr>
+			<c:forEach var="document" items="${allComDocumentList}">	
+				<tr data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal" style="cursor: pointer;">
+					<td>${docuvo.groupno}</td>
+					<td>${document.department_name}</td>
+					<td>${document.position_name}</td>
 					<td>${document.employee_name}</td>
-					<td>${document.regDate}</td>
 					<td>${document.category_name}</td>
 					<td>${document.subject}</td>
+					<td>${document.regDate}</td>
 					<td>${document.approveDate}</td>
-					<td><input type="checkbox" name="delCheck" value=""/></td>
+					<td><input type="checkbox" name="delCheck" value="${document.groupno}"/></td>
 				</tr>
-			</c:forEach>	
+			</c:forEach>
 		</tbody>
 	</table>
 	<div align="right">
-		<div class="managerBtn">선택삭제</div>
+		<div id="managerBtnDelete">선택삭제</div>
 	</div>
 </div>
+
+<form name="approveDocumentFrm">
+	<input type="text" name="groupno"/>
+</form>
+	
+<%-- *** 문서 내용  modal1 *** --%>
+<c:forEach var="docuvo" items="${allComDocumentList}">
+<div class="modal fade" id="documentContent${docuvo.document_seq}" role="dialog">
+	<div class="modal-dialog" style="width: 900px;">
+	  
+		    <!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">문서 내용</h4>
+			</div>
+			<div class="modal-body" style="height: 620px; width: 900px;">
+				<div id="addDelivery">
+					<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=${docuvo.document_seq}">
+					</iframe>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	    
+	</div>
+</div>
+</c:forEach>

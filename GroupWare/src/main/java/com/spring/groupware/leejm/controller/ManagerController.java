@@ -91,54 +91,6 @@ public class ManagerController {
 		
 	// ---------------------------------- 공지 사항 / FAQ 끝 -------------------------------------------------------
 	
-	
-	// ---------------------------------- 결재 관리 시작 ----------------------------------------------
-	
-		// 관리자-결재 관리(결재현황 리스트)페이지 이동[글목록]
-	
-		@RequestMapping(value="/manager/approval/documentList.top")
-		public String managerApprovalList(HttpServletRequest request ) {
-			
-			List<DocumentVO> dpmList = service.managerApprovalList();
-			
-			request.setAttribute("dpmList", dpmList);
-			
-			//System.out.println(dpmList.get(0).getFileName());
-			
-			return "admin/approval/documentList.tiles3";
-		}
-		
-		// 관리자-결재 관리(휴지통)페이지 이동
-		@RequestMapping(value="/manager/approval/garbage.top")
-		public String managerGarbage(HttpServletRequest request) {
-			
-			return "admin/approval/garbage.tiles3";
-		}
-		
-		// 관리자-결재 관리(문서함)페이지 이동
-		@RequestMapping(value="/manager/approval/approvalList.top")
-		public String managerDocumentList(HttpServletRequest request) {
-			
-			return "admin/approval/approvalList.tiles3";
-			
-		}
-		
-		// 관리자-결재 관리(결재현황 상세)페이지 이동
-		@RequestMapping(value="/manager/approval/approvalDetail.top")
-		public ModelAndView managerApprovalDetail(ModelAndView mav, HttpServletRequest request) {
-			mav.setViewName("admin/approval/approvalDetail.tiles3");
-			return mav;
-		}
-		
-		// 관리자-결재 관리(문서함-상세)페이지 이동
-		@RequestMapping(value="/manager/approval/documentDetail.top")
-		public ModelAndView managerDocumentDetail(ModelAndView mav, HttpServletRequest request) {
-			mav.setViewName("admin/approval/documentDetail.tiles3");
-			return mav;
-		}
-		
-		// ---------------------------------- 결재 관리 끝 ----------------------------------------------
-	
 		
 	// 관리자-게시글 관리(공지사항 상세보기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeDetail.top")
@@ -185,20 +137,5 @@ public class ManagerController {
 		mav.setViewName("admin/finance/salesList.tiles3");
 		return mav;
 	}
-	
-	// 관리자-인사 관리(인사고과)페이지 이동
-	@RequestMapping(value="/manager/HR/review.top")
-	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/HR/review.tiles3");
-		return mav;
-	}
-		
-	// 관리자-인사 관리(사원정보-상세)페이지 이동
-	@RequestMapping(value="/manager/HR/detail.top")
-	public ModelAndView managerHRdetail(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/HR/detail.tiles3");
-		return mav;
-	}
-	
 	
 }

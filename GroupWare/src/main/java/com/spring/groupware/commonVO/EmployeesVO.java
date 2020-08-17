@@ -22,6 +22,7 @@ public class EmployeesVO { // 사원정보VO
 	private String extraaddress; //참고항목
 	private String grade; // 권한등급
 	private String club_name; //가입한 동호회 명( ex.동호회1, 동호회2)
+	private String position_salary; // 급여내역
 	
 	public String getEmployee_seq() {
 		return employee_seq;
@@ -189,6 +190,14 @@ public class EmployeesVO { // 사원정보VO
 
 	public void setFk_department(String fk_department) {
 		this.fk_department = fk_department;
+	}
+
+	public String getPosition_salary() {
+		return position_salary;
+	}
+
+	public void setPosition_salary(String position_salary) {
+		this.position_salary = position_salary;
 	}
 
 }

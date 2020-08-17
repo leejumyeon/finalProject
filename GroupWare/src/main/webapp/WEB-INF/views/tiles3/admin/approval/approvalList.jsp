@@ -22,7 +22,6 @@
 		    "filter" : true,				   // 우측 상단에 보여지는 검색을 보여줄것인지 말것인지를 결정하는 것
 		    "lengthChange" : true,			   // 좌측상단에 보여지는 한페이지당 행의 갯수를 결정하는 것
 		  //"order" : [[0, "desc"]],		   // 기본 컬럼 정령 설정 숫자 0은 첫번쨰 컬럼을 말하며, "asc" 또는 "desc"를 설정할 수 있다.
-		    "order" : [[2, "asc"],[0, "desc"]],
 		    "stateSave" : false,
 		  //"stateSave" : true,
 		  /*
@@ -40,10 +39,7 @@
 		   "paging"을 false로 바꿀 수 있다. */
 			
 		}); // end of $("#datatables").DataTable({})
-		
-		
-		
-				
+	
 	}); // end of $(document).ready(function(){})
 
 </script>
@@ -51,66 +47,74 @@
 <div>
 	<div style="display: inline-block;">
 	<h3>결재현황</h3>
-	<h4 style="text-align: center;">-목록-</h4>
 	</div>
 </div>
 
-<form name="searchFrm">
-	<select name="documentType">
-		<option>==문서종류==</option>
-		<option>휴가신청</option>
-		<option>출장신청</option>
-		<option>매출</option>
-		<option>비품구매</option>
-		<option>프로젝트 시작</option>
-		<option>프로젝트 중단</option>
-		<option>프로젝트 완료</option>
-		<option>퇴사</option>
-		<option>인사고과</option>
-		<option>동호회 신청</option>
-		<option>동호회 가입</option>
-		<option>동호회 해체</option>
-	</select>
-	
-	<!-- 결재 상태 select로 검색 -->
-	<select name="approveStatus">
-		<option>==결재상태==</option>
-		<option>결재완료</option>
-		<option>결재중</option>
-		<option>결재신청</option>
-	</select>
-	
-	<div style="display: inline-block; float:right;">
-		<input type="text" name="searchWord" />
-		<select name="searchType">
-			<option>전체</option>
-			<option>결재자</option>
-			<option>신청자</option>
-			<option>제목</option>
-			<option>내용</option>
-		</select>
-	</div>
-</form>
-<div style="clear:both;"></div>
 <div style="margin-top: 15px;">
 	<table id="datatables" class="table">
 		<thead>
 			<tr>
+				<th>문서번호</th>
+				<th>신청자부서</th>
+				<th>신청자직위</th>
 				<th>신청자</th>
-				<th>신청날짜</th>
 				<th>결재종류</th>
 				<th>제목</th>
+				<th>결재자</th>
+				<th>신청날짜</th>
 				<th>결재상태</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>신청자</td>
-				<td>신청날짜</td>
-				<td>결재종류</td>
-				<td>제목</td>
-				<td>결재상태</td>
-			</tr>
+			<c:forEach var="docuvo" items="${allComDocumentList}">
+				<tr data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal" style="cursor: pointer;">
+					<td>${docuvo.groupno}</td>
+					<td>${docuvo.department_name}</td>
+					<td>${docuvo.position_name}</td>
+					<td>${docuvo.employee_name}</td>
+					<td>${docuvo.category_name}</td>
+					<td>${docuvo.subject}</td>
+					<td>${docuvo.approver_name}</td>
+					<td>${docuvo.regDate}</td>
+					<td>
+						<c:if test="${docuvo.status == '0'}">
+							<span style="color: blue;">결재중</span>
+						</c:if>
+						<c:if test="${docuvo.status == '1'}">
+							<span style="color: grean;">결재완료</span>
+						</c:if>
+						<c:if test="${docuvo.status == '-1'}">
+							<span style="color: red;">반려</span>
+						</c:if>
+					</td>
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 </div>
+
+<%-- *** 문서 내용  modal1 *** --%>
+<c:forEach var="docuvo" items="${allComDocumentList}">
+<div class="modal fade" id="documentContent${docuvo.document_seq}" role="dialog">
+	<div class="modal-dialog" style="width: 900px;">
+	  
+		    <!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close myclose" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">문서 내용</h4>
+			</div>
+			<div class="modal-body" style="height: 620px; width: 900px;">
+				<div id="addDelivery">
+					<iframe style="border: none; width: 100%; height: 600px;" src="<%= request.getContextPath()%>/documentContent.top?document_seq=${docuvo.document_seq}">
+					</iframe>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default myclose" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	    
+	</div>
+</div>
+</c:forEach>

@@ -1,10 +1,14 @@
 package com.spring.groupware.choijh.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -14,9 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.common.FileManager;
 import com.spring.groupware.choijh.service.InterChoijhService;
+import com.spring.groupware.commonVO.AttachFileVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -25,6 +34,9 @@ public class ChoijhController {
 
 	@Autowired
 	private InterChoijhService service;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	// 로그인 한 사원 정보를 제외한 모든 사원 정보 불러오기
 	@ResponseBody
@@ -269,21 +281,190 @@ public class ChoijhController {
 		return jsonObj.toString();
 	}
 	
-	
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	// 자유 게시판 //
-	@RequestMapping(value="/freeboard/freeboardlist.top")
-	public ModelAndView freeboardlist(ModelAndView mav) {
+	
+	
+	// 자유 게시판 글 보여주기
+	@RequestMapping(value="/freeboard/list.top")
+	public ModelAndView list(ModelAndView mav) {
 		
-		mav.setViewName("freeboard/freeboardlist.tiles1");
+		List<BoardVO> boardList = service.boardlistView(); // 게시판 글 보여주기
+		
+		mav.addObject("boardList", boardList);
+		
+		mav.setViewName("freeboard/list.tiles1");
 		
 		return mav;
 	}
 	
 	
+	// 자유게시판 글쓰기 폼페이지 보여주기
+	@RequestMapping(value="/freeboard/write.top")
+	public ModelAndView write(ModelAndView mav) {
+		mav.setViewName("freeboard/write.tiles1");
+		return mav;
+	}
 	
+	
+	// 자유게시판 글쓰기완료 
+	@RequestMapping(value="/freeboard/writeEnd.top", method= {RequestMethod.POST})
+	public String writeEnd(HttpServletRequest request, BoardVO bvo, AttachFileVO attachvo, MultipartHttpServletRequest mrequest) throws Exception {
+		
+	//  === !!! 첨부파일이 있는지 없는지 알아오기 시작 !!! ===
+		MultipartFile attach = attachvo.getAttach();
+		if( !attach.isEmpty() ) { // 첨부파일이 있는 경우
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator +"freeboard";
+			
+			System.out.println("~~~~ 확인용 path => " + path);
+			// ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\freeboard
+			
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명 
+			
+			byte[] bytes = null;
+			// 첨부파일을 WAS(톰캣)의 디스크에 저장할때 사용되는 용도.
+			
+			long fileSize = 0;
+			// 파일크기를 읽어오기 위한 용도
+			
+			try {
+				bytes = attach.getBytes();
+
+				newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+				
+				System.out.println(">>>> 확인용 newFileName ==> " + newFileName);
+				
+				attachvo.setFileName(newFileName);
+			
+				attachvo.setOrgFileName(attach.getOriginalFilename());
+				
+				fileSize = attach.getSize();
+				attachvo.setFileSize(String.valueOf(fileSize));
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	//  === !!! 첨부파일이 있는지 없는지 알아오기 끝 !!! ===	
+		
+		int n = 0;
+		if( attach.isEmpty() ) {
+			// 첨부파일이 없는 경우이라면
+			n = service.add(bvo); // 글쓰기(첨부파일이 없는 경우) 
+		}
+		else {
+			// 첨부파일이 있는 경우이라면
+			
+			int num = service.getBordNum(); // 게시판 글번호 채번해오기
+			
+			String number = String.valueOf(num);
+			
+			bvo.setBoard_seq(number);
+			attachvo.setFk_board_seq(number);
+			
+			n = service.add_withFile(bvo, attachvo); // 글쓰기(첨부파일이 있는 경우)
+		}
+		
+		if(n==1) { // 글쓰기 성공
+			
+			return "redirect:/freeboard/list.top";
+			
+		}
+		else { // 글쓰기 실패
+			
+			return "redirect:/freeboard/write.top";
+		}
+		
+	}
+	
+	
+	// 게시글 상세보기 페이지 보여주기 
+	@RequestMapping(value="/freeboard/detailView.top", method = {RequestMethod.GET})
+	public ModelAndView detailView(ModelAndView mav, HttpServletRequest request) {
+		
+		String board_seq = request.getParameter("board_seq");
+		
+		BoardVO bvo = service.detailView(board_seq);
+		
+		mav.addObject("bvo", bvo);
+		
+		mav.setViewName("freeboard/detailboard.tiles1");
+		
+		return mav;
+	}
+	
+
+	// 자유게시판 첨부파일 다운로드
+	@RequestMapping(value="/freeboard/download.top")
+	public void download(HttpServletRequest request, HttpServletResponse response) {
+		
+		String board_seq = request.getParameter("board_seq"); 
+		   // 첨부파일이 있는 글번호
+			
+		   // 첨부파일이 있는 글번호에서 
+		   // 202007250930481985323774614.png 처럼
+		   // 이러한 fileName 값을 DB에서 가져와야 한다. 
+		   // 또한 orgFileName 값도 DB에서 가져와야 한다.
+			
+		   BoardVO bvo = service.detailView(board_seq);
+		   // 조회수 증가 없이 1개 글 가져오기
+		   // 먼저 board.xml 에 가서 id가 getView 인것에서
+		   // select 절에 fileName, orgFilename, fileSize 컬럼을
+		   // 추가해주어야 한다.
+
+		   String fileName = bvo.getFileName(); 
+		   // 202007250930481985323774614.png 와 같은 것이다.
+		   // 이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
+			
+		   String orgFilename = bvo.getOrgFileName(); 
+		   // 강아지.png 처럼 다운받을 사용자에게 보여줄 파일명.
+			
+			
+		   // 첨부파일이 저장되어 있는 
+		   // WAS(톰캣)의 디스크 경로명을 알아와야만 다운로드를 해줄수 있다. 
+		   // 이 경로는 우리가 파일첨부를 위해서
+		   //    /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다.
+		   // WAS 의 webapp 의 절대경로를 알아와야 한다. 
+		   HttpSession session = request.getSession();
+			
+		   String root = session.getServletContext().getRealPath("/"); 
+		   String path = root + "resources"+File.separator+"freeboard";
+		   // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
+			
+		   // **** 다운로드 하기 **** //
+		   // 다운로드가 실패할 경우 메시지를 띄워주기 위해서
+		   // boolean 타입 변수 flag 를 선언한다.
+		   boolean flag = false;
+			
+		   flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+		   // 다운로드가 성공이면 true 를 반납해주고,
+		   // 다운로드가 실패이면 false 를 반납해준다.
+			
+		   if(!flag) {
+			   // 다운로드가 실패할 경우 메시지를 띄워준다.
+				
+			   response.setContentType("text/html; charset=UTF-8"); 
+			   PrintWriter writer = null;
+				
+			   try {
+				   writer = response.getWriter();
+				   // 웹브라우저상에 메시지를 쓰기 위한 객체생성.
+			   } catch (IOException e) {
+					
+			   }
+				
+			   writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가능합니다.!!')</script>");       
+				
+		   }
+		
+	}
+
 	
 }

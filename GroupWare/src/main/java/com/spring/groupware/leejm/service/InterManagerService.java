@@ -18,9 +18,5 @@ public interface InterManagerService {
 	
 	// 관리자 - 게시글 관리(FAQ 리스트)페이지[글목록]
 	List<BoardVO> managerFaqList();
-	
-	// 관리자-결재 관리(결재현황 리스트)페이지 이동[글목록]
-	List<DocumentVO> managerApprovalList();
-	
-	
+
 }

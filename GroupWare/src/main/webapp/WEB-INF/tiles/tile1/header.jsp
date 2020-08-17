@@ -60,8 +60,8 @@
 			</ul>
 		</li>
 			
-		<li class="dropdown"><a class=""
-			data-toggle="dropdown" href="<%= ctxPath%>/documentPayment.top">문서결재 <span class="caret"></span></a>
+		<li class="dropdown">
+			<a href="<%= ctxPath%>/documentPayment.top">문서결재</a>
 		</li>
 		
 		<li class="dropdown">

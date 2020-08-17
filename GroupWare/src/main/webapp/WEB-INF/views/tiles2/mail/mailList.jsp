@@ -32,6 +32,11 @@
 	.hide{
 		display:none;
 	}
+	
+	.mailSubject:hover{
+		cursor: pointer;
+		text-decoration: underline;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -43,9 +48,9 @@
 			func_searchTypeFind(txtVal);
 		});
         
-         $("#mailSearch").blur(function(){
+        /*  $("#mailSearch").blur(function(){
         	$("#searchTypetArea").css({"display":"none","border":"none"});
-        });
+        }); */
         
          // 메일 검색창에 키보드로 값 입력할 때 실행
         $("#mailSearch").keyup(function(event){
@@ -162,6 +167,21 @@
 	        });
         });
        
+        // 검색리스트 마우스 오버
+        $(document).on("mouseenter","#searchTypeList li",function(event){
+        	$(this).addClass("select");
+        	$(this).siblings().removeClass("select");
+        });
+        
+        // 검색리스트 항목에서 마우스 오버
+        $(document).on("mouseleave","#searchTypeList li",function(event){
+        	$(this).removeClass("select");
+        });
+        
+        $(document).on("mouseleave","#searchTypeList",function(event){
+        	$("#searchTypeList .all").addClass("select");
+        });
+        
         
         // 페이지 호출하기 전에 전체 선택이 되어있을 시에 페이지 호출 후에도 전체선택 상태로 유지하기
        	var len = $("input[name=selectCheck]").length;
@@ -187,7 +207,7 @@
 			html += "<ul id='searchTypeList'>";
 			html+="<li onclick='goSearch(\""+val+"\", \"all\")' class='all select'><div>"+val+"-<span style='font-size:8pt; color:gray;'>전체검색</span></div></li>";
 			html+="<li onclick='goSearch(\""+val+"\", \"send\")' class='receive'><div>보낸사람: "+val+"-<span style='font-size:8pt; color:gray;'>보낸사람을 찾기</span></div></li>";
-			html+="<li onclick='goSearch(\""+val+"\", \"recieve\")' class='send'><div>받은사람: "+val+"-<span style='font-size:8pt; color:gray;'>받은사람을 찾기</span></div></li>";
+			html+="<li onclick='goSearch(\""+val+"\", \"receive\")' class='send'><div>받은사람: "+val+"-<span style='font-size:8pt; color:gray;'>받은사람을 찾기</span></div></li>";
 			html+="<li onclick='goSearch(\""+val+"\", \"content\")' class='content'><div>내용: "+val+"-<span style='font-size:8pt; color:gray;'>제목, 본문내용, 첨부파일을 찾기</span></div></li>";
 		}
 		else{
@@ -201,7 +221,7 @@
 	// 메일 검색
 	function goSearch(val, category){
 		console.log(category);
-		location.href = "<%=request.getContextPath()%>/mail/list.top?searchWord="+val+"&type="+category;
+		location.href="<%=request.getContextPath()%>/mail/list.top?searchWord="+val+"&type="+category;
 	}
 	
 	// 파일 다운로드
@@ -264,15 +284,13 @@
 	}
 </script>
 <div style="margin-left:10px;">
-	<form name="mailFrm">
+	
 	
 	<!-- 공통 부분 -->
 	
 	<div id="searchArea">
-		<input type="hidden" value="${currentShowPageNo}" name="currentShowPageNo" />
-		<input type="hidden" value="" name="readSeq" />
 		<div style="position: relative; display: inline;">
-			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="${searchWord}" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
+			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
 			&nbsp;&nbsp;
 			<c:choose>
 				<c:when test="${not empty searchWord}">
@@ -282,13 +300,12 @@
 						<c:when test="${type eq 'content'}">내용 검색: </c:when>
 						<c:when test="${type eq 'all'}">전체 검색 : </c:when>
 					</c:choose>
-					${searchWord}
+					${searchWord} / ${total}
 				</c:when>
 				<c:otherwise>
 					<span style="font-weight: bold;">${mailhamType} / ${total}</span>
 				</c:otherwise>	
 			</c:choose>
-			<input type="hidden" name="type" value="${type}" />
 			<div id="searchTypetArea"></div>
 		</div>
 		
@@ -296,11 +313,9 @@
 			<input type="checkbox" id="allCheck" style="margin-left:10px;"/>
 			<c:if test="${readStatus eq '1'}">
 				<button type="button" class="noread">안읽음</button>
-				<input type="hidden" name="read" value="0" />
 			</c:if>
 			<c:if test="${readStatus eq '0'}">
 				<button type="button" class="read">읽음</button>
-				<input type="hidden" name="read" value="1" />
 			</c:if>
 		<c:choose>
 			<c:when test="${type eq 'del'}">
@@ -309,14 +324,19 @@
 			</c:when>
 			<c:otherwise>
 				<button type="button" onclick = "mailDel()">삭제</button>
-				<button type="button">전달</button>
-				<button type="button">답장</button>
 			</c:otherwise>
 		</c:choose>
 			
 		</div>
 		<!-- 공통 부분 -->
-		
+	</div>
+	<form name="mailFrm">
+	<input type="hidden" value="${currentShowPageNo}" name="currentShowPageNo" />
+	<input type="hidden" name="read" value="" /><!-- 읽음 / 안읽음 값 저장용 -->
+	<input type="hidden" name="type" value="${type}" /> <!-- 메일함 type값 저장용 -->
+	<input type="hidden" name="readSeq" value="" /> <!-- 메일 읽기 페이지 이동 값 저장용 --> 
+	<input type="hidden" name="searchWord" value="${searchWord}" />
+	
 		<!-- 첨부파일 강조가 아닌 메일 리스트 -->
 		<div id="mailList">
 			<c:set var="temp" value="0" />
@@ -330,20 +350,15 @@
 								<c:if test="${type == 'noRead' or type == 'del' or type == 'all'}">
 								<%--제목에 메일의 종류가 표시되는 메일 리스트 시작 --%>	
 									<c:forEach var="mail" items="${mailList}" varStatus="status">
-										<c:if test="${temp != mail.mail_groupno}">
-											<c:set var="temp" value="${mail.mail_groupno }" />
 											<c:choose>
 												<c:when test="${mail.readStatus eq 0 }">
-												<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
+												<tr style="color:blue;" >
 												</c:when>
 												<c:otherwise>
-												<tr onclick="goRead('${mail.mail_seq}')">
+												<tr >
 												</c:otherwise>
 											</c:choose>
 											
-											
-											<c:choose>
-												<c:when test="${(mail.fk_employee_seq ne sessionScope.loginEmployee.employee_seq and (mail.status eq 0 or mail.status eq 1)) or mail.status eq 2}">
 												<td>
 													<c:set var="loop_flag" value="false" />
 													<c:forEach var="i" items="${selectCheck}">
@@ -366,28 +381,18 @@
 												
 												<c:choose>
 													<c:when test="${mail.status eq 2}">
-														<td>[내게 쓴 메일]${mail.subject}</td>
+														<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[내게 쓴 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 1}">
-														<td>[받은 메일]${mail.subject}</td>
+														<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</td>
 													</c:when>
 													<c:when test="${mail.status eq 0}">
-														<td>[보낸 메일]${mail.subject}</td>
+														<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</td>
 													</c:when>
 												</c:choose>
 												
 												<td>${mail.regDate}</td>
-												<c:set var="cnt" value="0" />
-												</c:when>
-												<c:otherwise>
-													<c:set var="temp" value="0" />
-												</c:otherwise>
-											</c:choose>
 											</tr>
-										</c:if>
-										<c:if test="${temp == mail.mail_groupno}">
-											<c:set var="cnt" value="${cnt + 1}" />
-										</c:if>
 									</c:forEach>
 								</c:if>
 								<%-- 제목에 메일의 종류가 표시되는 메일 리스트 끝 --%>	
@@ -395,38 +400,35 @@
 								<%-- 제목에 메일의 종류가 표시되지 않는 메일 리스트 시작 --%>
 								<c:if test="${type == 'receive' or type == 'send' or type == 'mine'}">
 									<c:forEach var="mail" items="${mailList}" varStatus="status">
-										<c:if test='${temp != mail.mail_groupno}'>
-											<c:set var="temp" value="${mail.mail_groupno}"></c:set>
-											<c:choose>
-												<c:when test="${mail.readStatus eq 0 }">
-												<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
-												</c:when>
-												<c:otherwise>
-												<tr onclick="goRead('${mail.mail_seq}')">
-												</c:otherwise>
-											</c:choose>
-													<td>
-														<c:set var="loop_flag" value="false" />
-														<c:forEach var="i" items="${selectCheck}">
-															<c:if test="${not loop_flag }">
-																<c:if test="${i eq mail.mail_seq}">
-																	<c:set var="loop_flag" value="true" />
-																</c:if>
-															</c:if>
-														</c:forEach>
+										<c:choose>
+											<c:when test="${mail.readStatus eq 0 }">
+											<tr style="color:blue;" >
+											</c:when>
+											<c:otherwise>
+											<tr >
+											</c:otherwise>
+										</c:choose>
+												<td>
+													<c:set var="loop_flag" value="false" />
+													<c:forEach var="i" items="${selectCheck}">
 														<c:if test="${not loop_flag }">
-															<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" />					
+															<c:if test="${i eq mail.mail_seq}">
+																<c:set var="loop_flag" value="true" />
+															</c:if>
 														</c:if>
-														<c:if test="${loop_flag }">
-															<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/>
-														</c:if>
-														
-													</td>
-													<td>${mail.employee_name} (${mail.email})</td>
-													<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>${mail.subject}</a></td>
-													<td>${mail.regDate}</td>
-												</tr>
-										</c:if>	
+													</c:forEach>
+													<c:if test="${not loop_flag }">
+														<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" />					
+													</c:if>
+													<c:if test="${loop_flag }">
+														<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/>
+													</c:if>
+													
+												</td>
+												<td>${mail.employee_name} (${mail.email})</td>
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">${mail.subject}</td>
+												<td>${mail.regDate}</td>
+											</tr>
 									</c:forEach>
 								</c:if>
 								<%-- 제목에 메일의 종류가 표시되지 않는 메일 리스트 끝 --%>
@@ -437,60 +439,51 @@
 							<%-- 검색기능을 사용한 메일 리스트 시작 --%>
 							<c:otherwise>
 								<c:forEach var="mail" items="${mailList}" varStatus="status">
-									<c:if test='${temp != mail.mail_groupno}'>
-										<c:set var="temp" value="${mail.mail_groupno}"></c:set>
+									<c:choose>
+										<c:when test="${mail.readStatus eq 0 }">
+										<tr style="color:blue;" >
+										</c:when>
+										<c:otherwise>
+										<tr >
+										</c:otherwise>
+									</c:choose>
+										
+										<td>
+											<c:set var="loop_flag" value="false" />
+											<c:forEach var="i" items="${selectCheck}">
+												<c:if test="${not loop_flag }">
+													 <c:if test="${i eq mail.mail_seq}">
+														<c:set var="loop_flag" value="true" />
+													</c:if> 
+												</c:if>
+											</c:forEach>
+											<c:if test="${not loop_flag }">
+												<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" />
+												
+											</c:if>
+											<c:if test="${loop_flag }">
+												<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/>
+											</c:if>
+										</td>
+										<td>${mail.employee_name} (${mail.email}) </td>
+										
 										<c:choose>
-											<c:when test="${mail.readStatus eq 0 }">
-											<tr style="color:blue;" onclick="goRead('${mail.mail_seq}')">
+											<c:when test="${mail.status eq 2}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[내게 쓴 메일]${mail.subject}</td>
 											</c:when>
-											<c:otherwise>
-											<tr onclick="goRead('${mail.mail_seq}')">
-											</c:otherwise>
+											<c:when test="${mail.status eq 1}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</td>
+											</c:when>
+											<c:when test="${mail.status eq 0}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</td>
+											</c:when>
 										</c:choose>
-											<c:choose>
-												<c:when test="${(mail.fk_employee_seq ne sessionScope.loginEmployee.employee_seq and (mail.status eq 0 or mail.status eq 1)) or mail.status eq 2}">
-												<td>
-													<c:set var="loop_flag" value="false" />
-													<c:forEach var="i" items="${selectCheck}">
-														<c:if test="${not loop_flag }">
-															 <c:if test="${i eq mail.mail_seq}">
-																<c:set var="loop_flag" value="true" />
-															</c:if> 
-														</c:if>
-													</c:forEach>
-													<c:if test="${not loop_flag }">
-														<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" />
-														
-													</c:if>
-													<c:if test="${loop_flag }">
-														<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/>
-													</c:if>
-												</td>
-												<td>${mail.employee_name} (${mail.email}) </td>
-												
-												<c:choose>
-													<c:when test="${mail.status eq 2}">
-														<td>[내게 쓴 메일]${mail.subject}</td>
-													</c:when>
-													<c:when test="${mail.status eq 1}">
-														<td>[받은 메일]${mail.subject}</td>
-													</c:when>
-													<c:when test="${mail.status eq 0}">
-														<td>[보낸 메일]${mail.subject}</td>
-													</c:when>
-												</c:choose>
-												
-												<td>${mail.regDate}</td>
-												</c:when>
-												<c:otherwise>
-													<c:set var="temp" value="0" />
-												</c:otherwise>
-											</c:choose>
-										</tr>
-										</c:if>	
+										
+										<td>${mail.regDate}</td>
+									</tr>
 									</c:forEach>
 							</c:otherwise>
-							<%-- 검색기능을 사용한 메일 리스트 시작 --%>
+							<%-- 검색기능을 사용한 메일 리스트 종료 --%>
 							
 						</c:choose>
 						
@@ -513,77 +506,67 @@
 						<input type="hidden" name="status" />
 						
 						<c:forEach var="mail" items="${mailList}" varStatus="status">
-						<c:if test='${temp != mail.mail_groupno}'>
-							<c:set var="temp" value="${mail.mail_groupno}"></c:set>
-							<c:choose>
-								<c:when test="${(mail.fk_employee_seq ne sessionScope.loginEmployee.employee_seq and (mail.status eq 0 or mail.status eq 1)) or mail.status eq 2}">
-									<div style="display: inline-block; float:left; width: 320px; height: 150px; margin:5px; border: solid 1px;">
-										<div style="border-bottom: solid 1px #F5F5F5;">
-											<c:set var="loop_flag" value="false" />
-											<c:forEach var="i" items="${selectCheck}">
-												<c:if test="${not loop_flag }">
-													<c:if test="${i eq mail.mail_seq}">
-														<c:set var="loop_flag" value="true" />
-													</c:if>
-												</c:if>
-											</c:forEach>
-											<div>
-											<c:if test="${not loop_flag}">
-												<input type="checkbox" name="selectCheck" value="${mail.mail_seq}"/>
+							<div style="display: inline-block; float:left; width: 320px; height: 150px; margin:5px; border: solid 1px;">
+								<div style="border-bottom: solid 1px #F5F5F5;">
+									<c:set var="loop_flag" value="false" />
+									<c:forEach var="i" items="${selectCheck}">
+										<c:if test="${not loop_flag }">
+											<c:if test="${i eq mail.mail_seq}">
+												<c:set var="loop_flag" value="true" />
 											</c:if>
-											<c:if test="${loop_flag}">
-												<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/> 
-											</c:if>
-												<c:choose>
-													<c:when test="${mail.readStatus eq 0 }">
-													<div style="color:blue">${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
-													</c:when>
-													<c:otherwise>
-													<div>${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
-													</c:otherwise>
-												</c:choose>
-											</div>
-											
-											
-											<div style="clear:both;"></div>
-											<div>
-												<c:choose>
-													<c:when test="${mail.status eq 2}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[내게 쓴 메일]${mail.subject}</a></td>
-													</c:when>
-													<c:when test="${mail.status eq 1}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[받은 메일]${mail.subject}</a></td>
-													</c:when>
-													<c:when test="${mail.status eq 0}">
-														<td><a href='<%=request.getContextPath()%>/mail/read.top?mail_seq=${mail.mail_seq}'>[보낸 메일]${mail.subject}</a></td>
-													</c:when>
-												</c:choose>
-											</div>
-										</div>
-										<div align="left">
-											<c:if test="${not empty mail.fileName1}">
-												<div style="border:solid 1px black; cursor: pointer;" onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1} <span style="float:right">${mail.fileSize1}</span></div>
-												<div style="clear:both;"></div>
-											</c:if>
-											<c:if test="${not empty mail.fileName2}">
-												<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}<span style="float:right">${mail.fileSize2}</span></div>
-												<div style="clear:both;"></div>
-											</c:if>
-											<c:if test="${not empty mail.fileName3}">
-												<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}<span style="float:right">${mail.fileSize3}</span></div>
-												<div style="clear:both;"></div>
-											</c:if>
-										</div>
-									</div>
-									<c:if test="${(status.count % 3) == 0}">
-										<br>
+										</c:if>
+									</c:forEach>
+									<div>
+									<c:if test="${not loop_flag}">
+										<input type="checkbox" name="selectCheck" value="${mail.mail_seq}"/>
 									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:set var="temp" value="0"></c:set>
-								</c:otherwise>
-							</c:choose>
-						</c:if>
+									<c:if test="${loop_flag}">
+										<input type="checkbox" name="selectCheck" value="${mail.mail_seq}" checked/> 
+									</c:if>
+										<c:choose>
+											<c:when test="${mail.readStatus eq 0 }">
+											<div style="color:blue">${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
+											</c:when>
+											<c:otherwise>
+											<div>${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
+											</c:otherwise>
+										</c:choose>
+									</div>
+									
+									
+									<div style="clear:both;"></div>
+									<div>
+										<c:choose>
+											<c:when test="${mail.status eq 2}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[내게 쓴 메일]${mail.subject}</td>
+											</c:when>
+											<c:when test="${mail.status eq 1}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</td>
+											</c:when>
+											<c:when test="${mail.status eq 0}">
+												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</td>
+											</c:when>
+										</c:choose>
+									</div>
+								</div>
+								<div align="left">
+									<c:if test="${not empty mail.fileName1}">
+										<div style="border:solid 1px black; cursor: pointer;" onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1} <span style="float:right">${mail.fileSize1}</span></div>
+										<div style="clear:both;"></div>
+									</c:if>
+									<c:if test="${not empty mail.fileName2}">
+										<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}<span style="float:right">${mail.fileSize2}</span></div>
+										<div style="clear:both;"></div>
+									</c:if>
+									<c:if test="${not empty mail.fileName3}">
+										<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}<span style="float:right">${mail.fileSize3}</span></div>
+										<div style="clear:both;"></div>
+									</c:if>
+								</div>
+							</div>
+							<c:if test="${(status.count % 3) == 0}">
+								<br>
+							</c:if>
 						</c:forEach>
 				</c:if>
 				
@@ -597,6 +580,5 @@
 			</div>
 		</div>
 		
-	</div>
 	</form>
 </div>

@@ -202,18 +202,23 @@
 		// 초기값을 오늘 날짜로 설정
 		$('#datepicker').datepicker('setDate', 'today');	// (-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)
 		$('#rsvtDateH').text($('#datepicker').val());
-		$('#rsvtDate').val($('#datepicker').val());
+		$('#rsvtDate').val($('#datepicker').val());				
 		
+		var flag = false;
 		var people = "";
 		var people_min = "";
 		var people_max = "";
 		
-		var flag = false;
-		
 		// 회의실 클릭했을 때
 		$(".room").click(function(event){
 			
-			flag = true;
+			flag = true;			
+			
+			people = $(this).children('.people').text();
+			people_min = Number(people.substring(0, people.lastIndexOf("~")));
+			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
+			
+			alert(people_min+", "+people_max);
 			
 			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChoice");
@@ -223,14 +228,12 @@
 					
 			$("#roomName").text($(this).children('.roomName').text());			
 			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());	
-						
-			people = $(this).children('.people').text();
-			people_min = Number(people.substring(0, people.lastIndexOf("~")));
-			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
 			
-		//	alert($(this).children('.people').text());			
-			
-			showPossibleTime();
+		//	alert($(this).children('.people').text());		
+		
+			if($("#fk_roomNumber").val().trim() != "" && $("#rsvtDate").val().trim() != "") {
+				showPossibleTime();	
+			}
 			
 		}); // end of $(".room").click(function(event){})----------------------------
 		
@@ -240,17 +243,18 @@
 		$("#datepicker").change(function(event){
 			
 			$("#rsvtDateH").text($("#datepicker").val());
-			$('#rsvtDate').val($('#datepicker').val());
-			showPossibleTime();
-			
+			$('#rsvtDate').val($('#datepicker').val());			
+	
+			if($("#fk_roomNumber").val().trim() != "" && $("#rsvtDate").val().trim() != "") {
+				showPossibleTime();	
+			}
 		});
-		
 		
 		// 시간 선택하기	
 		var start = "";
 		var end = "";		
 
-		$(".td_time").click(function(){	// 가능여부 부분 클릭했을 경우
+		$(document).on("click",".td_time", function(){	// 가능여부 부분 클릭했을 경우
 			
 			if($(this).hasClass("ability")){	
 				if(!$(this).hasClass("rChoice")) {	// 배경색이 없을 경우
@@ -285,14 +289,18 @@
 						start = prStartTime;
 						end = $(this).children(".endTime").val();
 						$(this).siblings().removeClass("ability");
-						prev.addClass("ability");
+						if(!prev.hasClass("select")){
+							 prev.addClass("ability");
+						}
 					}
 					else {	// start가 공백일 경우
 						start = prStartTime;	// start에 prev의 startTime 값을 넣음
 						end = prEndTime;		// end에 prev의 endTime 값을 넣음
 						$(this).siblings().removeClass("ability");
-						prev.addClass("ability");
-						if(prev.prev().hasClass("td_time")){
+						if(!prev.hasClass("select")){
+							prev.addClass("ability");
+						}
+						if(prev.prev().hasClass("td_time") && !prev.prev().hasClass("select")){
 							prev.prev().addClass("ability");
 						}
 					}
@@ -308,8 +316,10 @@
 						start = neStartTime	// start에 next의 startTime 값을 넣음
 						end = neEndTime		// end에 next의 endTime 값을 넣음
 						$(this).siblings().removeClass("ability");
-						next.addClass("ability");
-						if(next.next().hasClass("td_time")){
+						if(!next.hasClass("select")){
+							next.addClass("ability");
+						}						
+						if(next.next().hasClass("td_time") && !next.next().hasClass("select")){
 							next.next().addClass("ability");
 						}
 					}
@@ -318,26 +328,41 @@
 					if($(this).hasClass("rChoice")) {
 						start = $(this).children(".startTime").val();	// start에 this의 startTime 값을 넣음
 						end = $(this).children(".endTime").val();
-						$(this).siblings().removeClass("ability");
-						prev.addClass("ability");
-						next.addClass("ability");
+						$(this).siblings().each(function(index, item){
+							if(!$(item).hasClass("select")) {
+								$(item).removeClass("ability");
+							}
+						});
+						if(!prev.hasClass("select")) {
+							prev.addClass("ability");
+						}
+						if(!next.hasClass("select")) {
+							next.addClass("ability");
+						}
 					}
 					else{
 						start="";
 						end="";
-						$(this).siblings().each(function(index, item){
-							if($(item).hasClass("td_time")){
+						$(".tdOne").siblings().each(function(index, item){
+							if($(item).hasClass("td_time") && !$(item).hasClass("select")){
 								$(item).addClass("ability");
 							}
-							$(".tdOne").removeClass("ability");
+						});
+						
+						$(".tdTwo").siblings().each(function(index, item){
+							if($(item).hasClass("td_time") && !$(item).hasClass("select")){
+								$(item).addClass("ability");
+							}
+						});
+							/* $(".tdOne").removeClass("ability");
 							$(".tdTwo").removeClass("ability");
 							
-							$(".tdOne").addClass("ability");
+							$(".tdOne").addClass("ability"); */
 							$(".tdOne").css("height", "50px");
 
-							$(".tdTwo").addClass("ability");
+							/* $(".tdTwo").addClass("ability"); */
 							$(".tdTwo").css("height", "50px");
-						});
+						
 					}
 				}
 				
@@ -414,16 +439,93 @@
 							// 검색된 데이터가 존재하지 않는 경우
 							$("#displayList").hide();
 						}
+						
 						console.log(json);												
-					},
+					},					
 					error: function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					}				
+					}	
+					
 				});
 				
+			}	
+			
+		});
+			
+		var checkFlag = false;
+		var memberCount = 0;
+		
+		$("#rsvt_btn").click(function(){	
+			
+			memberCount = Number($("#memberCount").val());
+			
+			// 회의실 유효성 검사
+			if($("#fk_roomNumber").val().trim() == "") {					
+				if(!checkFlag) {					
+					alert("예약할 회의실을 선택하세요.");					
+					checkFlag = true;
+				}
 			}
 			
-		});// end of $("#searchHead").keyup()------------------
+			// 예약일 유효성 검사
+			if($("#rsvtDate").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약일을 선택하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			// 예약 시간 유효성 검사
+			if($("#startTimeH").val().trim() == "" || $("#endTimeH").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약시간을 선택하세요.");
+					checkFlag = true;
+				}
+			}
+		
+			// 신청자 유효성 검사
+			if($("#fk_employee_seq").val().trim() == "") {
+				if(!checkFlag) {
+					alert("로그인을 하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			// 대표자 유효성 검사
+			if($("#head_seq").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약 대표자를 입력하세요.");
+					checkFlag = true;
+				}
+			}						
+			
+			// 사용 인원 유효성 검사
+			if(memberCount < people_min || memberCount > people_max) {
+				if(!checkFlag) {
+					alert("선택한 회의실의 사용가능 인원은 "+people_min+"인~"+people_max+"인입니다.");
+					checkFlag = true;
+				}
+			}
+			
+			// 사유 유효성 검사
+			if($("#reason").val().trim() == "") {
+				if(!checkFlag) {
+					alert("예약 사유를 입력하세요.");
+					checkFlag = true;
+				}
+			}
+			
+			if(!checkFlag) {
+				var frm = document.reserveRoomFrm;
+				frm.method="POST";
+				frm.action="<%= request.getContextPath()%>/reserveRoomEnd.top";
+				frm.submit();	
+			}
+			else {
+				checkFlag = false;
+			}
+			
+		});// end of $("#rsvt_btn").click(function(){})------------------
 		
 		<%-- === 검색어 입력 시 자동글 완성하기 8 === --%>
 		$(document).on("click", ".result", function(){
@@ -440,6 +542,11 @@
 	<%-- === 예약 가능한 시간 조회(Ajax) === --%>
 	function showPossibleTime() {		
 		
+		var startDateArr1 = ["09:00", "10:00", "11:00", "12:00"];
+		var startDateArr2 = ["14:00", "15:00", "16:00", "17:00"];
+		var endDateArr1 = ["10:00", "11:00", "12:00", "13:00"];
+		var endDateArr2 = ["15:00", "16:00", "17:00", "18:00"];
+		
 		var fk_roomNumber = $("#fk_roomNumber").val();
 		var rsvtDate = $("#rsvtDate").val();
 		
@@ -449,80 +556,112 @@
 					"rsvtDate":rsvtDate},
 			dataType : "JSON",
 			success:function(json){						
-				if(json.length > 0) {
-					$.each(json, function(index, item) {
-						console.log(item.startDate);
-					});
-				}
-				else {
-					console.log("예약내역 없음");
-					$(".whether").text("예약가능");
-				}						
-				
+				var flag = false;
+				var status = "";
+				var name = "";
 				var html = 	'<table id="time" style="margin-left: 30px;">'+
-								 '<tr>'+
-									'<th class="th_time times">시간</th>'+
-									'<td class="td_time times time9"><span class="start">09:00</span> - <span class="end">10:00</span></td>'+
-									'<td class="td_time times time10"><span class="start">10:00</span> - <span class="end">11:00</span></td>'+
-									'<td class="td_time times time11"><span class="start">11:00</span> - <span class="end">12:00</span></td>'+
-									'<td class="td_time times time12"><span class="start">12:00</span> - <span class="end">13:00</span></td>'+							
-								'</tr>'+
+								'<tr>'+
+									'<th class="th_time times">시간</th>';								
+				for(var i=0; i<startDateArr1.length; i++) {				
+					html += 		'<td class="td_time times"><span class="start">'+startDateArr1[i]+'</span> - <span class="end">'+endDateArr1[i]+'</span></td>';
+				}
+					html +=		'</tr>'+
+								'<tr>'+
+									'<th class="th_time">가능여부</th>';
+				for(var i=0; i<startDateArr1.length; i++) {					
+										
+					if(json.length > 0) {
+						$.each(json, function(index, item) {
+							if(item.startDate == startDateArr1[i] || item.endDate == endDateArr1[i]){
+								flag = true;								
+								status = item.status;
+								name = item.employee_name;
+								return false;
+							}
+						});
+						if(flag) {
+							html += '<td class="td_time tdOne select">'+
+									'<div><span class="whether">';
+							if(status == 0) {	
+								html += '승인대기중<br>('+name+')';
+							}
+							if(status == 1) {
+								html += '예약완료<br>('+name+')';
+							}
+							
+							flag = false;
+						}
+						else {
+							html += '<td class="td_time ability tdOne">'+
+									'<div><span class="whether">'+
+									'예약가능';
+						}
+					}
+					else {											
+						html += '<td class="td_time ability tdOne">'+
+								'<div><span class="whether">'+
+								'예약가능';
+					}	
+										
+					html += 			'</span></div>'+
+										'<input type="hidden" class="startTime" name="startTime" value="'+startDateArr1[i]+'" />'+
+										'<input type="hidden" class="endTime" name="endTime" value="'+endDateArr1[i]+'" />'+
+									'</td>';
+				}					
+				html +=		'</tr>';
 					
+				
+				html +=		'<tr>'+
+							'<th class="th_time times">시간</th>';								
+				for(var i=0; i<startDateArr2.length; i++) {				
+					html += 		'<td class="td_time times"><span class="start">'+startDateArr2[i]+'</span> - <span class="end">'+endDateArr2[i]+'</span></td>';
+				}				
+					html +=		'</tr>'+
 								'<tr>'+
-									'<th class="th_time">가능여부</th>'+
-									'<td class="td_time ability tdOne time9">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="09:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="10:00" />'+
-									'</td>'+
-									'<td class="td_time ability tdOne time10">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="10:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="11:00" />'+
-									'</td>'+
-									'<td class="td_time ability tdOne time11">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="11:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="12:00" />'+						
-									'</td>'+
-									'<td class="td_time ability tdOne time12">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="12:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="13:00" />'+					
-									'</td>'+
-								'</tr>'+
-					
-								'<tr>'+
-									'<th class="th_time times">시간</th>'+
-								'<td class="td_time times time14"><span class="start">14:00</span> - <span class="end">15:00</span></td>'+
-									'<td class="td_time times time15"><span class="start">15:00</span> - <span class="end">16:00</span></td>'+
-									'<td class="td_time times time16"><span class="start">16:00</span> - <span class="end">17:00</span></td>'+
-									'<td class="td_time times time17"><span class="start">17:00</span> - <span class="end">18:00</span></td>'+								
-								'</tr>'+
-								'<tr>'+
-									'<th class="th_time">가능여부</th>'+
-									'<td class="td_time ability tdTwo time14">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="14:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="15:00" />'+
-									'</td>'+
-									'<td class="td_time ability tdTwo time15">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="15:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="16:00" />'+					
-									'</td>'+
-									'<td class="td_time ability tdTwo time16">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="16:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="17:00" />'+						
-									'</td>'+
-									'<td class="td_time ability tdTwo time17">'+
-										'<div><span class="whether"></span></div>'+
-										'<input type="hidden" class="startTime" name="startTime" value="17:00" />'+
-										'<input type="hidden" class="endTime" name="endTime" value="18:00" />'+						
-									'</td>'+								
-								'</tr>'+				
-							'</table>';
+									'<th class="th_time">가능여부</th>';	
+									
+				for(var i=0; i<startDateArr2.length; i++) {					
+										
+					if(json.length > 0) {
+						$.each(json, function(index, item) {
+							if(item.startDate == startDateArr2[i] || item.endDate == endDateArr2[i]){
+								flag = true;
+								status = item.status;
+								name = item.employee_name;								
+								return false;
+							}											
+						});
+						if(flag) {
+							html += '<td class="td_time tdTwo select">'+
+									'<div><span class="whether">';
+							if(status == 0) {	
+								html += '승인대기중<br>('+name+')';
+							}
+							if(status == 1) {
+								html += '예약완료<br>('+name+')';
+							}
+							
+							flag = false;
+						}
+						else {
+							html += '<td class="td_time ability tdTwo">'+
+										'<div><span class="whether">'+
+										'예약가능';
+						}
+					}
+					else {											
+						html += '<td class="td_time ability tdTwo">'+
+									'<div><span class="whether">'+
+									'예약가능';
+					}											
+					html += 		'</span></div>'+
+									'<input type="hidden" class="startTime" name="startTime" value="'+startDateArr2[i]+'" />'+
+									'<input type="hidden" class="endTime" name="endTime" value="'+endDateArr2[i]+'" />'+
+								'</td>';
+				}					
+					html +=		'</tr>';
+								
+				html +=	'</table>';
 			
 				$("#timeWhether").html(html);
 			},
@@ -537,6 +676,8 @@
 			object.value = object.value.slice(0, object.maxLength);
 		}    
 	}
+	
+	
 
 </script>
 
@@ -609,72 +750,7 @@
 		<div id="dateAndTime">
 		<h4 style="margin-bottom: 20px; text-align: left;">2. 예약시간 선택</h4>
 			<div style="clear: both;"></div>
-			<div id="timeWhether">
-		
-<!-- 				<table id="time" style=" margin-left: 30px;">
-					<tr>
-						<th class="th_time times">시간</th>
-						<td class="td_time times time9">09:00 - 10:00</td>
-						<td class="td_time times time10">10:00 - 11:00</td>
-						<td class="td_time times time11">11:00 - 12:00</td>
-						<td class="td_time times time12">12:00 - 13:00</td>									
-					</tr>
-					<tr>
-						<th class="th_time">가능여부</th>
-						<td class="td_time ability tdOne time9">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="09:00" />
-							<input type="hidden" class="endTime" name="endTime" value="10:00" />
-						</td>
-						<td class="td_time ability tdOne time10">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="10:00" />
-							<input type="hidden" class="endTime" name="endTime" value="11:00" />
-						</td>
-						<td class="td_time ability tdOne time11">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="11:00" />
-							<input type="hidden" class="endTime" name="endTime" value="12:00" />			
-						</td>
-						<td class="td_time ability tdOne time12">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="12:00" />
-							<input type="hidden" class="endTime" name="endTime" value="13:00" />				
-						</td>								
-					</tr>
-					
-					<tr>
-						<th class="th_time times">시간</th>
-						<td class="td_time times time14">14:00 - 15:00</td>
-						<td class="td_time times time15">15:00 - 16:00</td>
-						<td class="td_time times time16">16:00 - 17:00</td>
-						<td class="td_time times time17">17:00 - 18:00</td>									
-					</tr>
-					<tr>
-						<th class="th_time">가능여부</th>
-						<td class="td_time ability tdTwo time14">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="14:00" />
-							<input type="hidden" class="endTime" name="endTime" value="15:00" />
-						</td>
-						<td class="td_time ability tdTwo time15">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="15:00" />
-							<input type="hidden" class="endTime" name="endTime" value="16:00" />					
-						</td>
-						<td class="td_time ability tdTwo time16">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="16:00" />
-							<input type="hidden" class="endTime" name="endTime" value="17:00" />				
-						</td>
-						<td class="td_time ability tdTwo time17">
-							<div><span class="whether"></span></div>
-							<input type="hidden" class="startTime" name="startTime" value="17:00" />
-							<input type="hidden" class="endTime" name="endTime" value="18:00" />				
-						</td>								
-					</tr>				
-				</table> -->
-
+			<div id="timeWhether">					
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -682,6 +758,8 @@
 		
 		<div id="info" style="z-index: 1;">
 			<h4 style="margin: 33px 10px 20px 25px;">3. 예약하기</h4>
+			
+			<form name="reserveRoomFrm">
 			<table id="info_tb">
 				<tr id="info_tr">
 					<th id="info_th">회의실</th>
@@ -715,7 +793,7 @@
 					<th id="info_th">예약 신청자</th>
 					<td id="info_td">
 						<span id="rsvt_employee">${sessionScope.loginEmployee.employee_name} &lt;${sessionScope.loginEmployee.department_name}/${sessionScope.loginEmployee.position_name}&gt;</span>
-						<input type="hidden" style="width:200px;" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" /><!-- hidden -->
+						<input type="hidden" style="width:200px;" id="fk_employee_seq" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" /><!-- hidden -->
 					</td>
 				</tr>
 				<tr id="info_tr">
@@ -732,7 +810,7 @@
 				<tr id="info_tr">
 					<th id="info_th">사용 인원</th>
 					<td id="info_td">
-						<input type="number" maxlength="2" min="3" max="30" value="3" oninput="maxLengthCheck(this)"/>
+						<input type="number" id="memberCount" name="memberCount" maxlength="2" min="3" max="30" value="3" oninput="maxLengthCheck(this)"/>
 					</td>
 				</tr>
 				<tr id="info_tr">
@@ -741,8 +819,8 @@
 						<textarea id="reason" name="reason" cols="40" rows="10"></textarea>
 					</td>
 				</tr>							
-
 			</table>
+			</form>
 			
 			<input type="button" id="rsvt_btn" value="예약 신청"/>
 			
