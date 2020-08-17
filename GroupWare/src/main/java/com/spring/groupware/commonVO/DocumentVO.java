@@ -36,7 +36,6 @@ public class DocumentVO { // 결재문서VO
 			String approver_name, String approver_position, String approver_department, String parent_approver,
 			String status, String document_category, String category_name, String approveDate, String groupno,
 			String fileName, String orgFileName, String fileSize, MultipartFile attach) {
-		super();
 		this.document_seq = document_seq;
 		this.fk_employee_seq = fk_employee_seq;
 		this.employee_name = employee_name;

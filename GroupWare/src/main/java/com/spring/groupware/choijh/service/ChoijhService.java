@@ -135,18 +135,17 @@ public class ChoijhService implements InterChoijhService {
 	
 	// 자유게시판 글쓰기(첨부파일이 있는 경우)
 	@Override
-	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
-	public int add_withFile(BoardVO bvo, AttachFileVO attachvo) {
-		
+	public int add_withFile(BoardVO bvo) {
 		int n = dao.add_withFile(bvo);
-		
-		int m = dao.addFile(attachvo); // 첨부파일 테이블 insert하기
-		
-		n = m*n;
-		
 		return n;
 	}
 
+	
+	// 자유게시판 첨부파일 테이블 insert하기
+	@Override
+	public void addFile(AttachFileVO attachvo) {
+		dao.addFile(attachvo);
+	}
 
 	// 자유게시판 글 보여주기
 	@Override
@@ -162,6 +161,34 @@ public class ChoijhService implements InterChoijhService {
 		BoardVO bvo = dao.detailView(board_seq);
 		return bvo;
 	}
+
+
+	// 해당게시글의 첨부파일 읽어오기 
+	@Override
+	public List<AttachFileVO> getfileView(String board_seq) {
+		List<AttachFileVO> attachvoList = dao.getfileView(board_seq);
+		return attachvoList;
+	}
+	
+	
+	// 자유게시판 글 삭제
+	@Override
+	public int del(String board_seq) {
+		int n = dao.del(board_seq);
+		return n;
+	}
+
+
+	// 자유게시판 글 수정 하기 
+	@Override
+	public int edit(BoardVO bvo) {
+		int n = dao.edit(bvo);
+		return n;
+	}
+
+	
+
+	
 
 
 	

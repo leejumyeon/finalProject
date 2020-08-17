@@ -44,17 +44,5 @@ public class ManagerService implements InterManagerService {
 		return boardvoList;
 	}
 	
-	// 관리자- 결재 관리(결재현황 리스트)페이지 이동[글목록]
-	@Override
-	public List<DocumentVO> managerApprovalList() {
-		
-		List<DocumentVO> dpmList = dao.managerApprovalList();
-		
-		return dpmList;
-	}
-
-	
-	
-	
 
 }
