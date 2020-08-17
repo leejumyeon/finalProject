@@ -132,4 +132,41 @@ public class HyeminController {
 	}
 	
 	
+	// === 예약 관리 페이지(관리자) === //	
+	@RequestMapping(value = "/manager/reservation.top")
+	public String reservation(HttpServletRequest request) {
+
+		return "admin/reservation.tiles3";
+		// /WEB-INF/views/tiles3/admin/reservation.jsp 페이지를 만들어야 한다.
+	}
+	
+	
+	// === 예약 신청 현황 조회(관리자)(Ajax) === //
+	@ResponseBody
+	@RequestMapping(value = "/manager/waitingReservation.top", produces = "text/plain;charset=UTF-8")
+	public String waitingReservation(HttpServletRequest request) {
+
+		List<ReservationVO> rsvtvoList = service.waitingReservation();
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if (rsvtvoList != null) {
+			for (ReservationVO rsvtvo : rsvtvoList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("reservation_seq", rsvtvo.getReservation_seq());
+				jsonObj.put("employee_name", rsvtvo.getEmployee_name());
+				jsonObj.put("roomName", rsvtvo.getRoomName());
+				jsonObj.put("startDate", rsvtvo.getStartDate());
+				jsonObj.put("endDate", rsvtvo.getEndDate());
+				jsonObj.put("memberCount", rsvtvo.getMemberCount());
+				jsonObj.put("reason", rsvtvo.getReason());
+				jsonObj.put("regDate", rsvtvo.getRegDate());				
+
+				jsonArr.put(jsonObj);
+			}
+		}
+
+		return jsonArr.toString();
+	}
+	
 }

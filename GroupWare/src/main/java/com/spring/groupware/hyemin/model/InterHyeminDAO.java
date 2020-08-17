@@ -16,6 +16,9 @@ public interface InterHyeminDAO {
 	// 회의실 예약하기(insert)
 	void reserveRoomEnd(HashMap<String, String> paraMap);
 
+	// 예약 신청 현황 조회(관리자)
+	List<ReservationVO> waitingReservation();
+
 	
 	
 }
