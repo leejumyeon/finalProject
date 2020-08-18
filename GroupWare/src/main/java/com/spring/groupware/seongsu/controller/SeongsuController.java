@@ -34,6 +34,14 @@ public class SeongsuController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/board/write.top")
+	public ModelAndView requiredLogin_bdwrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		mav.setViewName("redirect:/list.top");
+		
+		return mav;
+	}	
+	
 	@RequestMapping(value="/list.top")
 	public ModelAndView requiredLogin_list(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
