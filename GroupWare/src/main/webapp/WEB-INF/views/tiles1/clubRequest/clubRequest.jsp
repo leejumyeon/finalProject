@@ -217,9 +217,15 @@
 				dataType:"JSON",
 				success:function(json){
 					console.log(json.result);
+					if(json.result=="true"){
+						alert("동호회 가입 신청 메일을 동호회 회장에게 보냈습니다.");
+					}
+					else{
+						alert("동호회 가입 신청 메일을 동호회 회장에게 보내는데 실패했습니다.");
+					}
 				},
 				error:function(e){
-					
+					alert("동호회 가입 신청 메일을 동호회 회장에게 보내는 도중 오류가 발생했습니다.");
 				}
 			});
 			

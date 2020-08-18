@@ -685,13 +685,14 @@ public class MailController {
 		String msg = "삭제에 실패했습니다.";
 		if(n == selectCheck.length) {
 			msg = "선택한 메일을 휴지통에 버렸습니다.";
-			mav.addObject("msg",msg);
+			
 		}
 		
-		mav.addObject("searchWord",searchWord);
-		mav.addObject("type",type);
-		mav.addObject("currentShowPageNo",str_currentPageNo);
-		mav.setViewName("redirect:/mail/list.top");
+		String loc = request.getContextPath()+"/mail/list.top?searchWord="+searchWord+"&type="+type+"&currentShowPageNo="+str_currentPageNo;
+		
+		mav.addObject("message",msg);
+		mav.addObject("loc",loc);
+		mav.setViewName("msg");
 		return mav;
 	}
 	
@@ -746,10 +747,12 @@ public class MailController {
 			msg = "선택한 메일을 휴지통에서 지웠습니다.";
 			
 		}
-		mav.addObject("msg",msg);
-		mav.addObject("type",type);
-		mav.addObject("currentShowPageNo",str_currentPageNo);
-		mav.setViewName("redirect:/mail/list.top");
+		
+		String loc = request.getContextPath()+"/mail/list.top?type="+type+"&currentShowPageNo="+str_currentPageNo;
+		
+		mav.addObject("message",msg);
+		mav.addObject("loc",loc);
+		mav.setViewName("msg");
 		
 		return mav;
 	}
@@ -775,10 +778,10 @@ public class MailController {
 			msg = "선택한 메일을 성공적으로 복구했습니다.";
 			
 		}
-		mav.addObject("msg",msg);
-		mav.addObject("type",type);
-		mav.addObject("currentShowPageNo",str_currentPageNo);
-		mav.setViewName("redirect:/mail/list.top");
+		String loc = request.getContextPath()+"/mail/list.top?type="+type+"&currentShowPageNo="+str_currentPageNo;
+		mav.addObject("message",msg);
+		mav.addObject("loc",loc);
+		mav.setViewName("msg");
 		
 		return mav;
 	}
@@ -1224,7 +1227,8 @@ public class MailController {
 		sendMail.setContent(content);
 		sendMail.setSubject(subject);
 		sendMail.setReadStatus("1");
-
+		
+		
 		// 받는 메일 VO 생성 //
 		MailVO receiveMail = new MailVO();
 		receiveMail.setFk_employee_seq(receive);
@@ -1232,6 +1236,12 @@ public class MailController {
 		receiveMail.setSubject(subject);
 		receiveMail.setStatus("1");
 		receiveMail.setReadStatus("0");
+		
+		// 메일 그룹번호 채번
+		String mail_groupno = service.getMail_groupno();
+		mail_groupno = String.valueOf(Integer.parseInt(mail_groupno)+1);
+		sendMail.setMail_groupno(mail_groupno);
+		receiveMail.setMail_groupno(mail_groupno);
 		
 		mailList.add(sendMail);
 		mailList.add(receiveMail);
