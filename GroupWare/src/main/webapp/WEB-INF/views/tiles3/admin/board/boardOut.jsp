@@ -106,7 +106,7 @@
 	<div id="content_area">
 		<div class ="table_title" style="margin-top:5px;">
 			<div class="searchArea" style="display:inline-block; float:right;">
-				<input type="text" name="searchWord" />
+				<div style="border:solid 1px gray; display: inline-block;"><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span><input type="text" size="20" id="boardSearch" name="searchWord" value="" style="border: none;" autocomplete="off"/></div>
 				<select name="searchType">
 					<option>전체</option>
 					<option>작성자</option>

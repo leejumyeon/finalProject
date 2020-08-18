@@ -79,6 +79,28 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		<%-- 기존에 있는 input type="file"태그 값 변경시 orgFileName변경 --%>
+		$("input[name=file]").each(function(index, item){
+			$(item).change(function(){
+				var fullpath = $(this).val();
+				console.log(index);
+				var fileName = fullpath.substring(12);
+				if(fileName == ""){
+					if(index == 0){
+						fileName = "${mail.orgFileName1}";
+					}
+					else if(index == 1){
+						fileName = "${mail.orgFileName2}";
+					}
+					else{
+						fileName = "${mail.orgFileName3}";
+					}
+				}
+				$("input[name=orgFileName]:eq("+index+")").val(fileName);
+			});
+		});
+			
+		
 		<%-- === #160. 스마트 에디터 구현 시작 === --%>
 		//전역변수
 	    var obj = [];
@@ -288,7 +310,6 @@
 			<%-- === 스마트에디터 구현 끝 === --%>
 			
 			
-			
 			// 폼(form) 을 전송(submit)
 			var frm = document.mailFrm;
 			frm.method = "POST";
@@ -341,21 +362,27 @@
 							<div>
 								<c:choose>
 									<c:when test="${not empty mail.fileName1}">
-										<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName1}"/>
+										<div>
+										<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName1}"/>
 										<input type="hidden" name="fileName" value="${mail.fileName1}"/>
 										<input type="hidden" name="fileSize" value="${mail.fileSize1}" />
 										<span class='cancleFile'>X</span>
+										</div>
 										<c:if test="${not empty mail.fileName2}">
-											<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName2}"/>
+										<div>
+											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName2}"/>
 											<input type="hidden" name="fileName" value="${mail.fileName2}"/>
 											<input type="hidden" name="fileSize" value="${mail.fileSize2}" />
 											<span class='cancleFile'>X</span>
+										</div>
 										</c:if>
 										<c:if test="${not empty mail.fileName3}">
-											<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName3}"/>
+										<div>
+											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName3}"/>
 											<input type="hidden" name="fileName" value="${mail.fileName3}"/>
 											<input type="hidden" name="fileSize" value="${mail.fileSize3}" />
 											<span class='cancleFile'>X</span>
+										</div>
 										</c:if>
 									</c:when>
 									<c:otherwise>

@@ -57,19 +57,17 @@ $(document).ready(function(){
 			<table class="table noticeTable">
 				<tr>
 					<td>제목</td>
-					<td><input type="text" name="subject"/></td>
-				</tr>
-				<tr>
-					<td>작성날짜</td>
-					<td></td>
+					<td colspan="2"><input type="text" name="subject"/>${board.subject}</td>
 				</tr>
 				<tr>
 					<td style="vertical-align: top;">첨부파일</td>
-					<td><input type="file" name="file" /></td>
+					<td id="FileFrm">
+						<div id="attach0"><input type="file" name="attach"/><span class="cancle" id="cancle0">X</span></div></td>
+					<td style="vertical-align: top;"><div id="addFileFrm">추가 업로드</div></td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<textarea name="content" id="content" style="width: 800px;"></textarea>
+					<td colspan="3">
+						<textarea name="content" id="content" style="width: 800px;">${board.content}</textarea>
 					</td>
 				</tr>
 			</table>

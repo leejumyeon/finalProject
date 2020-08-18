@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.DocumentVO;
 
@@ -43,6 +44,20 @@ public class ManagerDAO implements InterManagerDAO {
 		
 		return boardvoList;
 		
+	}
+
+	// 관리자 - 게시글 관리(상세페이지)
+	@Override
+	public BoardVO boardDetail(String board_seq) {
+		BoardVO board = sqlsession.selectOne("manager.boardDetail",board_seq);
+		return board;
+	}
+
+	// 게시글 첨부파일 항목 조회
+	@Override
+	public List<AttachFileVO> boardFileList(String board_seq) {
+		List<AttachFileVO> fileList = sqlsession.selectList("manager.boardFileList",board_seq);
+		return fileList;
 	}
 
 }
