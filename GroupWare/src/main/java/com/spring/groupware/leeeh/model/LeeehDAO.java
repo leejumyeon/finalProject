@@ -580,4 +580,20 @@ public class LeeehDAO implements InterLeeehDAO {
 		sqlsession.delete("leeeh.shiftDelDocument", groupno);
 	}
 
+	// === 모든 클럽 정보 가져오기 === //
+	@Override
+	public List<HashMap<String, String>> allClubList() {
+
+		List<HashMap<String, String>> clubList = sqlsession.selectList("leeeh.allClubList");
+		
+		return clubList;
+	}
+
+	// === 클럽 회장 업데이트 하기 === //
+	@Override
+	public void updateClubManager(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateClubManager", paraMap);
+	}
+
 }

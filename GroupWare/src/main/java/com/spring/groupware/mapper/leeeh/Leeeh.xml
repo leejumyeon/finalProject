@@ -276,7 +276,7 @@
 		<result property="fileSize" column="fileSize" javaType="String"/>
 	</resultMap>
 	<select id="goDocumentContent" parameterType="String" resultMap="documentMap">
-		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_namem, DE.fileName, DE.orgFileName, DE.fileSize
+		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_name, D.fileName, D.orgFileName, D.fileSize
 		from department_table DE join employees_table E  
 		on DE.department_seq = E.fk_department
 		join document_table D
@@ -483,6 +483,12 @@
 		where groupno = #{groupno}
 	</update>
 	
+	<!-- === 클럽 회장 업데이트 하기 === -->
+	<update id="updateClubManager" parameterType="HashMap">
+		update clubMember_table set documentStatus = '1'
+		where groupno = #{groupno}
+	</update>
+	
 	<!-- === 휴가/출장을 시작한 사람과 끝난 사람을 알아오이 === -->
 	<select id="getTripList" resultType="com.spring.groupware.commonVO.TripVO">
 		select trip_category
@@ -490,7 +496,7 @@
 			 , to_char(trip_end, 'yyyy. mm. dd') AS trip_end
 			 , fk_employee_seq
 		from trip_table
-		where documentStatus = 1;
+		where documentStatus = 1
 	</select>
 	
 	<!-- === 휴가 시작한 사람 업데이트하기 === -->
@@ -679,4 +685,27 @@
 		delete from document_table
 		where groupno = #{groupno}
 	</delete>
+	
+	<!-- === 모든 클럽 정보 가져오기 === -->
+	<resultMap type="HashMap" id="clubMap">
+		<result property="club_seq" column="club_seq" javaType="String"/>
+		<result property="club_name" column="club_name" javaType="String"/>
+		<result property="club_info" column="club_info" javaType="String"/>
+		<result property="representative_img" column="representative_img" javaType="String"/>
+		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="cnt" column="cnt" javaType="String"/>
+	</resultMap>
+	<select id="allClubList" resultMap="clubMap">
+		select V.club_seq, V.club_name, V.club_info, V.representative_img, E.employee_name, T.cnt
+		from
+		(
+		    select C.club_seq, C.club_name, C.club_info, CM.fk_employee_seq, C.representative_img
+		    from club_table C join clubMember_table CM
+		    on C.club_seq = CM.fk_club
+		    where C.documentStatus = 1 and CM.status = 1
+		) V join employees_table E
+		on V.fk_employee_seq = E.employee_seq
+		join (select fk_club, count(*) AS cnt from clubMember_table group by fk_club) T
+		on V.club_seq = T.fk_club
+	</select>
 </mapper>
