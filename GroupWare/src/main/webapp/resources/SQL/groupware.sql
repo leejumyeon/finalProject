@@ -156,12 +156,13 @@ create table album_table
 ,fk_employee_seq    number  -- 게시글 작성자 번호
 ,subject    varchar2(500) not null -- 게시글 제목
 ,content    varchar2(4000) not null -- 게시글 내용
+,regDate    date default sysdate -- 게시글 등록 날짜
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence album_table_seq
+create sequence 
 start with 1 
 increment by 1
 nomaxvalue

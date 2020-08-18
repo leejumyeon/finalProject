@@ -157,4 +157,6 @@ public interface InterLeeehService {
 
 	void updateClubManager(HashMap<String, Object> paraMap);	// 클럽 회장 업데이트 하기
 
+	int getCntOfPayment(String fk_employee_seq);	// 문서 결재 알람 받아오기
+
 }
