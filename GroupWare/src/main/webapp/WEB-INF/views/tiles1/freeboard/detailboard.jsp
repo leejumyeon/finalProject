@@ -194,6 +194,7 @@
 			success:function(json) {
 				if(json.n == 1){
 					goReadComment(); // 댓글 내용(페이징처리 x) 보여주기
+					$("#commentContent").val("");
 				}
 			},
 			error: function(request, status, error){
@@ -220,7 +221,7 @@
 						html += "<tr>";
 					//	html += "<td style='text-align: center;'>"+(index+1)+"</td>";
 					
-					if(item.depthno == 0){
+					if(item.depthno == '0'){
 							
 						html += "<td style='padding: 12px;'>"+item.employee_name+item.regDate+"&nbsp;&nbsp;<span class='childCommentBtn' onclick='goChildComment("+index+","+item.fk_board_seq+","+item.comment_seq+","+item.depthno+");'>답글쓰기&nbsp;/</span>"+"&nbsp;<span class='cancel' onclick='goCancel("+index+")'>취소</span>"+        
 						        	"<div style='color:black; margin-top: 3px;'>"+item.content+"</div>"+
@@ -229,8 +230,8 @@
 					}
 					else{
 							
-						html += "<td style='padding: 12px;'>"+item.employee_name+item.regDate+"&nbsp;&nbsp;<span class='childCommentBtn' onclick='goChildComment("+index+","+item.fk_board_seq+","+item.comment_seq+","+item.depthno+");'>답글쓰기&nbsp;/</span>"+"&nbsp;<span class='cancel' onclick='goCancel("+index+")'>취소</span>"+        
-						        	"<div style='color:black; margin-top: 3px;'>"+item.content+"</div>"+
+						html += "<td style='padding: 12px; padding-left: "+ Number(item.depthno * 30) +"px;'>┗&nbsp;"+item.employee_name+item.regDate+"&nbsp;&nbsp;<span class='childCommentBtn' onclick='goChildComment("+index+","+item.fk_board_seq+","+item.comment_seq+","+item.depthno+");'>답글쓰기&nbsp;/</span>"+"&nbsp;<span class='cancel' onclick='goCancel("+index+")'>취소</span>"+        
+						        	"<div style='color:black; margin-top: 3px; margin-left: 14px;'>"+item.content+"</div>"+
 						        	"<div id='commentWriteDiv"+index+"'></div>"+
 						        "</td>";	
 					}
