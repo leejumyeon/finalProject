@@ -315,6 +315,97 @@ public class ChaController {
 			
 	// ------------------------------ 공지사항 및 자주묻는 질문 - 끝  -------------------------------------------------------
 	
+	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 시작  ----------------------------------------------
+	
+	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	@ResponseBody
+	@RequestMapping(value="/indication.top", produces="text/plain;charset=UTF-8")
+	public String indication(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String employee_name = request.getParameter("employee_name");
+		String board_seq = request.getParameter("board_seq");	
+		String fk_category_num = request.getParameter("fk_category_num");
+		
+		System.out.println(fk_category_num);
+		
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String readCnt = request.getParameter("readCnt");
+		String regDate = request.getParameter("regDate");
+		String fk_employee_seq = request.getParameter("fk_employee_seq");
+		String status = request.getParameter("status");
+		String commentCnt = request.getParameter("commentCnt");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("employee_name", employee_name);
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("fk_category_num", fk_category_num);
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		paraMap.put("readCnt", readCnt);
+		paraMap.put("regDate", regDate);
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("status", status);
+		paraMap.put("commentCnt", commentCnt);
+		
+		List<HashMap<String,String>> resList = service.indication(paraMap);
+		
+		JSONObject jsonObj = new JSONObject(); 
+		
+		jsonObj.put("resList", resList);
+		
+		return jsonObj.toString();
+	}
+				
+	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	@ResponseBody
+	@RequestMapping(value="/freedom.top", produces="text/plain;charset=UTF-8")
+	public String freedom(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String employee_name = request.getParameter("employee_name");
+		String board_seq = request.getParameter("board_seq");	
+		String fk_category_num = request.getParameter("fk_category_num");
+		
+		System.out.println(fk_category_num);
+		
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String readCnt = request.getParameter("readCnt");
+		String regDate = request.getParameter("regDate");
+		String fk_employee_seq = request.getParameter("fk_employee_seq");
+		String status = request.getParameter("status");
+		String commentCnt = request.getParameter("commentCnt");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("employee_name", employee_name);
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("fk_category_num", fk_category_num);
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		paraMap.put("readCnt", readCnt);
+		paraMap.put("regDate", regDate);
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("status", status);
+		paraMap.put("commentCnt", commentCnt);
+		
+		List<HashMap<String,String>> resList = service.freedom(paraMap);
+		
+		JSONObject jsonObj = new JSONObject(); 
+		
+		jsonObj.put("resList", resList);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 끝  ----------------------------------------------
+	
 	// ------------------------------ 관리자 메인페이지(회사 일정 캘린더) - 시작 ----------------------------------------------
 	
 	// 관리자 메인페이지(회사 일정 캘린더) - 뷰페이지	
