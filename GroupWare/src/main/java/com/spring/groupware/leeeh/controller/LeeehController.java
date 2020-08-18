@@ -32,7 +32,6 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
-import com.spring.groupware.commonVO.MailVO;
 import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.service.InterLeeehService;
@@ -1603,5 +1602,21 @@ public class LeeehController {
 		return mav;
 	}
 	
-	
+	// === 문서 결재 알람을 위해 cnt 알아오기 === //
+	@ResponseBody
+	@RequestMapping(value="/document/newPaymentFind.top", produces="text/plain;charset=UTF-8")
+	public String newPaymentFind(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+				
+		int result = service.getCntOfPayment(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+	}
 }

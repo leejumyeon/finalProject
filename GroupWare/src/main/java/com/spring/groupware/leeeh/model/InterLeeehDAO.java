@@ -156,6 +156,8 @@ public interface InterLeeehDAO {
 	List<HashMap<String, String>> allClubList();	// 모든 클럽 정보 가져오기
 
 	void updateClubManager(HashMap<String, Object> paraMap);	// 클럽 회장 업데이트 하기
+
+	int getCntOfPayment(String fk_employee_seq);	// 문서 결재 알람 받아오기
 	
 	
 }
