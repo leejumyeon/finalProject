@@ -605,4 +605,22 @@ public class LeeehDAO implements InterLeeehDAO {
 		return result;
 	}
 
+	// === 오늘 처음 로그인 한 건지 알아오기 === //
+	@Override
+	public String getIsAttendance(HashMap<String, String> paraMap) {
+
+		String fk_employee_seq = sqlsession.selectOne("leeeh.getIsAttendance", paraMap);
+		
+		return fk_employee_seq;
+	}
+
+	// === 출퇴 테이블에 출근 인서트 하기 === //
+	@Override
+	public int insertAttendanceTable(String fk_employee_seq) {
+
+		int result = sqlsession.insert("leeeh.insertAttendanceTable", fk_employee_seq);
+		
+		return result;
+	}
+
 }

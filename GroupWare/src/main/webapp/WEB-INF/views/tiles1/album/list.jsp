@@ -71,9 +71,86 @@
 	#side {
 		float: left;
 	}
+	
+	.labelAlbumList {
+		color: #0099ff;
+		border: solid 0.5px #0099ff;
+		cursor: pointer;
+	}
+	
+	.labelAlbumListActive {
+		color: white;
+		background-color: #0099ff;
+		cursor: pointer;
+	}
 </style>
 <script type="text/javascript">
 	
+	$(document).ready(function() {
+		
+		$("input:radio[name=albumList]").hide();
+		
+		getAlbumList();
+		
+		$("input:radio[name=albumList]").each(function() {
+			
+			var bchecked = $(this).prop("checked");
+			
+			if(bchecked) {
+				
+				$(this).next().addClass("labelAlbumListActive");
+			}
+		});
+		
+		$("input:radio[name=albumList]").click(function() {
+			
+			$(".labelAlbumList").removeClass("labelAlbumListActive");
+			
+			$(this).next().addClass("labelAlbumListActive");
+			
+			getAlbumList();
+		});
+		
+	});
+	
+	function getAlbumList() {
+		
+		var statusValue = $("input:radio[name=albumList]:checked").val();
+		var searchType = $("#searchType").val();
+		var searchWord = $("#searchWord").val();
+		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/albumList.top",
+			type:"GET",
+			data:{"statusValue":statusValue
+				, "searchType":searchType
+				, "searchWord":searchWord},
+			dataType:"JSON",
+			success:function(json) {
+				
+				var html = "";
+
+				if(json.length != 0) {
+					
+					$.each(json, function(index, item) {
+
+						html += '<tr>'
+							 +  '<td>' + (json.length - index) + '</td>'
+							 +  '<td>' + item.category_name + '</td>'
+							 +  '<td>' + item.employee_name + "(" + item.employee_id + ")" + '</td>'
+							 +  '<td>' + item.subject + '</td>'
+							 +  '<td>' + item.regDate + '</td>'
+							 +  '</tr>';
+
+					});
+					
+				}
+			
+				$("#albumList").html(html);
+			}
+		});
+	}
+
 </script>
 	<div id="container">
 		<div id="in">
@@ -85,29 +162,32 @@
 		</div>						
 			<div id="post">	
 				<h3>앨범게시판</h3>
-				<form>
 					<select name="searchType" id="searchType">
 						<option value="all">전체</option>
 						<option value="subject">제목</option>
-						<option value="content">내용</option>
-						<option value="writer">작성자</option>					
-					</select>	
-					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
-					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
+						<option value="employee_name">작성자</option>
+					</select>
+					<input type="text" name="searchWord" id="searchWord" size="30" autocomplete="off" />
+					<button style="color: white;" id="btnS" type="button" onclick="getAlbumList()">검색</button>
 					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
-				</form>
+				<input type="radio" id="allAlbumtList" name="albumList" value="0" checked/><label for="allAlbumtList" class="labelAlbumList">전체 앨범</label>
+				<input type="radio" id="comAlbumtList" name="albumList" value="1" /><label for="comAlbumtList" class="labelAlbumList">사내 앨범</label>
+				<input type="radio" id="clubAlbumtList" name="albumList" value="2" /><label for="clubAlbumtList" class="labelAlbumList">동호회 앨범</label>
+				<input type="radio" id="volAlbumtList" name="albumList" value="3" /><label for="volAlbumtList" class="labelAlbumList">봉사활동 앨범</label>
 				<div style="margin-top: 15px;">
 					<table id="abl">
-						<tbody>
+						<thead>
 							<tr>
 								<th style="height: 40px; text-align: center;" align="center" width="80px">글번호</th>
-								<th style="text-align: center;" width="80px">작성자</th>
+								<th style="text-align: center;" width="80px">앨범종류</th>
+								<th style="text-align: center;" width="200px">작성자</th>
 								<th style="text-align: center;" width="360px">제목</th>
 								<th style="text-align: center;" width="155px">작성날짜</th>
-								<th style="text-align: center;" width="80px">조회수</th>
-							</tr> 
-								<!-- td 들어갈곳 -->				
-						</tbody>					
+							</tr>
+						 </thead>
+						 <tbody id="albumList">
+						 
+						 </tbody>							
 					</table>
 					<div id="pagebar">
 						<!-- 페이지바들어갈곳 -->

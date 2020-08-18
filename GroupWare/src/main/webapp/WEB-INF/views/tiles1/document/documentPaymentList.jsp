@@ -240,8 +240,7 @@
 			
 			getComDocumentList();
 		});
-		
-		
+
 		$("#btnRejected").click(function() {
 
 			var documentSeqArr = new Array();

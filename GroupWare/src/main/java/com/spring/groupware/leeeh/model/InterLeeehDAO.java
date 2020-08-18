@@ -158,6 +158,10 @@ public interface InterLeeehDAO {
 	void updateClubManager(HashMap<String, Object> paraMap);	// 클럽 회장 업데이트 하기
 
 	int getCntOfPayment(String fk_employee_seq);	// 문서 결재 알람 받아오기
+
+	String getIsAttendance(HashMap<String, String> paraMap);	// 오늘 처음 로그인 한 건지 알아오기
+
+	int insertAttendanceTable(String fk_employee_seq);	// 출퇴 테이블에 출근 인서트 하기
 	
 	
 }

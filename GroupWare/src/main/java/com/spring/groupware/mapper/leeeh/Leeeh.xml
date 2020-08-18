@@ -735,4 +735,17 @@
 			      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
 		) V
 	</select>
+	
+	<!-- === 오늘 처음 로그인 한 건지 알아오기 === -->
+	<select id="getIsAttendance" parameterType="HashMap" resultType="String">
+		select fk_employee_seq
+		from attendance_table
+		where fk_employee_seq = #{fk_employee_seq} and to_char(onTime, 'yyyy. mm. dd') = #{onTime}
+	</select>
+	
+	<!-- === 출퇴 테이블에 출근 인서트 하기 === -->
+	<insert id="insertAttendanceTable" parameterType="String">
+		insert into attendance_table(fk_employee_seq, onTime, offTime)
+		values(#{fk_employee_seq}, default, '')
+	</insert>
 </mapper>
