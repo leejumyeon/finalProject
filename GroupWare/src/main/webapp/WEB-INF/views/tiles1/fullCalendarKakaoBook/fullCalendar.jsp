@@ -16,9 +16,8 @@
     <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel= "stylesheet" href="./resources/calendar/css/main.css">
-    
-   
-   <style>
+      
+<style>
 
 		.snip1536 {
 			  background-color: #0099ff;
@@ -78,9 +77,76 @@
 			  width: 100%;
 			}
 			
-   </style>
+			table.tableClass{
+	
+				width:100%;
+				border: 1px solid #444444;
+				border-collapse:collapse;
+				background-color: #bbdefb;
+			}
+			
+			.tableClass th, td {
+			
+				border: 1px solid #444444;
+				padding: 5px; 
+				text-align: center;
+			
+			}
+			
+			.tableClass tbody tr:nth-child(2n) {
+	
+			  background-color: #bbdefb;
+			  
+			}
+			.tableClass tbody tr:nth-child(2n+1) {
+			
+			  background-color: #e3f2fd;
+			  
+			}
+			
+			
+			table.type09 {
+			    border-collapse: collapse; 
+			    text-align: left;
+			    line-height: 1.5;
+			
+			}
+			table.type09 thead th {
+			    padding:10px;
+			    font-weight: bold;
+			    vertical-align: top; 
+			    color: #369;
+			    border-bottom: 1px solid #036; 
+			}
+			table.type09 tbody th {
+			    width: 100px;
+			    padding: 10px;
+			    font-weight: bold;
+			    vertical-align: top;
+			    border-bottom: 1px solid #ccc;
+			    background: #f3f6f7;
+			}
+			table.type09 td {  
+			    width: 280px;  
+			    padding: 10px;
+			    font-weight: bold; 
+			    vertical-align: top;
+			    border-bottom: 1px solid #ccc;
+			}			
+		
+			
+</style>
 
-	<div class="container" style="width: 700px; display: inline-block; float: left;">
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		func_viewInfo();
+		func_infoViews();
+	});
+	
+</script>
+
+	<div class="container" style="width: 700px; display: inline-block; float: left;"> 
 				
 	        <!-- 일자 클릭시 메뉴오픈 -->
 	        <div id="contextMenu" class="dropdown clearfix">
@@ -219,21 +285,42 @@
             </div>
         </div> 
         <!-- /.filter panel -->
-                                   
+                                  
     </div>
     
     <div style="float: left; border: solid 0px green; width: 300px; height: 300px; padding-top: 22px;" >
-    	<div style="border: solid 1px blue; width: 500px; height: 267px;">
-	        <h3>개인정보</h3>
-	        	사번 : ${sessionScope.loginEmployee.employee_id}<br/>
-	        	직급 : ${sessionScope.loginEmployee.position_name}<br/>
-	        	부서명 : ${sessionScope.loginEmployee.department_name}<br/>
-	        	이름	: ${sessionScope.loginEmployee.employee_name}<br/>
-	        	입사날짜 : ${sessionScope.loginEmployee.hire_date}
+    	<div style="border: solid 0px blue; width: 500px; height: 267px;">
+    	
+	        <br/><span><h3 style="font-weight: bolder;">개인정보</h3></span><br/>
+	        
+     		<table class="type09">
+			    
+			     <tr>
+			        <th scope="row">사번</th>
+			        <td>${sessionScope.loginEmployee.employee_id}</td>
+			    </tr>
+			    <tr>
+			        <th scope="row">직급</th>
+			        <td>${sessionScope.loginEmployee.position_name}</td>
+			    </tr>
+			    <tr>
+			        <th scope="row">부서명</th>
+			        <td>${sessionScope.loginEmployee.department_name}</td>
+			    </tr>
+			    <tr>
+			        <th scope="row">이름</th>
+			        <td>${sessionScope.loginEmployee.employee_name}</td>
+			    </tr>
+			    <tr>
+			        <th scope="row">입사날짜</th>
+			        <td>${sessionScope.loginEmployee.hire_date}</td>
+			    </tr>
+			    
+ 			 </table>      	
         </div>
         <br/>
         <div style="width: 730px; height: 267px;">
-        	<h3 style="display: inline-block; width: 120px;">도서 추천</h3>
+        	<h3 style="display: inline-block; width: 120px; font-weight: bolder;">도서 추천</h3>
         	<input id="bookName" type="text">
 			<button id="search" class="snip1536">검색</button>
 			
@@ -243,14 +330,15 @@
 	<div style="clear: both;"></div>
 	<br/>
     <div style="padding-left: 15px; float: left;">   
-	    <div style="border: solid 1px red; width: 670px; height: 148px; ">
-	        <h3>동호회</h3>
+	    <div style="border: solid 0px red; width: 520px; height: 148px; ">
+	        <h3 style="font-weight: bolder;">동호회</h3><br/>
 	        <div id="view"></div>		        	        
 	    </div>    
     </div>
     <div style="float: left;">   
-	    <div style="border: solid 1px red; width: 300px; height: 148px; margin-left: 15px;">
-	        <h3>예약 현황</h3>	
+	    <div style="border: solid 0px red; width: 562px; height: 148px; margin-left: 15px;">
+	        <h3 style="font-weight: bolder;">예약 현황</h3><br/>
+	        <div id="views"></div>	
 	    </div>    
     </div>
     <!-- /.container -->
@@ -369,39 +457,47 @@
 		return e;
 	}
 	
+	// 동호회	
 	function func_viewInfo(){
 		
-		$.ajax({
-			
-			uri:"/groupware/club.top",
+		$.ajax({			
+			url:"/groupware/club.top",
 			dataType:"JSON",
 			success:function(json){
-				
-				var html = "<table>";
-					htmp += "<tr>";
-						htmp += "<th>동호회번호</th>";
-						htmp += "<th>동호회원번호</th>";
-						htmp += "<th>회원명</th>";
-						htmp += "<th>동호회명</th>";
-						htmp += "<th>동호회소개</th>";
-						htmp += "<th>회원등급</th>";
-						htmp += "<th>가입날짜</th>";			
-					htmp += "</tr>";
+				console.log(json);
+				var html = "<table class='tableClass'>";
+					html += "<tr>";
+						/* html += "<th>동호회번호</th>";
+						html += "<th>동호회원번호</th>"; */
+						html += "<th>회원명</th>";
+						html += "<th>동호회명</th>";
+						html += "<th>동호회소개</th>";
+						html += "<th>가입날짜</th>";					
+						html += "<th>회원명단</th>";
+						
+					html += "</tr>";
 				$.each(json, function(index,item){
 					
-					htmp += "<tr>";			
-						htmp += "<td>+"item.club_seq"+</td>";
-						htmp += "<td>+"item.member_seq"+</td>";
-						htmp += "<td>+"item.employee_name"+</td>";
-						htmp += "<td>+"item.club_name"+</td>";
-						htmp += "<td>+"item.club_info"+</td>";
-						htmp += "<td>+"item.status"+</td>";
-						htmp += "<td>+"item.regDate"+</td>";
-					htmp += "</tr>";
+					html += "<tr>";			
+						/* html += "<td>"+item.club_seq+"</td>";
+						html += "<td>"+item.member_seq+"</td>"; */
+						html += "<td>"+item.employee_name+"</td>";
+						html += "<td>"+item.club_name+"</td>";
+						html += "<td>"+item.club_info+"</td>";
+						html += "<td>"+item.regDate+"</td>";
+						
+					if(item.status == '1') {
+						
+						html += "<td><button onclick='viewClubMember(" + item.club_seq + ")'>회원명단보기</button></td>";
+					
+					}
+					
+					html += "</tr>";
 					
 				});	
 				
 				html += "</table>";
+				
 				$("#view").html(html);
 				
 			},
@@ -413,6 +509,64 @@
 		});
 		
 	}//end of function func_viewInfo(){}
+	
+	function viewClubMember(club_seq){
+		
+		window.open("/groupware/popup.top?club_seq="+club_seq+"","popup","width=600, height=400, top=300,left=300");
+		
+	}
+	
+	// ------------------------------------ 예약 ------------------------------------------
+	
+	function func_infoViews(){
+		
+		$.ajax({
+			
+			url:"/groupware/reservation.top",
+			dataType:"JSON",
+			success:function(json){
+				
+				var html = "<table class='tableClass'>";
+				html += "<tr>";					 
+					html += "<th>예약방번호</th>";
+					html += "<th>시작시간</th>";
+					html += "<th>종료시간</th>";				
+					html += "<th>승인상태</th>";
+				html += "</tr>";
+				
+			$.each(json.reList, function(index,item){
+				
+				if(item.head_seq == '${sessionScope.loginEmployee.employee_seq}') {
+				
+					html += "<tr>";						 
+						html += "<td>"+item.roomNumber+"</td>";
+						html += "<td>"+item.startDate+"</td>";
+						html += "<td>"+item.endDate+"</td>";
+						if(item.status == '0') {
+							html += "<td>미승인</td>";	
+						}
+						else {
+							html += "<td>승인</td>";
+						}								
+					html += "</tr>";
+				}
+								
+			});	
+			
+			html += "</table>";
+			
+			$("#views").html(html);
+				
+			},
+			error : function(request, status, error){
+				
+				alert("code: "+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+			
+			
+		});
+		
+	}// end of function func_infoviews{
 	
 	</script>  
 
