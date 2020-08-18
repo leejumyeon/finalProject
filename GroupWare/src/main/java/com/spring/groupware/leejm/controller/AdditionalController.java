@@ -41,6 +41,7 @@ public class AdditionalController {
 		return "";
 	}
 	
+	// 파일 다운로드 받기
 	@RequestMapping(value="/board/download.top",method = {RequestMethod.POST})
 	public void attachFileDownload(HttpServletRequest request, HttpServletResponse response) {
 		String fileName = request.getParameter("fileName");
