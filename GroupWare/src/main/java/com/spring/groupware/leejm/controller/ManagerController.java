@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
@@ -88,6 +89,15 @@ public class ManagerController {
 	// 관리자-게시글 관리(공지사항 상세보기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeDetail.top")
 	public ModelAndView managerNoticeDetail(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = service.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = service.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
 		mav.setViewName("admin/board/noticeDetail.tiles3");
 		return mav;
 	}
@@ -95,6 +105,15 @@ public class ManagerController {
 	// 관리자-게시글 관리(공지사항 수정하기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeUpdate.top")
 	public ModelAndView managerNoticeUpdate(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = service.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = service.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
 		mav.setViewName("admin/board/noticeUpdate.tiles3");
 		return mav;
 	}

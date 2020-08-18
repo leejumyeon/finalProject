@@ -52,8 +52,18 @@
 		ON C.employee_seq = B.fk_employee_seq
 	</select>
 	
+	<!-- 관리자 게시글 관리(상세 페이지) -->
+	<select id="boardDetail" parameterType="String" resultType="com.spring.groupware.commonVO.BoardVO">
+		select board_seq, fk_category_num, subject, content, readCnt, to_char(regDate, 'yyyy-mm-dd') as regDate, category_name
+		from board_table join board_category on fk_category_num = category_seq
+		where board_seq = #{board_seq}
+	</select>
 	
-	
+	<!-- 게시글 첨부파일 항목 조회 -->
+	<select id="boardFileList" parameterType="String" resultType="com.spring.groupware.commonVO.AttachFileVO">
+		select file_seq, fk_board_seq, fileName, orgFileName, fileSize 
+		from attachFile_table where fk_board_seq = #{board_seq}
+	</select>
 	
 	
 </mapper>
