@@ -190,10 +190,6 @@
 		if(len == checkLen && len != 0){
 			$("#allCheck").prop("checked",true);
 		}
-		
-		if("${msg}" != ""){
-			alert("${msg}");
-		}
 	        
 	}); // end of $(document).ready(function())-----------------------------------------------------
 	

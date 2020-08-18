@@ -35,6 +35,22 @@
 		top: 20px;
 		display: none;
 	}
+	
+	.paymentCnt{
+		border: solid 1px black;
+		background-color: white;
+		font-size: 10pt;
+		font-weight: bold;
+		border-radius: 50%;
+		width:20px;
+		height: 20px;
+		text-align: center;
+		z-index: 1;
+		left: 40px;
+		top: 20px;
+		display: none;
+	}
+	
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -64,11 +80,17 @@ function newMailFind(){
 
 function newPaymentFind(){
 	$.ajax({
-		url:"<%=request.getContextPath()%>/",
-		data:{},
+		url:"<%=request.getContextPath()%>/document/newPaymentFind.top",
+		data:{"loginSeq":'${sessionScope.loginEmployee.employee_seq}'},
 		dataType:"JSON",
 		success:function(json){
 			
+			if(json.result > "0") {
+				
+				var html = "<span style='text-align:center;'>"+json.result+"</span>";
+				$(".paymentCnt").show();
+				$(".paymentCnt").html(html);
+			}
 		},
 		error:function(e){
 			
@@ -89,6 +111,10 @@ function goMailSend(){
 function goReservation(){
 	location.href="<%=request.getContextPath()%>/reservation/reserveRoom.top";
 }
+
+function goPayment() {
+	location.href="<%=request.getContextPath()%>/reservation/doucmentPayment.top";
+}
 </script>
 <div style="margin: 0 auto;" align="center" class="sideNavi">
 	
@@ -107,9 +133,9 @@ function goReservation(){
 				<div style="position: absolute;"></div>
 			</div>
 	
-			<div style="position: relative;" onclick="goReservation()">
+			<div style="position: relative;" onclick="goPayment()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/결재.png" />
-				<div style="position: absolute;"></div>
+				<div style="position: absolute;" class="paymentCnt"></div>
 			</div>
 		
 </div>

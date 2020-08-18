@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%--  --%><%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core" %>
@@ -201,15 +201,33 @@
 		$(".snip1538").click(function() {
 			
 			var detailSection = $(this).parents(".detailSection");
+			var type = "club";
+			var subject = detailSection.find(".subject").val();
+			var reason = detailSection.find(".reason").val();
+			var receive = detailSection.find(".employee_seq").val();
 			
-			var subject = detailSection.find(".subject");
 			
-			var frmName = "requestCLub" + btnId;
-			
-			var frm = document.frmName;
-			frm.method = "POST";
-			frm.action = "<%= request.getContextPath()%>/requestClub.top";
-			frm.submit();
+			$.ajax({
+				url:"<%=request.getContextPath()%>/mail/requestMail.top",
+				data:{"type":type
+					  ,"clubName":subject
+					  ,"reason":reason
+					  ,"receive":receive},
+				type:"get",
+				dataType:"JSON",
+				success:function(json){
+					console.log(json.result);
+					if(json.result=="true"){
+						alert("동호회 가입 신청 메일을 동호회 회장에게 보냈습니다.");
+					}
+					else{
+						alert("동호회 가입 신청 메일을 동호회 회장에게 보내는데 실패했습니다.");
+					}
+				},
+				error:function(e){
+					alert("동호회 가입 신청 메일을 동호회 회장에게 보내는 도중 오류가 발생했습니다.");
+				}
+			});
 			
 		});
 	});
@@ -255,7 +273,7 @@
 										<span style="font-weight: bold; font-size: 11pt;">신청자명</span>
 									</td>
 									<td class="BCel" colspan="3">
-										<input type="text" class="subject" style="border: none; width: 350px; height: 30px;" value="${sessionScope.loginEmployee.employee_name}" readonly/>
+										<input type="text" style="border: none; width: 350px; height: 30px;" value="${sessionScope.loginEmployee.employee_name}" readonly/>
 									</td>
 								</tr>
 								<tr>
@@ -269,7 +287,7 @@
 							</tbody>
 						</table>
 						<input type="hidden" value="${clubMap.club_seq}" class="club_seq" />
-						
+						<input type="hidden" value="${clubMap.employee_seq}" class="employee_seq" />
 						<button type="button" class="snip1538" id="btnRequestClub${clubMap.club_seq}">신청완료하기</button>
 					</div>
 				</c:forEach>

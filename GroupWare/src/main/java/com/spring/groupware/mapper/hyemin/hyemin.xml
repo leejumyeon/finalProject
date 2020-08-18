@@ -42,8 +42,8 @@
 		values(reservation_table_seq.nextval, #{fk_employee_seq}, #{fk_roomNumber}, to_date(#{startDate}, 'yyyy. mm. dd hh24:mi'), to_date(#{endDate}, 'yyyy. mm. dd hh24:mi'), #{head_seq}, #{memberCount}, #{reason}, default)
 	</insert>
 	
-	<!-- === 예약 신청 현황 조회(관리자) === -->
-	<select id="waitingReservation" resultType="com.spring.groupware.commonVO.ReservationVO">
+	<!-- === 예약 신청 현황 조회(관리자)(Ajax) === -->
+	<select id="waitingReservation" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
 		select R.reservation_seq
 		     , E.employee_name
 		     , D.department_name
@@ -51,12 +51,10 @@
 		     , V.roomName
 		     , to_char(R.startDate, 'yyyy.mm.dd hh24:mi') as startDate
 		     , to_char(R.endDate, 'yyyy.mm.dd hh24:mi') as endDate
+		     , HE.employee_name as head_name
+		     , HD.department_name as head_department
+		     , HP.position_name as head_position
 		     , R.memberCount
-		     , to_char(R.startDate, 'yyyy.mm.dd')
-		     , case R.status when 0 then '승인대기중'
-		                     when 1 then '승인완료'
-		                     when 2 then '반려'
-		       end AS status
 		     , reason  
 		     , to_char(R.regDate , 'yyyy.mm.dd hh24:mi:ss') as regDate
 		from reservation_table R join employees_table E
@@ -65,10 +63,77 @@
 		on E.fk_department = D.department_seq
 		join position_table P
 		on E.fk_position = P.position_seq
+		join employees_table HE
+		on R.head_seq = HE.employee_seq
+		join department_table HD
+		on HE.fk_department = HD.department_seq
+		join position_table HP
+		on HE.fk_position = HP.position_seq
 		join reservationRoom_table V
 		on R.fk_roomNumber = V.roomNumber
 		where R.status = 0
+		<if test="wPlaceType == ''"></if>
+		<if test="wPlaceType == 'all'"></if>
+		<if test="wPlaceType == 'small'">
+			and R.fk_roomNumber in (5, 6, 7)
+		</if>
+		<if test="wPlaceType == 'medium'">
+			and R.fk_roomNumber in (2, 3, 4)
+		</if>
+		<if test="wPlaceType == 'big'">
+			and R.fk_roomNumber = 1
+		</if>
 		order by R.reservation_seq desc
 	</select>
+	
+	<!-- === 예약 결과 현황 조회(관리자)(Ajax) === -->
+	<select id="resultReservation" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
+		select R.reservation_seq
+		     , R.fk_employee_seq || '-' || E.employee_name as employee_name
+		     , V.roomName
+		     , to_char(R.startDate, 'yyyy.mm.dd hh24:mi') as startDate
+		     , to_char(R.endDate, 'yyyy.mm.dd hh24:mi') as endDate
+		     , R.head_seq || '-' || HE.employee_name as head_name
+		     , R.memberCount
+		     , R.status
+		     , reason
+		     , to_char(R.regDate , 'yyyy.mm.dd hh24:mi:ss') as regDate
+		from reservation_table R join employees_table E
+		on R.fk_employee_seq = E.employee_seq
+		join employees_table HE
+		on R.head_seq = HE.employee_seq
+		join reservationRoom_table V
+		on R.fk_roomNumber = V.roomNumber
+		where 1=1
+		<if test="resultType == ''">
+			and R.status in (1, 2)
+		</if>
+		<if test="resultType == 'all'">
+			and R.status in (1, 2)
+		</if>
+		<if test="resultType == 'approval'">
+			and R.status = 1
+		</if>
+		<if test="resultType == 'disapproval'">
+			and R.status = 2
+		</if>
+		<if test="rPlaceType == ''"></if>
+		<if test="rPlaceType == 'all'"></if>
+		<if test="rPlaceType == 'small'">
+			and R.fk_roomNumber in (5, 6, 7)
+		</if>
+		<if test="rPlaceType == 'medium'">
+			and R.fk_roomNumber in (2, 3, 4)
+		</if>
+		<if test="rPlaceType == 'big'">
+			and R.fk_roomNumber = 1
+		</if>
+		order by R.reservation_seq desc
+	</select>
+	
+	<update id="approveRoom" parameterType="String">
+		 update reservation_table set status = 1
+		 where reservation_seq = #{reservation_seq}
+	</update>
 	
 </mapper>
