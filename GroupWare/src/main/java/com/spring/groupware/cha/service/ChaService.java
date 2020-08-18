@@ -18,9 +18,9 @@ public class ChaService implements ChaInterService {
 	
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 캘린더
 	@Override
-	public List<PersonalCalVO> fullCalendar() {
+	public List<PersonalCalVO> fullCalendar(String employee) {
 		
-		List<PersonalCalVO> perCalvo = dao.fullCalendar();
+		List<PersonalCalVO> perCalvo = dao.fullCalendar(employee);
 		
 		return perCalvo;
 	}
@@ -50,6 +50,33 @@ public class ChaService implements ChaInterService {
 		int n = dao.deleteFullCalendar(paraMap);
 		
 		return n;
+	}
+	
+	// 마이페이지(동호회) - 뿌리기
+	@Override
+	public List<HashMap<String,String>> club(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = dao.club(paraMap);
+		
+		return resultList;
+	}
+	
+	// 마이페이지(동호회) - 팝업창에 해당 동호회 명단 뿌리기
+	@Override
+	public List<HashMap<String, String>> popup(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String, String>> resultList = dao.popup(paraMap);
+		
+		return resultList;
+	}
+	
+	// 마이페이지(예약) - 뿌리기
+	@Override
+	public List<HashMap<String, String>> reservation(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String, String>> resultList = dao.reservation(paraMap);
+		
+		return resultList;
 	}
 
 	// 관리자 메인페이지(회사 일정 캘린더) - 회사 일정 캘린더
@@ -88,14 +115,7 @@ public class ChaService implements ChaInterService {
 		return n;
 	}
 	
-	// 마이페이지(동호회) - 뿌리기
-	@Override
-	public List<HashMap<String,String>> club(HashMap<String, String> paraMap) {
-		
-		List<HashMap<String,String>> resultList = dao.club(paraMap);
-		
-		return resultList;
-	}
+	
 
 	
 	

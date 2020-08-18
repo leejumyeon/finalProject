@@ -5,10 +5,11 @@
 <mapper namespace="cha">
 	
 	<!-- 마이페이지(개인 일정 캘린더 & 책검색) - 일정 -->
-	<select id="fullCalendar" resultType="com.spring.groupware.commonVO.PersonalCalVO">
+	<select id="fullCalendar" resultType="com.spring.groupware.commonVO.PersonalCalVO" parameterType="String">
 		select calendar_seq, title, content, to_char(startDate, 'yyyy-mm-dd') || 'T' || to_char(startDate, 'hh24:mi') AS startDate
 			 , to_char(endDate, 'yyyy-mm-dd') || 'T' || to_char(endDate, 'hh24:mi') AS endDate , backgroundColor
 		from personalCalendar_table
+		where fk_employee_seq = #{employee}
 	</select>
 	
 	<!-- 마이페이지(개인 일정 캘린더 & 책검색) - 일정 추가 -->	
@@ -54,12 +55,66 @@
 		     , B.club_name 
 		     , B.club_info 
 		     , A.status 
-		     , A.regDate 
+		     , to_char(A.regDate, 'yyyy-mm-dd') AS regDate
 		from clubMember_table A join club_table B
 		ON A.fk_club = B.club_seq
 		join employees_table C
 		ON C.employee_seq = A.fk_employee_seq
 		where C.employee_seq = #{employee_id}
+	</select>
+	
+	<!-- 마이페이지(동호회) - 팝업창에 해당 동호회 명단 뿌리기 -->
+	<select id="popup" parameterType="HashMap" resultMap="clubMap">
+		select B.club_seq
+		     , A.member_seq
+		     , C.employee_name
+		     , B.club_name
+		     , B.club_info
+		     , A.status
+		     , to_char(A.regDate, 'yyyy-mm-dd') AS regDate  
+		from clubMember_table A join club_table B
+		ON A.fk_club = B.club_seq
+		join employees_table C
+		ON C.employee_seq = A.fk_employee_seq
+		where B.club_seq = #{club_seq}
+	</select>
+	
+	<resultMap type="HashMap" id="reservationMap">
+		<result property="reservation_seq" column="reservation_seq" javaType="String"/>
+		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="roomNumber" column="roomNumber" javaType="String"/>
+		<result property="startDate" column="startDate" javaType="String"/>
+		<result property="endDate" column="endDate" javaType="String"/>
+		<result property="head_seq" column="head_seq" javaType="String"/>
+		<result property="memberCount" column="memberCount" javaType="String"/>
+		<result property="reason" column="reason" javaType="String"/>
+		<result property="status" column="status" javaType="String"/>		
+	</resultMap>
+	
+	<!-- 마이페이지(예약) - 뿌리기 -->
+	<select id="reservation" parameterType="HashMap" resultMap="reservationMap">
+		select V.RNO, V.reservation_seq, V.employee_seq, V.roomNumber, V.startDate, V.endDate, V.head_seq
+		     , V.memberCount, V.reason, V.status, V.regDate
+		from
+		(
+		select rownum AS RNO
+		     , A.reservation_seq
+		     , B.employee_seq
+		     , C.roomNumber
+		     , A.startDate
+		     , A.endDate
+		     , A.head_seq
+		     , A.memberCount
+		     , A.reason
+		     , A.status
+		     , A.regDate
+		from reservation_table A join employees_table B
+		ON A.head_seq = B.employee_seq
+		join reservationRoom_table C
+		ON A.fk_roomNumber = C.roomNumber
+		) V
+		where V.RNO between '1' and '3'
+		order by V.regDate desc
 	</select>
 		
 			

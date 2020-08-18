@@ -9,7 +9,7 @@ import com.spring.groupware.commonVO.PersonalCalVO;
 public interface ChaInterDAO {
 	
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 캘린더
-	List<PersonalCalVO> fullCalendar();
+	List<PersonalCalVO> fullCalendar(String employee);
 	
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정 추가
 	int insertFullCalendar(HashMap<String, String> paraMap);
@@ -22,6 +22,12 @@ public interface ChaInterDAO {
 	
 	// 마이페이지(동호회) - 뿌리기
 	List<HashMap<String,String>> club(HashMap<String, String> paraMap);
+	
+	// 마이페이지(동호회) - 팝업창에 해당 동호회 명단 뿌리기
+	List<HashMap<String, String>> popup(HashMap<String, String> paraMap);
+	
+	// 마이페이지(예약) - 뿌리기
+	List<HashMap<String, String>> reservation(HashMap<String, String> paraMap);
 
 	// 회사 일정 캘린더
 	List<CompanyCalVO> adminFullCalendar();
@@ -34,6 +40,9 @@ public interface ChaInterDAO {
 	
 	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
 	int deleteAdminCalendar(HashMap<String, String> paraMap);
+
+	
+	
 
 	
 

@@ -47,7 +47,7 @@ public class ChaController {
 		HttpSession session = request.getSession();
 		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
 		
-		List<PersonalCalVO> perCalvo =  service.fullCalendar();
+		List<PersonalCalVO> perCalvo =  service.fullCalendar(loginEmployee.getEmployee_seq());
 						
 		JSONArray jsonArr = new JSONArray();
 		
@@ -170,6 +170,8 @@ public class ChaController {
 		
 	// ------------------------------마이페이지(개인 일정 캘린더 & 책검색) - 끝 ----------------------------------------------
 	
+	// ------------------------------마이페이지(동호회,예약) - 시작 ----------------------------------------------
+	
 	// 마이페이지(동호회) - 뿌리기
 	@ResponseBody
 	@RequestMapping(value="/club.top", produces="text/plain;charset=UTF-8")
@@ -178,6 +180,9 @@ public class ChaController {
 		HttpSession session = request.getSession();
 		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();	
 		String employee_name = request.getParameter("employee_name");
+		
+		//System.out.println("사원번호:"+employee_id+"/사원명:"+employee_name);
+		
 		/*String club_seq = request.getParameter("club_seq");
 		String member_seq = request.getParameter("member_seq");
 		String club_name = request.getParameter("club_name");
@@ -185,7 +190,7 @@ public class ChaController {
 		String status = request.getParameter("status");
 		String regDate = request.getParameter("regDate");*/
 		
-		System.out.println(employee_name);
+		//System.out.println(employee_name);
 		
 		HashMap<String, String> paraMap = new HashMap<>();
 		
@@ -206,7 +211,97 @@ public class ChaController {
 		
 	}
 	
+	// 마이페이지(동호회) - 팝업창 뷰단
+	@RequestMapping(value="/popup.top")
+	public String popup(HttpServletRequest request) {
+		
+		String club_seq = request.getParameter("club_seq");
+		
+		request.setAttribute("club_seq", club_seq);
+		return "club/popup.notiles";
+	}
 	
+	// 마이페이지(동호회) - 팝업창에 해당 동호회 명단 뿌리기
+	@ResponseBody
+	@RequestMapping(value="/popupList.top", produces="text/plain;charset=UTF-8")
+	public String popupList(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String employee_name = request.getParameter("employee_name");
+		String club_seq = request.getParameter("club_seq");
+		
+		//System.out.println(club_seq);
+		
+		String member_seq = request.getParameter("member_seq");
+		String club_name = request.getParameter("club_name");
+		String club_info = request.getParameter("club_info");
+		String status = request.getParameter("status");
+		String regDate = request.getParameter("regDate");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("employee_name", employee_name);
+		paraMap.put("club_seq", club_seq);
+		paraMap.put("member_seq", member_seq);
+		paraMap.put("club_name", club_name);
+		paraMap.put("club_info", club_info);
+		paraMap.put("status", status);
+		paraMap.put("regDate", regDate);
+		
+		List<HashMap<String,String>> resultList = service.popup(paraMap);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("resultList", resultList);
+		
+		return jsonObj.toString();
+		
+	}
+	
+	// 마이페이지(예약) - 뿌리기
+	@ResponseBody
+	@RequestMapping(value="/reservation.top", produces="text/plain;charset=UTF-8")
+	public String reservation(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
+		String employee_name = request.getParameter("employee_name");
+		String reservation_seq = request.getParameter("reservation_seq");
+		String fk_employee_seq = request.getParameter("fk_employee_seq");
+		String fk_roomNumber = request.getParameter("fk_roomNumber");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String head_seq = request.getParameter("head_seq");
+		String memberCount = request.getParameter("memberCount");
+		String reason = request.getParameter("reason");
+		String status = request.getParameter("status");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("employee_id", employee_id);
+		paraMap.put("employee_name", employee_name);
+		paraMap.put("reservation_seq", reservation_seq);
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("fk_roomNumber", fk_roomNumber);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("head_seq", head_seq);
+		paraMap.put("memberCount", memberCount);
+		paraMap.put("reason", reason);
+		paraMap.put("status", status);
+		
+		List<HashMap<String,String>> reList = service.reservation(paraMap);
+		
+		JSONObject jsonObj = new JSONObject(); 
+		
+		jsonObj.put("reList", reList);
+		
+		return jsonObj.toString();
+	}
+	
+	// ------------------------------마이페이지(동호회,예약) - 끝 ----------------------------------------------
 	
 	// ------------------------------ 공지사항 및 자주묻는 질문 - 시작  ----------------------------------------------
 	
