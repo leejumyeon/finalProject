@@ -232,7 +232,23 @@ public class ChoijhService implements InterChoijhService {
 		return commentList;
 	}
 
+	
+	// 댓글 내용(페이징처리 o) 보여주기
+	@Override
+	public List<CommentVO> getCommentListPaging(HashMap<String, String> paraMap) {
+		List<CommentVO> commentList = dao.getCommentListPaging(paraMap);
+		return commentList;
+	}
 
+	
+	// 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기 
+	@Override
+	public int getCommentTotalPage(HashMap<String, String> paraMap) {
+		int totalCount = dao.getCommentTotalPage(paraMap);
+		return totalCount;
+	}
+	
+	
 	// 총 게시물 건수(totalCount)
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
@@ -265,6 +281,9 @@ public class ChoijhService implements InterChoijhService {
 		return result;
 	}
 
+	
+
+	
 	
 
 	

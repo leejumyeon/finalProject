@@ -134,6 +134,35 @@
 	</select>
 	
 	
+	<!-- 댓글 내용(페이징처리 O) 보여주기 -->
+	<select id="getCommentListPaging" parameterType="HashMap" resultType="com.spring.groupware.commonVO.CommentVO">
+		select T.comment_seq, T.fk_board_seq, T.fk_employee_seq, T.readCnt, T.content, T.status, T.regDate, T.parent_seq, T.depthno, T.employee_name
+		from
+		(
+		    select rownum AS rno, V.comment_seq, V.fk_board_seq, V.fk_employee_seq, V.readCnt, V.content, V.status, V.regDate, V.parent_seq, V.depthno, V.employee_name
+		    from
+		    (
+		        select C.comment_seq, C.fk_board_seq, C.fk_employee_seq, C.readCnt, C.content, C.status, C.regDate, C.parent_seq, C.depthno, E.employee_name
+		        from comment_table C join employees_table E
+		        on   C.fk_employee_seq = E.employee_seq
+		        where fk_board_seq = #{fk_board_seq}
+		        start with parent_seq = 0
+		        connect by prior comment_seq = parent_seq
+		        order siblings by fk_board_seq desc, comment_seq asc
+		    ) V
+		) T
+		where rno between #{startRno} and #{endRno}
+	</select>
+	 
+	 
+	<!-- 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기 -->
+	<select id="getCommentTotalPage" parameterType="HashMap" resultType="int">
+		select count(*)
+		from comment_table
+		where fk_board_seq = #{fk_board_seq}
+	</select>
+	 
+	
 	<!-- 자유게시판 총 게시물 건수(totalCount) -->
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)

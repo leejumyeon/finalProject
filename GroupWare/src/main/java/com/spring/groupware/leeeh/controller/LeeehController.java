@@ -1,5 +1,6 @@
 package com.spring.groupware.leeeh.controller;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -93,8 +95,7 @@ public class LeeehController {
 			}
 			
 		}
-		
-		
+
 		List<EmployeesVO> fireEemployeeList = service.employeeList();
 		
 		if(fireEemployeeList != null) {
@@ -289,6 +290,36 @@ public class LeeehController {
 		return mav;
 	}
 
+	@ResponseBody
+	@RequestMapping(value="/getIsAttendance.top", produces = "text/plain;charset=UTF-8")
+	public String getIsAttendance(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		Calendar currentDate = Calendar.getInstance();
+		int year = currentDate.get(Calendar.YEAR);
+		int month = (currentDate.get(Calendar.MONTH) + 1);
+		String strMonth = (month < 10) ? "0" + month : String.valueOf(month);
+
+		int day = currentDate.get(Calendar.DATE);
+		String strDay = day < 10 ? "0" + day : String.valueOf(day);
+
+		String onTime = String.valueOf(year) + ". " + strMonth + ". " + strDay;
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("onTime", onTime);
+		
+		String employee_seq = service.getIsAttendance(paraMap);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("employee_seq", employee_seq);
+		
+		return jsObj.toString();
+	}
 	// === 문서 결재 페이지로 이동하기 === //
 	@RequestMapping(value = "/documentPayment.top")
 	public ModelAndView goDocumentPayment(ModelAndView mav, HttpServletRequest request) {
@@ -1619,4 +1650,32 @@ public class LeeehController {
 		
 		return jsObj.toString();
 	}
+	
+	// === 출근하기 팝업 띄우기 === //
+	@RequestMapping(value="/getOnTime.top")
+	public ModelAndView getOnTime(ModelAndView mav) {
+		
+		mav.setViewName("getOnTime.notiles");
+		return mav;
+	}
+	
+	// === 출근 확인 버튼을 누르면 출근 테이블에 집어넣기 === //
+	@ResponseBody
+	@RequestMapping(value="/insertAttendanceTable.top", produces="text/plain;charset=UTF-8")
+	public String insertAttendanceTable(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		int result = service.insertAttendanceTable(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+		
+	}
+	
 }

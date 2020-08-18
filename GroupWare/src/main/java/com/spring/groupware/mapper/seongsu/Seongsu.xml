@@ -20,4 +20,75 @@
 		values(album_table_seq.nextval, #{album_category}, #{fk_employee_seq}, #{subject}, #{content}, default)
 	</insert>
 	
+	<!-- === 앨범 리스트 보기 === -->
+	<select id="getAlbumList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.AlbumVO">
+		select AC.category_name, A.subject, E.employee_name, E.employee_id, to_char(A.regDAte, 'yyyy. mm. dd') AS regDate
+		from album_table A join album_category AC
+		on A.album_category = ac.category_num
+		join employees_table E
+		on A.fk_employee_seq = E.employee_seq
+		<choose>
+			<when test="statusValue == 0">
+				<choose>
+					<when test="searchType == 'all'">
+						<choose>
+							<when test="searchWord == ''">
+								where 2 = 2
+							</when>
+							<otherwise>
+								where A.subject like '%' || #{searchWord} || '%' or E.employee_name like '%' || #{searchWord} || '%'
+									  or E.employee_id like '%' || #{searchWord} || '%'
+							</otherwise>
+						</choose>
+					</when>
+					<otherwise>
+						<choose>
+							<when test="searchWord == ''">
+								where 2 = 2
+							</when>
+							<otherwise>
+								<if test="searchType == 'subject'">
+									where A.subject like '%' || #{searchWord} || '%'
+								</if>
+								<if test="searchType == 'employee_name'">
+									where E.employee_name like '%' || #{searchWord} || '%' or E.employee_id like '%' || #{searchWord} || '%'
+								</if>
+							</otherwise>
+						</choose>
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				where A.album_category = #{statusValue}
+				<choose>
+					<when test="searchType == 'all'">
+						<choose>
+							<when test="searchWord == ''">
+								and 2 = 2
+							</when>
+							<otherwise>
+								and A.subject like '%' || #{searchWord} || '%' or E.employee_name like '%' || #{searchWord} || '%'
+									  or E.employee_id like '%' || #{searchWord} || '%'
+							</otherwise>
+						</choose>
+					</when>
+					<otherwise>
+						<choose>
+							<when test="searchWord == ''">
+								and 2 = 2
+							</when>
+							<otherwise>
+								<if test="searchType == 'subject'">
+									and A.subject like '%' || #{searchWord} || '%'
+								</if>
+								<if test="searchType == 'employee_name'">
+									and E.employee_name like '%' || #{searchWord} || '%' or E.employee_id like '%' || #{searchWord} || '%'
+								</if>
+							</otherwise>
+						</choose>
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+	</select>
 </mapper>

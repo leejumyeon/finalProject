@@ -383,6 +383,26 @@
   			
   		}// end of function func_infoView(){	 
   		
+  		firstAttendance();
+  		
+  		function firstAttendance() {
+  			
+  			$.ajax({
+  				url:"<%= request.getContextPath()%>/getIsAttendance.top",
+  				type:"GET",
+  				dataType:"JSON",
+  				success: function(json) {
+  					
+  					if(json.employee_seq == null) {
+  						
+  						window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
+  					}
+  				},
+  				error: function(e) {
+  					
+  				}
+  			});
+  		}
 	</script>
 
 

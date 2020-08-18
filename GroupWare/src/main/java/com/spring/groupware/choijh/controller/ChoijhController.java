@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.FileManager;
+import com.spring.common.MyUtil;
 import com.spring.groupware.choijh.service.InterChoijhService;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
@@ -476,13 +477,14 @@ public class ChoijhController {
 		
 		mav.addObject("pageBar", pageBar);
 		
-		
+		String gobackURL = MyUtil.getCurrentURL(request);
 		
 	//	boardList = service.boardlistView(); // 페이징 처리 안한 게시판 글 보여주기
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes"); // 새로고침시 조회 수 증가 방지
 		
+		mav.addObject("gobackURL", gobackURL);
 		mav.addObject("boardList", boardList);
 		
 		mav.setViewName("freeboard/list.tiles1");
@@ -576,6 +578,7 @@ public class ChoijhController {
 	public ModelAndView detailView(ModelAndView mav, HttpServletRequest request) {
 		
 		String board_seq = request.getParameter("board_seq");
+		String gobackURL = request.getParameter("gobackURL");
 		
 		HttpSession session = request.getSession();
 		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
@@ -609,6 +612,9 @@ public class ChoijhController {
 		}
 		
 		mav.addObject("bvo", bvo);
+		mav.addObject("gobackURL", gobackURL);
+		
+	//	System.out.println(gobackURL);
 		
 		mav.setViewName("freeboard/detailboard.tiles1");
 		
@@ -793,33 +799,80 @@ public class ChoijhController {
 	}
 	
 	
-	// 댓글 내용(페이징처리 x) 보여주기
+	// 댓글 내용(페이징처리 o) 보여주기
 	@ResponseBody
 	@RequestMapping(value="/freeboard/goReadComment.top", produces="text/plain;charset=UTF-8")
 	public String goReadComment(HttpServletRequest request) {
 		
 		String fk_board_seq = request.getParameter("fk_board_seq");
+		String currentShowPageNo = request.getParameter("currentShowPageNo");
 		
-		List<CommentVO> commentList = service.goReadComment(fk_board_seq);
+		if(currentShowPageNo == null) {
+		    currentShowPageNo = "1";
+	    }
+	   
+	    int sizePerPage = 5;	// 한 페이지당 5개의 댓글을 보여줄 것임.
+			   
+		
+	    int startRno = ((Integer.parseInt(currentShowPageNo) - 1 ) * sizePerPage) + 1;
+	    int endRno = startRno + sizePerPage - 1;
+		
+	//  System.out.println("확인용 : " + fk_board_seq + " , startRno : " + startRno + " , endRno : " + endRno);
+	    
+	    HashMap<String, String> paraMap = new HashMap<>();
+	    paraMap.put("fk_board_seq", fk_board_seq);
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+	    
+	//	List<CommentVO> commentList = service.goReadComment(fk_board_seq); // 페이징 처리 안한 댓글 내용 보여주기
+	    List<CommentVO> commentList = service.getCommentListPaging(paraMap); // 댓글 내용(페이징처리 o) 보여주기
 		
 		JSONArray jsonArr = new JSONArray();
 		   
-		   if(commentList != null) {
-			   for(CommentVO cvo : commentList) {
-			       JSONObject jsonObj = new JSONObject();
-			       jsonObj.put("content", cvo.getContent());
-			       jsonObj.put("employee_name", cvo.getEmployee_name());
-		   		   jsonObj.put("regDate", cvo.getRegDate());
-		   		   jsonObj.put("fk_board_seq", cvo.getFk_board_seq());
-		   		   jsonObj.put("comment_seq", cvo.getComment_seq());
-		   		   jsonObj.put("depthno", cvo.getDepthno());
-		   		   
-			       jsonArr.put(jsonObj);
-			    }
-		   }
-		    
-		   return jsonArr.toString();
+	    if(commentList != null) {
+		    for(CommentVO cvo : commentList) {
+		        JSONObject jsonObj = new JSONObject();
+		        jsonObj.put("content", cvo.getContent());
+		        jsonObj.put("employee_name", cvo.getEmployee_name());
+	   		    jsonObj.put("regDate", cvo.getRegDate());
+	   		    jsonObj.put("fk_board_seq", cvo.getFk_board_seq());
+	   		    jsonObj.put("comment_seq", cvo.getComment_seq());
+	   		    jsonObj.put("depthno", cvo.getDepthno());
+	   		   
+		        jsonArr.put(jsonObj);
+		     }
+	    }
+	
+	    return jsonArr.toString();
 	}
+	
+	
+	// 댓글 totalPage 알아오기
+    @ResponseBody
+    @RequestMapping(value="/freeboard/getCommentTotalPage.top")
+    public String getCommentTotalPage(HttpServletRequest request) {
+    	
+    	String fk_board_seq = request.getParameter("fk_board_seq");
+ 	   	String sizePerPage = request.getParameter("sizePerPage");
+ 	   
+ 	   	HashMap<String, String> paraMap = new HashMap<>();
+ 	   	paraMap.put("fk_board_seq", fk_board_seq);
+ 	   
+ 	   	// 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기 
+ 	   	int totalCount = service.getCommentTotalPage(paraMap);
+ 	   
+ 	   	// 총페이지수(totalPage) 구하기 
+ 	   	// 만약에 총 게시물 건수(totalCount)가 23개 이라면
+ 	   	// 총 페이지수(totalPage)는 5개가 되어야 한다.
+ 	   	int totalPage = (int) Math.ceil( (double)totalCount / Integer.parseInt(sizePerPage) ); 
+ 	   	// (double)23/5 ==> 4.6 ==> Math.ceil(4.6) ==> (int)5.0 ==> 5 
+ 	   	// (double)20/5 ==> 4.0 ==> Math.ceil(4.0) ==> (int)4.0 ==> 4
+    
+ 	   	JSONObject jsonObj = new JSONObject();
+ 	   	jsonObj.put("totalPage", totalPage);
+    	
+    	return jsonObj.toString();
+    }
 	
 	
 	// 답글쓰기를 눌렀을 시 댓글테이블에 insert(계층형 답글쓰기) 

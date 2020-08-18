@@ -63,12 +63,20 @@
 			
 		}); // end of $("#datatables").DataTable({})
 		
-		
+		$(".selectDelete").click(function(){
+			var frm = document.noticeFrm;
+			frm.action = "<%=request.getContextPath()%>/manager/board/noticeDelete.top";
+			frm.submit();
+		});
 		
 				
 	}); // end of $(document).ready(function(){})
 function goDetail(val){
 	location.href="<%=ctxPath%>/manager/board/noticeDetail.top?board_seq="+val;
+}
+	
+function goDelete(val){
+	location.href="<%=ctxPath%>/manager/board/noticeDelete.top?board_seq="+val;
 }
 </script>
     
@@ -87,6 +95,7 @@ function goDetail(val){
 			</div>
 		</div> -->
 		<div style="clear:both;"></div>
+			<form name="noticeFrm">
 			<table id="datatables" class="table table-bordered">
 				<thead>
 					<tr>
@@ -102,21 +111,22 @@ function goDetail(val){
 				<tbody>
 					<c:forEach var="board" items="${boardvoList}">
 						<tr>
-							<td><input type="checkbox" name="select" value="${board.board_seq}"/></td>
+							<td><input type="checkbox" name="board_seq" value="${board.board_seq}"/></td>
 							<td>${board.board_seq}</td>
 							<td>${board.employee_name }
 							<td class="tbl_title" onclick = "goDetail('${board.board_seq}')">${board.subject }</td>							
 							<td>${board.regDate }</td>
 							<td>${board.readCnt }</td>
-							<td>삭제</td>
+							<td onclick="goDelete('${board.board_seq}')">삭제</td>
 						</tr>
 					</c:forEach>	
 				</tbody>
 			</table>
 		<div>
 			
-			<span class="managerBtn">선택삭제</span>
+			<span class="managerBtn selectDelete">선택삭제</span>
 			
 		</div>
+		</form>
 	</div>
 </div>

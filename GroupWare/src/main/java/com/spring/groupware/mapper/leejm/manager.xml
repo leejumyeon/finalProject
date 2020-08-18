@@ -65,5 +65,43 @@
 		from attachFile_table where fk_board_seq = #{board_seq}
 	</select>
 	
+	<!-- 게시글 수정 - 삭제할 파일 조회 -->
+	<select id="boardDeleteFileList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.AttachFileVO">
+		select file_seq, fileName, orgFileName, fileSize, fk_board_seq 
+		from attachFile_table where fk_board_seq = #{board_seq} 
+		<if test="maintainSeq != null">
+			<foreach collection="maintainSeq" index="i" open="and not file_seq in(" separator="," close=")">
+				${maintainSeq[i]}
+			</foreach>
+		</if>
+		
+		
+	</select>
 	
+	<!-- 게시글 수정 - 첨부파일 삭제 -->
+	<delete id="fileDelete" parameterType="HashMap">
+		delete from attachFile_table where file_seq in 
+		<foreach collection="deleteFileList" item="deleteFile" open="(" separator="," close=")">
+			${deleteFile.file_seq}
+		</foreach>
+	</delete>
+	
+	<!-- 게시글 수정 - 본문수정 -->
+	<update id="boardUpdate" parameterType="HashMap">
+		update board_table set subject = #{subject}, content = #{content} where board_seq = #{board_seq}
+	</update>
+	
+	<!-- 게시글 수정 - 첨부파일 추가 -->
+	<insert id="fileInsert" parameterType="com.spring.groupware.commonVO.AttachFileVO">
+		insert into attachFile_table(file_seq, fk_board_seq, fileName, orgFileName, fileSize)
+		values(attachFile_table_seq.nextval, #{fk_board_seq}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<!-- 게시글 관리 - 게시글 삭제 -->
+	<delete id="boardDelete" parameterType="HashMap">
+		delete from board_table where board_seq in
+		<foreach collection="board_seqArr" index="i" open="(" separator="," close=")">
+			${board_seqArr[i]}
+		</foreach>
+	</delete>
 </mapper>

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.groupware.commonVO.AlbumVO;
 import com.spring.groupware.seongsu.model.InterSeongsuDAO;
 
 @Service
@@ -28,6 +29,15 @@ public class SeongsuService implements InterSeongsuService {
 	public void insertAlbumTable(HashMap<String, String> paraMap) {
 
 		dao.insertAlbumTable(paraMap);
+	}
+
+	// === 앨범 리스트 보기 === //
+	@Override
+	public List<AlbumVO> getAlbumList(HashMap<String, String> paraMap) {
+
+		List<AlbumVO> albumList = dao.getAlbumList(paraMap);
+		
+		return albumList;
 	}
 	
 	
