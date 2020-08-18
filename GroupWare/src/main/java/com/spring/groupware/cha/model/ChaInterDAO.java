@@ -19,6 +19,9 @@ public interface ChaInterDAO {
 	
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정 삭제
 	int deleteFullCalendar(HashMap<String, String> paraMap);
+	
+	// 마이페이지(동호회) - 뿌리기
+	List<HashMap<String,String>> club(HashMap<String, String> paraMap);
 
 	// 회사 일정 캘린더
 	List<CompanyCalVO> adminFullCalendar();
@@ -31,6 +34,8 @@ public interface ChaInterDAO {
 	
 	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
 	int deleteAdminCalendar(HashMap<String, String> paraMap);
+
+	
 
 	
 	

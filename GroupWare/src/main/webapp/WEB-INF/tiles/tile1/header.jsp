@@ -101,9 +101,9 @@
 	</ul>
 	<ul class="mynav" style="float:right;">
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">마이페이지 <span class="caret"></span></a>
+			data-toggle="dropdown" href="">마이페이지 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
+				<li><a href="<%=ctxPath%>/viewFullCalendar.top">제품목록</a></li>
 			</ul>
 		</li>	
 		<li class="dropdown">

@@ -153,4 +153,8 @@ public interface InterLeeehService {
 
 	void shiftDelDocument(String groupno);	// 휴지통에 있는 문서 영구 삭제하기
 
+	List<HashMap<String, String>> allClubList();	// 모든 클럽 정보 가져오기
+
+	void updateClubManager(HashMap<String, Object> paraMap);	// 클럽 회장 업데이트 하기
+
 }
