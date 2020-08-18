@@ -156,12 +156,13 @@ create table album_table
 ,fk_employee_seq    number  -- 게시글 작성자 번호
 ,subject    varchar2(500) not null -- 게시글 제목
 ,content    varchar2(4000) not null -- 게시글 내용
+,regDate    date default sysdate -- 게시글 등록 날짜
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence album_table_seq
+create sequence 
 start with 1 
 increment by 1
 nomaxvalue
@@ -579,6 +580,35 @@ create table board_table
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
+
+
+
+select * from board_table;
+select * from attachFile_table;
+select * from comment_table;
+
+select count(*)
+from board_table B join employees_table E 
+on  B.fk_employee_seq = E.employee_seq
+where fk_category_num = 3 
+and lower(employee_name) like '%' || lower('파이리') || '%';
+
+
+select board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt, employee_name
+from 
+(
+    select row_number() over(order by board_seq desc) AS rno, 
+           board_seq, fk_category_num, subject, content,  
+           readCnt, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate,
+           fk_employee_seq, status, commentCnt, employee_name
+    from board_table B join employees_table E 
+    on  B.fk_employee_seq = E.employee_seq
+    where fk_category_num = 3 
+    and content like '%'|| '첨부' ||'%'
+) V
+where rno between 1 and 2;
+
+
 create SEQUENCE board_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -607,7 +637,7 @@ nocache;
 
 -- 댓글 테이블(comment_table) --
 create table comment_table
-(commnet_seq    number not null -- 댓글번호
+(comment_seq    number not null -- 댓글번호
 ,fk_board_seq   number not null -- 게시글 번호(그룹번호)
 ,fk_employee_seq    number -- 작성자 사원번호
 ,readCnt    number default 0 not null -- 조회수
@@ -620,6 +650,10 @@ create table comment_table
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
+
+-- 댓글 테이블 컬럼 변경 -- 
+alter table comment_table
+rename column commnet_seq to comment_seq;
 
 create sequence comment_table_seq
 start with 1 -- 시작값
@@ -773,6 +807,12 @@ order by R.reservation_seq desc;
 
 
 
-
+-- 자유게시판 페이징처리를 위한 데이터
+begin
+    for i in 1..100 loop 
+        insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+        values(board_table_seq.nextval, 3, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 1, default, default); 
+    end loop;
+end;
 
 

@@ -3,6 +3,7 @@
 
 <%-- === #24. tiles 를 사용하는 레이아웃1 페이지 만들기 === --%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
 	String ctxPath = request.getContextPath();
@@ -52,10 +53,18 @@
 			</div>
 		</div>
 	</div>
-
-	<div id="mymessenger" class="messengerClose">
-		<tiles:insertAttribute name="messenger" />
-	</div>
+	
+	<c:if test="${empty(sessionScope.messenger)}">
+		<div id="mymessenger" class="messengerClose">
+			<tiles:insertAttribute name="messenger" />
+		</div>
+	</c:if>
+	<c:if test="${not empty(sessionScope.messenger)}">
+		<div id="mymessenger" class="messengerOpen">
+			<tiles:insertAttribute name="messenger" />
+		</div>
+	</c:if>
+	
 	<div style="clear:both;"></div>
 </body>
 </html>

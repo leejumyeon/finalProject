@@ -1275,6 +1275,11 @@ public class LeeehController {
 				
 				System.out.println(paraMap.get("document_category"));
 				service.updateDocumentStatus(paraMap);
+				
+				if("10".equals(docuvo.getDocument_category())) {
+					
+					service.updateClubManager(paraMap);
+				}
 			}
 			
 			if("8".equals(docuvo.getDocument_category())) {
@@ -1568,20 +1573,50 @@ public class LeeehController {
 	}
 
 	// === 휴지통에서 문서 영구삭제하기 === //
-		@RequestMapping(value="/shiftDelDocument.top")
-		public ModelAndView shiftDelDocument(ModelAndView mav, HttpServletRequest request) {
+	@RequestMapping(value="/shiftDelDocument.top")
+	public ModelAndView shiftDelDocument(ModelAndView mav, HttpServletRequest request) {
+		
+		String groupno = request.getParameter("groupno");
+		
+		String[] groupnoArr = groupno.split(",");
+		
+		for(int i = 0; i < groupnoArr.length; i++) {
 			
-			String groupno = request.getParameter("groupno");
-			
-			String[] groupnoArr = groupno.split(",");
-			
-			for(int i = 0; i < groupnoArr.length; i++) {
-				
-				service.shiftDelDocument(groupnoArr[i]);
-			}
-			
-			mav.setViewName("/manager/approval/documentList.top");
-			
-			return mav;
+			service.shiftDelDocument(groupnoArr[i]);
 		}
+		
+		mav.setViewName("/manager/approval/documentList.top");
+		
+		return mav;
+	}
+	
+	// === 동호회 신청 페이지 만들기 === //
+	@RequestMapping(value="/clubRequest.top")
+	public ModelAndView clubRequest(ModelAndView mav) {
+		
+		List<HashMap<String, String>> clubList = service.allClubList();
+		
+		mav.addObject("clubList", clubList);
+		mav.setViewName("clubRequest/clubRequest.tiles1");
+		
+		return mav;
+	}
+	
+	// === 문서 결재 알람을 위해 cnt 알아오기 === //
+	@ResponseBody
+	@RequestMapping(value="/document/newPaymentFind.top", produces="text/plain;charset=UTF-8")
+	public String newPaymentFind(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+				
+		int result = service.getCntOfPayment(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+	}
 }

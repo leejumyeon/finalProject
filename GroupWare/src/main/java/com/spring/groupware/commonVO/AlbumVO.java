@@ -7,7 +7,7 @@ public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시
 	private String employee_id; // 작성자ID (employees_table이랑 join)
 	private String subject; // 제목
 	private String content; // 내용(이미지 포함)
-	
+	private String regDate; // 작성날짜
 	
 	
 }

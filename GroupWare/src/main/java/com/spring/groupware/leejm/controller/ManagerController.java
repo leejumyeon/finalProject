@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
@@ -49,38 +50,7 @@ public class ManagerController {
 				
 		return "admin/board/noticeList.tiles3";
 	}
-	
-	
-	// 관리자 - 게시글 관리(공지사항 리스트)페이지[작성페이지 - 뷰단] 
-	@RequestMapping(value="/manager/board/boardWrite.top")
-	public ModelAndView managerBoardWrite(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/board/boardWrite.tiles3");
-		return mav;
-	}
-		
-	// 관리자 - 게시글 관리(공지사항 리스트)페이지[작성페이지 - 완료] 
-	@RequestMapping(value="/manager/board/noticeInsert.top", method= {RequestMethod.POST})
-	public String managerNoticeInsert(HashMap<String, String> paraMap, MultipartHttpServletRequest mrequest){
-		
-		/*HttpSession session = request.getSession();
-		String loginEmployee = ((EmployeesVO) session.getAttribute("loginEmployee")).getEmployee_seq();
-		
-		String subject = request.getParameter("subject");
-		String content = request.getParameter("content");
-		
-		HashMap<String, String> paraMap = new HashMap<>();
-				
-		paraMap.put("loginEmployee", loginEmployee);
-		paraMap.put("subject", subject);
-		paraMap.put("content", content);
-		
-		int n = service.managerNoticeInsert(paraMap);*/
-		
-		mrequest.getParameter("attach");
-			
-		return "admin/board/boardWrite.tiles3";
-		
-	}
+
 		
 	// ---------------------------------- 공지 사항 / FAQ 끝 -------------------------------------------------------
 	
@@ -88,6 +58,15 @@ public class ManagerController {
 	// 관리자-게시글 관리(공지사항 상세보기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeDetail.top")
 	public ModelAndView managerNoticeDetail(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = service.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = service.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
 		mav.setViewName("admin/board/noticeDetail.tiles3");
 		return mav;
 	}
@@ -95,6 +74,15 @@ public class ManagerController {
 	// 관리자-게시글 관리(공지사항 수정하기)페이지 이동
 	@RequestMapping(value="/manager/board/noticeUpdate.top")
 	public ModelAndView managerNoticeUpdate(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = service.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = service.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
 		mav.setViewName("admin/board/noticeUpdate.tiles3");
 		return mav;
 	}
@@ -105,17 +93,7 @@ public class ManagerController {
 		mav.setViewName("admin/board/faqUpdate.tiles3");
 		return mav;
 	}
-	
-	
-	
-	// 관리자-게시글 관리(신고글 조회)페이지 이동
-	@RequestMapping(value="/manager/board/boardOut.top")
-	public ModelAndView managerBoardOut(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("admin/board/boardOut.tiles3");
-		return mav;
-	}
 
-	
 	
 	// 관리자-재무 관리(급여내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salaryList.top")

@@ -581,4 +581,29 @@ public class LeeehService implements InterLeeehService {
 		dao.shiftDelDocument(groupno);
 	}
 
+	// === 모든 클럽 정보 가져오기 === //
+	@Override
+	public List<HashMap<String, String>> allClubList() {
+
+		List<HashMap<String, String>> clubList = dao.allClubList();
+		
+		return clubList;
+	}
+
+	// === 클럽 회장 업데이트 하기 === //
+	@Override
+	public void updateClubManager(HashMap<String, Object> paraMap) {
+
+		dao.updateClubManager(paraMap);
+	}
+
+	// === 문서 결재 알람 받아오기 === //
+	@Override
+	public int getCntOfPayment(String fk_employee_seq) {
+
+		int result = dao.getCntOfPayment(fk_employee_seq);
+		
+		return result;
+	}
+
 }

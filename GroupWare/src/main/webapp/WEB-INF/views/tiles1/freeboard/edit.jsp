@@ -1,34 +1,43 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    
 <% String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
+
 	#container {
 		width: 1240px;
 		margin: 0 auto;
 	}
+	
 	#in {
 		width: 1000px;
 		margin: 0 auto;
 	}
+	
 	#abledit {
 		width: 750px;
 		
 	}
+	
 	#abledit, #abledit th, #abledit td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
+	
 	#abledit th{
 		width: 130px;
 		font-size: 11pt;
 		background-color: #3399ff;
 		color: white;
-	}	
+	}
+		
 	#abledit th, #abledit td {
 		height: 40px;
 	} 
+	
 	#btnUpdate, #btnUpdate2 {
 		border-radius: 0;
 		border-style: none;
@@ -36,13 +45,16 @@
 		padding: 5px;
 		width: 50px;		
 	}
+	
 	#inputname {
 		height: 20px;
 		border: 1px solid #b3b3b3;
 	}
+	
 	#subject {
 		width: 450px;
 	}
+	
 	.sidebar2 {
 		border: 1px solid white;
 		width: 100px;
@@ -54,11 +66,13 @@
 		background-color: #3399ff;		
 		color: white;
 	}
+	
 	#post {
 		margin-right: 30px;
 		width: 750px;
 		float: right;		
 	}	
+	
 	.comunity {
 		padding-top: 18px;
 		width: 100px;
@@ -67,16 +81,24 @@
 		text-align: center;
 		font-weight: bold;		
 	}
+	
 	#side {
 		float: left;
 	}
+	
 	#fk_category_num {
 		height: 28px;
 		vertical-align: middle;
 	}
+	
 	#btn{
 		float: right;
 	}
+	
+	.attach {
+		margin: 8px 0 0 8px;
+	}
+	
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -149,15 +171,16 @@
 			frm.submit();	 		
 		}); // end of $(".btnUpdate").click() ------------------------------------------------------------
 		
-		var cnt = 0;
+		
 		$("#addFileBtn").click(function(){
+			
 			cnt++;
 			
 			if(cnt > 3){
 				return;
-			}
+			}		
 			
-			$("#addDiv").append("<input type='file' name='attach' margin-left: 7px;' />");
+			$("#addDiv").append("<input type='file' name='attach' class='attach' />");
 			
 		});
 		
@@ -195,8 +218,12 @@
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
 							<td>
-								<span id="addFileBtn" style="border: solid 1px gray; padding: 3px; cursor: pointer">추가하기</span>
-								<div id="addDiv"></div>
+								<c:if test="${attachvoList == null || attachvoListSize == 1 || attachvoListSize == 2}"><span id="addFileBtn" style="border: solid 1px gray; padding: 3px; cursor: pointer">추가하기</span></c:if>	
+								<div id="addDiv">
+									<c:forEach var="attachvo" items="${attachvoList}">
+										<div>${attachvo.orgFileName}</div>
+									</c:forEach>
+								</div>
 							</td>
 						</tr>
 						<tr style="height: 400px;">

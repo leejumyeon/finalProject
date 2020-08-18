@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="seongsu">
+
+	<!-- === 앨범 카태고리 받아오기 === -->
+	<resultMap type="HashMap" id="albumMap">
+		<result property="category_num" column="category_num" javaType="String"/>
+		<result property="category_name" column="category_name" javaType="String"/>
+	</resultMap>
+	<select id="getAlbumCategory" resultMap="albumMap">
+		select category_num, category_name
+		from album_category
+	</select>
+	
+	<!-- === 앨범 글쓰기 === -->
+	<insert id="insertAlbumTable" parameterType="HashMap">
+		insert into album_table(album_seq, album_category, fk_employee_seq, subject, content, regDate)
+		values(album_table_seq.nextval, #{album_category}, #{fk_employee_seq}, #{subject}, #{content}, default)
+	</insert>
+	
+</mapper>

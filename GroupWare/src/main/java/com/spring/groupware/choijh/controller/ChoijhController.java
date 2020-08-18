@@ -2,6 +2,7 @@ package com.spring.groupware.choijh.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -286,12 +287,198 @@ public class ChoijhController {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 자유 게시판 //
 	
+	// 스마트에디터. 드래그앤드롭을 사용한 다중사진 파일업로드 ===
+    @RequestMapping(value="/image/multiplePhotoUpload.action", method= {RequestMethod.POST}) 
+    public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
+	   
+    /*
+	    1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
+	    >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 
+	        우리는 WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
+    */
+	   
+	    // WAS의 webapp 의 절대경로를 알아와야 한다.
+	    HttpSession session = request.getSession();
+	    String root = session.getServletContext().getRealPath("/");
+	    String path = root + "resources" + File.separator + "photo_upload";
+    /*  File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+	        운영체제가 Windows 이라면  File.separator 는 "\" 이고, 
+	        운영체제가 UNIX, LINUX 이라면 File.separator 는 "/" 이다.
+    */
+	
+	    // path 가 첨부파일을 저장할 WAS(톰캣)의 폴더가 된다. 
+	    System.out.println("~~~~ 확인용 path => " + path);
+	    // ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload
+	
+	    File dir = new File(path);
+	    if(!dir.exists()) {
+		   dir.mkdirs();
+	    }
+	   
+	    String strURL = "";
+		
+	    try {
+		    if(!"OPTIONS".equals(request.getMethod().toUpperCase())) {
+			   	 String filename = request.getHeader("file-name"); //파일명을 받는다 - 일반 원본파일명
+		    		
+		         // System.out.println(">>>> 확인용 filename ==> " + filename); 
+		         // >>>> 확인용 filename ==> berkelekle%ED%8A%B8%EB%9E%9C%EB%94%9405.jpg
+		    		
+		    	 InputStream is = request.getInputStream();
+		    	 /*
+		          	 요청 헤더의 content-type이 application/json 이거나 multipart/form-data 형식일 때,
+		          	 혹은 이름 없이 값만 전달될 때 이 값은 요청 헤더가 아닌 바디를 통해 전달된다. 
+		          	 이러한 형태의 값을 'payload body'라고 하는데 요청 바디에 직접 쓰여진다 하여 'request body post data'라고도 한다.
+		
+		           	 서블릿에서 payload body는 Request.getParameter()가 아니라 
+		        	 Request.getInputStream() 혹은 Request.getReader()를 통해 body를 직접 읽는 방식으로 가져온다. 	
+		    	 */
+		    	 String newFilename = fileManager.doFileUpload(is, filename, path);
+		    	
+		    	 int width = fileManager.getImageWidth(path+File.separator+newFilename);
+				
+		    	 if(width > 600)
+		    		 width = 600;
+					
+		    	 // System.out.println(">>>> 확인용 width ==> " + width);
+		    	 // >>>> 확인용 width ==> 600
+		    	 // >>>> 확인용 width ==> 121
+		    	
+		    	 String CP = request.getContextPath(); // board
+				
+		    	 strURL += "&bNewLine=true&sFileName="; 
+		        	   	 strURL += newFilename;
+		        	   	 strURL += "&sWidth="+width;
+		        	   	 strURL += "&sFileURL="+CP+"/resources/photo_upload/"+newFilename;
+		     }
+			
+		     /// 웹브라우저상에 사진 이미지를 쓰기 ///
+			 PrintWriter out = response.getWriter();
+		 	 out.print(strURL);
+		 } catch(Exception e){
+		 		e.printStackTrace();
+		 }
+	
+    }// end of  public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response)-------------
+	
 	
 	// 자유 게시판 글 보여주기
 	@RequestMapping(value="/freeboard/list.top")
 	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
 		
-		List<BoardVO> boardList = service.boardlistView(); // 게시판 글 보여주기
+		List<BoardVO> boardList = null;
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		if(searchWord == null || searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		int totalCount = 0;   		// 총 게시물 건수 
+		int sizePerPage = 10; 		// 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0;  // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정 
+		int totalPage = 0; 			// 총 페이지 수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0;			// 시작 행번호
+		int endRno = 0;				// 끝 행번호
+		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		
+		totalPage = (int) Math.ceil( (double)totalCount/sizePerPage );
+		
+		if(str_currentShowPageNo == null) {
+			// 게시판에 보여지는 초기화면
+			
+			currentShowPageNo = 1;
+			// 즉, 초기화면인 /freeboard/list.top 은 /freeboard/list.top?currentShowPageNo=1 로 하겠다는 말이다.
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo); 
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) { // user가 get방식으로 currentShowPageNo=asdfasdfasdf 로 장난 친 경우 
+					currentShowPageNo = 1;
+				}
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1; 
+
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		boardList = service.boardListSearchWithPaging(paraMap);
+		// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
+		
+		if(!"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// 페이지바 만들기  //
+		String pageBar = "<ul id='pageBarUl' style='list-style:none;'>";
+		
+		int blockSize = 10;
+		// blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
+		/*
+		  	  1  2  3  4  5  6  7  8  9 10  다음 	-- 1개블럭
+		   이전  11 12 13 14 15 16 17 18 19 20		-- 1개 블럭
+		   이전  21 22 23 24 25 26 27 28 29 30  
+		*/
+		
+		int loop = 1;
+		/*
+		  	loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[지금은 10개(== blockSize)] 까지만 증가하는 용도이다.
+		*/
+		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String url = request.getContextPath()+"/freeboard/list.top";
+		
+		// === [이전] 만들기 ===
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		
+		while( !( loop > blockSize || pageNo > totalPage)) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+			}
+			
+			loop++;
+			pageNo ++;
+		}// end of while --------------------------------------
+		
+		
+		// === [다음] 만들기 ===
+		if( !(pageNo > totalPage) ) { // 맨 마지막으로 빠져나온것이 아니라면 [다음]을 보인다.
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+		
+		
+		
+	//	boardList = service.boardlistView(); // 페이징 처리 안한 게시판 글 보여주기
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes"); // 새로고침시 조회 수 증가 방지
@@ -539,7 +726,17 @@ public class ChoijhController {
 			return "msg";
 		}
 		
+		List<AttachFileVO> attachvoList = service.getfileView(board_seq);
+		
+		if(attachvoList.size() == 0) {
+			attachvoList = null;
+		}
+		else if(attachvoList.size() == 1 || attachvoList.size() == 2) {
+			request.setAttribute("attachvoListSize", attachvoList.size());
+		}
+		
 		request.setAttribute("bvo", bvo);
+		request.setAttribute("attachvoList", attachvoList);
 		
 		return "freeboard/edit.tiles1";
 	}
@@ -547,7 +744,7 @@ public class ChoijhController {
 	
 	// 글 수정 하기 
 	@RequestMapping(value="/freeboard/edit.top")
-	public String edit(HttpServletRequest request, BoardVO bvo) {
+	public String edit(HttpServletRequest request, BoardVO bvo, MultipartHttpServletRequest mrequest) {
 		
 		int n = service.edit(bvo); // 자유게시판 글 수정 하기 
 		
@@ -613,7 +810,10 @@ public class ChoijhController {
 			       jsonObj.put("content", cvo.getContent());
 			       jsonObj.put("employee_name", cvo.getEmployee_name());
 		   		   jsonObj.put("regDate", cvo.getRegDate());
-			    		
+		   		   jsonObj.put("fk_board_seq", cvo.getFk_board_seq());
+		   		   jsonObj.put("comment_seq", cvo.getComment_seq());
+		   		   jsonObj.put("depthno", cvo.getDepthno());
+		   		   
 			       jsonArr.put(jsonObj);
 			    }
 		   }
@@ -622,9 +822,36 @@ public class ChoijhController {
 	}
 	
 	
-	
-	
-	
+	// 답글쓰기를 눌렀을 시 댓글테이블에 insert(계층형 답글쓰기) 
+	@ResponseBody
+	@RequestMapping(value="/freeboard/goChildCommentWrite.top", produces="text/plain;charset=UTF-8")
+	public String goChildCommentWrite(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String Employee_seq = loginEmployee.getEmployee_seq();
+		String fk_board_seq = request.getParameter("fk_board_seq");
+		String parent_seq = request.getParameter("parent_seq");
+		String childCommentContent = request.getParameter("childCommentContent");
+		String depthno = request.getParameter("depthno");
+		
+	//	System.out.println("확인용 : " + Employee_seq + " , " + fk_board_seq + " , " + parent_seq + " , " + childCommentContent);
+		
+		CommentVO cvo = new CommentVO(); 
+		cvo.setFk_board_seq(fk_board_seq);
+		cvo.setParent_seq(parent_seq);
+		cvo.setFk_employee_seq(Employee_seq);
+		cvo.setContent(childCommentContent);
+		cvo.setDepthno(depthno);
+		
+		int n = service.addChildComment(cvo); // 답글쓰기 및 원글게시물 댓글수 +1 증가
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
 	
 	
 	
