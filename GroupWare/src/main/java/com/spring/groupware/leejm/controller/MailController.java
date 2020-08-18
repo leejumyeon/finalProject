@@ -501,7 +501,7 @@ public class MailController {
 		MailVO mail = null;
 		try {
 			mail = service.mailRead(paraMap);
-			if(mail!= null && !"2".equals(mail.getStatus())) {
+			if(mail!= null) {
 				MailVO sender = service.mailSenderFind(mail.getMail_groupno());
 				List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno());
 				
@@ -787,6 +787,9 @@ public class MailController {
 		System.out.println("mail_seq:"+mail_seq+"/ secendType:"+secendType);
 		
 		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
+		
+		System.out.println("메일그룹번호"+mail.getMail_groupno());
+		
 		MailVO sender = service.mailSenderFind(mail.getMail_groupno()); //발신자
 		List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno()); // 수신자
 		

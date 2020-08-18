@@ -44,6 +44,19 @@
 			
 			window.resizeTo(1220,845);
 		}
+		console.log($("#mymessenger").prop("class"));
+		$.ajax({
+			url:"<%=request.getContextPath()%>/messenger/open.top",
+			data:{"messengerStatus":$("#mymessenger").prop("class")},
+			type:"get",
+			dataType:"JSON",
+			success:function(json){
+				console.log("세션업");
+			},
+			error:function(e){
+				
+			}
+		});
 	}
 </script>
 

@@ -395,7 +395,7 @@
 		join employees_table on fk_employee_seq = employee_seq 
 		join position_table on fk_position = position_seq
 		join department_table on fk_department = department_seq
-		where mail_groupno = #{mail_groupno} and status = 1
+		where mail_groupno = #{mail_groupno} and status in (1,2)
 	</select>
 	
 	
