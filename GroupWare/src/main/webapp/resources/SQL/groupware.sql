@@ -541,6 +541,7 @@ create table reservation_table
 );
 
 
+
 create SEQUENCE reservation_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
