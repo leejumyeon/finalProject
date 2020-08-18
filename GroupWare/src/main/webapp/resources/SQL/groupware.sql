@@ -162,7 +162,7 @@ create table album_table
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence album_table_seq
+create sequence 
 start with 1 
 increment by 1
 nomaxvalue

@@ -700,7 +700,7 @@
 		select V.club_seq, V.club_name, V.club_info, V.representative_img, E.employee_seq, E.employee_name, T.cnt
 		from
 		(
-		    select C.club_seq, C.club_name, C.club_info, CM.fk_employee_seq, C.representative_img,
+		    select C.club_seq, C.club_name, C.club_info, CM.fk_employee_seq, C.representative_img
 		    from club_table C join clubMember_table CM
 		    on C.club_seq = CM.fk_club
 		    where C.documentStatus = 1 and CM.status = 1

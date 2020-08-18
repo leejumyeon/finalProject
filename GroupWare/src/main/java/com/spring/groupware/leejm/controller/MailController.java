@@ -1224,9 +1224,7 @@ public class MailController {
 		sendMail.setContent(content);
 		sendMail.setSubject(subject);
 		sendMail.setReadStatus("1");
-		
-		
-		
+
 		// 받는 메일 VO 생성 //
 		MailVO receiveMail = new MailVO();
 		receiveMail.setFk_employee_seq(receive);
