@@ -199,6 +199,34 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return commentList;
 	}
 
+	// 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("freeboard.getTotalCount", paraMap);
+		return totalCount;
+	}
+
+	// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("freeboard.boardListSearchWithPaging", paraMap);
+		return boardList;
+	}
+
+	// 자유게시판 댓글의 답글 쓰기
+	@Override
+	public int addChildComment(CommentVO cvo) {
+		int n = sqlsession.insert("freeboard.addChildComment", cvo);
+		return n;
+	}
+
+	// 해당 댓글의 게시물에 댓글 수 +1 증가
+	@Override
+	public int updateChildCommentCnt(String fk_board_seq) {
+		int result = sqlsession.update("freeboard.updateChildCommentCnt", fk_board_seq);
+		return result;
+	}
+
 	
 
 	

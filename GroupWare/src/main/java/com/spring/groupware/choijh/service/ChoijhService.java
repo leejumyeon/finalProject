@@ -232,6 +232,39 @@ public class ChoijhService implements InterChoijhService {
 		return commentList;
 	}
 
+
+	// 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+		int totalCount = dao.getTotalCount(paraMap);
+		return totalCount;
+	}
+
+
+	// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
+		List<BoardVO> boardList = dao.boardListSearchWithPaging(paraMap);
+		return boardList;
+	}
+
+	// 답글쓰기 및 원글게시물 댓글수 +1 증가
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public int addChildComment(CommentVO cvo) {
+		
+		int n = 0;
+		int result = 0;
+		
+		n = dao.addChildComment(cvo); // 자유게시판 댓글의 답글 쓰기
+		
+		if(n ==1) {
+			result = dao.updateChildCommentCnt(cvo.getFk_board_seq()); // 해당 댓글의 게시물에 댓글 수 +1 증가
+		}
+		
+		return result;
+	}
+
 	
 
 	
