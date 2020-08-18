@@ -596,4 +596,13 @@ public class LeeehDAO implements InterLeeehDAO {
 		sqlsession.update("leeeh.updateClubManager", paraMap);
 	}
 
+	// === 문서 결재 알람 받아오기 === //
+	@Override
+	public int getCntOfPayment(String fk_employee_seq) {
+
+		int result = sqlsession.selectOne("leeeh.getCntOfPayment", fk_employee_seq);
+		
+		return result;
+	}
+
 }

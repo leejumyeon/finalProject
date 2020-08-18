@@ -692,14 +692,15 @@
 		<result property="club_name" column="club_name" javaType="String"/>
 		<result property="club_info" column="club_info" javaType="String"/>
 		<result property="representative_img" column="representative_img" javaType="String"/>
+		<result property="employee_seq" column="employee_seq" javaType="String"/>
 		<result property="employee_name" column="employee_name" javaType="String"/>
 		<result property="cnt" column="cnt" javaType="String"/>
 	</resultMap>
 	<select id="allClubList" resultMap="clubMap">
-		select V.club_seq, V.club_name, V.club_info, V.representative_img, E.employee_name, T.cnt
+		select V.club_seq, V.club_name, V.club_info, V.representative_img, E.employee_seq, E.employee_name, T.cnt
 		from
 		(
-		    select C.club_seq, C.club_name, C.club_info, CM.fk_employee_seq, C.representative_img
+		    select C.club_seq, C.club_name, C.club_info, CM.fk_employee_seq, C.representative_img,
 		    from club_table C join clubMember_table CM
 		    on C.club_seq = CM.fk_club
 		    where C.documentStatus = 1 and CM.status = 1
@@ -707,5 +708,31 @@
 		on V.fk_employee_seq = E.employee_seq
 		join (select fk_club, count(*) AS cnt from clubMember_table group by fk_club) T
 		on V.club_seq = T.fk_club
+	</select>
+	
+	<!-- === 문서 결재 알람 받아오기 === -->
+	<select id="getCntOfPayment" parameterType="String" resultType="int">
+		select count(*) AS cnt
+		from
+		(
+			select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+			from employees_table E join document_table D
+			on E.employee_seq = D.fk_employee_seq
+			join document_category DC
+			on D.document_category = DC.document_category_seq
+			where D.approver_seq = #{fk_employee_seq} and D.parent_approver is null
+			      and status = '0'
+			      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
+			UNION
+			select D.document_seq, D.groupno, D.subject, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, E.employee_name, DC.category_name
+			from employees_table E join document_table D
+			on E.employee_seq = D.fk_employee_seq
+			join document_category DC
+			on D.document_category = DC.document_category_seq
+			where D.approver_seq = #{fk_employee_seq} and D.parent_approver is not null
+			      and groupno in (select groupno from document_table where approver_seq in (select parent_approver from document_table where approver_seq = #{fk_employee_seq}) and status = '1')
+			      and status = '0'
+			      and groupno in (select groupno from document_table group by groupno having sum(status) != count(status))
+		) V
 	</select>
 </mapper>

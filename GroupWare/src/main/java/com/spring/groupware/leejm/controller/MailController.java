@@ -527,7 +527,7 @@ public class MailController {
 	}
 	
 	// 스마트 에디터 사진첨부 //
-	@RequestMapping(value="/image/photoUpload.action", method={RequestMethod.POST})
+	@RequestMapping(value="/image/photoUpload.top", method={RequestMethod.POST})
 	public String photoUpload(PhotoVO photovo, MultipartHttpServletRequest req) {
 	    
 	String callback = photovo.getCallback();

@@ -1602,13 +1602,21 @@ public class LeeehController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/requestClub.top")
-	public ModelAndView requestClub(ModelAndView mav, HttpServletRequest request) {
-
-		String club_seq = request.getParameter("club_seq");
+	// === 문서 결재 알람을 위해 cnt 알아오기 === //
+	@ResponseBody
+	@RequestMapping(value="/document/newPaymentFind.top", produces="text/plain;charset=UTF-8")
+	public String newPaymentFind(HttpServletRequest request) {
 		
-		System.out.println(club_seq);
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
 		
-		return mav;
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+				
+		int result = service.getCntOfPayment(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
 	}
 }

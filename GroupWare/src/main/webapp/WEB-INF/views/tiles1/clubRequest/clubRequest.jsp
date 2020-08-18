@@ -269,6 +269,7 @@
 							</tbody>
 						</table>
 						<input type="hidden" value="${clubMap.club_seq}" class="club_seq" />
+						<input type="hidden" value="${clubMap.employee_seq}" class="employee_seq" />
 						
 						<button type="button" class="snip1538" id="btnRequestClub${clubMap.club_seq}">신청완료하기</button>
 					</div>
