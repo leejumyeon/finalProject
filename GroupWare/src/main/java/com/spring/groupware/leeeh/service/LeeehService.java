@@ -606,4 +606,22 @@ public class LeeehService implements InterLeeehService {
 		return result;
 	}
 
+	// === 오늘 처음 로그인 한 건지 알아오기 === //
+	@Override
+	public String getIsAttendance(HashMap<String, String> paraMap) {
+
+		String fk_employee_seq = dao.getIsAttendance(paraMap);
+		
+		return fk_employee_seq;
+	}
+
+	// === 출퇴 테이블에 출근 인서트 하기 === //
+	@Override
+	public int insertAttendanceTable(String fk_employee_seq) {
+
+		int result = dao.insertAttendanceTable(fk_employee_seq);
+		
+		return result;
+	}
+
 }
