@@ -104,9 +104,22 @@
 		cursor: pointer;
 	}
 	
+	#commentViewTbl, #commentViewTbl tr, #commentViewTbl td {
+		border: solid 1px gray;
+		border-collapse: collapse;
+	}
+	
 </style>
 
 <script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		// 댓글 내용(페이징처리 x) 보여주기
+		goReadComment();
+		
+	});
+
 
 	// 삭제 버튼 클릭 시 
 	function goDelete() {
@@ -128,6 +141,11 @@
 		
 		var commentContent = $("#commentContent").val();
 		
+		if(commentContent.trim() == ""){
+			alert("댓글 내용을 입력하세요.");
+			return;
+		}
+		
 		alert(commentContent);
 		
 		$.ajax({
@@ -137,7 +155,45 @@
 			type:"POST",
 			dataType:"JSON",
 			success:function(json) {
+				if(json.n == 1){
+					goReadComment(); // 댓글 내용(페이징처리 x) 보여주기
+				}
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+			
+		}); 
+	}
+	
+	
+	// 댓글 내용(페이징처리 x) 보여주기
+	function goReadComment() {
+		
+		$.ajax({
+			
+			url:"<%= ctxPath%>/freeboard/goReadComment.top",
+			data:{"fk_board_seq":"${bvo.board_seq}"},
+			dataType:"JSON",
+			success:function(json) {
 				
+				var html = "";
+				if(json.length > 0) {
+					$.each(json, function(index, item){
+						html += "<tr>";
+						html += "<td style='text-align: center;'>"+(index+1)+"</td>";
+						html += "<td>"+item.content+"</td>";
+						html += "<td style='text-align: center;'>"+item.employee_name+"</td>";
+						html += "<td style='text-align: center;'>"+item.regDate+"</td>";
+						html += "</tr>";
+					});
+				}
+				else {
+					html += "<tr>";
+					html += "<td colspan='4' style='text-align: center;'>댓글이 없습니다.</td>";
+					html += "</tr>";
+				}
+					$("#commentView").html(html);
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -212,6 +268,19 @@
 			</div>
 			<div id="commentWrite" onclick="goCommentWrite('${bvo.board_seq}')">댓글 쓰기</div>
 			<div style="clear: both;"></div>
+			
+			<%-- 댓글 보여지는 곳 --%>
+			<table id="commentViewTbl" style="margin-top: 2%; margin-bottom: 3%;">
+				<thead>
+				<tr>
+				    <th style="width: 10%; text-align: center;">번호</th>
+					<th style="width: 60%; text-align: center;">내용</th>
+					<th style="width: 10%; text-align: center;">작성자</th>
+					<th style="text-align: center;">작성일자</th>
+				</tr>
+				</thead>
+				<tbody id="commentView"></tbody>
+			</table>
 			
 		</div>
 		</div>

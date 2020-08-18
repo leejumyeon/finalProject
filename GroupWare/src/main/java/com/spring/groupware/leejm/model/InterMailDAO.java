@@ -54,6 +54,9 @@ public interface InterMailDAO {
 	// 1개 메일 찾기
 	MailVO findMail(String mail_seq);
 
+	// 휴지통 비우기
+	int mailDrop(String loginSeq);
+
 
 	
 }

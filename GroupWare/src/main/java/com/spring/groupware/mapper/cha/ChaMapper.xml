@@ -36,7 +36,33 @@
 		where calendar_seq = #{calendar_seq}
 	</delete>
 	
+	<resultMap type="HashMap" id="clubMap">
+		<result property="club_seq" column="club_seq" javaType="String"/>
+		<result property="member_seq" column="member_seq" javaType="String"/>
+		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="club_name" column="club_name" javaType="String"/>
+		<result property="club_info" column="club_info" javaType="String"/>
+		<result property="status" column="status" javaType="String"/>
+		<result property="regDate" column="regDate" javaType="String"/>		
+	</resultMap>
 	
+	<!-- 마이페이지(동호회) - 뿌리기 -->
+	<select id="club" parameterType="HashMap" resultMap="clubMap">
+		select B.club_seq 
+		     , A.member_seq 
+		     , C.employee_name
+		     , B.club_name 
+		     , B.club_info 
+		     , A.status 
+		     , A.regDate 
+		from clubMember_table A join club_table B
+		ON A.fk_club = B.club_seq
+		join employees_table C
+		ON C.employee_seq = A.fk_employee_seq
+		where C.employee_seq = #{employee_id}
+	</select>
+		
+			
 	<!-- 회사일정 -->
 	<select id="adminFullCalendar" resultType="com.spring.groupware.commonVO.CompanyCalVO">
 		select C.comCalendar_seq, C.title, C.content

@@ -26,6 +26,7 @@ import com.spring.common.FileManager;
 import com.spring.groupware.choijh.service.InterChoijhService;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -288,9 +289,12 @@ public class ChoijhController {
 	
 	// 자유 게시판 글 보여주기
 	@RequestMapping(value="/freeboard/list.top")
-	public ModelAndView list(ModelAndView mav) {
+	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
 		
 		List<BoardVO> boardList = service.boardlistView(); // 게시판 글 보여주기
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes"); // 새로고침시 조회 수 증가 방지
 		
 		mav.addObject("boardList", boardList);
 		
@@ -386,7 +390,30 @@ public class ChoijhController {
 		
 		String board_seq = request.getParameter("board_seq");
 		
-		BoardVO bvo = service.detailView(board_seq);
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String employee_seq = null;
+		
+		if(loginEmployee != null) {
+			employee_seq = loginEmployee.getEmployee_seq();
+			// employee_seq 는 로그인 되어진 사용자의 employee_seq 이다.
+		}
+		
+		BoardVO bvo = null;
+		
+		if("yes".equals(session.getAttribute("readCountPermission")) ) {
+			// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+			
+			bvo = service.detailView(board_seq, employee_seq);
+			// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+			
+			session.removeAttribute("readCountPermission");
+			// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		}
+		else {
+			bvo = service.detailViewNoAddCount(board_seq); // 자유게시판 글 조회수 증가 없이 단순히 글1개 조회하기
+		}
 		
 		List<AttachFileVO> attachvoList = service.getfileView(board_seq); // 해당게시글의 첨부파일 읽어오기 
 		
@@ -464,7 +491,7 @@ public class ChoijhController {
 		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
 		String Employee_seq = loginEmployee.getEmployee_seq();
 		
-		BoardVO bvo = service.detailView(board_seq);
+		BoardVO bvo = service.detailViewNoAddCount(board_seq);
 		
 		if(Employee_seq != null && bvo.getFk_employee_seq().equals(Employee_seq)) { // 로그인한 사용자가 자신의 글을 삭제 할 경우
 			
@@ -501,7 +528,7 @@ public class ChoijhController {
 		
 		String board_seq = request.getParameter("board_seq");
 		
-		BoardVO bvo = service.detailView(board_seq);
+		BoardVO bvo = service.detailViewNoAddCount(board_seq);
 		
 		if(Employee_seq == null || !bvo.getFk_employee_seq().equals(Employee_seq)) { // 로그인한 사용자가 다른 사용자의 글을 수정할 경우
 			String message = "다른 사용자의 글은 수정 불가합니다.";
@@ -544,16 +571,55 @@ public class ChoijhController {
 
 	
 	// 댓글 쓰기 
-	@RequestMapping(value="/freeboard/goCommentWrite.top")
+	@ResponseBody
+	@RequestMapping(value="/freeboard/goCommentWrite.top", produces="text/plain;charset=UTF-8")
 	public String goCommentWrite(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String Employee_seq = loginEmployee.getEmployee_seq();
 		String board_seq = request.getParameter("board_seq");
 		String commentContent = request.getParameter("commentContent");
 		
-		return "";
+		CommentVO cvo = new CommentVO(); 
+		cvo.setFk_board_seq(board_seq);
+		cvo.setContent(commentContent);
+		cvo.setFk_employee_seq(Employee_seq);
+		
+		int n = service.addComment(cvo); // 댓글 쓰기 및 원글게시물 댓글수 +1 증가
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
 	}
 	
 	
+	// 댓글 내용(페이징처리 x) 보여주기
+	@ResponseBody
+	@RequestMapping(value="/freeboard/goReadComment.top", produces="text/plain;charset=UTF-8")
+	public String goReadComment(HttpServletRequest request) {
+		
+		String fk_board_seq = request.getParameter("fk_board_seq");
+		
+		List<CommentVO> commentList = service.goReadComment(fk_board_seq);
+		
+		JSONArray jsonArr = new JSONArray();
+		   
+		   if(commentList != null) {
+			   for(CommentVO cvo : commentList) {
+			       JSONObject jsonObj = new JSONObject();
+			       jsonObj.put("content", cvo.getContent());
+			       jsonObj.put("employee_name", cvo.getEmployee_name());
+		   		   jsonObj.put("regDate", cvo.getRegDate());
+			    		
+			       jsonArr.put(jsonObj);
+			    }
+		   }
+		    
+		   return jsonArr.toString();
+	}
 	
 	
 	

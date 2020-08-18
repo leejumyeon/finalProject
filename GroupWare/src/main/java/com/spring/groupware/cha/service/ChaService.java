@@ -87,6 +87,15 @@ public class ChaService implements ChaInterService {
 		
 		return n;
 	}
+	
+	// 마이페이지(동호회) - 뿌리기
+	@Override
+	public List<HashMap<String,String>> club(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = dao.club(paraMap);
+		
+		return resultList;
+	}
 
 	
 	

@@ -90,6 +90,15 @@ public class ChaDAO implements ChaInterDAO {
 		
 		return n;
 	}
+	
+	// 마이페이지(동호회) - 뿌리기
+	@Override
+	public List<HashMap<String,String>> club(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = sqlsession.selectList("cha.club", paraMap);
+		return resultList;
+		
+	}
 
 	
 	

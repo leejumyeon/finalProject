@@ -12,6 +12,7 @@ public class CommentVO {
 	private String parent_seq; // 상위 댓글(계층형)
 	private String depthno; // 답글형 댓글일 경우 상위 글 보다 들여쓰기 하기 위한 용도
 	public String getFk_userid;
+	
 	public String getComment_seq() {
 		return comment_seq;
 	}

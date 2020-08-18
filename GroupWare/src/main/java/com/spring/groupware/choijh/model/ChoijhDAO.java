@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -141,13 +142,18 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return boardList;
 	}
 
-	// 자유게시판 상세 글 보여주기 
+	// 자유게시판 글1개를 조회를 해주는 것 
 	@Override
 	public BoardVO detailView(String board_seq) {
 		BoardVO bvo = sqlsession.selectOne("freeboard.detailView", board_seq);
 		return bvo;
 	}
 	
+	// 글 조회수 1증가 하기
+	@Override
+	public void setAddReadCount(String board_seq) {
+		sqlsession.update("freeboard.setAddReadCount", board_seq);
+	}
 	
 	// 해당게시글의 첨부파일 읽어오기
 	@Override
@@ -171,6 +177,31 @@ public class ChoijhDAO implements InterChoijhDAO {
 		int n = sqlsession.update("freeboard.edit", bvo);
 		return n;
 	}
+
+	// 자유게시판 댓글쓰기
+	@Override
+	public int addComment(CommentVO cvo) {
+		int n = sqlsession.insert("freeboard.addComment", cvo);
+		return n;
+	}
+
+	// 해당 댓글의 게시물에 댓글 수 증가
+	@Override
+	public int updateCommentCnt(String fk_board_seq) {
+		int result = sqlsession.update("freeboard.updateCommentCnt", fk_board_seq);
+		return result;
+	}
+
+	// 댓글 내용(페이징처리 x) 보여주기
+	@Override
+	public List<CommentVO> goReadComment(String fk_board_seq) {
+		List<CommentVO> commentList = sqlsession.selectList("freeboard.goReadComment", fk_board_seq);
+		return commentList;
+	}
+
+	
+
+	
 
 
 	

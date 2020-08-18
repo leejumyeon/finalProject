@@ -16,7 +16,8 @@ public class ReservationVO { // 예약 신청VO
 	private String head_department;		// 예약 대표자 부서
 	private String memberCount;			// 사용 인원
 	private String reason;				// 사유
-	private String status;				// 승인상태(0: 승인대기중, 1: 승인완료)
+	private String status;				// 승인상태(0: 승인대기중, 1: 승인완료)	
+	private String regDate;				// 예약날짜
 	
 	
 	// 생성자
@@ -24,7 +25,7 @@ public class ReservationVO { // 예약 신청VO
 	public ReservationVO(String reservation_seq, String fk_employee_seq, String employee_name, String position_name,
 			String department_name, String fk_roomNumber, String roomName, String startDate, String endDate,
 			String head_seq, String head_name, String head_position, String head_department, String memberCount,
-			String reason, String status) {
+			String reason, String status, String regDate) {
 		super();
 		this.reservation_seq = reservation_seq;
 		this.fk_employee_seq = fk_employee_seq;
@@ -42,6 +43,7 @@ public class ReservationVO { // 예약 신청VO
 		this.memberCount = memberCount;
 		this.reason = reason;
 		this.status = status;
+		this.regDate = regDate;
 	}
 	
 	
@@ -174,4 +176,11 @@ public class ReservationVO { // 예약 신청VO
 		this.status = status;
 	}
 
+	public String getRegDate() {
+		return regDate;
+	}
+	
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
 }
