@@ -83,7 +83,7 @@
 		<if test="wPlaceType == 'big'">
 			and R.fk_roomNumber = 1
 		</if>
-		order by R.reservation_seq desc
+		order by R.reservation_seq
 	</select>
 	
 	<!-- === 예약 결과 현황 조회(관리자)(Ajax) === -->
