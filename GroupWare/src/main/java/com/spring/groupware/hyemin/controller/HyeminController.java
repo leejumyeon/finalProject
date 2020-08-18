@@ -146,7 +146,12 @@ public class HyeminController {
 	@RequestMapping(value = "/manager/waitingReservation.top", produces = "text/plain;charset=UTF-8")
 	public String waitingReservation(HttpServletRequest request) {
 
-		List<ReservationVO> rsvtvoList = service.waitingReservation();
+		String wPlaceType = request.getParameter("wPlaceType");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("wPlaceType", wPlaceType);
+		
+		List<ReservationVO> rsvtvoList = service.waitingReservation(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -154,10 +159,18 @@ public class HyeminController {
 			for (ReservationVO rsvtvo : rsvtvoList) {
 				JSONObject jsonObj = new JSONObject();
 				jsonObj.put("reservation_seq", rsvtvo.getReservation_seq());
+				jsonObj.put("fk_employee_seq", rsvtvo.getFk_employee_seq());				
 				jsonObj.put("employee_name", rsvtvo.getEmployee_name());
+				jsonObj.put("position_name", rsvtvo.getPosition_name());
+				jsonObj.put("department_name", rsvtvo.getDepartment_name());
+				jsonObj.put("fk_roomNumber", rsvtvo.getFk_roomNumber());
 				jsonObj.put("roomName", rsvtvo.getRoomName());
 				jsonObj.put("startDate", rsvtvo.getStartDate());
 				jsonObj.put("endDate", rsvtvo.getEndDate());
+				jsonObj.put("head_seq", rsvtvo.getHead_seq());
+				jsonObj.put("head_name", rsvtvo.getHead_name());
+				jsonObj.put("head_position", rsvtvo.getHead_position());
+				jsonObj.put("head_department", rsvtvo.getHead_department());
 				jsonObj.put("memberCount", rsvtvo.getMemberCount());
 				jsonObj.put("reason", rsvtvo.getReason());
 				jsonObj.put("regDate", rsvtvo.getRegDate());				
@@ -169,4 +182,61 @@ public class HyeminController {
 		return jsonArr.toString();
 	}
 	
+	
+	// === 예약 결과 현황 조회(관리자)(Ajax) === //
+	@ResponseBody
+	@RequestMapping(value = "/manager/resultReservation.top", produces = "text/plain;charset=UTF-8")
+	public String resultReservation(HttpServletRequest request) {
+		
+		String resultType = request.getParameter("resultType");
+		String rPlaceType = request.getParameter("rPlaceType");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("resultType", resultType);
+		paraMap.put("rPlaceType", rPlaceType);
+		
+		List<ReservationVO> rsvtvoList = service.resultReservation(paraMap);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if (rsvtvoList != null) {
+			for (ReservationVO rsvtvo : rsvtvoList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("reservation_seq", rsvtvo.getReservation_seq());
+				jsonObj.put("fk_employee_seq", rsvtvo.getFk_employee_seq());				
+				jsonObj.put("employee_name", rsvtvo.getEmployee_name());
+				jsonObj.put("fk_roomNumber", rsvtvo.getFk_roomNumber());
+				jsonObj.put("roomName", rsvtvo.getRoomName());
+				jsonObj.put("startDate", rsvtvo.getStartDate());
+				jsonObj.put("endDate", rsvtvo.getEndDate());
+				jsonObj.put("head_seq", rsvtvo.getHead_seq());
+				jsonObj.put("head_name", rsvtvo.getHead_name());
+				jsonObj.put("head_position", rsvtvo.getHead_position());
+				jsonObj.put("head_department", rsvtvo.getHead_department());
+				jsonObj.put("status", rsvtvo.getStatus());
+				jsonObj.put("memberCount", rsvtvo.getMemberCount());
+				jsonObj.put("reason", rsvtvo.getReason());
+				jsonObj.put("regDate", rsvtvo.getRegDate());				
+
+				jsonArr.put(jsonObj);
+			}
+		}
+
+		return jsonArr.toString();	
+	}
+	
+	
+	// === 예약 승인하기(관리자)(update) === //
+	@RequestMapping(value = "/manager/approveRoom.top", method = { RequestMethod.POST })
+	public ModelAndView approveRoom(ModelAndView mav, HttpServletRequest request) {
+		
+		String reservation_seq = request.getParameter("reservation_seq");
+		
+		service.approveRoom(reservation_seq);
+
+		mav.setViewName("redirect:/manager/reservation.top");
+		
+		return mav;
+	}
+
 }

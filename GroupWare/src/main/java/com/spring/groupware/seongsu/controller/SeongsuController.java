@@ -1,8 +1,5 @@
 package com.spring.groupware.seongsu.controller;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,9 +23,6 @@ public class SeongsuController {
 	
 	@Autowired
 	private InterSeongsuService service;
-	
-	@Autowired
-	private FileManager fileManager;
 	
 	@RequestMapping(value="/board.top")
 	public ModelAndView goBoardPage(ModelAndView mav) {
@@ -76,6 +70,7 @@ public class SeongsuController {
 		
 		service.insertAlbumTable(paraMap);
 		
+		mav.setViewName("redirect:/list.top");
 		return mav;
 	}
 	
