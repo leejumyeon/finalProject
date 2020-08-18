@@ -897,14 +897,17 @@ public class MailController {
 		String newSendFileName = "";
 		String newReceiveFileName = "";
 		
+		int cnt = 0;
+		
 		if(!attachList.isEmpty()) {
 			for(int i=0; i<attachList.size(); i++) {
+				System.out.println(attachList.get(i).getOriginalFilename());
 				if(!attachList.get(i).isEmpty()) {
 					byte[] bytes = null;
 					long fileSize = 0;
 					
 					try {
-						bytes = newAttachList.get(i).getBytes();
+						bytes = attachList.get(i).getBytes();
 						// getBytes() 메소드는 첨부된 파일(attach)을 바이트단위로 파일을 다 읽어오는 것이다. 
 						// 예를 들어, 첨부한 파일이 "강아지.png" 이라면
 						// 이 파일을 WAS(톰캣) 디스크에 저장시키기 위해 byte[] 타입으로 변경해서 올린다.
@@ -921,9 +924,9 @@ public class MailController {
 					/*
 					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
 					*/
-						fileSize = newAttachList.get(i).getSize();
+						fileSize = attachList.get(i).getSize();
 						
-						if(i==0) {
+						if(cnt==0) {
 							sendMail.setFileName1(newSendFileName);
 							sendMail.setOrgFileName1(attachList.get(i).getOriginalFilename());
 							sendMail.setFileSize1(String.valueOf(fileSize));
@@ -933,7 +936,7 @@ public class MailController {
 							receiveMail.setFileSize1(String.valueOf(fileSize));
 							
 						}
-						else if(i==1) {
+						else if(cnt==1) {
 							sendMail.setFileName2(newSendFileName);
 							sendMail.setOrgFileName2(attachList.get(i).getOriginalFilename());
 							sendMail.setFileSize2(String.valueOf(fileSize));
@@ -960,7 +963,7 @@ public class MailController {
 					}
 				}
 				else {
-					if(i==0) {
+					if(cnt==0) {
 						sendMail.setFileName1(fileNameList[i]);
 						sendMail.setOrgFileName1(orgFileNameList[i]);
 						sendMail.setFileSize1(fileSizeList[i]);
@@ -969,32 +972,31 @@ public class MailController {
 						receiveMail.setOrgFileName1(orgFileNameList[i]);
 						receiveMail.setFileSize1(fileSizeList[i]);
 					}
-					else if(i==1) {
+					else if(cnt==1) {
 						sendMail.setFileName2(fileNameList[i]);
 						sendMail.setOrgFileName2(orgFileNameList[i]);
-						sendMail.setFileSize1(fileSizeList[i]);
+						sendMail.setFileSize2(fileSizeList[i]);
 						
 						receiveMail.setFileName2(fileNameList[i]);
 						receiveMail.setOrgFileName2(orgFileNameList[i]);
 						receiveMail.setFileSize2(fileSizeList[i]);
 					}
-					else if(i==2) {
-						sendMail.setFileName1(fileNameList[i]);
-						sendMail.setOrgFileName1(orgFileNameList[i]);
-						sendMail.setFileSize1(fileSizeList[i]);
+					else if(cnt==2) {
+						sendMail.setFileName3(fileNameList[i]);
+						sendMail.setOrgFileName3(orgFileNameList[i]);
+						sendMail.setFileSize3(fileSizeList[i]);
 						
-						receiveMail.setFileName1(fileNameList[i]);
-						receiveMail.setOrgFileName1(orgFileNameList[i]);
-						receiveMail.setFileSize1(fileSizeList[i]);
+						receiveMail.setFileName3(fileNameList[i]);
+						receiveMail.setOrgFileName3(orgFileNameList[i]);
+						receiveMail.setFileSize3(fileSizeList[i]);
 					}
 				}
-				
-			}
+				cnt++;
+			} // end of for(int i=0; i<attachList.size(); i++)
 		}
 		
 		
 		if(!newAttachList.isEmpty()) {
-			int cnt = 0;
 			
 			for(int i=0; i<newAttachList.size(); i++) {
 				if(!newAttachList.get(i).isEmpty()) {

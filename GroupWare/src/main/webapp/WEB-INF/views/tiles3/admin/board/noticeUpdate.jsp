@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	
+%>
 <style type="text/css">
 	.managerBtn{
 		border:solid 1px black;
@@ -21,9 +25,27 @@
 		width: 40%;
 		text-align: center;
 	}
+	
+	#addFileFrm{
+		font-size:12pt;
+		text-align: center;
+		background-color: blue;
+		color:white;
+		font-weight: bold;
+		cursor: pointer;
+	}
 </style> 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	
+	
+	var orgFileNameArr = new Array();
+	<c:forEach var="file" items="${fileList}">
+		orgFileNameArr.push("${file.orgFileName}");
+	</c:forEach>
+	
+	var cnt = orgFileNameArr.length;
 	
 	<%-- === #160. 스마트 에디터 구현 시작 === --%>
 	//전역변수
@@ -44,6 +66,33 @@ $(document).ready(function(){
         }
     });
 	<%-- === 스마트 에디터 구현 끝 === --%>
+	
+	$("#addFileFrm").click(function(){
+		cnt++;
+		console.log("파일첨부 값:"+cnt);
+		var html = "<div style='margin-top:3px;' id='attach"+cnt+"'><input type='file' name='newAttach' style='display:inline-block;'/><span class='cancle' id='cancle"+cnt+"'>X</span></div>";
+		$("#FileFrm").append(html);
+	});
+	
+	<%-- X클릭 했을 때 action --%>
+	$(document).on("click",".cancle",function(event){
+		$target = $(event.target);
+		$target = $target.parent().parent();
+		$target.remove();
+	});
+	
+	<%-- 기존에 있는 input type="file"태그 값 변경시 orgFileName변경 --%>
+	$("input[name=attach]").each(function(index, item){
+		$(item).change(function(){
+			var fullpath = $(this).val();
+			console.log(index);
+			var fileName = fullpath.substring(12);
+			if(fileName == ""){
+				fileName = orgFileNameArr[index];
+			}
+			$("input[name=orgFileName]:eq("+index+")").val(fileName);
+		});
+	});
 });
 </script>   
 <div>
@@ -57,27 +106,29 @@ $(document).ready(function(){
 			<table class="table noticeTable">
 				<tr>
 					<td>제목</td>
-					<td colspan="3"><input type="text" name="subject"/></td>
-				</tr>
-				<tr>
-					<td>작성날짜</td>
-					<td></td>
-					<td>조회수</td>
-					<td></td>
+					<td colspan="2"><input type="text" name="subject"/>${board.subject}</td>
 				</tr>
 				<tr>
 					<td style="vertical-align: top;">첨부파일</td>
-					<td colspan="3"><input type="file" name="file" /></td>
+					<td id="FileFrm">
+						<c:forEach var="file" items="${fileList}" varStatus="status">
+							<div id="attach${status.index}" style="margin:5px 0;">
+								<input type="file" name="attach" style="display: inline-block; width:80px;"/><input type="text" name="orgFileName" value="${file.orgFileName}" style="border:none;"/><span class="cancle" id="cancle${status.index}">X</span>
+								<input type="hidden" name="file_seq" value="${file.file_seq}"/>
+							</div>
+						</c:forEach>
+					</td>
+					<td style="vertical-align: top;"><div id="addFileFrm">추가 업로드</div></td>
 				</tr>
 				<tr>
-					<td colspan="4">
-						<textarea name="content" id="content" style="width: 800px;"></textarea>
+					<td colspan="3">
+						<textarea name="content" id="content" style="width: 800px;">${board.content}</textarea>
 					</td>
 				</tr>
 			</table>
 		</form>
 		<div align="center">
-			<div class="managerBtn">삭제</div>
+			<div class="managerBtn" onclick="history.back();">취소</div>
 			<div class="managerBtn">수정</div>
 		</div>
 	</div>

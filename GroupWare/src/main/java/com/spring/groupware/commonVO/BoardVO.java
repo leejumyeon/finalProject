@@ -1,5 +1,7 @@
 package com.spring.groupware.commonVO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BoardVO { //게시글 VO
 	private String board_seq; //게시글 번호
 	private String fk_category_num; //게시글 카테고리 번호
@@ -18,6 +20,19 @@ public class BoardVO { //게시글 VO
 	private String previoussubject;  // 이전글제목
 	private String nextseq;          // 다음글번호
 	private String nextsubject;      // 다음글제목
+	
+	/*
+		=== #148. 파일을 첨부하도록 VO 수정하기
+			먼저, 오라클에서 tblBoard 테이블에 3개 컬럼(fileName, orgFilename, fileSize)을 추가한 다음에 아래의 작업을 한다.
+	*/
+	private String fileName;		// WAS(톰캣)에 저장될 파일명(20200725092715353243254235235234.png)
+	private String orgFilename;		// 진짜 파일명(강아지.png)  // 사용자가 파일을 업로드 하거나 파일을 다운로드할 때 사용되는 파일명 
+	private String fileSize;		// 파일크기
+	
+	private MultipartFile attach;	// form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 진짜 파일 ==> WAS(톰캣) 디스크에 저장됨.
+	// !!!!!! MultipartFile attach 는 오라클 데이터베이스 tblBoard 테이블의 컬럼이 아니다.!!!!!!  
+	// jsp 파일에서 input type="file" 인 name 의 이름(attach)과 동일해야만 파일첨부가 가능해진다.!!!!
+	
 	
 	public BoardVO() {}
 	
@@ -167,7 +182,13 @@ public class BoardVO { //게시글 VO
 		this.nextsubject = nextsubject;
 	}
 
-	
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
 	
 	
 }

@@ -6,7 +6,7 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <meta charset="UTF-8">
-<title>album board</title>
+
 <style type="text/css">
 
 	#container {
@@ -92,7 +92,7 @@
 	
 	#commentContent {
 		border: solid 1px gray;
-		margin-top: 130px;
+		margin-top: 20px;
 	}
 	
 	#commentWrite {
@@ -104,9 +104,46 @@
 		cursor: pointer;
 	}
 	
-	#commentViewTbl, #commentViewTbl tr, #commentViewTbl td {
+	.ChildCommentWrite {
+		width: 58px;
+		margin-left: 315px;
+		color: white;
+		font-size: 9pt;
+    	padding: 5px;
+		background-color: #3399ff;
+		cursor: pointer;
+	}
+	
+	.childCommentContent {
 		border: solid 1px gray;
+		margin-top: 20px;
+	}
+	
+	#commentViewTbl{
+		width: 750px;
+	}
+	    
+	#commentViewTbl, #commentViewTbl tr, #commentViewTbl td {
+		border: solid 1px #33adff;
+		border-left-style: none;
+		border-right-style: none;
 		border-collapse: collapse;
+	}
+	
+	/* 답글쓰기 */
+	.childCommentBtn {
+		cursor: pointer;
+		color: gray;
+		font-weight: bold;
+		font-size: 9pt;
+	}
+	
+	/* 취소 */
+	.cancel {
+		cursor: pointer;
+		color: gray;
+		font-weight: bold;
+		font-size: 9pt;
 	}
 	
 </style>
@@ -181,10 +218,26 @@
 				if(json.length > 0) {
 					$.each(json, function(index, item){
 						html += "<tr>";
-						html += "<td style='text-align: center;'>"+(index+1)+"</td>";
-						html += "<td>"+item.content+"</td>";
-						html += "<td style='text-align: center;'>"+item.employee_name+"</td>";
-						html += "<td style='text-align: center;'>"+item.regDate+"</td>";
+					//	html += "<td style='text-align: center;'>"+(index+1)+"</td>";
+					
+					if(item.depthno == 0){
+							
+						html += "<td style='padding: 12px;'>"+item.employee_name+item.regDate+"&nbsp;&nbsp;<span class='childCommentBtn' onclick='goChildComment("+index+","+item.fk_board_seq+","+item.comment_seq+","+item.depthno+");'>답글쓰기&nbsp;/</span>"+"&nbsp;<span class='cancel' onclick='goCancel("+index+")'>취소</span>"+        
+						        	"<div style='color:black; margin-top: 3px;'>"+item.content+"</div>"+
+						        	"<div id='commentWriteDiv"+index+"'></div>"+
+						        "</td>";
+					}
+					else{
+							
+						html += "<td style='padding: 12px;'>"+item.employee_name+item.regDate+"&nbsp;&nbsp;<span class='childCommentBtn' onclick='goChildComment("+index+","+item.fk_board_seq+","+item.comment_seq+","+item.depthno+");'>답글쓰기&nbsp;/</span>"+"&nbsp;<span class='cancel' onclick='goCancel("+index+")'>취소</span>"+        
+						        	"<div style='color:black; margin-top: 3px;'>"+item.content+"</div>"+
+						        	"<div id='commentWriteDiv"+index+"'></div>"+
+						        "</td>";	
+					}
+						
+						
+					//	html += "<td style='text-align: center;'>"+item.employee_name+"</td>";
+					//	html += "<td style='text-align: center;'>"+item.regDate+"</td>";
 						html += "</tr>";
 					});
 				}
@@ -202,6 +255,57 @@
 		}); 
 		
 	}
+	
+	
+	// 답글쓰기 버튼 클릭 시 
+	function goChildComment(index, fk_board_seq, parent_seq, depthno) {
+		
+	//	alert(index+" , "+fk_board_seq+" , "+parent_seq);
+		
+		var html = "";
+		html += "<textarea rows='2' cols='50' name='childCommentContent' id='childCommentContent'"+index+" class='childCommentContent' ></textarea>";
+		html += "<div class='ChildCommentWrite' onclick='goChildCommentWrite("+index+","+fk_board_seq+","+parent_seq+","+depthno+")'>답글쓰기</div>";
+		html += "<div style='clear:both;'></div>"
+		$("#commentWriteDiv"+index).html(html);
+		
+	}
+	
+	
+	// 답변쓰기 취소 클릭시
+	function goCancel(index) {
+		$("#commentWriteDiv"+index).empty();
+	}
+	
+	
+	// 답글쓰기를 눌렀을 시 댓글테이블에 insert(계층형 답글쓰기) 
+	function goChildCommentWrite(index, fk_board_seq, parent_seq, depthno) {
+		
+		var childCommentContent = $(".childCommentContent").val();
+			
+		if(childCommentContent.trim() == ""){
+			alert("답글 내용을 입력하세요.");
+			return;
+		} 
+		
+	//	alert(fk_board_seq + " , " + parent_seq + " , " + childCommentContent + " , " + depthno);
+	
+		$.ajax({
+			url:"<%= ctxPath%>/freeboard/goChildCommentWrite.top",
+			data:{"fk_board_seq":fk_board_seq,"parent_seq":parent_seq,"childCommentContent":childCommentContent,"depthno":depthno},
+			type:"POST",
+			dataType:"JSON",
+			success:function(json) {
+				if(json.n == 1){
+					goReadComment(); // 댓글 내용(페이징처리 x) 보여주기
+				}
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		}); 
+			
+	}
+	
 	
 </script>
 
@@ -262,25 +366,25 @@
 			
 			<div style="clear: both;"></div>
 			
-			<%-- 댓글 쓰기  --%>
-			<div>
-				<textarea rows="5" cols="104" name="commentContent" id="commentContent" ></textarea>
-			</div>
-			<div id="commentWrite" onclick="goCommentWrite('${bvo.board_seq}')">댓글 쓰기</div>
-			<div style="clear: both;"></div>
-			
 			<%-- 댓글 보여지는 곳 --%>
-			<table id="commentViewTbl" style="margin-top: 2%; margin-bottom: 3%;">
-				<thead>
+			<table id="commentViewTbl" style="margin-top: 80px;">
+		   <!-- <thead>
 				<tr>
 				    <th style="width: 10%; text-align: center;">번호</th>
 					<th style="width: 60%; text-align: center;">내용</th>
 					<th style="width: 10%; text-align: center;">작성자</th>
 					<th style="text-align: center;">작성일자</th>
 				</tr>
-				</thead>
+				</thead> -->
 				<tbody id="commentView"></tbody>
 			</table>
+			
+			<%-- 댓글 쓰기  --%>
+			<div>
+				<textarea rows="3" cols="104" name="commentContent" id="commentContent" ></textarea>
+			</div>
+			<div id="commentWrite" onclick="goCommentWrite('${bvo.board_seq}')">댓글 쓰기</div>
+			<div style="clear: both;"></div>
 			
 		</div>
 		</div>
