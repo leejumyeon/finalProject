@@ -218,7 +218,7 @@
 			people_min = Number(people.substring(0, people.lastIndexOf("~")));
 			people_max = Number(people.substring(people.indexOf("~")+1, people.lastIndexOf("인")));
 			
-			alert(people_min+", "+people_max);
+		//	alert(people_min+", "+people_max);
 			
 			// 클릭한 회의실의 배경색이 바뀜
 			$(".room").removeClass("rChoice");
@@ -226,7 +226,8 @@
 						
 		//	alert($(this).children('.roomName').text());
 					
-			$("#roomName").text($(this).children('.roomName').text());			
+			$("#roomName").text($(this).children('.roomName').text());	
+			$("#roomNameH").val($(this).children('.roomName').text());			
 			$("#fk_roomNumber").val($(this).children('.fk_roomNumber').val());	
 			
 		//	alert($(this).children('.people').text());		
@@ -452,12 +453,40 @@
 			
 		});
 			
-		var checkFlag = false;
-		var memberCount = 0;
 		
+		
+		var checkFlag = false;
+		var memberCount = 0;		
+		
+		// 오늘 날짜 구하기
+		var date = new Date(); 
+		var year = date.getFullYear(); 
+		var month = new String(date.getMonth()+1); 
+		var day = new String(date.getDate()); 
+
+		// 한자리수일 경우 0을 채워준다. 
+		if(month.length == 1){ 
+		  month = "0" + month; 
+		} 
+		if(day.length == 1){ 
+		  day = "0" + day; 
+		} 
+
+		var today = year + ". " + month + ". " + day;
+		
+		// 예약하기 버튼을 눌렀을 때
 		$("#rsvt_btn").click(function(){	
 			
 			memberCount = Number($("#memberCount").val());
+			
+			var rsvtDate = rsvtDate = $("#rsvtDate").val();			
+			var rsvtYear = rsvtDate.substring(0, 4);
+			var rsvtMonth = rsvtDate.substring(6, 8);
+			var rsvtDay = rsvtDate.substring(10);
+			
+			var toYear = today.substring(0, 4);
+			var toMonth = today.substring(6, 8);
+			var toDay = today.substring(10);
 			
 			// 회의실 유효성 검사
 			if($("#fk_roomNumber").val().trim() == "") {					
@@ -473,7 +502,31 @@
 					alert("예약일을 선택하세요.");
 					checkFlag = true;
 				}
+			}									
+			
+			// 현재날짜 이후의 날짜만 선택가능
+			if(rsvtYear < toYear) {
+				if(!checkFlag) {
+					alert("현재 일자 이후로 선택하세요.");
+					checkFlag = true;
+				}
 			}
+			else if(rsvtYear == toYear) {
+				if(rsvtMonth < toMonth) {
+					if(!checkFlag) {
+						alert("현재 일자 이후로 선택하세요.");
+						checkFlag = true;
+					}
+				}
+				else if(rsvtMonth == toMonth) {
+					if(rsvtDay <= toDay) {
+						if(!checkFlag) {
+							alert("현재 일자 이후로 선택하세요.");
+							checkFlag = true;
+						}
+					}
+				}
+			}				
 			
 			// 예약 시간 유효성 검사
 			if($("#startTimeH").val().trim() == "" || $("#endTimeH").val().trim() == "") {
@@ -767,10 +820,12 @@
 						<c:if test="${empty fk_roomNumber}">
 							<span id="roomName">-</span>
 							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+							<input type="hidden" id="roomNameH" name="roomName"/><!-- hidden -->
 						</c:if>
 						<c:if test="${not empty fk_roomNumber}">
 							<span id="roomName"></span>
-							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->
+							<input type="hidden" id="fk_roomNumber" name="fk_roomNumber"/><!-- hidden -->	
+							<input type="hidden" id="roomNameH" name="roomName"/><!-- hidden -->						
 						</c:if>
 					</td>
 				</tr>
@@ -803,7 +858,7 @@
 							<input type="text" name="searchHead" id="searchHead" autocomplete="off" style="width:200px; text-align:center;" placeholder="성명 <부서명/직위>"/>
 							<input type="hidden" name="head_seq" id="head_seq"/><!-- hidden -->
 							<%-- === 검색어 입력 시 자동글 완성하기 1 === --%>
-							<div id="displayList" style="position: absolute; border:solid 1px gray; border-top:0px; width:200px; height:70px; margin-left:51px; margin-top:0px; padding: 4px; overflow: auto; background-color: #e7f5fd;"></div>
+							<div id="displayList" style="position: absolute; border:solid 1px gray; border-top:0px; width:200px; height:70px; margin-left:46px; margin-top:0px; padding: 4px; overflow: auto; background-color: #e7f5fd;"></div>
 						</div>
 					</td>
 				</tr>

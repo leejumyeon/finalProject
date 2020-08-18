@@ -156,4 +156,11 @@ public class MailService implements InterMailService{
 		MailVO mail = dao.findMail(mail_seq);
 		return mail;
 	}
+
+	// 휴지통 비우기
+	@Override
+	public int mailDrop(String loginSeq) {
+		int result = dao.mailDrop(loginSeq);
+		return result;
+	}
 }

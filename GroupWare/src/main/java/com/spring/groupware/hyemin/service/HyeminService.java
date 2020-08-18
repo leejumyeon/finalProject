@@ -36,5 +36,12 @@ public class HyeminService implements InterHyeminService {
 	public void reserveRoomEnd(HashMap<String, String> paraMap) {
 		dao.reserveRoomEnd(paraMap);
 	}
+
+	// === 예약 신청 현황 조회(관리자) === //
+	@Override
+	public List<ReservationVO> waitingReservation() {
+		List<ReservationVO> rsvtvoList = dao.waitingReservation();
+		return rsvtvoList;
+	}
 	
 }

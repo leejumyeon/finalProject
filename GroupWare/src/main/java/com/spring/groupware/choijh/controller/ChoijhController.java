@@ -26,6 +26,7 @@ import com.spring.common.FileManager;
 import com.spring.groupware.choijh.service.InterChoijhService;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -225,7 +226,6 @@ public class ChoijhController {
 		
 		HttpSession session = request.getSession();
 		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
-		;
 		
 		HashMap<String,String> map = new HashMap<>();
 		map.put("roomNumber", roomNumber);
@@ -289,9 +289,12 @@ public class ChoijhController {
 	
 	// 자유 게시판 글 보여주기
 	@RequestMapping(value="/freeboard/list.top")
-	public ModelAndView list(ModelAndView mav) {
+	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
 		
 		List<BoardVO> boardList = service.boardlistView(); // 게시판 글 보여주기
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes"); // 새로고침시 조회 수 증가 방지
 		
 		mav.addObject("boardList", boardList);
 		
@@ -311,74 +314,70 @@ public class ChoijhController {
 	
 	// 자유게시판 글쓰기완료 
 	@RequestMapping(value="/freeboard/writeEnd.top", method= {RequestMethod.POST})
-	public String writeEnd(HttpServletRequest request, BoardVO bvo, AttachFileVO attachvo, MultipartHttpServletRequest mrequest) throws Exception {
+	public String writeEnd(HttpServletRequest request, BoardVO bvo, MultipartHttpServletRequest mrequest) throws Exception {
 		
-	//  === !!! 첨부파일이 있는지 없는지 알아오기 시작 !!! ===
-		MultipartFile attach = attachvo.getAttach();
-		if( !attach.isEmpty() ) { // 첨부파일이 있는 경우
-			
-			HttpSession session = mrequest.getSession();
-			String root = session.getServletContext().getRealPath("/");
-			String path = root + "resources" + File.separator +"freeboard";
-			
-			System.out.println("~~~~ 확인용 path => " + path);
-			// ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\freeboard
-			
-			String newFileName = "";
-			// WAS(톰캣)의 디스크에 저장될 파일명 
-			
-			byte[] bytes = null;
-			// 첨부파일을 WAS(톰캣)의 디스크에 저장할때 사용되는 용도.
-			
-			long fileSize = 0;
-			// 파일크기를 읽어오기 위한 용도
-			
-			try {
-				bytes = attach.getBytes();
-
-				newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
-				
-				System.out.println(">>>> 확인용 newFileName ==> " + newFileName);
-				
-				attachvo.setFileName(newFileName);
-			
-				attachvo.setOrgFileName(attach.getOriginalFilename());
-				
-				fileSize = attach.getSize();
-				attachvo.setFileSize(String.valueOf(fileSize));
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-	//  === !!! 첨부파일이 있는지 없는지 알아오기 끝 !!! ===	
+		List<MultipartFile> fileList = mrequest.getFiles("attach");
 		
 		int n = 0;
-		if( attach.isEmpty() ) {
-			// 첨부파일이 없는 경우이라면
-			n = service.add(bvo); // 글쓰기(첨부파일이 없는 경우) 
+		
+		if(fileList.size() == 0) { // 첨부파일 없는 경우
+			n = service.add(bvo); // 자유게시판 글쓰기(첨부파일이 없는 경우) 
 		}
-		else {
-			// 첨부파일이 있는 경우이라면
+		else {	// 첨부파일 있는 경우
 			
-			int num = service.getBordNum(); // 게시판 글번호 채번해오기
-			
+			int num = service.getBordNum(); // 자유게시판 글번호 채번해오기
 			String number = String.valueOf(num);
 			
 			bvo.setBoard_seq(number);
-			attachvo.setFk_board_seq(number);
+
+			n = service.add_withFile(bvo); // 글쓰기(첨부파일이 있는 경우)
 			
-			n = service.add_withFile(bvo, attachvo); // 글쓰기(첨부파일이 있는 경우)
+			for(MultipartFile attach : fileList) {
+				
+				//  === !!! 첨부파일이 있는지 없는지 알아오기 시작 !!! ===
+					if(!attach.isEmpty()) { // 첨부파일이 있는경우
+						HttpSession session = mrequest.getSession();
+						String root = session.getServletContext().getRealPath("/");
+						String path = root + "resources" + File.separator +"freeboard";
+						
+						String newFileName = "";
+						
+						byte[] bytes = null;
+						
+						long fileSize = 0;
+						
+						AttachFileVO attachvo = new AttachFileVO();
+						attachvo.setFk_board_seq(number);
+						
+						try {
+							bytes = attach.getBytes();
+
+							newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+							
+							attachvo.setFileName(newFileName);
+						
+							attachvo.setOrgFileName(attach.getOriginalFilename());
+							
+							fileSize = attach.getSize();
+							attachvo.setFileSize(String.valueOf(fileSize));
+							
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						service.addFile(attachvo); // 자유게시판 첨부파일 테이블 insert하기
+						
+					}
+				//  === !!! 첨부파일이 있는지 없는지 알아오기 끝 !!! ===
+
+				}// end of for(MultipartFile attach : fileList)------------------
+			
 		}
 		
 		if(n==1) { // 글쓰기 성공
-			
 			return "redirect:/freeboard/list.top";
-			
 		}
 		else { // 글쓰기 실패
-			
 			return "redirect:/freeboard/write.top";
 		}
 		
@@ -391,7 +390,36 @@ public class ChoijhController {
 		
 		String board_seq = request.getParameter("board_seq");
 		
-		BoardVO bvo = service.detailView(board_seq);
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String employee_seq = null;
+		
+		if(loginEmployee != null) {
+			employee_seq = loginEmployee.getEmployee_seq();
+			// employee_seq 는 로그인 되어진 사용자의 employee_seq 이다.
+		}
+		
+		BoardVO bvo = null;
+		
+		if("yes".equals(session.getAttribute("readCountPermission")) ) {
+			// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+			
+			bvo = service.detailView(board_seq, employee_seq);
+			// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+			
+			session.removeAttribute("readCountPermission");
+			// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		}
+		else {
+			bvo = service.detailViewNoAddCount(board_seq); // 자유게시판 글 조회수 증가 없이 단순히 글1개 조회하기
+		}
+		
+		List<AttachFileVO> attachvoList = service.getfileView(board_seq); // 해당게시글의 첨부파일 읽어오기 
+		
+		if(attachvoList.size() != 0) { // 파일첨부가 있을 경우
+			mav.addObject("attachvoList",attachvoList);
+		}
 		
 		mav.addObject("bvo", bvo);
 		
@@ -403,27 +431,13 @@ public class ChoijhController {
 
 	// 자유게시판 첨부파일 다운로드
 	@RequestMapping(value="/freeboard/download.top")
-	public void download(HttpServletRequest request, HttpServletResponse response) {
-		
-		String board_seq = request.getParameter("board_seq"); 
-		   // 첨부파일이 있는 글번호
-			
-		   // 첨부파일이 있는 글번호에서 
-		   // 202007250930481985323774614.png 처럼
-		   // 이러한 fileName 값을 DB에서 가져와야 한다. 
-		   // 또한 orgFileName 값도 DB에서 가져와야 한다.
-			
-		   BoardVO bvo = service.detailView(board_seq);
-		   // 조회수 증가 없이 1개 글 가져오기
-		   // 먼저 board.xml 에 가서 id가 getView 인것에서
-		   // select 절에 fileName, orgFilename, fileSize 컬럼을
-		   // 추가해주어야 한다.
-
-		   String fileName = bvo.getFileName(); 
+	public void download(HttpServletRequest request, HttpServletResponse response, AttachFileVO attachvo) {
+	
+		   String fileName = attachvo.getFileName(); 
 		   // 202007250930481985323774614.png 와 같은 것이다.
 		   // 이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
 			
-		   String orgFilename = bvo.getOrgFileName(); 
+		   String orgFilename = attachvo.getOrgFileName(); 
 		   // 강아지.png 처럼 다운받을 사용자에게 보여줄 파일명.
 			
 			
@@ -466,5 +480,152 @@ public class ChoijhController {
 		
 	}
 
+	
+	// 글 삭제하기
+	@RequestMapping(value="/freeboard/del.top", method = {RequestMethod.POST})
+	public String del(HttpServletRequest request) {
+		
+		String board_seq = request.getParameter("board_seq");
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		String Employee_seq = loginEmployee.getEmployee_seq();
+		
+		BoardVO bvo = service.detailViewNoAddCount(board_seq);
+		
+		if(Employee_seq != null && bvo.getFk_employee_seq().equals(Employee_seq)) { // 로그인한 사용자가 자신의 글을 삭제 할 경우
+			
+			int n = service.del(board_seq);
+			
+			if(n > 0) { // 글 삭제 성공 시 
+				String message = "글이 삭제 되었습니다.";
+				String loc = request.getContextPath()+"/freeboard/list.top";
+				
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+			}
+		}
+		else if(!bvo.getFk_employee_seq().equals(Employee_seq)) {
+			String message = "다른 사용자의 글은 삭제 불가합니다.";
+			String loc = "javascript:history.back()";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+			
+		}
+		
+		return "msg";
+	}
+	
+	
+	// 글 수정 폼 보여주기
+	@RequestMapping(value="/freeboard/editView.top")
+	public String editView(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		String Employee_seq = loginEmployee.getEmployee_seq();
+		
+		String board_seq = request.getParameter("board_seq");
+		
+		BoardVO bvo = service.detailViewNoAddCount(board_seq);
+		
+		if(Employee_seq == null || !bvo.getFk_employee_seq().equals(Employee_seq)) { // 로그인한 사용자가 다른 사용자의 글을 수정할 경우
+			String message = "다른 사용자의 글은 수정 불가합니다.";
+			String loc = "javascript:history.back()";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+			return "msg";
+		}
+		
+		request.setAttribute("bvo", bvo);
+		
+		return "freeboard/edit.tiles1";
+	}
+	
+	
+	// 글 수정 하기 
+	@RequestMapping(value="/freeboard/edit.top")
+	public String edit(HttpServletRequest request, BoardVO bvo) {
+		
+		int n = service.edit(bvo); // 자유게시판 글 수정 하기 
+		
+		if(n == 1) { // 글 수정이 완료 된 경우
+			String message = "글이 수정 되었습니다.";
+			String loc = request.getContextPath()+"/freeboard/list.top";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+		}
+		else {
+			String message = "글 수정이 실패했습니다.";
+			String loc = "javascript:history.back()";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+		}
+		
+		return "msg";
+	}
+
+	
+	// 댓글 쓰기 
+	@ResponseBody
+	@RequestMapping(value="/freeboard/goCommentWrite.top", produces="text/plain;charset=UTF-8")
+	public String goCommentWrite(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String Employee_seq = loginEmployee.getEmployee_seq();
+		String board_seq = request.getParameter("board_seq");
+		String commentContent = request.getParameter("commentContent");
+		
+		CommentVO cvo = new CommentVO(); 
+		cvo.setFk_board_seq(board_seq);
+		cvo.setContent(commentContent);
+		cvo.setFk_employee_seq(Employee_seq);
+		
+		int n = service.addComment(cvo); // 댓글 쓰기 및 원글게시물 댓글수 +1 증가
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// 댓글 내용(페이징처리 x) 보여주기
+	@ResponseBody
+	@RequestMapping(value="/freeboard/goReadComment.top", produces="text/plain;charset=UTF-8")
+	public String goReadComment(HttpServletRequest request) {
+		
+		String fk_board_seq = request.getParameter("fk_board_seq");
+		
+		List<CommentVO> commentList = service.goReadComment(fk_board_seq);
+		
+		JSONArray jsonArr = new JSONArray();
+		   
+		   if(commentList != null) {
+			   for(CommentVO cvo : commentList) {
+			       JSONObject jsonObj = new JSONObject();
+			       jsonObj.put("content", cvo.getContent());
+			       jsonObj.put("employee_name", cvo.getEmployee_name());
+		   		   jsonObj.put("regDate", cvo.getRegDate());
+			    		
+			       jsonArr.put(jsonObj);
+			    }
+		   }
+		    
+		   return jsonArr.toString();
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

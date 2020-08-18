@@ -244,7 +244,8 @@
 	<br/>
     <div style="padding-left: 15px; float: left;">   
 	    <div style="border: solid 1px red; width: 670px; height: 148px; ">
-	        <h3>동호회</h3>	
+	        <h3>동호회</h3>
+	        <div id="view"></div>		        	        
 	    </div>    
     </div>
     <div style="float: left;">   
@@ -367,6 +368,51 @@
 		
 		return e;
 	}
+	
+	function func_viewInfo(){
+		
+		$.ajax({
+			
+			uri:"/groupware/club.top",
+			dataType:"JSON",
+			success:function(json){
+				
+				var html = "<table>";
+					htmp += "<tr>";
+						htmp += "<th>동호회번호</th>";
+						htmp += "<th>동호회원번호</th>";
+						htmp += "<th>회원명</th>";
+						htmp += "<th>동호회명</th>";
+						htmp += "<th>동호회소개</th>";
+						htmp += "<th>회원등급</th>";
+						htmp += "<th>가입날짜</th>";			
+					htmp += "</tr>";
+				$.each(json, function(index,item){
+					
+					htmp += "<tr>";			
+						htmp += "<td>+"item.club_seq"+</td>";
+						htmp += "<td>+"item.member_seq"+</td>";
+						htmp += "<td>+"item.employee_name"+</td>";
+						htmp += "<td>+"item.club_name"+</td>";
+						htmp += "<td>+"item.club_info"+</td>";
+						htmp += "<td>+"item.status"+</td>";
+						htmp += "<td>+"item.regDate"+</td>";
+					htmp += "</tr>";
+					
+				});	
+				
+				html += "</table>";
+				$("#view").html(html);
+				
+			},
+			error : function(request, status, error){
+				
+				alert("code: "+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			}
+		
+		});
+		
+	}//end of function func_viewInfo(){}
 	
 	</script>  
 

@@ -12,24 +12,24 @@
 		width: 1000px;
 		margin: 0 auto;
 	}
-	#ablwrite {
+	#abledit {
 		width: 750px;
 		
 	}
-	#ablwrite, #ablwrite th, #ablwrite td {
+	#abledit, #abledit th, #abledit td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
-	#ablwrite th{
+	#abledit th{
 		width: 130px;
 		font-size: 11pt;
 		background-color: #3399ff;
 		color: white;
 	}	
-	#ablwrite th, #ablwrite td {
+	#abledit th, #abledit td {
 		height: 40px;
 	} 
-	#btnWrite, #btnWrite2 {
+	#btnUpdate, #btnUpdate2 {
 		border-radius: 0;
 		border-style: none;
 		background-color: #3399ff;
@@ -101,7 +101,7 @@
 		<%-- === 스마트 에디터 구현 끝 === --%>
 		
 		// 쓰기버튼
-		$("#btnWrite").click(function(){
+		$("#btnUpdate").click(function(){
 			
 			<%-- === 스마트에디터 구현 시작 === --%>
 			// id가 content인 textarea에 에디터에서 대입
@@ -143,11 +143,11 @@
 			
 		
 			// 폼(form) 을 전송(submit)
-			var frm = document.writeFrm;
+			var frm = document.editFrm;
 			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/freeboard/writeEnd.top";
+			frm.action = "<%= ctxPath%>/freeboard/edit.top";
 			frm.submit();	 		
-		}); // end of $(".btnWrite").click() ------------------------------------------------------------
+		}); // end of $(".btnUpdate").click() ------------------------------------------------------------
 		
 		var cnt = 0;
 		$("#addFileBtn").click(function(){
@@ -173,8 +173,8 @@
 		</div>			
 			<div id="post">
 			<h3>자유게시판</h3>
-			<form name="writeFrm" enctype="multipart/form-data">
-				<table id="ablwrite">
+			<form name="editFrm" enctype="multipart/form-data">
+				<table id="abledit">
 					<tbody>
 						<tr>
 							<th style="text-align: center;">항목</th>
@@ -190,7 +190,7 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">제목</th>
-							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" ></td>
+							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" value="${bvo.subject}" ></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
@@ -201,16 +201,17 @@
 						</tr>
 						<tr style="height: 400px;">
 							<th style="text-align: center;">내용</th>
-							<td>&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content"></textarea></td>
+							<td>&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content">${bvo.content}</textarea></td>
 						</tr>				
 					</tbody>				
 				</table>		
 				<div style="margin-top: 10px;" id="btn">	
 					<div style="clear:both"></div>						
-					<button type="button" id="btnWrite" style="color: white;">쓰기</button>
-					<button type="button" id="btnWrite2" onclick="javascript:history.back()" style="color: white;">취소</button>
+					<button type="button" id="btnUpdate" style="color: white;">수정</button>
+					<button type="button" id="btnUpdate2" onclick="javascript:history.back()" style="color: white;">취소</button>
 				</div>
-				<input type="hidden" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" />			
+				<input type="hidden" name="fk_employee_seq" value="${sessionScope.loginEmployee.employee_seq}" />
+				<input type="hidden" name="board_seq" value="${bvo.board_seq}" />			
 			</form>
 			</div>				
 		</div>

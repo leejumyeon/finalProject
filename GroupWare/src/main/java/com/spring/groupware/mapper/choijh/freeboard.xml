@@ -34,28 +34,97 @@
 	
 	<!-- 게시판 글 보여주기 -->
 	<select id="boardlistView" resultType="com.spring.groupware.commonVO.BoardVO">
-		select V.board_seq, E.employee_name, V.subject, V.content, V.regDate, V.commentCnt, V.orgFileName, V.readCnt
-		from 
-		(
-			select B.board_seq, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, A.orgFileName, fk_employee_seq
-			from board_table B left join attachFile_table A
-			on   B.board_seq = A.fk_board_seq
-		) V join employees_table E
-		on  V.fk_employee_seq = E.employee_seq
+		select B.board_seq, E.employee_name, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, B.fk_employee_seq
+		from board_table B join employees_table E 
+		on  B.fk_employee_seq = E.employee_seq
+		where fk_category_num = 3
+		order by B.board_seq desc
 	</select>
 	
 	
-	<!-- 자유게시판 상세 글 보여주기  -->
+	<!-- 자유게시판 상세 글(이전글,다음글) 보여주기  -->
 	<select id="detailView" parameterType="String" resultType="com.spring.groupware.commonVO.BoardVO">
-		select V.board_seq, E.employee_name, V.subject, V.content, V.regDate, V.commentCnt, V.orgFileName, V.fileName, V.fileSize, V.readCnt
-		from 
-		(
-			select B.board_seq, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, A.orgFileName, A.fileName, A.fileSize, B.fk_employee_seq
-			from board_table B left join attachFile_table A
-			on   B.board_seq = A.fk_board_seq
-			where B.board_seq = #{board_seq}
-		) V join employees_table E
-		on  V.fk_employee_seq = E.employee_seq
+   <!-- select B.board_seq, E.employee_name, B.subject, B.content, B.readCnt, to_char(B.regDate, 'yyyy-mm-dd hh24:mi') AS regDate, B.commentCnt, B.fk_employee_seq
+		from board_table B join employees_table E 
+		on  B.fk_employee_seq = E.employee_seq
+		where fk_category_num = 3 and B.board_seq = #{board_seq} -->
+		select previousseq, previoussubject
+		     , board_seq, fk_employee_seq, E.employee_name, subject, content, readCnt, regDate
+		     , nextseq, nextsubject
+		from
+		    (
+		    select previousseq, previoussubject
+		         , board_seq, fk_employee_seq, subject, content, readCnt, regDate
+		         , nextseq, nextsubject
+		    from
+		    (    
+		        select lag(board_seq, 1) over(order by board_seq desc) AS previousseq  
+		             , lag(subject, 1) over(order by board_seq desc) AS previoussubject 
+		           
+		             , board_seq, fk_employee_seq, subject, content, readCnt
+		             , to_char(regDate,'yyyy-mm-dd hh24:mi:ss') AS regDate
+		          
+		             , lead(board_seq, 1) over(order by board_seq desc) AS nextseq
+		             , lead(subject, 1) over(order by board_seq desc) AS nextsubject
+		        from board_table
+		        where fk_category_num = 3
+		    ) V
+		    where V.board_seq = #{board_seq}
+		    ) T join employees_table E
+		on T.fk_employee_seq = employee_seq 
 	</select>
+	
+	
+	<!-- 글 조회수 1증가 하기 -->
+	<update id="" parameterType="String">
+		update board_table set readCnt = readCnt + 1
+		where board_seq = #{board_seq}
+	</update>
+	
+	
+	<!-- 해당게시글의 첨부파일 읽어오기 -->
+	<select id="getfileView" parameterType="String" resultType="com.spring.groupware.commonVO.AttachFileVO">
+		select file_seq, fk_board_seq, fileName, orgFileName, fileSize
+		from attachFile_table
+		where fk_board_seq = #{board_seq}
+	</select>
+	
+	
+	<!-- 자유게시판 글 삭제 -->
+	<delete id="del" parameterType="String">
+		delete from board_table 
+		where board_seq = #{board_seq}
+	</delete>
+	
+	
+	<!-- 자유게시판 글 수정 하기  -->
+	<update id="edit" parameterType="com.spring.groupware.commonVO.BoardVO">
+		update board_table set subject = #{subject}, content = #{content}, regDate = sysdate
+		where board_seq = #{board_seq}
+	</update>
+	
+	
+	<!-- 댓글쓰기 -->
+	<insert id="addComment" parameterType="com.spring.groupware.commonVO.CommentVO">
+		insert into comment_table(commnet_seq, fk_board_seq, fk_employee_seq, readCnt, content, status, regDate, parent_seq, depthno)
+		values(comment_table_seq.nextval, #{fk_board_seq}, #{fk_employee_seq}, default, #{content}, default, default, 0, default)
+	</insert>
+	<!-- 해당 댓글의 게시물에 댓글 수 증가 -->
+	<update id="updateCommentCnt" parameterType="String">
+		update board_table set commentCnt = commentCnt + 1
+		where fk_category_num = 3 and board_seq = #{fk_board_seq} 
+	</update>
+	
+	
+	<!-- 댓글 내용(페이징처리 x) 보여주기 -->
+	<select id="goReadComment" parameterType="String" resultType="com.spring.groupware.commonVO.CommentVO">
+		select C.commnet_seq, C.fk_board_seq, C.fk_employee_seq, C.readCnt, C.content, C.status, C.regDate, C.parent_seq, C.depthno, E.employee_name
+		from comment_table C join employees_table E
+		on   C.fk_employee_seq = E.employee_seq
+		where fk_board_seq = #{fk_board_seq}
+	</select>
+	
+	
+	
 	
 </mapper>

@@ -398,4 +398,18 @@
 		where mail_groupno = #{mail_groupno} and status = 1
 	</select>
 	
+	
+	<!-- 1개 메일 찾기 -->
+	<select id="findMail" parameterType="String" resultType="com.spring.groupware.commonVO.MailVO">
+		select mail_seq, mail_groupno, mailStatus, readStatus, status, subject, content, fileName1, fileName2, fileName3, orgFileName1, orgFileName2, orgFileName3, fileSize1, fileSize2, fileSize3, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate
+		from mail_table
+		join employees_table on fk_employee_seq = employee_seq 
+		join position_table on fk_position = position_seq
+		join department_table on fk_department = department_seq
+		where mail_seq = #{mail_seq}
+	</select>
+	
+	<delete id="drop" parameterType="String">
+		delete from mail_table where status = 0 and fk_employee_seq = #{loginSeq}
+	</delete>
 </mapper>

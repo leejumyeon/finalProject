@@ -221,12 +221,12 @@
 		});
 		
 		$("#addFile").click(function(){
-			var len = $("input[name=fileName]").length;
+			var len = $("input[name=fileName]").length + $("input[name=newFileName]").length;
 			if(len >= 3){
 				alert("메일 1개당 최대 3개까지만 파일첨부가 가능합니다.");
 				return;
 			}
-			var html="<div><input type='file' name='fileName' style='display:inline-block;'/><span class='cancleFile'>X</span></div>";
+			var html="<div><input type='file' name='newFileName' style='display:inline-block;'/><span class='cancleFile'>X</span></div>";
 			$("#attachFile").append(html);
 		}); // end of $("#addFile").click()----------------------------------------------------------------
 		
@@ -249,7 +249,7 @@
 				alert("글제목을 입력하세요!!");
 				return;
 			}
-			if("${receive}"==""){
+			if("${secendType}"=="relay"){
 				var receiver = $("#inputArea li").length;
 				console.log(receiver);
 				if(receiver <= 0){
@@ -292,7 +292,7 @@
 			// 폼(form) 을 전송(submit)
 			var frm = document.mailFrm;
 			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/mail/mailSend.top";
+			frm.action = "<%= ctxPath%>/mail/mailReSend.top";
 			frm.submit();	 		
 		}); // end of $(".wirteBtn").click()------------------------------------------------------------
 		
@@ -303,12 +303,12 @@
 <c:choose>
 	<c:when test="${empty result}">
 		<div id="writeArea">
-			<span class="writeBtn">보내기</span> <span class="writeBtn">미리보기</span>
+			<span class="writeBtn">보내기</span>
 		</div>
 		<div id="frmArea">
 			<form name="mailFrm" enctype="multipart/form-data">
 				<table>
-					<c:if test="${empty(receive)}">
+					<c:if test="${secendType eq 'relay'}"> <!-- 전달일 경우 -->
 						<tr>
 							<th>받는 사람</th>
 							<td class="receive" colspan="2">
@@ -320,29 +320,56 @@
 						</tr>
 						<tr>
 							<th>제목</th>
-							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
+							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" value="FW:${mail.subject}"/></div></td>
 						</tr>
 					</c:if>
 					
-					<c:if test="${not empty(receive) && sessionScope.loginEmployee.employee_seq == receive.employee_seq}">
+					<c:if test="${secendType eq 'reply'}"> <!-- 답장일 경우 -->
 						<tr>
-							<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
+							<th>받는 사람</th>
+							<td colspan="2">${sender.employee_name}(${sender.email})<input type="hidden" name="receiveSeq" value="${sender.fk_employee_seq}"/></td>
 						</tr>
 						<tr>
 							<th>제목</th>
-							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" /></div></td>
+							<td class="receive" colspan="2"><div style="border:solie 1px black;"><input type="text" name="subject" id="subject" value="RE:${mail.subject}"/></div></td>
 						</tr>
 					</c:if>
 					
 					<tr>
 						<th style="vertical-align: top">파일첨부</th>
-						<td class="receive" id="attachFile"><div><input type="file" name="fileName" style='display:inline-block;'/><span class='cancleFile'>X</span></div></td>
+						<td class="receive" id="attachFile">
+							<div>
+								<c:choose>
+									<c:when test="${not empty mail.fileName1}">
+										<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName1}"/>
+										<input type="hidden" name="fileName" value="${mail.fileName1}"/>
+										<input type="hidden" name="fileSize" value="${mail.fileSize1}" />
+										<span class='cancleFile'>X</span>
+										<c:if test="${not empty mail.fileName2}">
+											<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName2}"/>
+											<input type="hidden" name="fileName" value="${mail.fileName2}"/>
+											<input type="hidden" name="fileSize" value="${mail.fileSize2}" />
+											<span class='cancleFile'>X</span>
+										</c:if>
+										<c:if test="${not empty mail.fileName3}">
+											<input type="file" name="file" style='display:inline-block;'/><input type="text" name="orgFileName" value="${mail.orgFileName3}"/>
+											<input type="hidden" name="fileName" value="${mail.fileName3}"/>
+											<input type="hidden" name="fileSize" value="${mail.fileSize3}" />
+											<span class='cancleFile'>X</span>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<input type="file" name="newFileName" style='display:inline-block;'/><input type="text" name="newOrgFileName" value=""/><span class='cancleFile'>X</span>
+									</c:otherwise>
+								</c:choose>
+							</div>
+						</td>
 						<td style="vertical-align: top;"><div id="addFile">추가 업로드</div></td>
 					</tr>
 					
 				</table>
 				<div id="contentArea" style="width: 800px;">
-					<textarea name="content" id="content" style="width: 800px;"></textarea>
+					<textarea name="content" id="content" style="width: 800px;">${origin}${mail.content}</textarea>
 				</div>
 			</form>
 		</div>
