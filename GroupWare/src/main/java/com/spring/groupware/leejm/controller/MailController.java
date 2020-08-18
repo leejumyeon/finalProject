@@ -2,6 +2,7 @@ package com.spring.groupware.leejm.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -527,73 +528,77 @@ public class MailController {
 	}
 	
 	// 스마트 에디터 사진첨부 //
-	@RequestMapping(value="/image/photoUpload.action", method={RequestMethod.POST})
-	public String photoUpload(PhotoVO photovo, MultipartHttpServletRequest req) {
-	    
-	String callback = photovo.getCallback();
-	String callback_func = photovo.getCallback_func();
-	String file_result = "";
-	    
-	if(!photovo.getFiledata().isEmpty()) {
-	   // 파일이 존재한다라면
-			
+	@RequestMapping(value="/image/multiplePhotoUpload.top", method={RequestMethod.POST})
+	public void photoUpload(HttpServletRequest request, HttpServletResponse response) {
 		/*
-		   1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
-		   >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-		        우리는 WAS 의 webapp/resources/files 라는 폴더로 지정해준다.
+		 	1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
+		 	>>> 파일이 업로드 될 특정 경로(폴더)지정해주기
+		 	우리는 WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
 		 */
-			
-		// WAS 의 webapp 의 절대경로를 알아와야 한다. 
-		HttpSession session = req.getSession();
-		String root = session.getServletContext().getRealPath("/"); 
-		String path = root + "resources"+File.separator+"photo_upload";
-		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다. 
-			
-		System.out.println(">>>> 확인용 path ==> " + path); 
-		// >>>> 확인용 path ==> C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload  
-			
-			
-		// 2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일올리기
-		String newFileName = "";
-		// WAS(톰캣) 디스크에 저장할 파일명 
-			
-		byte[] bytes = null;
-		// 첨부파일을 WAS(톰캣) 디스크에 저장할때 사용되는 용도 
-						
+		
+		// WAS의 webapp 의 절대경로를 알아와야 한다.
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "photo_upload";
+		/*	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+		 	운영체제가 Windows 라면 File.separator 는 "\" 이고,
+		 	운영체제가 UNIX, Linux 라면 File.separator 는 "/" 이다.
+		 */
+		
+		// path 가 첨부파일을 저장할 WAS(톰캣)의 폴더가 된다.
+		System.out.println("~~~~ 확인용 path => " + path);
+		// ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload
+		
+		File dir = new File(path);
+		if(dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		String strURL = "";
+		
 		try {
-			bytes = photovo.getFiledata().getBytes(); 
-			// getBytes()는 첨부된 파일을 바이트단위로 파일을 다 읽어오는 것이다. 
-			/* 2-1. 첨부된 파일을 읽어오는 것
-	  		        첨부한 파일이 강아지.png 이라면
-				이파일을 WAS(톰캣) 디스크에 저장시키기 위해
-				byte[] 타입으로 변경해서 받아들인다.
-			*/ 
-			
-                        // 2-2. 이제 파일올리기를 한다.
-			String original_name = photovo.getFiledata().getOriginalFilename();
-			//  photovo.getFiledata().getOriginalFilename() 은 첨부된 파일의 실제 파일명(문자열)을 얻어오는 것이다. 
-			newFileName = fileManager.doFileUpload(bytes, original_name, path);
-				
-			// System.out.println(">>>> 확인용 newFileName ==> " + newFileName); 
-
-			int width=fileManager.getImageWidth(path+File.separator+newFileName);
-			 
-                        if(width>600)
-			   width=600;
+			if(!"OPTIONS".equals(request.getMethod().toUpperCase())) {
+				String filename = request.getHeader("file-name"); //파일명을 받는다 - 일반 원본파일명
 	
-			String CP = req.getContextPath();
-			file_result += "&bNewLine=true&sFileName="+newFileName+"&sWidth="+width+"&sFileURL="+CP+"/resources/photo_upload/"+newFileName; 
+				// System.out.println(">>>> 확인용 filename ==> " + filename); 
+				// >>>> 확인용 filename ==> berkelekle%ED%8A%B8%EB%9E%9C%EB%94%9405.jpg
+		    		
+				InputStream is = request.getInputStream();
+			/*
+				요청 헤더의 content-type이 application/json 이거나 multipart/form-data 형식일 때,
+				혹은 이름 없이 값만 전달될 때 이 값은 요청 헤더가 아닌 바디를 통해 전달된다. 
+				이러한 형태의 값을 'payload body'라고 하는데 요청 바디에 직접 쓰여진다 하여 'request body post data'라고도 한다.
+	
+				서블릿에서 payload body는 Request.getParameter()가 아니라 
+				Request.getInputStream() 혹은 Request.getReader()를 통해 body를 직접 읽는 방식으로 가져온다. 	
+			*/
+				String newFilename = fileManager.doFileUpload(is, filename, path);
+		    	
+				int width = fileManager.getImageWidth(path+File.separator+newFilename);
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+				if(width > 600) {
+					width = 600;
+				}	
+				// System.out.println(">>>> 확인용 width ==> " + width);
+				// >>>> 확인용 width ==> 600
+				// >>>> 확인용 width ==> 121
+		    	
+				String CP = request.getContextPath(); // board
+				
+				strURL += "&bNewLine=true&sFileName="; 
+				strURL += newFilename;
+				strURL += "&sWidth="+width;
+				strURL += "&sFileURL="+CP+"/resources/photo_upload/"+newFilename;
 			}
 			
-		} else {
-			// 파일이 존재하지 않는다라면
-			file_result += "&errstr=error";
+			/// 웹브라우저상에 사진 이미지를 쓰기 ///
+			PrintWriter out = response.getWriter();
+			out.print(strURL);
+			System.out.println(strURL);
+			
+		} catch(Exception e){
+			e.printStackTrace();
 		}
-	    
-		return "redirect:" + callback + "?callback_func="+callback_func+file_result;
 	}
 	
 	// 파일 다운로드
@@ -1117,12 +1122,10 @@ public class MailController {
 	public String mailNoRead(HttpServletRequest request) {
 		String loginSeq = request.getParameter("loginSeq");
 		String type="noRead";
-		String searchWord = "";
 		
 		HashMap<String, String>paraMap = new HashMap<>();
 		paraMap.put("loginSeq", loginSeq);
 		paraMap.put("type", type);
-		paraMap.put("searchWord", searchWord);
 		
 		
 		int noReadCount = service.getTotalCount(paraMap);
@@ -1144,11 +1147,9 @@ public class MailController {
 	public String mailDrop(HttpServletRequest request) {
 		String loginSeq = request.getParameter("loginSeq");
 		String type = "del";
-		String searchWord = "";
 		HashMap<String, String> paraMap = new HashMap<>();
 		paraMap.put("type", type);
 		paraMap.put("loginSeq", loginSeq);
-		paraMap.put("searchWord", searchWord);
 		
 		int cnt = service.getTotalCount(paraMap);
 		int result = service.mailDrop(loginSeq);
@@ -1178,16 +1179,86 @@ public class MailController {
 	public String newMailFind(HttpServletRequest request) {
 		String type = "noRead";
 		String loginSeq = request.getParameter("loginSeq");
-		String searchWord = "";
 		
 		HashMap<String, String>paraMap = new HashMap<>();
 		paraMap.put("type", type);
 		paraMap.put("loginSeq", loginSeq);
-		paraMap.put("searchWord", searchWord);
 		
 		int result = service.getTotalCount(paraMap);
 		JSONObject json = new JSONObject();
 		json.put("result", result);
+		return json.toString();
+	}
+	
+	// 특정 요청 메일 발송 기능(동호회 신청, 예약신청 결과 전송)
+	@ResponseBody
+	@RequestMapping(value="/mail/requestMail.top",produces="text/plain;charset=UTF-8")
+	public String requestMail(HttpServletRequest request) {
+		String type = request.getParameter("type"); //동호회 신청 or 예약신청 결과
+		String reason = request.getParameter("reason"); //전송할 내용에 사용될 사유
+		String receive = request.getParameter("receive"); //전송할 상대(동호회신청=회장 / 예약신청 결과=신청자)
+		
+		String subject = ""; //전송할 메일의 제목 
+		String content = ""; // 전송할 메일의 내용
+		
+		HttpSession session = request.getSession();
+		EmployeesVO emp = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		List<MailVO> mailList = new ArrayList<>();
+		
+		if("club".equals(type)) { //동호회 신청일 경우의 메일 양식
+			String clubName = request.getParameter("clubName"); //전송할 메일 제목
+			subject +=clubName+"가입을 희망합니다.";
+			content +=clubName+"가입을 희망합니다.<br>";
+			content +="신청자 : "+emp.getEmployee_name()+"("+emp.getDepartment_name()+"/"+emp.getPosition_name()+")<br>";
+			content +="사유 : "+reason;
+			
+		}
+		else { // 예약신청 결과일 경우의 메일 양식
+			
+		}
+		// 보내는 메일 VO 생성 //
+		MailVO sendMail = new MailVO();
+		sendMail.setFk_employee_seq(emp.getEmployee_seq());
+		sendMail.setStatus("0"); // 발신 상태
+		sendMail.setContent(content);
+		sendMail.setSubject(subject);
+		sendMail.setReadStatus("1");
+		
+		
+		
+		// 받는 메일 VO 생성 //
+		MailVO receiveMail = new MailVO();
+		receiveMail.setFk_employee_seq(receive);
+		receiveMail.setContent(content);
+		receiveMail.setSubject(subject);
+		receiveMail.setStatus("1");
+		receiveMail.setReadStatus("0");
+		
+		mailList.add(sendMail);
+		mailList.add(receiveMail);
+		
+		int count = mailList.size();
+		int n = 0;
+		System.out.println("입력할 행의 수:"+count);
+		
+		boolean result = false;
+		
+		try{
+			n = service.mailSend(mailList);
+			if(n == count) {
+				result = true;
+			}
+			else {
+				result = false;
+			}
+		}catch(Throwable e) {
+			e.printStackTrace();
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("result", result);
+		
 		return json.toString();
 	}
 	

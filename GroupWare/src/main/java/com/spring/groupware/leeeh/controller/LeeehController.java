@@ -32,6 +32,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.MailVO;
 import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.service.InterLeeehService;
@@ -1602,13 +1603,5 @@ public class LeeehController {
 		return mav;
 	}
 	
-	@RequestMapping(value="/requestClub.top")
-	public ModelAndView requestClub(ModelAndView mav, HttpServletRequest request) {
-
-		String club_seq = request.getParameter("club_seq");
-		
-		System.out.println(club_seq);
-		
-		return mav;
-	}
+	
 }
