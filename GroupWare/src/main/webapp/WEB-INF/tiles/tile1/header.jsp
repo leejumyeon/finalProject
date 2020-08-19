@@ -31,32 +31,17 @@
 
 <script type="text/javascript">
 	function click_messenger(){
-		if($("#mymessenger").hasClass("messengerClose")){
-			$("#mymessenger").removeClass("messengerClose");
-			$("#mymessenger").addClass("messengerOpen");
-			
-			window.resizeTo(1600,845);
-			
-		}
-		else {
-			$("#mymessenger").addClass("messengerClose");
-			$("#mymessenger").removeClass("messengerOpen");
-			
-			window.resizeTo(1220,845);
-		}
-		console.log($("#mymessenger").prop("class"));
-		$.ajax({
-			url:"<%=request.getContextPath()%>/messenger/open.top",
-			data:{"messengerStatus":$("#mymessenger").prop("class")},
-			type:"get",
-			dataType:"JSON",
-			success:function(json){
-				console.log("세션업");
-			},
-			error:function(e){
-				
-			}
-		});
+		
+		var sw=screen.width;  // 화면 가로길이
+		var sh=screen.height; // 화면 세로길이
+		var popw=500; 		  // 팝업창 가로길이 
+		var poph=800; 		  // 팝업창 세로길이
+		var xpos=(sw-popw)/2; 
+		var ypos=(sh-poph)/2; 
+
+		var popWin=window.open("<%=request.getContextPath()%>/messenger/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes");
+		
+		
 	}
 </script>
 
