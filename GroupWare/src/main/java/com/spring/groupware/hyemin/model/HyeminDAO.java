@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.ReservationVO;
 
 //=== #32. DAO 선언 ===
@@ -58,10 +59,31 @@ public class HyeminDAO implements InterHyeminDAO {
 		sqlsession.update("hyemin.approveRoom", reservation_seq);
 	}
 
+	// === 글번호 채번하기 ===
+	@Override
+	public int getBoard_seq() {
+		int n = sqlsession.selectOne("hyemin.getBoard_seq");
+		return n;
+	}
+	
+	// === 게시글 관리(공지사항 리스트)글 작성(관리자)(insert) ===
+	@Override
+	public int managerNoticeInsert(HashMap<String, Object> paraMap) {
+		int n = sqlsession.insert("hyemin.managerNoticeInsert", paraMap);
+		return n;
+	}
+
+	// === 게시글 관리(공지사항 리스트)글 작성 시 첨부파일 추가(관리자)(insert) ===
+	@Override
+	public int managerNoticeFileInsert(AttachFileVO attachFile) {
+		int result = sqlsession.insert("hyemin.managerNoticeFileInsert", attachFile);
+		return result;
+	}
+
 	// === 예약 반려하기 (관리자) === //
 	@Override
 	public void rejectRoom(String reservation_seq) {
 		sqlsession.update("hyemin.rejectRoom", reservation_seq);
 	}
-	
+		
 }

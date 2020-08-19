@@ -38,7 +38,7 @@ public class BoardVO { //게시글 VO
 	
 	public BoardVO(String board_seq, String fk_category_num, String category_name, String subject, String content,
 			String readCnt, String regDate, String fk_employee_seq, String employee_name, String employee_id,
-			String status, String commentCnt) {
+			String status, String commentCnt, String fileName, String orgFilename, String fileSize) {
 		super();
 		this.board_seq = board_seq;
 		this.fk_category_num = fk_category_num;
@@ -52,6 +52,9 @@ public class BoardVO { //게시글 VO
 		this.employee_id = employee_id;
 		this.status = status;
 		this.commentCnt = commentCnt;
+		this.fileName = fileName;
+		this.orgFilename = orgFilename;
+		this.fileSize = fileSize;
 	}
 
 	public String getBoard_seq() {
@@ -180,6 +183,30 @@ public class BoardVO { //게시글 VO
 
 	public void setNextsubject(String nextsubject) {
 		this.nextsubject = nextsubject;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getOrgFilename() {
+		return orgFilename;
+	}
+
+	public void setOrgFilename(String orgFilename) {
+		this.orgFilename = orgFilename;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
 
 	public MultipartFile getAttach() {
