@@ -202,13 +202,21 @@ th, td {
 }
 
 .table100-head th {
+  text-align: center;
   padding-top: 18px;
   padding-bottom: 18px;
 }
 
 .table100-body td {
+  text-align: center;
   padding-top: 16px;
   padding-bottom: 16px;
+}
+
+.table105-body td {
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 /*==================================================================

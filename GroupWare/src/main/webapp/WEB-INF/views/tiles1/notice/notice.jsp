@@ -128,7 +128,7 @@
 		frm.board_seq.value = board_seq;
 		
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>/freeboard/detailView.top";
+		frm.action = "<%= ctxPath%>detailNotice.top";
 		frm.submit();
 		
 	}
@@ -138,7 +138,7 @@
 		
 		var frm = document.searchFrm;
 		frm.method = "GET";
-		frm.action = "<%= request.getContextPath()%>/freeboard/list.top";
+		frm.action = "<%= request.getContextPath()%>/notice.top";
 		frm.submit();
 		
 	}
@@ -148,9 +148,8 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>			
-			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">앨범</div>
-			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자유게시판</div>
-			<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">공지사항</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자주묻는질문</div>
 		</div>						
 			<div id="post">	
 				<h3>자유게시판</h3>
@@ -162,8 +161,7 @@
 						<option value="employee_name">작성자</option>					
 					</select>	
 					<input type="text" name="searchWord" id="searchWord" size="40" autocomplete="off" />
-					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>
-					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/write.top'">글쓰기</button>		
+					<button style="color: white;" id="btnS" type="button" onclick="goSearch()">검색</button>	
 				</form>
 				<div style="margin-top: 15px;">
 					<table id="abl">

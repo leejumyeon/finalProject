@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.leejm.model.InterManagerDAO;
 
@@ -93,6 +94,34 @@ public class ManagerService implements InterManagerService {
 		String[] board_seqArr = (String[]) paraMap.get("board_seqArr");
 		int result = dao.boardDelete(paraMap);
 		return result;
+	}
+
+	// 매출관리 - 프로젝트 매출금액
+	@Override
+	public List<ChartVO> saleCartList() {
+		List<ChartVO> saleChartList = dao.saleChartList();
+		return saleChartList;
+	}
+
+	// 매출관리 - 인건비 조회
+	@Override
+	public List<ChartVO> laborCostChartList() {
+		List<ChartVO> laborCostChartList = dao.laborCostChartList();
+		return laborCostChartList;
+	}
+
+	// 매출관리 - 시설유지비 조회
+	@Override
+	public List<ChartVO> maintainChartList() {
+		List<ChartVO> maintainChartList = dao.maintainChartList();
+		return maintainChartList;
+	}
+
+	// 매출관리 - 순이익조회
+	@Override
+	public List<ChartVO> profitChartList() {
+		List<ChartVO> profitChartList = dao.profitChartList();
+		return profitChartList;
 	}
 	
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.ChartVO;
 
 
 public interface InterManagerDAO {
@@ -38,5 +39,17 @@ public interface InterManagerDAO {
 
 	// 게시글 관리 - 게시글 삭제
 	int boardDelete(HashMap<String, Object> paraMap);
+
+	// 매출 관리 - 매출금액 조회
+	List<ChartVO> saleChartList();
+
+	// 매출 관리 - 인건비 조회
+	List<ChartVO> laborCostChartList();
+
+	// 매출 관리 - 시설유지비 조회
+	List<ChartVO> maintainChartList();
+
+	// 매출 관리 - 순이익 조회
+	List<ChartVO> profitChartList();
 
 }

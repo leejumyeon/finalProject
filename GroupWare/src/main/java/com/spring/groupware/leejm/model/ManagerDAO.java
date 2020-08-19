@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
 
 
@@ -93,6 +94,34 @@ public class ManagerDAO implements InterManagerDAO {
 	public int boardDelete(HashMap<String, Object> paraMap) {
 		int result = sqlsession.delete("manager.boardDelete",paraMap);
 		return result;
+	}
+
+	// 매출관리 - 매출금액 조회
+	@Override
+	public List<ChartVO> saleChartList() {
+		List<ChartVO> saleChartList = sqlsession.selectList("manager.saleChartList");
+		return saleChartList;
+	}
+
+	// 매출관리 - 인건비 조회
+	@Override
+	public List<ChartVO> laborCostChartList() {
+		List<ChartVO> laborConstChartList = sqlsession.selectList("manager.laborConstChartList");
+		return laborConstChartList;
+	}
+
+	// 매출관리 - 시설유지비 조회
+	@Override
+	public List<ChartVO> maintainChartList() {
+		List<ChartVO> maintainChartList = sqlsession.selectList("manager.maintainChartList");
+		return maintainChartList;
+	}
+
+	// 매출관리 - 순이익 조회
+	@Override
+	public List<ChartVO> profitChartList() {
+		List<ChartVO> profitChartList = sqlsession.selectList("manager.profitChartList");
+		return profitChartList;
 	}
 
 }

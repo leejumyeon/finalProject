@@ -99,6 +99,19 @@
 		margin: 8px 0 0 8px;
 	}
 	
+	#addFileBtn {
+		border: solid 0px gray;
+    	cursor: pointer;
+    	padding: 4px;
+	}
+	
+	.cancle {
+		cursor: pointer;
+	}
+	.cancle:hover {
+		color: red;
+	}
+	
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -172,16 +185,26 @@
 		}); // end of $(".btnUpdate").click() ------------------------------------------------------------
 		
 		
+		cnt = "${attachvoListSize}";
+		// 파일 업로드 버튼
 		$("#addFileBtn").click(function(){
 			
-			cnt++;
-			
-			if(cnt > 3){
-				return;
+			if(cnt < 3) {	
+				cnt++;
+				$("#addDiv").append("<div id='attach"+cnt+"'><input type='file' name='newAttach' style='display:inline; margin:5px 0 5px 5px; '/><span class='cancle' id='cancle"+cnt+"'>X</span></div>");
 			}		
-			
-			$("#addDiv").append("<input type='file' name='attach' class='attach' />");
-			
+			else{
+				alert("첨부파일은 3개까지 가능합니다.");
+			}
+	
+		});
+		
+		// 파일 업로드 폼 삭제
+		$(document).on("click",".cancle",function(){		
+			var idValue = $(this).prop("id");
+			var idx = idValue.substr(6);
+			$("#attach"+idx).remove();
+			cnt--;		
 		});
 		
 	});
@@ -209,26 +232,35 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">성명</th>
-							<td>&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" id="inputname" value="${sessionScope.loginEmployee.employee_seq}" /></td>
+							<td colspan="2">&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" id="inputname" value="${sessionScope.loginEmployee.employee_seq}" /></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">제목</th>
-							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" value="${bvo.subject}" ></td>
+							<td colspan="2">&nbsp;&nbsp;<input type="text" name="subject" id="subject" value="${bvo.subject}" ></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
-							<td>
-								<c:if test="${attachvoList == null || attachvoListSize == 1 || attachvoListSize == 2}"><span id="addFileBtn" style="border: solid 1px gray; padding: 3px; cursor: pointer">추가하기</span></c:if>	
+							<td style="width: 300px;">
+								<c:if test="${not empty attachvoList}"></c:if>	
 								<div id="addDiv">
 									<c:forEach var="attachvo" items="${attachvoList}">
-										<div>${attachvo.orgFileName}</div>
+										<div id="attach${status.index}" style="margin:5px 0;">
+											<input type="file" name="attach" id="attachFile${status.index}" style="display: inline-block; width:80px;"/><input type="text" name="orgFileName" value="${attachvo.orgFileName}" id="orgFileName${status.index}" style="border:none; width:185px;"/><span class="cancle" id="cancle${status.index}">X</span>
+											<input type="hidden" name="file_seq" value="${attachvo.file_seq}"/>
+											<input type="hidden" name="fileName" value="${attachvo.fileName}" />
+											<input type="hidden" name="fileSize" value="${attachvo.fileSize}" />
+										</div>
+										<%-- <div>${attachvo.orgFileName}</div> --%>
 									</c:forEach>
 								</div>
+							</td>
+							<td align="center">
+								<img id="addFileBtn" src="<%= ctxPath %>/resources/freeboardImg/upload.png" width="30px" height="30px" />
 							</td>
 						</tr>
 						<tr style="height: 400px;">
 							<th style="text-align: center;">내용</th>
-							<td>&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content">${bvo.content}</textarea></td>
+							<td colspan="2">&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content">${bvo.content}</textarea></td>
 						</tr>				
 					</tbody>				
 				</table>		

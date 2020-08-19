@@ -8,11 +8,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.common.FileManager;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.leejm.service.InterManagerService;
@@ -303,8 +307,37 @@ public class ManagerController {
 	// 관리자-재무 관리(매출내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salesList.top")
 	public ModelAndView managerSalesList(ModelAndView mav, HttpServletRequest request) {
+		
 		mav.setViewName("admin/finance/salesList.tiles3");
 		return mav;
+	}
+	
+	// 매출 차트 그리기
+	@ResponseBody
+	@RequestMapping(value="/manager/finance/salesChart.top",produces="text/plain;charset=UTF-8")
+	public String salesChart(HttpServletRequest request) {
+		System.out.println("매출차트 그리기");
+		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
+		List<ChartVO> laborCostChartList = service.laborCostChartList(); //인건비 금액 조회 
+		List<ChartVO> maintainChartList = service.maintainChartList(); // 시설유지비 금액 조회
+		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
+		
+		JSONArray projectChart = new JSONArray();
+		
+		System.out.println("매출개수:"+projectChartList.size());
+		
+		for(ChartVO chart: projectChartList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("category", chart.getCategory());
+			jsonObj.put("value", chart.getValue());
+			System.out.println(chart.getCategory()+"/"+chart.getValue());
+			projectChart.put(jsonObj);
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("projectChart", projectChart);
+		
+		return json.toString();
 	}
 	
 }

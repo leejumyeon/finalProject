@@ -20,22 +20,23 @@
 	.tbl_title{
 		width: 40%;
 		text-align: center;
+		cursor: pointer;
 	}
 	
-	.hide{
-		display: none;
+	.delete:hover {
+		color: red;
 	}
+	
 </style>    
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
 <script type="text/javascript">
 	
 	$(document).ready(function(){
 		
 		$("#datatables").DataTable({
-		
+			
 			"dom" : '<"top"lf>rt<"bottom"ip>', // 페이지바가 우측하단에 위치 함, 검색이 우측 상단에 위치 함 
 		  //"dom" : '<"top"lp>rt<"bottom"if>', // 페이지바가 우측상단에 위치 함, 검색이 우측하단에 위치 함
 			"paging" : true,				   // 우측 하단에 페이지바를 보여주겠다
@@ -64,33 +65,24 @@
 			
 		}); // end of $("#datatables").DataTable({})
 		
-		$(".accodion").click(function(){
-			
-			var $targetNext = $(this).next();
-		//	var targetNextDisplayProperty = $targetNext.css('display');
-			
-			if($targetNext.hasClass('hide')) {
-				$(".pannel").each(function(index, item){
-					if(item != $targetNext){
-						if(!$(item).hasClass("hide")){
-							$(item).addClass("hide");
-						}
-					}
-				});
-				
-				$targetNext.removeClass("hide");
-			}		
-			else {
-				$targetNext.addClass("hide");
-			}
-			
-		});	
-		
+		$(".selectDelete").click(function(){
+			var frm = document.noticeFrm;
+			frm.action = "<%=request.getContextPath()%>/manager/board/faqDelete.top";
+			frm.submit();
+		});
 				
 	}); // end of $(document).ready(function(){})
 
 	function goUpdate(seq){
 		
+	}
+	
+	function goDetail(val){
+		location.href="<%=request.getContextPath()%>/manager/board/faqDetail.top?board_seq="+val;
+	}
+		
+	function goDelete(val){
+		location.href="<%=request.getContextPath()%>/manager/board/faqDelete.top?board_seq="+val;
 	}
 	
 </script>
@@ -110,43 +102,36 @@
 			</div>
 		</div> -->
 		<div style="clear:both;"></div>
-		<table id="datatables" class="table table-bordered">
-				<thead>
-					<tr>
-						<th><input type="checkbox" name="allSelect" value=""/></th>
-						<th>글번호</th>
-						<th>작성자</th>
-						<th>제목</th>						
-						<th>작성날짜</th>
-						<th>조회수</th>
-						<th>삭제</th>				
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="board" items="${boardvoList}" varStatus="status">
-						<tr class="accodion">
-							<td><input type="checkbox" name="board_seq" value="${board.board_seq}"/></td>
-							<td>${status.count}</td>
-							<td>${board.employee_name}
-							<td class="tbl_title">${board.subject}</td>							
-							<td>${board.regDate}</td>
-							<td>${board.readCnt}</td>
-							<td>삭제</td>
+			<form name="noticeFrm">
+			<table id="datatables" class="table table-bordered">
+					<thead>
+						<tr>
+							<th><input type="checkbox" name="allSelect" value=""/></th>
+							<th>글번호</th>
+							<th>작성자</th>
+							<th>제목</th>						
+							<th>작성날짜</th>
+							<th>조회수</th>
+							<th>삭제</th>				
 						</tr>
-						<tr class="pannel hide">
-							<td colspan="7">
-								${board.content}
-								<div align="right">
-									<span class="managerBtn" style="margin-rithg:10px">삭제</span>
-									<span class="managerBtn" style="margin-rithg:10px" onclick="goUpdate('${board.board_seq}')">수정</span>
-								</div>
-							</td>
-						</tr>
-					</c:forEach>	
-				</tbody>
-			</table>
-		<div>
-			<span class="managerBtn">선택삭제</span>
-		</div>
+					</thead>
+					<tbody>
+						<c:forEach var="board" items="${boardvoList}" varStatus="status">
+							<tr>
+								<td><input type="checkbox" name="board_seq" value="${board.board_seq}"/></td>
+								<td>${status.count}</td>
+								<td>${board.employee_name}
+								<td class="tbl_title" onclick = "goDetail('${board.board_seq}')">${board.subject}</td>							
+								<td>${board.regDate}</td>
+								<td>${board.readCnt}</td>
+								<td class="delete" style="text-align: center; cursor: pointer;" onclick="goDelete('${board.board_seq}')">삭제</td>
+							</tr>						
+						</c:forEach>	
+					</tbody>
+				</table>
+			<div>
+				<span class="managerBtn selectDelete delete">선택삭제</span>
+			</div>
+			</form>
 	</div>
 </div>

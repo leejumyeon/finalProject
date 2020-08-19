@@ -1202,7 +1202,7 @@ public class MailController {
 		String type = request.getParameter("type"); //동호회 신청 or 예약신청 결과
 		String reason = request.getParameter("reason"); //전송할 내용에 사용될 사유
 		String receive = request.getParameter("receive"); //전송할 상대(동호회신청=회장 / 예약신청 결과=신청자)
-		
+		String title = request.getParameter("subject");
 		String subject = ""; //전송할 메일의 제목 
 		String content = ""; // 전송할 메일의 내용
 		
@@ -1220,7 +1220,25 @@ public class MailController {
 			
 		}
 		else { // 예약신청 결과일 경우의 메일 양식
+			String value = request.getParameter("value");
+			String receive_name = request.getParameter("receive_name");
+			String receive_position = request.getParameter("receive_position");
+			String receive_department = request.getParameter("receive_department");
+			String roomName = request.getParameter("receive_room");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			if("true".equals(value)) { //예약신청 승인 메일
+				subject += receive_name+"<"+receive_department+"/"+receive_position+"> 이(가) 신청한 회의실 예약이 승인되었습니다.";
+				content += receive_name+"<"+receive_department+"/"+receive_position+"> 이(가) 신청한 회의실 예약이 정상적으로 승인되었습니다.<br>";
+				content += "장소:"+roomName+"<br>";
+				content += "시간:"+startDate+" ~ "+endDate;
+			}
 			
+			else { //예약신청 반려 메일
+				subject += receive_name+"<"+receive_department+"/"+receive_position+"> 이(가) 신청한 회의실 예약이 반려되었습니다.";
+				content += "제목:"+title+"<br>";
+				content += "사유:"+reason;
+			}
 		}
 		// 보내는 메일 VO 생성 //
 		MailVO sendMail = new MailVO();

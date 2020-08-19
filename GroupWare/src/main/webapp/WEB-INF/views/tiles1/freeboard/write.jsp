@@ -4,31 +4,38 @@
 <% String ctxPath = request.getContextPath(); %>
 
 <style type="text/css">
+
 	#container {
 		width: 1240px;
 		margin: 0 auto;
 	}
+	
 	#in {
 		width: 1000px;
 		margin: 0 auto;
 	}
+	
 	#ablwrite {
 		width: 750px;
 		
 	}
+	
 	#ablwrite, #ablwrite th, #ablwrite td {
 		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
+	
 	#ablwrite th{
 		width: 130px;
 		font-size: 11pt;
 		background-color: #3399ff;
 		color: white;
-	}	
+	}
+		
 	#ablwrite th, #ablwrite td {
 		height: 40px;
 	} 
+	
 	#btnWrite, #btnWrite2 {
 		border-radius: 0;
 		border-style: none;
@@ -36,13 +43,16 @@
 		padding: 5px;
 		width: 50px;		
 	}
+	
 	#inputname {
 		height: 20px;
 		border: 1px solid #b3b3b3;
 	}
+	
 	#subject {
 		width: 450px;
 	}
+	
 	.sidebar2 {
 		border: 1px solid white;
 		width: 100px;
@@ -54,11 +64,13 @@
 		background-color: #3399ff;		
 		color: white;
 	}
+	
 	#post {
 		margin-right: 30px;
 		width: 750px;
 		float: right;		
 	}	
+	
 	.comunity {
 		padding-top: 18px;
 		width: 100px;
@@ -67,16 +79,33 @@
 		text-align: center;
 		font-weight: bold;		
 	}
+	
 	#side {
 		float: left;
 	}
+	
 	#fk_category_num {
 		height: 28px;
 		vertical-align: middle;
 	}
+	
 	#btn{
 		float: right;
 	}
+	
+	#addFileBtn {
+		border: solid 0px gray;
+    	cursor: pointer;
+    	padding: 4px;
+	}
+	
+	.cancle {
+		cursor: pointer;
+	}
+	.cancle:hover {
+		color: red;
+	}
+	
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -149,17 +178,30 @@
 			frm.submit();	 		
 		}); // end of $(".btnWrite").click() ------------------------------------------------------------
 		
-		var cnt = 0;
+		
+		// 파일 업로드 추가
+		var cnt = 0; // 0 1 2 1 0 
 		$("#addFileBtn").click(function(){
-			cnt++;
 			
-			if(cnt > 3){
-				return;
+			if(cnt < 2){
+				cnt++;
+				$("#addTd").append("<div id='attach"+cnt+"'><input type='file' name='attach' style='display:inline; margin:5px 0 5px 5px; '/><span class='cancle' id='cancle"+cnt+"'>X</span></div>");
+			}
+			else{
+				alert("첨부파일은 3개까지 가능합니다.");
 			}
 			
-			$("#addDiv").append("<input type='file' name='attach' margin-left: 7px;' />");
-			
 		});
+		
+		
+		// 파일 업로드 폼 삭제
+		$(document).on("click",".cancle",function(){		
+			var idValue = $(this).prop("id");
+			var idx = idValue.substr(6);
+			$("#attach"+idx).remove();
+			cnt--;		
+		});
+		
 		
 	});
 </script>
@@ -186,22 +228,24 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">성명</th>
-							<td>&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" id="inputname" value="${sessionScope.loginEmployee.employee_seq}" /></td>
+							<td colspan="2">&nbsp;&nbsp;${sessionScope.loginEmployee.employee_name}<input type="hidden" name="name" id="inputname" value="${sessionScope.loginEmployee.employee_seq}" /></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">제목</th>
-							<td>&nbsp;&nbsp;<input type="text" name="subject" id="subject" ></td>
+							<td colspan="2">&nbsp;&nbsp;<input type="text" name="subject" id="subject" ></td>
 						</tr>
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
-							<td>
-								<span id="addFileBtn" style="border: solid 1px gray; padding: 3px; cursor: pointer">추가하기</span>
-								<div id="addDiv"></div>
+							<td id="addTd" style="width: 300px;">
+								<input type="file" name="attach" style="display:inline; margin:5px 0 5px 5px; "/> <%-- <span class='cancle' id='cancle"+cnt+"'>X</span> --%>
+							</td>
+							<td align="center">
+								<img id="addFileBtn" src="<%= ctxPath %>/resources/freeboardImg/upload.png" width="30px" height="30px" />
 							</td>
 						</tr>
 						<tr style="height: 400px;">
 							<th style="text-align: center;">내용</th>
-							<td>&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content"></textarea></td>
+							<td colspan="2">&nbsp;&nbsp;<textarea rows="10" cols="100" style="width: 95%; height: 412px; display: none;" name="content" id="content"></textarea></td>
 						</tr>				
 					</tbody>				
 				</table>		

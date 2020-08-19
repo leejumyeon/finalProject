@@ -15,7 +15,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 <script type="text/javascript">  
-
+	data={};
 	$(document).ready(function(){		
 			
 		waitingReservation();	
@@ -56,28 +56,71 @@
 		var reservation_seq = "";
 		// 승인 버튼 눌렀을 때
 		$(document).on("click", "#approve_btn", function(event){	
-			
-			reservation_seq = $(this).parent().parent().prev().children(".rsvt_seq").text();
-						
 			if (confirm("정말 승인하시겠습니까?") == true){		// 확인	
 				
+				reservation_seq = $(this).parent().parent().prev().children(".rsvt_seq").text();
 				$("#reservation_seq").val(reservation_seq);
+				var employee_seq = $(this).parent().find("input[name=employee_seq]").val();
+				var employee_name = $(this).parent().find("input[name=employee_name]").val();
+				var position_name = $(this).parent().find("input[name=position_name]").val();
+				var department_name = $(this).parent().find("input[name=department_name]").val();
+				var roomName = $(this).parent().find("input[name=roomName]").val();
+				var startDate = $(this).parent().find("input[name=startDate]").val();
+				var endDate = $(this).parent().find("input[name=endDate]").val();
 				
-				var frm = document.btnFrm;
-				frm.method = "POST";
-				frm.action = "<%= request.getContextPath()%>/manager/approveRoom.top";
-				frm.submit();						
+				console.log(employee_seq);
+				
+				 $.ajax({
+					url:"<%=request.getContextPath()%>/mail/requestMail.top",
+					data:{"type":"reservation", "value":"true", "receive":employee_seq
+						  ,"receive_name":employee_name
+						  ,"receive_position":position_name
+						  ,"receive_department":department_name
+						  ,"receive_room":roomName
+						  ,"startDate":startDate
+						  ,"endDate":endDate},
+					type:"get",
+					dataType:"JSON",
+					success:function(json){
+						if(json.result == true){
+							var frm = document.btnFrm;
+							frm.method = "POST";
+							frm.action = "<%= request.getContextPath()%>/manager/approveRoom.top";
+							frm.submit();
+						}
+						 
+					},
+					error:function(e){
+						
+					}
+				});					
 			}
+			
+			
 			else{		//취소
 				return false;
-			}
+			} 
 		});
 		
 		
 		// 반려 버튼 눌렀을 때
 		$(document).on("click", "#reject_btn", function(){
+			reservation_seq = $(this).parent().parent().prev().children(".rsvt_seq").text();
+			$("#reservation_seq").val(reservation_seq);
+			var employee_seq = $(this).parent().find("input[name=employee_seq]").val();
+			var employee_name = $(this).parent().find("input[name=employee_name]").val();
+			var position_name = $(this).parent().find("input[name=position_name]").val();
+			var department_name = $(this).parent().find("input[name=department_name]").val();
+			var roomName = $(this).parent().find("input[name=roomName]").val();
+			var startDate = $(this).parent().find("input[name=startDate]").val();
+			var endDate = $(this).parent().find("input[name=endDate]").val();
+			
+			data = {"type":"reservation", "value":"false", "receive":employee_seq,"receive_name":employee_name,
+					"receive_position":position_name, "receive_department":department_name, "receive_room":roomName,
+					"startDate":startDate, "endDate":endDate};
+			
 			if (confirm("정말 반려하시겠습니까?") == true){		// 확인
-				goReject();
+				goReject($(this), data);
 			}
 			else{		//취소
 				return false;
@@ -114,6 +157,13 @@
 										"사유 : " + item.reason + "<br/>" +
 										"<input type='button' id='approve_btn' value='승인'/>&nbsp;&nbsp;" +
 										"<input type='button' id='reject_btn' value='반려'/>" +
+										"<input type='hidden' name='employee_seq' value='"+item.fk_employee_seq+"' />"+
+										"<input type='hidden' name='employee_name' value='"+item.employee_name+"' />"+
+										"<input type='hidden' name='department_name' value='"+item.department_name+"' />"+
+										"<input type='hidden' name='position_name' value='"+item.position_name+"' />"+
+										"<input type='hidden' name='roomName' value='"+item.roomName+"' />"+
+										"<input type='hidden' name='startDate' value='"+item.startDate+"' />"+
+										"<input type='hidden' name='endDate' value='"+item.endDate+"' />"+
 									"</td>";		
 						html += "</tr>";									
 					});
@@ -135,7 +185,7 @@
 	
 	
 	// 반려 메일 전송 팝업 띄우기
-	function goReject() {
+	function goReject(elem, obj) {
 		var sw=screen.width;  // 화면 가로길이
 		var sh=screen.height; // 화면 세로길이
 		var popw=322; 		  // 팝업창 가로길이 
@@ -143,31 +193,10 @@
 		var xpos=(sw-popw)/2; 
 		var ypos=(sh-poph)/2; 
 
-		var popWin=window.open("","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes"); 				
+		var popWin=window.open("<%=request.getContextPath()%>/reservation/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes"); 				
 		// 일단 내용이 없는 팝업창을 만든다
 		
-		popWin.document.open();  // 팝업창에 내용을 넣을 수 있도록 열어주어야 한다(오픈한다)
-	
-		// 팝업창에 내용을 입력한다
-		popWin.document.write("<html><head><title>반려 메일 전송</title><body onload='window.print()'>");
-		popWin.document.write("<div class='popup' style='border: solid 1px black; width:300px;'>");
-		popWin.document.write("<h3>&nbsp;반려 메일 전송</h3>");
-		popWin.document.write("<table>");
-		popWin.document.write("	<tr>");
-		popWin.document.write("	 <th>&nbsp;받는 사람</th>");
-		popWin.document.write("	 <td><input type='text' /></td>");
-		popWin.document.write("	</tr>");
-		popWin.document.write("	<tr>");
-		popWin.document.write("	 <th>&nbsp;제목</th>");
-		popWin.document.write("	 <td><input type='text' /></td>");
-		popWin.document.write("	</tr>");
-		popWin.document.write("	<tr>");
-		popWin.document.write("	 <th style='vertical-align: top;'>&nbsp;내용</th>");
-		popWin.document.write("	 <td><textarea style='resize: none; width:100%;' rows='5'></textarea></td>");
-		popWin.document.write("	</tr>");
-		popWin.document.write("</table><div><span style='border:solid 1px black; padding:10px 20px; margin:20px; float:right;'>전송</span></div>");
-		popWin.document.write("<div style='clear:both;'></div>");
-		popWin.document.write("</body></html>");		
+			
 				
 	}// end of function goPrint(title)-----------------------------------
 	
@@ -218,6 +247,31 @@
 		});
 	}	
 	
+	function rejectMail(subject, reason){
+		console.log(subject, reason);
+		console.log(data);
+		data.subject = subject;
+		data.reason = reason;
+		
+		 $.ajax({
+				url:"<%=request.getContextPath()%>/mail/requestMail.top",
+				data:data,
+				type:"get",
+				dataType:"JSON",
+				success:function(json){
+					if(json.result == true){
+						var frm = document.btnFrm;
+						frm.method = "POST";
+						frm.action = "<%= request.getContextPath()%>/manager/rejectRoom.top";
+						frm.submit();
+					}
+					 
+				},
+				error:function(e){
+					
+				}
+			});					
+	}
 	
 </script>    
     

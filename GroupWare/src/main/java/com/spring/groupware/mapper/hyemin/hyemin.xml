@@ -45,6 +45,7 @@
 	<!-- === 예약 신청 현황 조회(관리자)(Ajax) === -->
 	<select id="waitingReservation" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
 		select R.reservation_seq
+			 , R.fk_employee_seq
 		     , E.employee_name
 		     , D.department_name
 		     , P.position_name
@@ -131,8 +132,33 @@
 		order by R.reservation_seq desc
 	</select>
 	
+	<!-- 예약 승인하기(관리자)(update) -->
 	<update id="approveRoom" parameterType="String">
 		 update reservation_table set status = 1
+		 where reservation_seq = #{reservation_seq}
+	</update>
+	
+	<!-- 글번호 채번하기 -->
+	<select id="getBoard_seq" resultType="int">
+		select board_table_seq.nextval
+		from dual
+	</select>
+	
+	<!-- 게시글 관리(공지사항 리스트)글 작성(관리자)(insert) -->
+	<insert id="managerNoticeInsert" parameterType="HashMap">
+		insert into board_table(board_seq, fk_category_num, subject, content, fk_employee_seq)
+		values(#{fk_board_seq}, #{fk_category_num}, #{subject}, #{content}, #{fk_employee_seq})
+	</insert>
+	
+	<!-- 게시글 관리(공지사항 리스트)글 작성 시 첨부파일 추가(관리자)(insert) -->
+	<insert id="managerNoticeFileInsert" parameterType="com.spring.groupware.commonVO.AttachFileVO">
+		insert into attachFile_table(file_seq, fk_board_seq, fileName, orgFileName, fileSize)
+		values(attachFile_table_seq.nextval, #{fk_board_seq}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+
+	<!-- 예약 반려하기 (관리자) -->
+	<update id="rejectRoom" parameterType="String">
+		 update reservation_table set status = 2
 		 where reservation_seq = #{reservation_seq}
 	</update>
 	

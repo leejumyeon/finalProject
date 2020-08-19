@@ -3,6 +3,8 @@ package com.spring.groupware.cha.model;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -41,11 +43,20 @@ public interface ChaInterDAO {
 	// 관리자 메인페이지(회사 일정 캘린더) - 일정 삭제
 	int deleteAdminCalendar(HashMap<String, String> paraMap);
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 공지사항
 	List<HashMap<String, String>> indication(HashMap<String, String> paraMap);
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 자유게시판
 	List<HashMap<String, String>> freedom(HashMap<String, String> paraMap);
+	
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판
+	List<AlbumVO> album();
+
+	// 메인페이지(공지사항 페이징 처리 된 거)
+	int getTotalCount(HashMap<String, String> paraMap);
+
+	// 페이징 처리한 공지사항 글목록 얻어오기
+	List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap);
 
 	
 	

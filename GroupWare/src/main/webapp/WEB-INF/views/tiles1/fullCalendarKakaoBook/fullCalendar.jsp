@@ -16,7 +16,14 @@
     <link rel= "stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel= "stylesheet" href="./resources/calendar/css/main.css">
-      
+    
+    <link rel="icon" type="image/png" href="<%= request.getContextPath()%>/resources/table_css/images/icons/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/perfect-scrollbar/perfect-scrollbar.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/css/util.css">
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/css/main.css">
 <style>
 
 		.snip1536 {
@@ -76,34 +83,6 @@
 			  height: 100%;
 			  width: 100%;
 			}
-			
-			table.tableClass{
-	
-				width:100%;
-				border: 1px solid #444444;
-				border-collapse:collapse;
-				background-color: #bbdefb;
-			}
-			
-			.tableClass th, td {
-			
-				border: 1px solid #444444;
-				padding: 5px; 
-				text-align: center;
-			
-			}
-			
-			.tableClass tbody tr:nth-child(2n) {
-	
-			  background-color: #bbdefb;
-			  
-			}
-			.tableClass tbody tr:nth-child(2n+1) {
-			
-			  background-color: #e3f2fd;
-			  
-			}
-			
 			
 			table.type09 {
 			    border-collapse: collapse; 
@@ -319,9 +298,9 @@
  			 </table>      	
         </div>
         <br/>
-        <div style="width: 730px; height: 267px;">
+        <div style="width: 500px; height: 267px;">
         	<h3 style="display: inline-block; width: 120px; font-weight: bolder;">도서 추천</h3>
-        	<input id="bookName" type="text">
+        	<input id="bookName" type="text" style="border: solid 0.5px #0099ff;">
 			<button id="search" class="snip1536">검색</button>
 			
 			<div id="p" style="width: 500px;"></div>
@@ -335,7 +314,7 @@
 	        <div id="view"></div>		        	        
 	    </div>    
     </div>
-    <div style="float: left;">   
+    <div style="float: left; margin-left: 30px;">   
 	    <div style="border: solid 0px red; width: 562px; height: 148px; margin-left: 15px;">
 	        <h3 style="font-weight: bolder;">예약 현황</h3><br/>
 	        <div id="views"></div>	
@@ -464,31 +443,37 @@
 			url:"/groupware/club.top",
 			dataType:"JSON",
 			success:function(json){
-				console.log(json);
-				var html = "<table class='tableClass'>";
-					html += "<tr>";
-						/* html += "<th>동호회번호</th>";
-						html += "<th>동호회원번호</th>"; */
-						html += "<th>회원명</th>";
-						html += "<th>동호회명</th>";
-						html += "<th>동호회소개</th>";
-						html += "<th>가입날짜</th>";					
-						html += "<th>회원명단</th>";
-						
-					html += "</tr>";
+
+				var html = '<div class="table100 ver2 m-b-35">';
+				html += '<div class="table100-head">';
+				html += "<table class='tableClass'>";
+				html += "<thead>";
+			html += "<tr class='row100 head'>";
+				html += "<th class='cell100 column2'>회원명</th>";
+				html += "<th class='cell100 column2'>동호회명</th>";
+				html += "<th class='cell100 column3'>동호회소개</th>";
+				html += "<th class='cell100 column5'>가입날짜</th>";					
+				html += "<th class='cell100 column5'>회원명단</th>";				 						
+			html += "</tr>";
+			html += "</thead>";
+			html += "</table>";
+			html += "</div>";
+			
+			html += '<div class="table105-body js-pscroll">';
+			html += '<table>';
+			html += "<tbody>";
 				$.each(json, function(index,item){
 					
 					html += "<tr>";			
-						/* html += "<td>"+item.club_seq+"</td>";
-						html += "<td>"+item.member_seq+"</td>"; */
-						html += "<td>"+item.employee_name+"</td>";
-						html += "<td>"+item.club_name+"</td>";
-						html += "<td>"+item.club_info+"</td>";
-						html += "<td>"+item.regDate+"</td>";
+
+						html += "<td class='cell100 column2'>"+item.employee_name+"</td>";
+						html += "<td class='cell100 column2'>"+item.club_name+"</td>";
+						html += "<td class='cell100 column3'>"+item.club_info+"</td>";
+						html += "<td class='cell100 column5'>"+item.regDate+"</td>";
 						
 					if(item.status == '1') {
 						
-						html += "<td><button onclick='viewClubMember(" + item.club_seq + ")'>회원명단보기</button></td>";
+						html += "<td class='cell100 column5'><button onclick='viewClubMember(" + item.club_seq + ")'>명단보기</button></td>";
 					
 					}
 					
@@ -496,7 +481,10 @@
 					
 				});	
 				
-				html += "</table>";
+				html += "</tbody>";
+  				html += "</table>";
+  				html += "</div>"
+  				html += "</div>"
 				
 				$("#view").html(html);
 				
@@ -526,34 +514,47 @@
 			dataType:"JSON",
 			success:function(json){
 				
-				var html = "<table class='tableClass'>";
-				html += "<tr>";					 
-					html += "<th>예약방번호</th>";
-					html += "<th>시작시간</th>";
-					html += "<th>종료시간</th>";				
-					html += "<th>승인상태</th>";
-				html += "</tr>";
+				var html = '<div class="table100 ver2 m-b-35">';
+				html += '<div class="table100-head">';
+				html += "<table class='tableClass'>";
+				html += "<thead>";
+			html += "<tr class='row100 head'>";	
+				html += "<th class='cell100 column5'>예약방번호</th>";
+				html += "<th class='cell100 column3'>시작시간</th>";
+				html += "<th class='cell100 column3'>종료시간</th>";				
+				html += "<th class='cell100 column4'>승인상태</th>";				 						
+			html += "</tr>";
+			html += "</thead>";
+			html += "</table>";
+			html += "</div>";
+			
+			html += '<div class="table105-body js-pscroll">';
+			html += '<table>';
+			html += "<tbody>";
 				
 			$.each(json.reList, function(index,item){
 				
 				if(item.head_seq == '${sessionScope.loginEmployee.employee_seq}') {
 				
 					html += "<tr>";						 
-						html += "<td>"+item.roomNumber+"</td>";
-						html += "<td>"+item.startDate+"</td>";
-						html += "<td>"+item.endDate+"</td>";
+						html += "<td class='cell100 column5'>"+item.roomName+"</td>";
+						html += "<td class='cell100 column3'>"+item.startDate+"</td>";
+						html += "<td class='cell100 column3'>"+item.endDate+"</td>";
 						if(item.status == '0') {
-							html += "<td>미승인</td>";	
+							html += "<td class='cell100 column4'>미승인</td>";	
 						}
 						else {
-							html += "<td>승인</td>";
+							html += "<td class='cell100 column4'>승인</td>";
 						}								
 					html += "</tr>";
 				}
 								
 			});	
 			
+			html += "</tbody>";
 			html += "</table>";
+			html += "</div>"
+			html += "</div>"
 			
 			$("#views").html(html);
 				

@@ -73,6 +73,12 @@ public interface InterChoijhDAO {
 
 	int getCommentTotalPage(HashMap<String, String> paraMap); // 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기
 
+	List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap); // 보존할 것들 이외 삭제할 첨부파일 번호 조회
+
+	int deleteFile(HashMap<String, Object> paraMap); // 게시글 수정 - 첨부파일 삭제
+
+	int insertFile(AttachFileVO uploadFile); // 게시글 수정 - 첨부파일 추가
+
 	
 
 	

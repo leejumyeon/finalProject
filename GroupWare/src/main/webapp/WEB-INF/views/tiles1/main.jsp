@@ -10,7 +10,7 @@
       margin: 0 auto;
    }
    div.mt {
-      margin-top: 30px;
+      margin-top: 0px;
    }
    p {
       margin: 15px;
@@ -25,13 +25,23 @@
    a {
       cursor: pointer;
    }
+   
 </style>
+
+<link rel="icon" type="image/png" href="<%= request.getContextPath()%>/resources/table_css/images/icons/favicon.ico"/>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/animate/animate.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/select2/select2.min.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/vendor/perfect-scrollbar/perfect-scrollbar.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/css/util.css">
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/css/main.css">
 
 <script type="text/javascript">
 	
 	$(document).ready(function(){
 		func_infoView();
 		func_viewInfo();
+		func_info();
 	});
 	
 </script>
@@ -48,29 +58,39 @@
 
 <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <body>
 
 	<div id="container">
-		<div style="float: left;">
-			<div style="width: 300px; height: 300px; border: 1px solid red;"> 
+		<div style="float: left; margin-left: 30px;">
+			<div style="width: 300px; height: 250px; border: 0px solid red;"> 
 			<h3>공지사항</h3>
 			
 			<div id="indication"></div>
 			
 			</div>
 			
-			<div class="mt" style="width: 300px; height: 300px; border: 1px solid red;">
+			<div class="mt" style="width: 300px; height: 250px; border: 0px solid red;">
 			<h3>자유게시판</h3>
 			
 			<div id="freedom"></div>
 			
 			</div>
 			
-		</div>
+			<div style="width: 300px; height: 250px; border: 0px solid red;">
+				<h3>앨범게시판</h3>
+				<div id="album"></div>
+			</div>
+			
+		</div> 
       
       
-		<div style="clear: both; display: inline-block; margin-left: 25px;">
-			<div style="width: 600px; height: 630px; border: 1px solid red;">
+		<div style="clear: both; display: inline-block; margin-left: 0px; margin-top: 100px;">
+			<div style="width: 600px; height: 630px; border: 0px solid red;">
 	   
 				<div class="container" style=" width: 600px;" >				
 	
@@ -234,16 +254,78 @@
       
       
 		<div style="float: right;">
-			<div style="width: 300px; height: 190px; border: 1px solid red;">
-				<h3>앨범게시판</h3>
+			
+			
+			<div class="mt" style=" width: 300px; height: 300px; border: 0px solid red; margin-top: 50px;">								
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+				    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+				    <li data-target="#myCarousel" data-slide-to="1"></li>
+				    <li data-target="#myCarousel" data-slide-to="2"></li>
+				  </ol>
+				
+				  <!-- Wrapper for slides -->
+				  <div class="carousel-inner">
+				    <div class="item active" style=" width: 300px; height: 230px;">
+				      <img height="230px" src="/groupware/resources/images/rodong.jpg">
+				    </div>
+				
+				    <div class="item" style=" width: 300px; height: 230px;">
+				      <img height="230px" src="/groupware/resources/images/gim.jpg">
+				    </div>
+				
+				    <div class="item" style=" width: 300px; height: 230px;">
+				      <img height="230px" src="/groupware/resources/images/tan.jpg">
+				    </div>
+				  </div>
+				
+				  <!-- Left and right controls -->
+				  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+				    <span class="glyphicon glyphicon-chevron-left"></span>
+				    <span class="sr-only">Previous</span>
+				  </a>
+				  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+				    <span class="glyphicon glyphicon-chevron-right"></span>
+				    <span class="sr-only">Next</span>
+				  </a>
+				</div>				
 			</div>
 			
-			<div class="mt" style="width: 300px; height: 190px; border: 1px solid red;">
-				<h3>봉사활동</h3>
-			</div>
-			
-			<div class="mt" style="width: 300px; height: 190px; border: 1px solid red;">
-				<h3>동호회</h3>
+			<div class="mt" style=" margin-bottom:30px; width: 300px; height: 300px; border: 0px solid red; margin-top: 50px;">				
+				<div id="myCarousel2" class="carousel slide" data-ride="carousel">
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+				    <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
+				    <li data-target="#myCarousel2" data-slide-to="1"></li>
+				    <li data-target="#myCarousel2" data-slide-to="2"></li>
+				  </ol>
+				
+				  <!-- Wrapper for slides -->
+				  <div class="carousel-inner">
+				    <div class="item active" style="width: 300px; height: 230px;">
+				      <img height="190px" src="/groupware/resources/images/auto.jpg">
+				    </div>
+				
+				    <div class="item" style="width: 300px; height: 230px;">
+				      <img height="190px" src="/groupware/resources/images/ron.jpg">
+				    </div>
+				
+				    <div class="item" style="width: 300px; height: 230px;">
+				      <img src="/groupware/resources/images/si.jpg">
+				    </div>
+				  </div>
+				
+				  <!-- Left and right controls -->
+				  <a class="left carousel-control" href="#myCarousel2" data-slide="prev">
+				    <span class="glyphicon glyphicon-chevron-left"></span>
+				    <span class="sr-only">Previous</span>
+				  </a>
+				  <a class="right carousel-control" href="#myCarousel2" data-slide="next">
+				    <span class="glyphicon glyphicon-chevron-right"></span>
+				    <span class="sr-only">Next</span>
+				  </a>
+				</div>								
 			</div>
 			
 		</div>
@@ -269,8 +351,31 @@
 	
 	<script type="text/javascript">
 		
-  		
-  		
+	firstAttendance();
+		
+		function firstAttendance() {
+			
+			$.ajax({
+				url:"<%= request.getContextPath()%>/getIsAttendance.top",
+				type:"GET",
+				dataType:"JSON",
+				success: function(json) {
+					
+					if(json.employee_seq == null) {
+						
+						window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
+					}
+				},
+				error: function(e) {
+					
+				}
+			});
+		}
+		
+	</script>
+	
+	<script type="text/javascript">
+
   		// 공지사항
   		function func_infoView(){
   			
@@ -281,39 +386,37 @@
   				dataType:"JSON",
   				success:function(json){
   					
-  					var html = "<table class='tableClass'>";
-  					html += "<tr>";					 
-  						html += "<th>예약방번호</th>";
-  						html += "<th>시작시간</th>";
-  						html += "<th>종료시간</th>";				
-  						html += "<th>승인상태</th>";
-  						html += "<th>예약방번호</th>";
-  						html += "<th>시작시간</th>";
-  						html += "<th>종료시간</th>";				
-  						html += "<th>승인상태</th>";
-  						html += "<th>승인상태</th>";
-  					html += "</tr>";
+  					var html = '<div class="table100 ver2 m-b-35">';
+						html += '<div class="table100-head">';
+						html += "<table class='tableClass'>";
+						html += "<thead>";
+					html += "<tr class='row100 head'>";					 
+						html += "<th class='cell100 column2'>항목</th>"; 						
+						html += "<th class='cell100 column3'>제목</th>";				  						  						
+						html += "<th class='cell100 column5'>작성자</th>";				 						
+					html += "</tr>";
+					html += "</thead>";
+					html += "</table>";
+					html += "</div>";
+					
+					html += '<div class="table105-body js-pscroll">';
+					html += '<table>';
+					html += "<tbody>";
   					
   				$.each(json.resList, function(index,item){
   					  					
-  						html += "<tr>";	
-  							
-	  							html += "<td>"+item.category_name+"</td>";
-	  							html += "<td>"+item.board_seq+"</td>";
-	  							html += "<td>"+item.subject+"</td>";
-	  							html += "<td>"+item.content+"</td>";
-	  							html += "<td>"+item.readCnt+"</td>";
-	  							html += "<td>"+item.regDate+"</td>";
-	  							html += "<td>"+item.employee_name+"</td>";
-	  							html += "<td>"+item.status+"</td>";
-	  							html += "<td>"+item.commentCnt+"</td>";							
-	  							html += "<td>"+item.fk_category_num+"</td>";
-  							
-  						html += "</tr>";
+  					html += "<tr class='row100 tr_body'>";	 							
+						html += "<td class='cell100 column2'>"+item.category_name+"</td>"; 							
+						html += "<td class='cell100 column3'>"+item.subject+"</td>"; 
+						html += "<td class='cell100 column5'>"+item.employee_name+"</td>";							  							  							
+					html += "</tr>";
   														
   				});	
   				
+  				html += "</tbody>";
   				html += "</table>";
+  				html += "</div>"
+  				html += "</div>"
   				
   				$("#indication").html(html);
   					
@@ -326,8 +429,7 @@
   			});
   			
   		}// end of function func_infoView(){
-  			
-  		
+  			  		
   		// 자유게시판
   		function func_viewInfo(){
   			
@@ -337,39 +439,36 @@
   				dataType:"JSON",
 				success:function(json){
   					
-  					var html = "<table class='tableClass'>";
-  					html += "<tr>";					 
-  						html += "<th>예약방번호</th>";
-  						html += "<th>시작시간</th>";
-  						html += "<th>종료시간</th>";				
-  						html += "<th>승인상태</th>";
-  						html += "<th>예약방번호</th>";
-  						html += "<th>시작시간</th>";
-  						html += "<th>종료시간</th>";				
-  						html += "<th>승인상태</th>";
-  						html += "<th>승인상태</th>";
+  					var html = '<div class="table100 ver2 m-b-35">';
+  						html += '<div class="table100-head">';
+  						html += "<table class='tableClass'>";
+  						html += "<thead>";
+  					html += "<tr class='row100 head'>";					 
+  						html += "<th class='cell100 column2'>항목</th>"; 						
+  						html += "<th class='cell100 column3'>제목</th>";				  						  						
+  						html += "<th class='cell100 column5'>작성자</th>";				 						
   					html += "</tr>";
+  					html += "</thead>";
+  					html += "</table>";
+  					html += "</div>";
   					
+  					html += '<div class="table105-body js-pscroll">';
+  					html += '<table>';
+  					html += "<tbody>";
   				$.each(json.resList, function(index,item){
   					  					
-  						html += "<tr>";	
-  							
-	  							html += "<td>"+item.category_name+"</td>";
-	  							html += "<td>"+item.board_seq+"</td>";
-	  							html += "<td>"+item.subject+"</td>";
-	  							html += "<td>"+item.content+"</td>";
-	  							html += "<td>"+item.readCnt+"</td>";
-	  							html += "<td>"+item.regDate+"</td>";
-	  							html += "<td>"+item.employee_name+"</td>";
-	  							html += "<td>"+item.status+"</td>";
-	  							html += "<td>"+item.commentCnt+"</td>";							
-	  							html += "<td>"+item.fk_category_num+"</td>";
-  							
+  						html += "<tr class='row100 tr_body'>";	 							
+  							html += "<td class='cell100 column2'>"+item.category_name+"</td>"; 							
+  							html += "<td class='cell100 column3'>"+item.subject+"</td>"; 
+  							html += "<td class='cell100 column5'>"+item.employee_name+"</td>";						  							  							
   						html += "</tr>";
   														
   				});	
   				
+  				html += "</tbody>";
   				html += "</table>";
+  				html += "</div>";
+  				html += "</div>";
   				
   				$("#freedom").html(html);
   					
@@ -382,6 +481,75 @@
   			});
   			
   		}// end of function func_infoView(){	 
+  		
+  			
+  		// 앨범게시판
+  		function func_info(){
+  			
+  			$.ajax({
+  				
+  				url:"/groupware/album.top",
+  				dataType:"JSON",
+  				success:function(json){
+  					
+  					var html = '<div class="table100 ver2 m-b-35">';
+						html += '<div class="table100-head">';
+						html += "<table class='tableClass'>";
+						html += "<thead>";
+					html += "<tr class='row100 head'>";					 
+						html += "<th class='cell100 column2'>항목</th>"; 						
+						html += "<th class='cell100 column3'>제목</th>";				  						  						
+						html += "<th class='cell100 column5'>작성자</th>";				 						
+					html += "</tr>";
+					html += "</thead>";
+					html += "</table>";
+					html += "</div>";
+					
+					html += '<div class="table105-body js-pscroll">';
+					html += '<table>';
+					html += "<tbody>";
+  					
+  					$.each(json.albumvoList, function(index,item){
+  					  					
+  						html += "<tr class='row100 tr_body'>";	 							
+  							 							
+  							if(item.album_seq == '1'){
+  								
+  								html += "<td class='cell100 column2'>사내활동</td>";
+  								
+  							}else if(item.album_seq == '2'){
+  								
+  								html += "<td class='cell100 column2'>동호회</td>";
+  								
+  							}else{
+  								
+  								html += "<td class='cell100 column2'>봉사</td>";
+  							
+  							}
+  							
+  							html += "<td class='cell100 column3'>"+item.subject+"</td>";
+  							html += "<td class='cell100 column5'>"+item.employee_name+"</td>";
+							
+  						html += "</tr>";
+  						
+  					});	
+  					
+  					html += "</tbody>";
+  	  				html += "</table>";
+  	  				html += "</div>";
+  	  				html += "</div>";
+  	  				
+  	  				$("#album").html(html);
+  				
+  				},
+				error : function(request, status, error){
+  					
+  					alert("code: "+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+  				}
+  							
+  			});
+  				
+  		}// end of function func_info(){}
   		
 	</script>
 

@@ -48,6 +48,11 @@
 		max-height: 30px;
 		width: 400px;
 	}
+	
+	.hide{
+		display: none;
+	}
+	
 </style> 
 <script type="text/javascript">
 $(document).ready(function(){	
@@ -90,6 +95,16 @@ $(document).ready(function(){
 		var idx = idValue.substr(6);
 		$("#attach"+idx).remove();
 		cnt--;		
+	});
+	
+	// 분류 바꿨을 때
+	$("#fk_category_num").bind("change", function(){
+		if($("#fk_category_num").val() == '1') {
+			$("#plusFile").removeClass('hide');
+		}
+		else {
+			$("#plusFile").addClass('hide');
+		}
 	});
 	
 	// 쓰기버튼
@@ -148,9 +163,9 @@ $(document).ready(function(){
 	<h4 style="text-align: center;">-공지글 작성-</h4>
 	</div>
 	
-	<div style="margin-top: 20px; border:solid 1px blue;">
-		<form name="noticeFrm" enctype="multipart/form-data">
-			<select name="boardType" style="height: 25px;">
+	<div style="margin-top: 20px; border-top:solid 0px gray;">
+		<form name="writeFrm" enctype="multipart/form-data">
+			<select id="fk_category_num" name="fk_category_num" style="height: 25px;">
 				<option value="1">공지사항</option>
 				<option value="2">FAQ</option>
 			</select>
@@ -161,7 +176,7 @@ $(document).ready(function(){
 						<input type="text" id="subject" name="subject"/>
 					</td>
 				</tr>
-				<tr>
+				<tr id="plusFile">
 					<td style="vertical-align: top;">첨부파일</td>
 					<td id="FileFrm">
 						<div id="attach0">

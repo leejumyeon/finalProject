@@ -24,6 +24,10 @@
 		text-align: center;
 		cursor: pointer;
 	}
+	
+	.delete:hover {
+		color: red;
+	}
 </style>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css"/>
@@ -117,14 +121,14 @@ function goDelete(val){
 							<td class="tbl_title" onclick = "goDetail('${board.board_seq}')">${board.subject }</td>							
 							<td>${board.regDate }</td>
 							<td>${board.readCnt }</td>
-							<td onclick="goDelete('${board.board_seq}')">삭제</td>
+							<td class="delete" style="text-align: center; cursor: pointer;" onclick="goDelete('${board.board_seq}')">삭제</td>
 						</tr>
 					</c:forEach>	
 				</tbody>
 			</table>
 		<div>
 			
-			<span class="managerBtn selectDelete">선택삭제</span>
+			<span class="managerBtn selectDelete delete">선택삭제</span>
 			
 		</div>
 		</form>

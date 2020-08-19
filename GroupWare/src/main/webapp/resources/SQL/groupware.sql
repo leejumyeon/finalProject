@@ -162,7 +162,7 @@ create table album_table
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence 
+create sequence album_table_seq
 start with 1 
 increment by 1
 nomaxvalue
@@ -599,6 +599,7 @@ create table attachFile_table
 ,constraint pk_attachFile_table primary key(file_seq)
 ,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 );
+
 create SEQUENCE attachFile_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -618,14 +619,10 @@ create table comment_table
 ,regDate    date default sysdate not null -- 작성날짜
 ,parent_seq number -- 상위 댓글(계층형)
 ,depthno    number default 0 not null
-,constraint pk_comment_seq primary key(commnet_seq)
+,constraint pk_comment_seq primary key(comment_seq)
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
-
--- 댓글 테이블 컬럼 변경 -- 
-alter table comment_table
-rename column commnet_seq to comment_seq;
 
 create sequence comment_table_seq
 start with 1 -- 시작값
@@ -737,6 +734,7 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+commit;
 
 -- 메일 테이블 check 제약조건 수정 --
 alter table mail_table drop constraint CK_mail_table;
@@ -777,7 +775,9 @@ where R.status = 0
 order by R.reservation_seq desc;
 
 
-
+-- 댓글 테이블 컬럼 변경 -- 
+alter table comment_table
+rename column commnet_seq to comment_seq;
 
 -- 자유게시판 페이징처리를 위한 데이터
 begin
@@ -795,4 +795,14 @@ begin
 		values(comment_table_seq.nextval, 1, 1, default, '댓글 테스트 입니다.'||i, default, default, 0, default); 
     end loop;
 end;
+commit;
+
+
+begin
+    for i in 1..20 loop 
+        insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+        values(board_table_seq.nextval, 1, '공지사항 글'||i, '공지사항 글입니다.'||i, default, default, 1, default, default); 
+    end loop;
+end;
+
 commit;
