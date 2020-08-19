@@ -642,4 +642,22 @@ public class LeeehService implements InterLeeehService {
 		return detailTA;
 	}
 
+	// === 부서별 인원 수 % 얻어오기 === //
+	@Override
+	public List<HashMap<String, String>> getDepartmentMenberCnt() {
+
+		List<HashMap<String, String>> departmentMenberCnt = dao.getDepartmentMenberCnt();
+		
+		return departmentMenberCnt;
+	}
+
+	// === 검색한 사원의 정보 급여정보 알아오기 === //
+	@Override
+	public EmployeesVO getEmployeeSalary(String employee_seq) {
+
+		EmployeesVO employeeInfo = dao.getEmployeeSalary(employee_seq);
+		
+		return employeeInfo;
+	}
+
 }

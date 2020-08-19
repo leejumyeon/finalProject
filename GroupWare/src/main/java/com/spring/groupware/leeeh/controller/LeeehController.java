@@ -974,7 +974,7 @@ public class LeeehController {
 			
 			for(int i = 0; i < sales_titleArr.length; i++) {
 				
-				paraMap.put("sales_title", sales_subject + sales_titleArr[i]);
+				paraMap.put("sales_title", sales_subject + " : " + sales_titleArr[i]);
 				paraMap.put("sales_count", sales_countArr[i]);
 				paraMap.put("price", priceArr[i]);
 				
@@ -1730,6 +1730,7 @@ public class LeeehController {
 		return jsObj.toString();
 	}
 	
+	// === 조직도를 위해 모든 회원 정보 얻어오기 === //
 	@ResponseBody
 	@RequestMapping(value="/getAllEmployee.top", produces="text/plain;charset=UTF-8")
 	public String getAllEmployee(HttpServletRequest request) {
@@ -1769,10 +1770,50 @@ public class LeeehController {
 		return jsArr.toString();
 	}
 	
+	// === 회사 정보 보여주기 === //
 	@RequestMapping(value="/veiwCompany.top")
 	public ModelAndView veiwCompany(ModelAndView mav) {
 		
 		mav.setViewName("companyinfo/companyInfo.tiles1");
 		return mav;
 	}
+	
+	// === 부서별 인원수 차트를 위해 값 얻어오기 === //
+	@ResponseBody
+	@RequestMapping(value="/getDepartmentMenberCnt.top", produces="text/plain;charset=UTF-8")
+	public String getDepartmentMenberCnt() {
+		
+		List<HashMap<String, String>> departmentMemberCnt = service.getDepartmentMenberCnt();
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(HashMap<String, String> departPctMap : departmentMemberCnt) {
+			
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("name", departPctMap.get("department_name"));
+			jsObj.put("y", Double.parseDouble(departPctMap.get("member_pct")));
+			
+			jsArr.put(jsObj);
+		}
+		
+		return jsArr.toString();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/getEmployeeSalary.top", produces="text/plain;charset=UTF-8")
+	public String getEmployeeSalary(HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		
+		EmployeesVO employeeInfo = service.getEmployeeSalary(employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("department_name", employeeInfo.getDepartment_name());
+		jsObj.put("position_name", employeeInfo.getPosition_name());
+		jsObj.put("employee_name", employeeInfo.getEmployee_name());
+		jsObj.put("position_salary", employeeInfo.getPosition_salary());
+		
+		return jsObj.toString();
+	}
+	
 }

@@ -580,7 +580,6 @@
 								 , address = #{address}
 								 , detailaddress = #{detailaddress}
 								 , extraaddress = #{extraaddress}
-								 , position_seq = #{position_seq}
 		where employee_id = #{employee_id}
 	</update>
 	
@@ -756,6 +755,7 @@
 			  and to_char(onTime, 'yyyymmdd') = to_char(sysdate, 'yyyymmdd')
 	</update>
 	
+	<!-- === 인사고과 저번달 고과와 이번달 고과, 사유 얻어오기 === -->
 	<select id="getDetailTA" parameterType="HashMap" resultType="com.spring.groupware.commonVO.TimeAndAttVO">
 		select nvl(lag(V.attitude, 1) over(order by V.ta_seq desc), 0) AS previousattitude
 			 , nvl(lag(V.attendance, 1) over(order by V.ta_seq desc), 0) AS previousattendance
@@ -767,5 +767,27 @@
 		    from TA_table
 		    where fk_employee_seq = #{fk_employee_seq}
 		) V
+	</select>
+	
+	<!-- === 부서별 인원 수 % 얻어오기 === -->
+	<resultMap type="HashMap" id="DepartPctMap">
+		<result property="department_name" column="department_name" javaType="String"/>
+		<result property="member_pct" column="member_pct" javaType="String"/>
+	</resultMap>
+	<select id="getDepartmentMenberCnt" resultMap="DepartPctMap">
+		select D.department_name, (count(E.employee_seq) / (select count(*) from employees_table) * 100) AS member_pct
+		from employees_table E join department_table D
+		on E.fk_department = D.department_seq
+		group by D.department_name
+	</select>
+	
+	<!-- === 검색한 사원의 정보 급여정보 알아오기 === -->
+	<select id="getEmployeeSalary" parameterType="String" resultType="com.spring.groupware.commonVO.EmployeesVO">
+		select D.department_name, P.position_name, E.employee_name, P.position_salary
+		from employees_table E join department_table D
+		on E.fk_department = D.department_seq
+		join position_table P
+		on E.fk_position = P.position_seq
+		where E.employee_seq = #{employee_seq}
 	</select>
 </mapper>

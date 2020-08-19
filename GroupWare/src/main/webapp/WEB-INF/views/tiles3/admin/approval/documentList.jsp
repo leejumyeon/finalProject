@@ -140,7 +140,7 @@
 </div>
 
 <form name="approveDocumentFrm">
-	<input type="text" name="groupno"/>
+	<input type="hidden" name="groupno"/>
 </form>
 	
 <%-- *** 문서 내용  modal1 *** --%>

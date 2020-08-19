@@ -44,6 +44,14 @@
 		color: white;
 	}
 	
+	.employeeSeq {
+		width: 140px;
+		height: 35px;
+		text-align: center;
+		padding-top: 10px;
+		cursor: pointer;
+	}
+	
 	.snip1535 {
 	  background-color: #0099ff;
 	  border: none;
@@ -109,7 +117,14 @@
 
 	$(document).ready(function() {
 		
+		sessionStorage.removeItem("seq1");
+		sessionStorage.removeItem("seq2");
+		sessionStorage.removeItem("seq3");
+		sessionStorage.removeItem("seq4");
+		sessionStorage.removeItem("seq5");
+		
 		$(".documentChoiced").css("display","none");
+		$("#representImage").css("display","none");
 		
 		$(".documentLabel").click(function() {
 			
@@ -122,6 +137,7 @@
 			else {
 
 				$(".documentLabel").removeClass("viewClick");
+				$("#representImage").css("display","none");
 				$(this).addClass("viewClick");
 				
 				var html = "";
@@ -165,6 +181,8 @@
 				else if($(this).next().val() == '10') {
 					
 					$("#documentForm").load( '<%= request.getContextPath()%>/makeClubDocument.top' );
+					
+					$("#representImage").css("display","");
 				}
 				else if($(this).next().val() == '11') {
 					
@@ -227,9 +245,9 @@
 					var html = "";
 					
 					$.each(json, function(index, item) {
-						
-						html += "<input type='checkbox' name='employeeSeq' id='employeeSeq" + index + "' value='" + item.employee_seq + "' onclick='approvalList()' style='display: none;'/>";
-						html += "<label class='employeeSeq' for='employeeSeq" + index + "' style='cursor: pointer;'>" + item.position_name + " " + item.employee_name + "</label>";
+
+						html += "<input type='checkbox' name='employeeSeq' id='employeeSeq" + item.employee_seq + "' value='" + item.employee_seq + "' onclick='approvalList()' style='display: none;'/>";
+						html += "<label class='employeeSeq' for='employeeSeq" + item.employee_seq + "' style='cursor: pointer;'>" + item.position_name + " " + item.employee_name + "</label>";
 						html += "<br/>";
 
 					});
@@ -251,6 +269,22 @@
 	}
 	
 	function approvalList() {
+		
+		$("input:checkbox[name=employeeSeq]").each(function() {
+			
+			var bChecked = $(this).prop('checked');
+			
+			if(bChecked) {
+				
+				$(this).next().addClass("viewClick");
+			}
+			else {
+				
+				$(this).next().removeClass("viewClick");
+			}
+		});
+		
+		
 		
 		var seqLen = $("input:checkbox[name=employeeSeq]:checked").length;
 		
@@ -360,7 +394,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="height: 550px; border: solid 1px gray; overflow-y: scroll; vertical-align: top; padding-top: 10px;" >
+						<td style="height: 550px; border: solid 1px #0099ff; overflow-y: scroll; vertical-align: top; padding-top: 10px;" >
 							<c:forEach var="departVO" items="${departmentList}" varStatus="status">
 								<button type="button" class="departmentLabel" onclick="showMemberByDepartment('${departVO.department_seq}')">${departVO.department_name}</button>
 								<div class="departmentEmployees" id="departmentEmployees${status.count}">
@@ -372,12 +406,12 @@
 				</tbody>
 			</table>
 			
-			<div id="documentForm" class="documentChoiced" style="border: solid 1px gray; width: 900px; height: 580px; overflow-y: scroll;">
+			<div id="documentForm" class="documentChoiced" style="border: solid 1px #0099ff; width: 900px; height: 580px; overflow-y: scroll;">
 			</div>
 			
-			<table class="documentChoiced">
+			<table id="representImage" style="border: solid 1px #0099ff; width: 1135px;">
 				<tr style="width:1130px; height: 30px;">
-					<td style="text-align: center; background-color: #0099ff; color: white;">첨부파일</td>
+					<td style="text-align: center; background-color: #0099ff; color: white;">대표이미지 파일</td>
 					<td><input type="file" name="attach"/></td>
 				</tr>
 			</table>
@@ -386,6 +420,8 @@
 			<input type="hidden" name="allEmployeeSeq" id="allEmployeeSeq">
 		</form>
 		
-		<button type="button" id="btnWrite" class="snip1535" >작성</button>
+		<div class="documentChoiced">
+			<button type="button" id="btnWrite" class="snip1535" >작성</button>
+		</div>
 	</div>
 </body>
