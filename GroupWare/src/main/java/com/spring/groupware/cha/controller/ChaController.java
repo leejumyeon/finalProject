@@ -1,8 +1,5 @@
 package com.spring.groupware.cha.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,8 +18,8 @@ import com.google.gson.Gson;
 import com.spring.common.MyUtil;
 import com.spring.groupware.cha.service.ChaInterService;
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
-import com.spring.groupware.commonVO.ClubMemberVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
@@ -706,6 +702,53 @@ public class ChaController {
 		mav.addObject("boardList", boardList);
 		
 		mav.setViewName("notice/notice.tiles1");
+		return mav;
+	}
+	
+	@RequestMapping(value="/detailNotice.top")
+	public ModelAndView detailNotice(ModelAndView mav, HttpServletRequest request) {
+		
+		String board_seq = request.getParameter("board_seq");
+		String gobackURL = request.getParameter("gobackURL");
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO)session.getAttribute("loginEmployee");
+		
+		String employee_seq = null;
+		
+		if(loginEmployee != null) {
+			employee_seq = loginEmployee.getEmployee_seq();
+			// employee_seq 는 로그인 되어진 사용자의 employee_seq 이다.
+		}
+		
+		BoardVO bvo = null;
+		
+		if("yes".equals(session.getAttribute("readCountPermission")) ) {
+			// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+			
+			bvo = service.detailNotice(board_seq, employee_seq);
+			// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+			
+			session.removeAttribute("readCountPermission");
+			// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		}
+		else {
+			bvo = service.detailNoticeNoAddCount(board_seq); // 자유게시판 글 조회수 증가 없이 단순히 글1개 조회하기
+		}
+		
+		List<AttachFileVO> attachvoList = service.getfileView(board_seq); // 해당게시글의 첨부파일 읽어오기 
+		
+		if(attachvoList.size() != 0) { // 파일첨부가 있을 경우
+			mav.addObject("attachvoList",attachvoList);
+		}
+		
+		mav.addObject("bvo", bvo);
+		mav.addObject("gobackURL", gobackURL);
+		
+	//	System.out.println(gobackURL);
+		
+		mav.setViewName("notice/noticeDetail.tiles1");
+		
 		return mav;
 	}
 }

@@ -139,10 +139,3 @@ function goPayment() {
 			</div>
 		
 </div>
-
-
-
-
-
-
-

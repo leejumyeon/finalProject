@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
@@ -165,14 +166,25 @@ public class ChaDAO implements ChaInterDAO {
 		
 		return boardList;
 	}
-	
-	
 
-	
-	
-	
-	
-	
-	
+	@Override
+	public BoardVO detailNotice(String board_seq) {
 
+		BoardVO bvo = sqlsession.selectOne("cha.detailNotice", board_seq);
+		
+		return bvo;
+	}
+
+	@Override
+	public void setAddReadCount(String board_seq) {
+
+		sqlsession.insert("cha.setAddReadCount", board_seq);
+	}
+
+	@Override
+	public List<AttachFileVO> getfileView(String board_seq) {
+		List<AttachFileVO> attachvoList = sqlsession.selectList("cha.getfileView", board_seq);
+		return attachvoList;
+	}
+	
 }

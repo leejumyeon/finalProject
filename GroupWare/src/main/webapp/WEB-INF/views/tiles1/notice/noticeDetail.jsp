@@ -1,133 +1,231 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    
+<% String ctxPath = request.getContextPath(); %>
 
-
-<title>공지사항</title>
+<meta charset="UTF-8">
 
 <style type="text/css">
-	
-	
-	
-	.frame{
-	
-		width: 800px;
+
+	#container {
+		width: 1240px;
 		margin: 0 auto;
-		border: 1px solid red;
+	}	
 	
-	}
-	.container{
-	
-		overflow: hidden;
-	
-	}
-	.nav{
-		
-		display : inline-block;
-		float: left;
-		width: 150px;
-		/*background: #333;*/
-		color: red;
-		margin-right: 50px;
-	
-	}
-	.nav-list{
-		border: 1px solid blue;
-		list-style:none;
-		margin-top: 50px;
-		padding: 10px 0;
-	
+	#in {
+		width: 1000px;
+		margin: 0 auto;
 	}
 	
-	.nav-item{
-	
-		margin: 4px 0;
-		border: 1px solid red;
-	
-	}
-	.nav-link{
-	
-		display: block;
-		text-decoration: none;
-		padding: 4px 10px;
-		color: #fff;
-	
-	}
-	.content{
-	
-		display : inline-block;	 
-		border: 1px solid red;
-		margin-top: 50px;
-		width:800px;
-		/* margin-left: 300px;  */
-		/*padding: 200px;*/
-	
+	#detail {
+		width: 750px;
+		margin: 0 auto;
 	}
 	
-	.content table{
-		width: 800px;
-	}
-	
-	.content table, .content table td{
-		border: solid 1px black;
+	#detail, #detail th, #detail td {
+		border: 0.1px solid #d9d9d9;
 		border-collapse: collapse;
 	}
 	
-	#contentArea{
-		margin-top: 5px;
-		width: 800px;
-		min-height: 400px;
-		border:solid 1px blue;
+	#detail th{
+		width: 120px;
+		font-size: 11pt;
+		background-color: #3399ff;
+		height: 40px;
+		color: white;
 	}
-
-	.boardBtn{
-		width: 80px;
+	
+	#detail td{
+		padding: 10px;
+		width: 468px;		
+	}
+	
+	.detailbtn3 {
+		border-radius: 0;
+		border-style: none;
+		background-color: #3399ff;
+		padding: 5px;
+		float: right;
+	}
+	
+	.sidebar2 {
+		border: 1px solid white;
+		width: 100px;
+		height: 52px;
+		margin-left: 30px;
+		cursor: pointer;
+		padding-top: 15px;
 		text-align: center;
-		border:solid 1px black;
-		margin-right: 5px;
-		padding: 10px 0;
+		background-color: #3399ff;		
+		color: white;
+	}
+	
+	#post {
+		margin-right: 30px;
+		width: 750px;
+		float: right;		
+	}	
+	
+	.comunity {
+		padding-top: 18px;
+		width: 100px;
+		height: 55px;
+		margin-left: 30px;
+		text-align: center;
+		font-weight: bold;		
+	}
+	
+	#side {
+		float: left;
+	}
+	
+	p {
+		font-size: 11pt;
+		font-weight: bold;
+	}
+	
+	#content {
+		max-height: 250px;
+	}
+	
+	#commentContent {
+		border: solid 1px gray;
+		margin-top: 20px;
+	}
+	
+	#commentWrite {
+		float: right;
+		color: white;
+		font-size: 9pt;
+    	padding: 5px;
+		background-color: #3399ff;
 		cursor: pointer;
 	}
-
+	
+	.ChildCommentWrite {
+		width: 58px;
+		margin-left: 315px;
+		color: white;
+		font-size: 9pt;
+    	padding: 5px;
+		background-color: #3399ff;
+		cursor: pointer;
+	}
+	
+	.childCommentContent {
+		border: solid 1px gray;
+		margin-top: 20px;
+	}
+	
+	#commentViewTbl{
+		width: 730px;
+	}
+	    
+	#commentViewTbl, #commentViewTbl tr, #commentViewTbl td {
+		border: solid 1px #33adff;
+		border-left-style: none;
+		border-right-style: none;
+		border-collapse: collapse;
+	}
+	
+	/* 답글쓰기 */
+	.childCommentBtn {
+		cursor: pointer;
+		color: gray;
+		font-weight: bold;
+		font-size: 9pt;
+	}
+	
+	/* 취소 */
+	.cancel {
+		cursor: pointer;
+		color: gray;
+		font-weight: bold;
+		font-size: 9pt;
+	}
+	
+	#scroll {
+		margin-top: 80px;
+		width: 750px;
+		max-height: 300px;
+		overflow-y: scroll;
+	}
+	
+	.move:hover {
+		color: blue;
+		font-weight: bold;
+	}
+	
 </style>
 
-
-	
-<div class="fralme">
-	<div class="container">
-		<div class="nav">
-			<h2>사내공지</h2>
-			<ul class="nav-list">
-				<li class="nav-item"><h2>공지사항</h2></li>
-			</ul>				
-			<ul class="nav-list">
-				<li class="nav-item"><h2>자주묻는질문</h2></li>
-			</ul>
-		</div>
-		<div class="content">
-			<h3>공지사항</h3>
-			<table>
-				<tr>
-					<td>제목</td>
-					<td colspan="3">제목의 내용</td>
-				</tr>
-				<tr>
-					<td>작성날짜</td>
-					<td>작성날짜의 내용</td>
-					<td>조회수</td>
-					<td>조회수 내용</td>
-				</tr>
-			</table>
-			<div id="contentArea">게시글 내용</div>
-			<div id="otherArea">
-				<div class="prevNotice">이전글 |<span>OOOOO</span></div>
-				<div class="nextNotice">다음글 |<span>XXXXX</span></div>
+	<div id="container">
+		<div id="in">	
+			<div id="side">
+				<div class="comunity">공지사항</div>			
+				<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/notice.top'">공지사항</div>
+				<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>">자누묻는질문</div>
+			</div>	
+		<div id="post">	
+			<h3>공지사항 게시판</h3>
+			<form>	
+				<table id="detail">
+					<tbody>
+						<tr>
+							<th style="text-align: center;">제목</th>
+							<td colspan="3">${bvo.subject}</td>
+						</tr>
+						<tr>
+							<th style="text-align: center;">작성자</th>
+							<td>${bvo.employee_name}</td>
+							<th style="text-align: center;">작성날짜</th>
+							<td>${bvo.regDate}</td>
+						</tr>
+						
+						<c:forEach var="attachvo" items="${attachvoList}">
+						<tr>
+							<th style="text-align: center;">첨부파일</th>
+							<td><a href="<%= ctxPath%>/freeboard/download.top?fk_board_seq=${attachvo.fk_board_seq}&fileName=${attachvo.fileName}&orgFileName=${attachvo.orgFileName}">${attachvo.orgFileName}</a></td>
+							<th style="text-align: center;">파일크기</th>
+							<td>&nbsp;${attachvo.fileSize}byte</td>
+						</tr>
+						</c:forEach>
+						
+						<tr>
+							<th colspan="5" style="text-align: center;">내용</th>					
+						</tr>			
+						<tr>
+							<td colspan="5" style="width: 1178px;" id="content">${bvo.content}</td>
+						</tr>	
+					</tbody>				
+				</table>
+			</form>	
+			<br/>
+			<div>
+				<p>이전글&nbsp;:&nbsp;<span class="move" onclick="javascript:location.href='?board_seq=${bvo.previousseq}'" style="cursor: pointer;">${bvo.previoussubject}</span></p>
 			</div>
-			<div align="right">
-				<div class="boardBtn">목록보기</div>
+			<div>
+				<p>다음글&nbsp;:&nbsp;<span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">${bvo.nextsubject}</span></p>
 			</div>
+			<div id="button" >
+			
+				<c:if test="${not empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
+				</c:if>
+				<c:if test="${empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">목록보기</button>
+				</c:if>
+				
+			</div>
+			
+			<div style="clear: both;"></div>
+			
 		</div>
-	</div>
-	
-</div>
-
+		</div>
+		
+		<form name="delFrm">
+			<input type="hidden" name="board_seq" value="${bvo.board_seq}" />
+		</form>
+		
+	</div>	

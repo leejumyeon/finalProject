@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.groupware.cha.model.ChaInterDAO;
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
@@ -161,6 +162,41 @@ public class ChaService implements ChaInterService {
 		List<BoardVO> boardList = dao.boardListSearchWithPaging(paraMap);
 		
 		return boardList;
+	}
+
+	// 메인페이지(공지사항 상세보기 가져오기)
+	@Override
+	public BoardVO detailNotice(String board_seq, String employee_seq) {
+		
+		BoardVO bvo = dao.detailNotice(board_seq);
+		
+		if(bvo != null && 
+		   employee_seq != null && 
+		   !bvo.getFk_employee_seq().equals(employee_seq)) {
+			// 글조회수 증가는 다른 사람의 글을 읽을때만 증가하도록 해야 한다.
+			// 로그인 하지 않은 상태에서는 글 조회수 증가는 없다.
+			
+			dao.setAddReadCount(board_seq); // 글 조회수 1증가 하기
+			bvo = dao.detailNotice(board_seq);
+		}
+		
+		return bvo;
+	}
+
+	@Override
+	public BoardVO detailNoticeNoAddCount(String board_seq) {
+
+		BoardVO bvo = dao.detailNotice(board_seq);
+		
+		return bvo;
+	}
+
+	@Override
+	public List<AttachFileVO> getfileView(String board_seq) {
+		
+		List<AttachFileVO> attachvoList = dao.getfileView(board_seq);
+		
+		return attachvoList;
 	}
 	
 	
