@@ -791,7 +791,7 @@ commit;
 begin
     for i in 1..100 loop 
         insert into comment_table(comment_seq, fk_board_seq, fk_employee_seq, readCnt, content, status, regDate, parent_seq, depthno)
-		values(comment_table_seq.nextval, 1, 1, default, '댓글 테스트 입니다.'||i, default, default, 0, default); 
+		values(comment_table_seq.nextval, 2, 1, default, '댓글 테스트 입니다.'||i, default, default, 0, default); 
     end loop;
 end;
 commit;

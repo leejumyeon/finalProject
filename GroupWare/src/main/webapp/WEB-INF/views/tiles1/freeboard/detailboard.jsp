@@ -148,9 +148,9 @@
 	
 	#scroll {
 		margin-top: 80px;
-		width: 750px;
+		width: 751px;
 		max-height: 300px;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 	
 	.move:hover {
