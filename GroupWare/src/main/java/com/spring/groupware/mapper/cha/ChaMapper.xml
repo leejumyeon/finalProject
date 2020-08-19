@@ -82,7 +82,7 @@
 	<resultMap type="HashMap" id="reservationMap">
 		<result property="reservation_seq" column="reservation_seq" javaType="String"/>
 		<result property="employee_name" column="employee_name" javaType="String"/>
-		<result property="roomNumber" column="roomNumber" javaType="String"/>
+		<result property="roomName" column="roomName" javaType="String"/>
 		<result property="startDate" column="startDate" javaType="String"/>
 		<result property="endDate" column="endDate" javaType="String"/>
 		<result property="head_seq" column="head_seq" javaType="String"/>
@@ -93,14 +93,14 @@
 	
 	<!-- 마이페이지(예약) - 뿌리기 -->
 	<select id="reservation" parameterType="HashMap" resultMap="reservationMap">
-		select V.RNO, V.reservation_seq, V.employee_seq, V.roomNumber, V.startDate, V.endDate, V.head_seq
+		select V.RNO, V.reservation_seq, V.employee_seq, V.roomName, V.startDate, V.endDate, V.head_seq
 		     , V.memberCount, V.reason, V.status, V.regDate
 		from
 		(
 		select rownum AS RNO
 		     , A.reservation_seq
 		     , B.employee_seq
-		     , C.roomNumber
+		     , C.roomName
 		     , A.startDate
 		     , A.endDate
 		     , A.head_seq
@@ -168,7 +168,7 @@
 		<result property="commentCnt" column="commentCnt" javaType="String"/>
 		<result property="fk_category_num" column="fk_category_num" javaType="String"/>		
 	</resultMap>	 
-	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항 -->
+	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 공지사항 -->
 	<select id="indication" parameterType="HashMap" resultMap="indicationMap">
 		select V.RNO, V.category_name, V.board_seq, V.subject, V.content, V.readCnt
 		     , V.regDate, V.employee_name, V.status, V.commentCnt, V.fk_category_num
@@ -183,13 +183,15 @@
 		from board_category A join board_table B
 		on A.category_seq = B.fk_category_num
 		join employees_table C
-		ON C.employee_seq = B.fk_employee_seq		
+		ON C.employee_seq = B.fk_employee_seq
+		where B.fk_category_num = 1
+		order by board_seq desc
 		)V
-		where V.RNO between '1' and '5'
-		order by V.regDate desc
+		where V.RNO between '1' and '3'
+		
 	</select>
 	
-	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판 -->
+	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 자유게시판 -->
 	<select id="freedom" parameterType="HashMap" resultMap="indicationMap">
 		select V.RNO, V.category_name, V.board_seq, V.subject, V.content, V.readCnt
 		     , V.regDate, V.employee_name, V.status, V.commentCnt, V.fk_category_num
@@ -204,9 +206,33 @@
 		from board_category A join board_table B
 		on A.category_seq = B.fk_category_num
 		join employees_table C
-		ON C.employee_seq = B.fk_employee_seq		
+		ON C.employee_seq = B.fk_employee_seq
+		where B.fk_category_num = 3	
+		order by board_seq desc	
 		)V
-		where V.RNO between '1' and '5'
-		order by V.regDate desc
+		where V.RNO between '1' and '3'
+		
 	</select>
+	
+	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판 -->
+	<select id="album" resultType="com.spring.groupware.commonVO.AlbumVO">
+		select V.RNO, V.employee_name, V.album_seq, V.subject, V.category_name ,V.content, V.regDate
+		from
+		(
+		select rownum AS RNO
+		     , B.employee_name
+		     , album_seq
+		     , album_category AS category_name
+		     , subject
+		     , content
+		     , to_char(regDate, 'yyyy-mm-dd') AS regDate
+		from album_table A join employees_table B
+		ON A.fk_employee_seq = B.employee_seq
+		order by album_seq desc		
+		)V
+		where V.RNO between '1' and '3'
+		
+	</select>
+	
+	
 </mapper>
