@@ -453,7 +453,14 @@
 				<p>다음글&nbsp;:&nbsp;<span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">${bvo.nextsubject}</span></p>
 			</div>
 			<div id="button" >
-				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
+			
+				<c:if test="${not empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
+				</c:if>
+				<c:if test="${empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">목록보기</button>
+				</c:if>
+				
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/editView.top?board_seq=${bvo.board_seq}'">수정</button>
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="goDelete();">삭제</button>
 			</div>
