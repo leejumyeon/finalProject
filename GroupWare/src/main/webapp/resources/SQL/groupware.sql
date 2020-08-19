@@ -624,10 +624,6 @@ create table comment_table
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
--- 댓글 테이블 컬럼 변경 -- 
-alter table comment_table
-rename column commnet_seq to comment_seq;
-
 create sequence comment_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -738,6 +734,7 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+commit;
 
 -- 메일 테이블 check 제약조건 수정 --
 alter table mail_table drop constraint CK_mail_table;
@@ -775,7 +772,9 @@ where R.status = 0
 order by R.reservation_seq desc;
 
 
-
+-- 댓글 테이블 컬럼 변경 -- 
+alter table comment_table
+rename column commnet_seq to comment_seq;
 
 -- 자유게시판 페이징처리를 위한 데이터
 begin
@@ -799,7 +798,7 @@ commit;
 begin
     for i in 1..20 loop 
         insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
-        values(board_table_seq.nextval, 2, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 4, default, default); 
+        values(board_table_seq.nextval, 1, '공지사항 글'||i, '공지사항 글입니다.'||i, default, default, 1, default, default); 
     end loop;
 end;
 

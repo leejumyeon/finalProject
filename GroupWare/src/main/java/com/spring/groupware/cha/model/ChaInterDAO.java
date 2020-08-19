@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -50,6 +51,12 @@ public interface ChaInterDAO {
 	
 	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판
 	List<AlbumVO> album();
+
+	// 메인페이지(공지사항 페이징 처리 된 거)
+	int getTotalCount(HashMap<String, String> paraMap);
+
+	// 페이징 처리한 공지사항 글목록 얻어오기
+	List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap);
 
 	
 	

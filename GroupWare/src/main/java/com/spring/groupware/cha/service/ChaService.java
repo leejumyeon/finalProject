@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.groupware.cha.model.ChaInterDAO;
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -142,6 +143,24 @@ public class ChaService implements ChaInterService {
 		List<AlbumVO> albumvoList = dao.album();
 		
 		return albumvoList;
+	}
+
+	// 메인페이지(공지사항 페이징 처리 된 거)
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+		
+		int totalCount = dao.getTotalCount(paraMap);
+		
+		return totalCount;
+	}
+
+	// 페이징 처리한 공지사항 글목록 얻어오기
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
+
+		List<BoardVO> boardList = dao.boardListSearchWithPaging(paraMap);
+		
+		return boardList;
 	}
 	
 	

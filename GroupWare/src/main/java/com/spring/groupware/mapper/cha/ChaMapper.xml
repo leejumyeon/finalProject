@@ -231,8 +231,50 @@
 		order by album_seq desc		
 		)V
 		where V.RNO between '1' and '3'
-		
 	</select>
 	
+	<!-- 공지사항 총 게시물 건수(totalCount) -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from board_table B join employees_table E 
+		on  B.fk_employee_seq = E.employee_seq
+		where fk_category_num = 1
+		<if test='searchWord != ""'>
+			<if test='searchType == "all"'>
+				and lower(subject) like '%'|| lower(#{searchWord}) ||'%' or 
+				    lower(content) like '%'|| lower(#{searchWord}) ||'%' or
+				    lower(employee_name) like '%'|| lower(#{searchWord}) ||'%'    
+			</if>
+			<if test='searchType != "all"'>
+				and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+			</if>
+			
+		</if>
+	</select>
 	
+	<select id="boardListSearchWithPaging" parameterType="HashMap" resultType="com.spring.groupware.commonVO.BoardVO">
+		select board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt, employee_name
+		from 
+		(
+			select row_number() over(order by board_seq desc) AS rno, 
+			       board_seq, fk_category_num, subject, content,  
+			       readCnt, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate,
+			       fk_employee_seq, status, commentCnt, employee_name
+			from board_table B join employees_table E 
+			on  B.fk_employee_seq = E.employee_seq
+			where fk_category_num = 1
+			<if test='searchWord != ""'>
+				<if test='searchType == "all"'>
+				and subject like '%'|| #{searchWord} ||'%' or 
+				    content like '%'|| #{searchWord} ||'%' or
+				    employee_name like '%'|| #{searchWord} ||'%'
+				</if>
+				<if test='searchType != "all"'>
+				and ${searchType} like '%'|| #{searchWord} ||'%'
+				</if>
+			</if>
+			
+		) V
+		where rno between #{startRno} and #{endRno}
+	</select>
 </mapper>
