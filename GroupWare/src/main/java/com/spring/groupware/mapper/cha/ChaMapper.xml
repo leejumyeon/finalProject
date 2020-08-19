@@ -156,5 +156,57 @@
 		where comCalendar_seq = #{comCalendar_seq}
 	</delete>
 	
-
+	<resultMap type="HashMap" id="indicationMap">
+		<result property="category_name" column="category_name" javaType="String"/>
+		<result property="board_seq" column="board_seq" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+		<result property="content" column="content" javaType="String"/>
+		<result property="readCnt" column="readCnt" javaType="String"/>
+		<result property="regDate" column="regDate" javaType="String"/>
+		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="status" column="status" javaType="String"/>
+		<result property="commentCnt" column="commentCnt" javaType="String"/>
+		<result property="fk_category_num" column="fk_category_num" javaType="String"/>		
+	</resultMap>	 
+	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항 -->
+	<select id="indication" parameterType="HashMap" resultMap="indicationMap">
+		select V.RNO, V.category_name, V.board_seq, V.subject, V.content, V.readCnt
+		     , V.regDate, V.employee_name, V.status, V.commentCnt, V.fk_category_num
+		from
+		(
+		select rownum AS RNO
+		     , A.category_name 
+		     , board_seq, subject,content,readCnt
+		     , to_char(regDate, 'yyyy-mm-dd') AS regDate
+		     , C.employee_name AS employee_name
+		     , status,commentCnt, B.fk_category_num 
+		from board_category A join board_table B
+		on A.category_seq = B.fk_category_num
+		join employees_table C
+		ON C.employee_seq = B.fk_employee_seq		
+		)V
+		where V.RNO between '1' and '5'
+		order by V.regDate desc
+	</select>
+	
+	<!-- 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판 -->
+	<select id="freedom" parameterType="HashMap" resultMap="indicationMap">
+		select V.RNO, V.category_name, V.board_seq, V.subject, V.content, V.readCnt
+		     , V.regDate, V.employee_name, V.status, V.commentCnt, V.fk_category_num
+		from
+		(
+		select rownum AS RNO
+		     , A.category_name 
+		     , board_seq, subject,content,readCnt
+		     , to_char(regDate, 'yyyy-mm-dd') AS regDate
+		     , C.employee_name AS employee_name
+		     , status,commentCnt, B.fk_category_num 
+		from board_category A join board_table B
+		on A.category_seq = B.fk_category_num
+		join employees_table C
+		ON C.employee_seq = B.fk_employee_seq		
+		)V
+		where V.RNO between '1' and '5'
+		order by V.regDate desc
+	</select>
 </mapper>

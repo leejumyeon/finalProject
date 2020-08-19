@@ -58,6 +58,42 @@ public class ManagerService implements InterManagerService {
 		List<AttachFileVO> fileList = dao.boardFileList(board_seq);
 		return fileList;
 	}
+
+	// 게시글 수정 - 삭제할 파일 찾기
+	@Override
+	public List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap) {
+		List<AttachFileVO> deleteFileList = dao.deleteFileList(paraMap);
+		return deleteFileList;
+	}
+
+	// 게시글 수정 - 첨부파일 삭제
+	@Override
+	public int deleteFile(HashMap<String, Object> paraMap) {
+		int result = dao.deleteFile(paraMap);
+		return result;
+	}
+
+	// 게시글 수정 - 본문 수정
+	@Override
+	public int boardUpdate(HashMap<String, Object> paraMap) {
+		int result = dao.boardUpdate(paraMap);
+		return result;
+	}
+
+	// 게시글 수정 - 첨부파일 추가
+	@Override
+	public int insertFile(AttachFileVO uploadFile) {
+		int result = dao.insertFile(uploadFile);
+		return result;
+	}
+
+	// 게시글 관리 - 게시글 삭제
+	@Override
+	public int boardDelete(HashMap<String, Object> paraMap) {
+		String[] board_seqArr = (String[]) paraMap.get("board_seqArr");
+		int result = dao.boardDelete(paraMap);
+		return result;
+	}
 	
 
 }

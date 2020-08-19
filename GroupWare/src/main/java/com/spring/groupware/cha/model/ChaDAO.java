@@ -119,6 +119,25 @@ public class ChaDAO implements ChaInterDAO {
 		return n;
 	}
 	
+	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	@Override
+	public List<HashMap<String, String>> indication(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String, String>> resultList = sqlsession.selectList("cha.indication",paraMap);
+		
+		return resultList;
+	}
+	
+	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	@Override
+	public List<HashMap<String, String>> freedom(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String, String>> resultList = sqlsession.selectList("cha.freedom",paraMap);
+		
+		return resultList;
+		
+	}
+	
 	
 
 	

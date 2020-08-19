@@ -59,12 +59,19 @@ public interface InterChoijhService {
 	int addComment(CommentVO cvo); // 댓글 쓰기 및 원글게시물 댓글수 +1 증가
 
 	List<CommentVO> goReadComment(String fk_board_seq); // 댓글 내용(페이징처리 x) 보여주기
-
+	List<CommentVO> getCommentListPaging(HashMap<String, String> paraMap); // 댓글 내용(페이징처리 o) 보여주기
+	
+	int getCommentTotalPage(HashMap<String, String> paraMap); // 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기 
+	
 	int getTotalCount(HashMap<String, String> paraMap); // 총 게시물 건수(totalCount)
 
 	List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap); // 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
 
 	int addChildComment(CommentVO cvo); // 답글쓰기 및 원글게시물 댓글수 +1 증가
+
+	
+
+	
 
 	
 

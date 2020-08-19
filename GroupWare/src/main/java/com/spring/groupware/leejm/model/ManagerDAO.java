@@ -60,4 +60,39 @@ public class ManagerDAO implements InterManagerDAO {
 		return fileList;
 	}
 
+	// 게시글 수정 - 삭제할 파일 조회
+	@Override
+	public List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap) {
+		List<AttachFileVO> deleteFileList = sqlsession.selectList("manager.boardDeleteFileList",paraMap);
+		return deleteFileList;
+	}
+
+	// 게시글 수정 - 첨부파일 삭제
+	@Override
+	public int deleteFile(HashMap<String, Object> paraMap) {
+		int result = sqlsession.delete("manager.fileDelete",paraMap);
+		return result;
+	}
+
+	// 게시글 수정 - 본문 수정
+	@Override
+	public int boardUpdate(HashMap<String, Object> paraMap) {
+		int result = sqlsession.update("manager.boardUpdate",paraMap);
+		return result;
+	}
+
+	// 게시글 수정 - 첨부파일 추가
+	@Override
+	public int insertFile(AttachFileVO uploadFile) {
+		int result = sqlsession.insert("manager.fileInsert",uploadFile);
+		return result;
+	}
+
+	// 게시글 관리 - 게시글 삭제
+	@Override
+	public int boardDelete(HashMap<String, Object> paraMap) {
+		int result = sqlsession.delete("manager.boardDelete",paraMap);
+		return result;
+	}
+
 }

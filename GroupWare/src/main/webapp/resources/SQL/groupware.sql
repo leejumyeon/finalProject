@@ -541,6 +541,7 @@ create table reservation_table
 );
 
 
+
 create SEQUENCE reservation_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -579,35 +580,6 @@ create table board_table
 ,constraint fk_board_category foreign key(fk_category_num) references board_category(category_seq)
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
-
-
-
-
-select * from board_table;
-select * from attachFile_table;
-select * from comment_table;
-
-select count(*)
-from board_table B join employees_table E 
-on  B.fk_employee_seq = E.employee_seq
-where fk_category_num = 3 
-and lower(employee_name) like '%' || lower('파이리') || '%';
-
-
-select board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt, employee_name
-from 
-(
-    select row_number() over(order by board_seq desc) AS rno, 
-           board_seq, fk_category_num, subject, content,  
-           readCnt, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate,
-           fk_employee_seq, status, commentCnt, employee_name
-    from board_table B join employees_table E 
-    on  B.fk_employee_seq = E.employee_seq
-    where fk_category_num = 3 
-    and content like '%'|| '첨부' ||'%'
-) V
-where rno between 1 and 2;
-
 
 create SEQUENCE board_table_seq
 start with 1 -- 시작값
@@ -814,5 +786,13 @@ begin
         values(board_table_seq.nextval, 3, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 1, default, default); 
     end loop;
 end;
+commit;
 
-
+-- 자유게시판 댓글 페이징처리를 위한 데이터
+begin
+    for i in 1..100 loop 
+        insert into comment_table(comment_seq, fk_board_seq, fk_employee_seq, readCnt, content, status, regDate, parent_seq, depthno)
+		values(comment_table_seq.nextval, 1, 1, default, '댓글 테스트 입니다.'||i, default, default, 0, default); 
+    end loop;
+end;
+commit;

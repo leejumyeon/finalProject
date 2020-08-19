@@ -713,7 +713,7 @@ public class MailController {
 		String root = session.getServletContext().getRealPath("/");
 		String path = root+"resources"+File.separator;
 		
-		for(MailVO deleteFile : deleteFileList) {
+		/*for(MailVO deleteFile : deleteFileList) {
 			if("1".equals(deleteFile.getStatus())) {
 				path += "receiveFiles";
 			}
@@ -738,7 +738,7 @@ public class MailController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		
 		// DB에서 삭제
 		int n = service.mailDeletion(paraMap);

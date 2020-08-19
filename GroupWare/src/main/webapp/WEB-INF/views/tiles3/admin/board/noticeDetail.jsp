@@ -47,6 +47,10 @@
 	function goUpdate(){
 		location.href="<%=request.getContextPath()%>/manager/board/noticeUpdate.top?board_seq=${board.board_seq}";
 	}
+	
+	function goDelete(){
+		location.href="<%=request.getContextPath()%>/manager/board/noticeDelete.top?board_seq=${board.board_seq}";
+	}
 </script>
     
 <div>
@@ -85,8 +89,8 @@
 			</tr>
 		</table>
 		<div>
-			<span class="managerBtn" style="float:left" onclick="history.back();">목록 돌아가기</span>
-			<span class="managerBtn" >삭제</span>
+			<span class="managerBtn" style="float:left" onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">목록 돌아가기</span>
+			<span class="managerBtn" onclick="goDelete()">삭제</span>
 			<span class="managerBtn" onclick="goUpdate()">수정</span>
 		</div>
 	</div>

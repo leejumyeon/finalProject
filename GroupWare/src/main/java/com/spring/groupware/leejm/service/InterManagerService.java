@@ -26,4 +26,19 @@ public interface InterManagerService {
 	// 게시글 - 첨부파일 목록 조회
 	List<AttachFileVO> boardFileList(String board_seq);
 
+	// 게시글 수정 - 삭제할 파일 조회
+	List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap);
+
+	// 게시글 수정 - 첨부파일 삭제
+	int deleteFile(HashMap<String, Object> paraMap);
+
+	// 게시글 수정 - 본문 수정
+	int boardUpdate(HashMap<String, Object> paraMap);
+
+	// 게시글 수정 - 첨부파일 추가(업데이트, 추가)
+	int insertFile(AttachFileVO uploadFile);
+
+	// 게시글 관리 - 게시글 삭제
+	int boardDelete(HashMap<String, Object> paraMap);
+
 }
