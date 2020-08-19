@@ -57,5 +57,11 @@ public class HyeminDAO implements InterHyeminDAO {
 	public void approveRoom(String reservation_seq) {
 		sqlsession.update("hyemin.approveRoom", reservation_seq);
 	}
+
+	// === 예약 반려하기 (관리자) === //
+	@Override
+	public void rejectRoom(String reservation_seq) {
+		sqlsession.update("hyemin.rejectRoom", reservation_seq);
+	}
 	
 }

@@ -45,6 +45,7 @@
 	<!-- === 예약 신청 현황 조회(관리자)(Ajax) === -->
 	<select id="waitingReservation" parameterType="HashMap" resultType="com.spring.groupware.commonVO.ReservationVO">
 		select R.reservation_seq
+			 , R.fk_employee_seq
 		     , E.employee_name
 		     , D.department_name
 		     , P.position_name
@@ -133,6 +134,11 @@
 	
 	<update id="approveRoom" parameterType="String">
 		 update reservation_table set status = 1
+		 where reservation_seq = #{reservation_seq}
+	</update>
+	
+	<update id="rejectRoom" parameterType="String">
+		 update reservation_table set status = 2
 		 where reservation_seq = #{reservation_seq}
 	</update>
 	

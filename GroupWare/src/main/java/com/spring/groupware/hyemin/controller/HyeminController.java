@@ -34,6 +34,8 @@ public class HyeminController {
 	@Autowired
 	private InterHyeminService service;
 	
+	
+	
 	// === #150. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI: Dependency Injection) ===
 	@Autowired	// Type에 따라 알아서 Bean 을 주입해준다.
 	private FileManager fileManager;
@@ -244,7 +246,7 @@ public class HyeminController {
 		String reservation_seq = request.getParameter("reservation_seq");
 		
 		service.approveRoom(reservation_seq);
-
+		
 		mav.setViewName("redirect:/manager/reservation.top");
 		
 		return mav;
@@ -360,4 +362,16 @@ public class HyeminController {
 		}		
 		
 	}*/
+	
+	// 관리자 - 예약관리(반려)
+	@RequestMapping(value="/manager/rejectRoom.top")
+	public ModelAndView rejectRoom(ModelAndView mav, HttpServletRequest request) {
+		String reservation_seq = request.getParameter("reservation_seq");
+		
+		service.rejectRoom(reservation_seq);
+		
+		mav.setViewName("redirect:/manager/reservation.top");
+		
+		return mav;
+	}
 }

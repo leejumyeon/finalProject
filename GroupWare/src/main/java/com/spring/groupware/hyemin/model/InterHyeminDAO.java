@@ -25,6 +25,8 @@ public interface InterHyeminDAO {
 	// 예약 승인하기(관리자)(update)
 	void approveRoom(String reservation_seq);
 
+	void rejectRoom(String reservation_seq);
+
 	
 	
 }

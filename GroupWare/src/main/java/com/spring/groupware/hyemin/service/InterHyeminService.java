@@ -25,6 +25,9 @@ public interface InterHyeminService {
 	// 예약 승인하기(관리자)(update)
 	void approveRoom(String reservation_seq);
 
+	// 예약 반려하기(관리자)
+	void rejectRoom(String reservation_seq);
+
 	
 	
 }

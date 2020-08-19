@@ -56,5 +56,11 @@ public class HyeminService implements InterHyeminService {
 	public void approveRoom(String reservation_seq) {
 		dao.approveRoom(reservation_seq);
 	}
+
+	// === 예약 반려하기(관리자) === //
+	@Override
+	public void rejectRoom(String reservation_seq) {
+		dao.rejectRoom(reservation_seq);
+	}
 	
 }
