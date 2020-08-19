@@ -1,6 +1,5 @@
 package com.spring.groupware.leeeh.controller;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -17,7 +16,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -1678,4 +1676,57 @@ public class LeeehController {
 		
 	}
 	
+	// === 퇴근하기 팝업 띄우기 === //
+	@RequestMapping(value="/getOffTime.top")
+	public ModelAndView getOffTime(ModelAndView mav) {
+		
+		mav.setViewName("getOnTime.notiles");
+		return mav;
+	}
+	
+	
+	// === 출근 확인 버튼을 누르면 출근 테이블에 집어넣기 === //
+	@ResponseBody
+	@RequestMapping(value="/updateAttendanceTable.top", produces="text/plain;charset=UTF-8")
+	public String updateAttendanceTable(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		int result = service.updateAttendanceTable(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+		
+	}
+	
+	// === 인사고과 저번달 고과와 이번달 고과, 사유 얻어오기 === //
+	@ResponseBody
+	@RequestMapping(value="/detailTAList.top", produces="text/plain;charset=UTF-8")
+	public String detailTAList(HttpServletRequest request) {
+		
+		String fk_employee_seq = request.getParameter("fk_employee_seq");
+		String ta_seq = request.getParameter("ta_seq");
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("ta_seq", ta_seq);
+		
+		TimeAndAttVO detailTA = service.getDetailTA(paraMap);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("previousattitude", detailTA.getPreviousattitude());
+		jsObj.put("previousattendance", detailTA.getPreviousattendance());
+		jsObj.put("previousperformance", detailTA.getPreviousperformance());
+		jsObj.put("attitude", detailTA.getAttitude());
+		jsObj.put("attendance", detailTA.getAttendance());
+		jsObj.put("performance", detailTA.getPerformance());
+		jsObj.put("reason", detailTA.getReason());
+		
+		return jsObj.toString();
+	}
 }

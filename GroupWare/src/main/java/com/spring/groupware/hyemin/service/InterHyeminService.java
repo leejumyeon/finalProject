@@ -3,6 +3,7 @@ package com.spring.groupware.hyemin.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.ReservationVO;
 
 public interface InterHyeminService {
@@ -25,6 +26,16 @@ public interface InterHyeminService {
 	// 예약 승인하기(관리자)(update)
 	void approveRoom(String reservation_seq);
 
+	// 글번호 채번하기
+	int getBoard_seq();
 	
+	// 게시글 관리(공지사항 리스트)글 작성(관리자)(insert)
+	int managerNoticeInsert(HashMap<String, Object> paraMap);
+
+	// 게시글 관리(공지사항 리스트)글 작성 시 첨부파일 추가(관리자)(insert)
+	int managerNoticeFileInsert(AttachFileVO attachFile);
+	
+	// 예약 반려하기(관리자)
+	void rejectRoom(String reservation_seq);
 	
 }

@@ -797,3 +797,13 @@ begin
     end loop;
 end;
 commit;
+
+
+begin
+    for i in 1..20 loop 
+        insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+        values(board_table_seq.nextval, 2, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 4, default, default); 
+    end loop;
+end;
+
+commit;

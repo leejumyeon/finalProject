@@ -148,9 +148,9 @@ $(document).ready(function(){
 	<h4 style="text-align: center;">-공지글 작성-</h4>
 	</div>
 	
-	<div style="margin-top: 20px; border:solid 1px blue;">
-		<form name="noticeFrm" enctype="multipart/form-data">
-			<select name="boardType" style="height: 25px;">
+	<div style="margin-top: 20px; border:solid 0px blue;">
+		<form name="writeFrm" enctype="multipart/form-data">
+			<select name="fk_category_num" style="height: 25px;">
 				<option value="1">공지사항</option>
 				<option value="2">FAQ</option>
 			</select>

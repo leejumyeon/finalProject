@@ -29,9 +29,125 @@
 	//serverName : http://192.168.50.65:9090 
 %>
 
+<style>
+
+	.snip1537 {
+	  background-color: #ff4d4d;
+	  border: none;
+	  color: #ffffff;
+	  cursor: pointer;
+	  display: inline-block;
+	  font-family: 'BenchNine', Arial, sans-serif;
+	  font-size: 1em;
+	  font-size: 22px;
+	  line-height: 1em;
+	  margin: 15px 40px;
+	  outline: none;
+	  padding: 12px 40px 10px;
+	  position: relative;
+	  text-transform: uppercase;
+	  font-weight: 700;
+	}
+	
+	.snip1537:before,
+	.snip1537:after {
+	  border-color: transparent;
+	  -webkit-transition: all 0.25s;
+	  transition: all 0.25s;
+	  border-style: solid;
+	  border-width: 0;
+	  content: "";
+	  height: 24px;
+	  position: absolute;
+	  width: 24px;
+	}
+	
+	.snip1537:before {
+	  border-color: #ff4d4d;
+	  border-right-width: 2px;
+	  border-top-width: 2px;
+	  right: -5px;
+	  top: -5px;
+	}
+	
+	.snip1537:after {
+	  border-bottom-width: 2px;
+	  border-color: #ff4d4d;
+	  border-left-width: 2px;
+	  bottom: -5px;
+	  left: -5px;
+	}
+	
+	.snip1537:hover {
+	  background-color: #ff4d4d;
+	}
+	
+	.snip1537:hover:before,
+	.snip1537:hover:after {
+	  height: 100%;
+	  width: 100%;
+	}
+	
+</style>
+
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		firstAttendance();
+		
+		$("#offButton").css("display","none");
+		
+		setTimeout(function() {
+			
+			var todayDate = new Date();
+			
+			var hours = todayDate.getHours();
+			
+			if(hours == '18' && sessionStorage.getItem("offTime") == null) {
+				
+				$("#offButton").css("display","");
+				
+				sessionStorage.setItem("offTime", "1");
+				
+				window.open("<%= request.getContextPath()%>/getOffTime.top", "퇴근하기", "width = 450, height= 200, top=350, left=500")
+				
+			}
+			
+		}, 300000)
+	});
+	
+	function firstAttendance() {
+			
+		$.ajax({
+			url:"<%= request.getContextPath()%>/getIsAttendance.top",
+			type:"GET",
+			dataType:"JSON",
+			success: function(json) {
+				
+				if(json.employee_seq == null) {
+					
+					window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
+				}
+			},
+			error: function(e) {
+				
+			}
+		});
+	}
+	
 	function click_messenger(){
-		if($("#mymessenger").hasClass("messengerClose")){
+		
+		var sw=screen.width;  // 화면 가로길이
+		var sh=screen.height; // 화면 세로길이
+		var popw=500; 		  // 팝업창 가로길이 
+		var poph=800; 		  // 팝업창 세로길이
+		var xpos=(sw-popw)/2; 
+		var ypos=(sh-poph)/2; 
+
+		var popWin=window.open("<%=request.getContextPath()%>/messenger/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes");
+		console.log()
+		/* if($("#mymessenger").hasClass("messengerClose")){
 			$("#mymessenger").removeClass("messengerClose");
 			$("#mymessenger").addClass("messengerOpen");
 			
@@ -44,8 +160,8 @@
 			
 			window.resizeTo(1220,845);
 		}
-		console.log($("#mymessenger").prop("class"));
-		$.ajax({
+		console.log($("#mymessenger").prop("class")); */
+		<%-- $.ajax({
 			url:"<%=request.getContextPath()%>/messenger/open.top",
 			data:{"messengerStatus":$("#mymessenger").prop("class")},
 			type:"get",
@@ -56,7 +172,7 @@
 			error:function(e){
 				
 			}
-		});
+		}); --%>
 	}
 </script>
 
@@ -100,14 +216,17 @@
 		</li>
 	</ul>
 	<ul class="mynav" style="float:right;">
+		<li class="dropdown" id="offButton">
+			<button class="snip1537" onclick="click_off()">퇴근하기</button>
+		</li>
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="">마이페이지 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="<%=ctxPath%>/viewFullCalendar.top">제품목록</a></li>
 			</ul>
-		</li>	
+		</li>
 		<li class="dropdown">
-			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
+			<div onclick = "click_messenger();">메신저 아이콘 </div>
 		</li>
 	</ul>
 	

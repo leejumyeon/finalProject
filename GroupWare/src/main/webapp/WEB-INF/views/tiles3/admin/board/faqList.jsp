@@ -29,13 +29,12 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
 <script type="text/javascript">
 	
 	$(document).ready(function(){
 		
 		$("#datatables").DataTable({
-		
+			
 			"dom" : '<"top"lf>rt<"bottom"ip>', // 페이지바가 우측하단에 위치 함, 검색이 우측 상단에 위치 함 
 		  //"dom" : '<"top"lp>rt<"bottom"if>', // 페이지바가 우측상단에 위치 함, 검색이 우측하단에 위치 함
 			"paging" : true,				   // 우측 하단에 페이지바를 보여주겠다
@@ -64,14 +63,15 @@
 			
 		}); // end of $("#datatables").DataTable({})
 		
-		$(".accodion").click(function(){
+		$(".accordion").click(function(){
 			
 			var $targetNext = $(this).next();
 		//	var targetNextDisplayProperty = $targetNext.css('display');
 			
 			if($targetNext.hasClass('hide')) {
 				$(".pannel").each(function(index, item){
-					if(item != $targetNext){
+					console.log(item);
+					if($(item) != $targetNext){
 						if(!$(item).hasClass("hide")){
 							$(item).addClass("hide");
 						}
@@ -124,7 +124,7 @@
 				</thead>
 				<tbody>
 					<c:forEach var="board" items="${boardvoList}" varStatus="status">
-						<tr class="accodion">
+						<tr class="accordion">
 							<td><input type="checkbox" name="board_seq" value="${board.board_seq}"/></td>
 							<td>${status.count}</td>
 							<td>${board.employee_name}

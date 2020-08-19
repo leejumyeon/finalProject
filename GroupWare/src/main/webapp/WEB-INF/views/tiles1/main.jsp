@@ -27,6 +27,15 @@
    }
 </style>
 
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		func_infoView();
+		func_viewInfo();
+	});
+	
+</script>
+
 <link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
 <link rel= "stylesheet" href="./resources/admincalendar/vendor/css/fullcalendar.min.css" />
@@ -43,10 +52,20 @@
 
 	<div id="container">
 		<div style="float: left;">
-			<div style="width: 300px; height: 300px; border: 1px solid red;">
+			<div style="width: 300px; height: 300px; border: 1px solid red;"> 
+			<h3>공지사항</h3>
+			
+			<div id="indication"></div>
+			
 			</div>
+			
 			<div class="mt" style="width: 300px; height: 300px; border: 1px solid red;">
+			<h3>자유게시판</h3>
+			
+			<div id="freedom"></div>
+			
 			</div>
+			
 		</div>
       
       
@@ -215,12 +234,18 @@
       
       
 		<div style="float: right;">
-			<div style="width: 250px; height: 190px; border: 1px solid red;">
+			<div style="width: 300px; height: 190px; border: 1px solid red;">
+				<h3>앨범게시판</h3>
 			</div>
-			<div class="mt" style="width: 250px; height: 190px; border: 1px solid red;">
+			
+			<div class="mt" style="width: 300px; height: 190px; border: 1px solid red;">
+				<h3>봉사활동</h3>
 			</div>
-			<div class="mt" style="width: 250px; height: 190px; border: 1px solid red;">
+			
+			<div class="mt" style="width: 300px; height: 190px; border: 1px solid red;">
+				<h3>동호회</h3>
 			</div>
+			
 		</div>
 	</div>      
 </body>
@@ -239,29 +264,125 @@
     <script src="./resources/admincalendar/js/etcSetting.js"></script>
 	
 	<script type="text/javascript">
+		$("#hideAll").hide();
+	</script>
+	
+	<script type="text/javascript">
 		
-  		$("#hideAll").hide();
   		
-  		firstAttendance();
   		
-  		function firstAttendance() {
+  		// 공지사항
+  		function func_infoView(){
   			
   			$.ajax({
-  				url:"<%= request.getContextPath()%>/getIsAttendance.top",
-  				type:"GET",
+  				
+  				url:"/groupware/indication.top",
+  				data:{"fk_category_num":"${fk_category_num}"}, 
   				dataType:"JSON",
-  				success: function(json) {
+  				success:function(json){
   					
-  					if(json.employee_seq == null) {
-  						
-  						window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
-  					}
+  					var html = "<table class='tableClass'>";
+  					html += "<tr>";					 
+  						html += "<th>예약방번호</th>";
+  						html += "<th>시작시간</th>";
+  						html += "<th>종료시간</th>";				
+  						html += "<th>승인상태</th>";
+  						html += "<th>예약방번호</th>";
+  						html += "<th>시작시간</th>";
+  						html += "<th>종료시간</th>";				
+  						html += "<th>승인상태</th>";
+  						html += "<th>승인상태</th>";
+  					html += "</tr>";
+  					
+  				$.each(json.resList, function(index,item){
+  					  					
+  						html += "<tr>";	
+  							
+	  							html += "<td>"+item.category_name+"</td>";
+	  							html += "<td>"+item.board_seq+"</td>";
+	  							html += "<td>"+item.subject+"</td>";
+	  							html += "<td>"+item.content+"</td>";
+	  							html += "<td>"+item.readCnt+"</td>";
+	  							html += "<td>"+item.regDate+"</td>";
+	  							html += "<td>"+item.employee_name+"</td>";
+	  							html += "<td>"+item.status+"</td>";
+	  							html += "<td>"+item.commentCnt+"</td>";							
+	  							html += "<td>"+item.fk_category_num+"</td>";
+  							
+  						html += "</tr>";
+  														
+  				});	
+  				
+  				html += "</table>";
+  				
+  				$("#indication").html(html);
+  					
   				},
-  				error: function(e) {
+  				error : function(request, status, error){
   					
+  					alert("code: "+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
   				}
+  									
   			});
-  		}
+  			
+  		}// end of function func_infoView(){
+  			
+  		
+  		// 자유게시판
+  		function func_viewInfo(){
+  			
+  			$.ajax({
+  				
+  				url:"/groupware/freedom.top",
+  				dataType:"JSON",
+				success:function(json){
+  					
+  					var html = "<table class='tableClass'>";
+  					html += "<tr>";					 
+  						html += "<th>예약방번호</th>";
+  						html += "<th>시작시간</th>";
+  						html += "<th>종료시간</th>";				
+  						html += "<th>승인상태</th>";
+  						html += "<th>예약방번호</th>";
+  						html += "<th>시작시간</th>";
+  						html += "<th>종료시간</th>";				
+  						html += "<th>승인상태</th>";
+  						html += "<th>승인상태</th>";
+  					html += "</tr>";
+  					
+  				$.each(json.resList, function(index,item){
+  					  					
+  						html += "<tr>";	
+  							
+	  							html += "<td>"+item.category_name+"</td>";
+	  							html += "<td>"+item.board_seq+"</td>";
+	  							html += "<td>"+item.subject+"</td>";
+	  							html += "<td>"+item.content+"</td>";
+	  							html += "<td>"+item.readCnt+"</td>";
+	  							html += "<td>"+item.regDate+"</td>";
+	  							html += "<td>"+item.employee_name+"</td>";
+	  							html += "<td>"+item.status+"</td>";
+	  							html += "<td>"+item.commentCnt+"</td>";							
+	  							html += "<td>"+item.fk_category_num+"</td>";
+  							
+  						html += "</tr>";
+  														
+  				});	
+  				
+  				html += "</table>";
+  				
+  				$("#freedom").html(html);
+  					
+  				},
+  				error : function(request, status, error){
+  					
+  					alert("code: "+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+  				}
+  									
+  			});
+  			
+  		}// end of function func_infoView(){	 
+  		
 	</script>
 
 
