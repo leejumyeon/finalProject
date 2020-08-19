@@ -137,7 +137,17 @@
 	}
 	
 	function click_messenger(){
-		if($("#mymessenger").hasClass("messengerClose")){
+		
+		var sw=screen.width;  // 화면 가로길이
+		var sh=screen.height; // 화면 세로길이
+		var popw=500; 		  // 팝업창 가로길이 
+		var poph=800; 		  // 팝업창 세로길이
+		var xpos=(sw-popw)/2; 
+		var ypos=(sh-poph)/2; 
+
+		var popWin=window.open("<%=request.getContextPath()%>/messenger/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes");
+		console.log()
+		/* if($("#mymessenger").hasClass("messengerClose")){
 			$("#mymessenger").removeClass("messengerClose");
 			$("#mymessenger").addClass("messengerOpen");
 			
@@ -150,8 +160,8 @@
 			
 			window.resizeTo(1220,845);
 		}
-		console.log($("#mymessenger").prop("class"));
-		$.ajax({
+		console.log($("#mymessenger").prop("class")); */
+		<%-- $.ajax({
 			url:"<%=request.getContextPath()%>/messenger/open.top",
 			data:{"messengerStatus":$("#mymessenger").prop("class")},
 			type:"get",
@@ -162,7 +172,7 @@
 			error:function(e){
 				
 			}
-		});
+		}); --%>
 	}
 </script>
 
@@ -216,7 +226,7 @@
 			</ul>
 		</li>
 		<li class="dropdown">
-			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
+			<div onclick = "click_messenger();">메신저 아이콘 </div>
 		</li>
 	</ul>
 	

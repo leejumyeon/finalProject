@@ -77,9 +77,17 @@ public class AdditionalController {
 			
 	}
 	
+	// 예약 반려 팝업 창
 	@RequestMapping(value="/reservation/popup.top")
 	public ModelAndView popUp(ModelAndView mav) {
 		mav.setViewName("popup");
+		return mav;
+	}
+	
+	// 메신저 팝업 창
+	@RequestMapping(value="/messenger/popup.top")
+	public ModelAndView messengerPopUp(ModelAndView mav) {
+		mav.setViewName("messengerPopup");
 		return mav;
 	}
 }
