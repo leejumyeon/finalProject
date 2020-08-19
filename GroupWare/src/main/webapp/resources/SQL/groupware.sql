@@ -162,7 +162,7 @@ create table album_table
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence 
+create sequence album_table_Seq
 start with 1 
 increment by 1
 nomaxvalue
@@ -338,6 +338,8 @@ create table document_table
 ,constraint fk_document_category foreign key (document_category) references document_category(document_category_seq)
 );
 
+
+
 create SEQUENCE document_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -364,6 +366,8 @@ create table project_table
 ,documentStatus     number default 0 -- 연결되어있는 결재문서의 승인상태 값과 연동??(0:결재 진행중, 1:결재완료, 삭제:결재반려)
 ,constraint pk_project_table primary key(project_seq)
 );
+
+
 create SEQUENCE project_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -415,6 +419,7 @@ create table companyCalendar_category
 ,category_name  varchar2(50) not null -- 항목명
 ,constraint pk_companyCalendar_category primary key(category_num)
 );
+
 
 -- 회사일정 테이블(companyCalendar_table) --
 create table companyCalendar_table
@@ -599,7 +604,6 @@ create table attachFile_table
 ,constraint pk_attachFile_table primary key(file_seq)
 ,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 );
-
 create SEQUENCE attachFile_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -706,6 +710,11 @@ insert into trip_category(category_num, category_name) values(7,'장기출장');
 insert into trip_category(category_num, category_name) values(8,'해외출장');
 commit;
 
+select *
+from document_category;
+
+delete from document_category;
+
 insert into document_category(document_category_seq, category_name)values(1,'휴가신청');
 insert into document_category(document_category_seq, category_name)values(2,'출장신청');
 insert into document_category(document_category_seq, category_name)values(3,'매출');
@@ -738,6 +747,8 @@ insert into companyCalendar_category(category_num, category_name) values(1,'경�
 insert into companyCalendar_category(category_num, category_name) values(2,'워크샵');
 insert into companyCalendar_category(category_num, category_name) values(3,'협력일정');
 insert into companyCalendar_category(category_num, category_name) values(4,'채용일정');
+insert into companyCalendar_category(category_num, category_name) values(5,'행사');
+select * from companyCalendar_category;
 
 -- 메일 테이블 check 제약조건 수정 --
 alter table mail_table drop constraint CK_mail_table;
@@ -805,5 +816,17 @@ begin
         values(board_table_seq.nextval, 2, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 4, default, default); 
     end loop;
 end;
+desc project_table;
+insert into project_table(project_seq, groupno, project_name, content, term, startDate, manager, memberCount, downPayment, middlePayment,  status)
+values (project_table_seq.nextval, 1, 'TopGroupWare', '그룹웨어제작', 7, to_date('1999-06-23','yyyy-mm-dd'), 15, 6, 21000, 10000,  1);
+
+select extract(year from add_months(startDate, term)) as category, sum(nvl(downPayment,0))+sum(nvl(middlePayment,0))+sum(nvl(completionPayment,0)) as value
+		from
+			(select project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus
+			from project_table where status != 0) P group by (extract(year from add_months(startDate, term))) order by category asc;
+
+select * from project_table;
+
+alter table project_table rename column dwonPayment to downPayment;
 
 commit;

@@ -8,11 +8,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -304,17 +306,27 @@ public class ManagerController {
 	// 관리자-재무 관리(매출내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salesList.top")
 	public ModelAndView managerSalesList(ModelAndView mav, HttpServletRequest request) {
+		
+		mav.setViewName("admin/finance/salesList.tiles3");
+		return mav;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/manager/finance/salesChart.top",produces="text/plain;charset=UTF-8")
+	public String salesChart(HttpServletRequest request) {
 		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
 		List<ChartVO> laborCostChartList = service.laborCostChartList(); //인건비 금액 조회 
 		List<ChartVO> maintainChartList = service.maintainChartList(); // 시설유지비 금액 조회
 		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
 		
+		JSONArray projectChart = new JSONArray();
+		/*for()
+		
 		mav.addObject("projectChartList",projectChartList);
 		mav.addObject("laborCostChartList",laborCostChartList);
 		mav.addObject("maintainChartList",maintainChartList);
-		mav.addObject("profitChartList",profitChartList);
-		mav.setViewName("admin/finance/salesList.tiles3");
-		return mav;
+		mav.addObject("profitChartList",profitChartList);*/
+		return "";
 	}
 	
 	
