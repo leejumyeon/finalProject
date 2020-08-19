@@ -85,10 +85,10 @@
 		</li>
 	</ul>
 	<ul class="mynav" style="float:right;">
-		<li class="dropdown"><a href="<%= ctxPath%>/viewFullCalendar.top">마이페이지</a>
+		<li class="dropdown"><a href="<%= ctxPath%>/viewFullCalendar.top"><img src="<%=ctxPath%>/resources/mainPage_images/mypage.png" width="30px;" height="30px;"/></a>
 		</li>	
 		<li class="dropdown">
-			<a href="#" onclick = "click_messenger()">메신저 아이콘</a>
+			<a href="#" onclick = "click_messenger()"><img src="<%=ctxPath%>/resources/msg_images/messenger.png" width="30px;" height="30px;"/></a>
 		</li>
 	</ul>
 	

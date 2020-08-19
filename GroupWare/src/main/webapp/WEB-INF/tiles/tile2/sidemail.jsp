@@ -58,7 +58,7 @@
 			type:"get",
 			dataType:"JSON",
 			success:function(json){
-				var html = "<div style='color:green; text-align:center; font-size:14pt; padding:10px 0;' class='noRead'>"+json.noReadCount+"</div>";
+				var html = "<div style='color:green; text-align:center; font-size:28pt;' class='noRead'>"+json.noReadCount+"</div>";
 				$(".cnt").html(html);
 				if(json.delCount > 0){
 					html = "<span>"+json.delCount+"</span>";
@@ -121,17 +121,17 @@
 	</div>
 	<div align="left" style="margin:10px 10px 0 12px; padding-bottom:5px; border-bottom: solid 1px white">
 		<div class="subMailBtn">
-			<div style="border:solid 1px black; width: 50px; height: 50px;" class="noRead cnt">
+			<div style="border:solid 0px black; width: 50px; height: 50px;" class="noRead cnt">
 				
 			</div>
-			<div style="border:solid 1px green" class="noRead">안읽음</div>
+			<div style="border:solid 0px green" class="noRead">안읽음</div>
 		</div>
 		
 		<div class="subMailBtn">
-			<div style="border:solid 1px black; width: 50px; height: 50px;" class="attach">
-				<img src="" />
+			<div style="border:solid 0px black; width: 50px; height: 50px;" class="attach">
+				<img src="<%=ctxPath%>/resources/sideImg/attach.jpg" width="100%;"/>
 			</div>
-			<div style="border:solid 1px green" class="attach">첨부</div>
+			<div style="border:solid 0px green" class="attach">첨부</div>
 		</div>
 	</div>
 	<div id="mailhamArea" align="left">
