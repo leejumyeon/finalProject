@@ -162,7 +162,7 @@ create table album_table
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence 
+create sequence album_table_seq
 start with 1 
 increment by 1
 nomaxvalue
@@ -278,7 +278,7 @@ create table grade_table
 ,grade_name     varchar2(50)
 ,constraint pk_grade_table primary key(grade_level)
 );
-select * from grade_table;
+
 -- 휴가/출장 항목 테이블(trip_category)--
 create table trip_category
 (category_num   number not null -- 휴가/출장 항목 번호
@@ -619,7 +619,7 @@ create table comment_table
 ,regDate    date default sysdate not null -- 작성날짜
 ,parent_seq number -- 상위 댓글(계층형)
 ,depthno    number default 0 not null
-,constraint pk_comment_seq primary key(commnet_seq)
+,constraint pk_comment_seq primary key(comment_seq)
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
@@ -743,9 +743,6 @@ insert into companyCalendar_category(category_num, category_name) values(4,'채�
 alter table mail_table drop constraint CK_mail_table;
 alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
 
-select * from mail_table order by mail_seq desc;
-delete from mail_table;
-commit;
 
 
 
