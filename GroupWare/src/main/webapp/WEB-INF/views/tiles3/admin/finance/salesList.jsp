@@ -69,6 +69,11 @@
 				func_salesChart();
 			}
 		});
+		
+		// 매출 테이블 그리기
+		$.ajax({
+			
+		});
 	});
 	
 function func_salesChart(){
@@ -80,11 +85,13 @@ function func_salesChart(){
 			var project_value = new Array;
 			var maintain_value = new Array;
 			var laborCost_value = new Array;
+			var category_value = new Array;
 			$.each(json.projectChartList, function(index, item) {
 				var comma = (index > 0) ? "," : "";
 				project_value.push(Number(item.project_value));
 				maintain_value.push(Number(item.maintain_value));
 				laborCost_value.push(Number(item.laborCost_value));
+				category_value.push(item.category);
 			});
 			
 			console.log(project_value);
@@ -100,20 +107,7 @@ function func_salesChart(){
 				        text: 'Source: WorldClimate.com'
 				    },
 				    xAxis: {
-				        categories: [
-				            '2015',
-				            '2016',
-				            '2017',
-				            '2018',
-				            '2019',
-				            '2020',
-				            '2021',
-				            '2022',
-				            '2023',
-				            '2024',
-				            '2025',
-				            '2026'
-				        ],
+				        categories:category_value,
 				        crosshair: true
 				    },
 				    yAxis: {
@@ -158,75 +152,79 @@ function func_salesChart(){
 }
 
 function func_profitChart(){
-	Highcharts.chart('profitContainer', {
+	$.ajax({
+		url:"<%=request.getContextPath()%>/manager/finance/profitChart.top",
+		dataType:"JSON",
+		success:function(json){
+			var project_value = new Array;
+			var category_value = new Array;
+			$.each(json.profitChartList, function(index, item) {
+				project_value.push(Number(item.project_value));
+				category_value.push(item.category);
+			});
+			Highcharts.chart('profitContainer', {
 
-	    title: {
-	        text: '순이익 차트'
-	    },
+			    title: {
+			        text: '순이익 차트'
+			    },
 
-	    subtitle: {
-	        text: 'Source: thesolarfoundation.com'
-	    },
+			    subtitle: {
+			        text: 'Source: thesolarfoundation.com'
+			    },
 
-	    yAxis: {
-	        title: {
-	            text: 'Number of Employees'
-	        }
-	    },
+			    yAxis: {
+			        title: {
+			            text: 'Number of Employees'
+			        }
+			    },
 
-	    xAxis: {
-	        accessibility: {
-	            rangeDescription: 'Range: 2010 to 2017'
-	        }
-	    },
+			    xAxis: {
+			        accessibility: {
+			            rangeDescription: category_value
+			        }
+			    },
 
-	    legend: {
-	        layout: 'vertical',
-	        align: 'right',
-	        verticalAlign: 'middle'
-	    },
+			    legend: {
+			        layout: 'vertical',
+			        align: 'right',
+			        verticalAlign: 'middle'
+			    },
 
-	    plotOptions: {
-	        series: {
-	            label: {
-	                connectorAllowed: false
-	            },
-	            pointStart: 2010
-	        }
-	    },
+			    plotOptions: {
+			        series: {
+			            label: {
+			                connectorAllowed: false
+			            },
+			            pointStart: 2010
+			        }
+			    },
 
-	    series: [{
-	        name: 'Installation',
-	        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-	    }, {
-	        name: 'Manufacturing',
-	        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-	    }, {
-	        name: 'Sales & Distribution',
-	        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-	    }, {
-	        name: 'Project Development',
-	        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-	    }, {
-	        name: 'Other',
-	        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-	    }],
+			    series: [{
+			        name: 'profit',
+			        data: project_value
+			    }],
 
-	    responsive: {
-	        rules: [{
-	            condition: {
-	                maxWidth: 500
-	            },
-	            chartOptions: {
-	                legend: {
-	                    layout: 'horizontal',
-	                    align: 'center',
-	                    verticalAlign: 'bottom'
-	                }
-	            }
-	        }]
-	    }
+			    responsive: {
+			        rules: [{
+			            condition: {
+			                maxWidth: 500
+			            },
+			            chartOptions: {
+			                legend: {
+			                    layout: 'horizontal',
+			                    align: 'center',
+			                    verticalAlign: 'bottom'
+			                }
+			            }
+			        }]
+			    }
 
+			});
+
+		},
+		error:function(e){
+			
+		}
 	});
 }
 </script>

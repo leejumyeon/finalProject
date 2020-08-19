@@ -67,22 +67,30 @@
 
 	<div id="container">
 		<div style="float: left; margin-left: 30px;">
-			<div style="width: 300px; height: 250px; border: 0px solid red;"> 
-			<h3>공지사항</h3>
 			
+			<div style="width: 300px; height: 250px; border: 0px solid red;"> 
+			<div>
+				<h3 style="display: inline-block;float:left;">공지사항</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/notice.top'"/></h3>
+			</div>
+			<div style="clear:both;"></div>
 			<div id="indication"></div>
 			
 			</div>
 			
 			<div class="mt" style="width: 300px; height: 250px; border: 0px solid red;">
-			<h3>자유게시판</h3>
-			
+			<div>
+				<h3 style="display: inline-block;float:left;">자유게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;"/></h3>
+			</div>
+			<div style="clear:both;"></div>
 			<div id="freedom"></div>
 			
 			</div>
 			
 			<div style="width: 300px; height: 250px; border: 0px solid red;">
-				<h3>앨범게시판</h3>
+			<div>
+				<h3 style="display: inline-block;float:left;">앨범게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;"/></h3>
+			</div>
+			<div style="clear:both;"></div>
 				<div id="album"></div>
 			</div>
 			

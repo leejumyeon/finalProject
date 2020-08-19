@@ -319,7 +319,8 @@
 <script type="text/javascript">
 
 	var timerId = '';
-
+	var timerId2 = '';
+	
 	$(document).ready(function(){
 		
 		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
@@ -383,7 +384,7 @@
 		allEmployeeView();
 
 		// 대화목록 보여주기 
-		msgRoomListView();
+		timerId2 = setInterval(msgRoomListView, 1000);
 		
 		// 대화상대 클릭시 메시지 숨기기
 		$("#conversationPerson").click(function(){
@@ -405,7 +406,16 @@
 			else{
 				alert("글을 입력하세요");
 			}
-		});	
+		});
+		
+
+		// 글을 쓰고 엔터 누를 시
+		$("#content").keydown(function (key) {
+            if (key.keyCode == 13) {
+               $("#msgBtn").click();
+            }
+         });
+		
 		
 		// 대화상대 클릭 시
 		$("#conversationPerson").click(function(){

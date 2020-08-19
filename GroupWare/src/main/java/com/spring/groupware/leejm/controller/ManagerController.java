@@ -318,14 +318,25 @@ public class ManagerController {
 	public String salesChart(HttpServletRequest request) {
 		System.out.println("매출차트 그리기");
 		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
-		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
-		
-		JSONArray projectChart = new JSONArray();
 		
 		System.out.println("매출개수:"+projectChartList.size());
 		
 		JSONObject json = new JSONObject();
 		json.put("projectChartList", projectChartList);
+		
+		return json.toString();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/manager/finance/profitChart.top",produces="text/plain;charset=UTF-8")
+	public String profitChart(HttpServletRequest request) {
+		System.out.println("순이익차트 그리기");
+		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
+		
+		System.out.println("매출개수:"+profitChartList.size());
+		
+		JSONObject json = new JSONObject();
+		json.put("profitChartList", profitChartList);
 		
 		return json.toString();
 	}

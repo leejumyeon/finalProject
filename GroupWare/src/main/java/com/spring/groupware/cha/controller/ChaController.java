@@ -701,7 +701,7 @@ public class ChaController {
 		mav.addObject("gobackURL", gobackURL);
 		mav.addObject("boardList", boardList);
 		
-		mav.setViewName("notice/notice.tiles1");
+		mav.setViewName("Notice/notice.tiles1");
 		return mav;
 	}
 	
@@ -747,7 +747,7 @@ public class ChaController {
 		
 	//	System.out.println(gobackURL);
 		
-		mav.setViewName("notice/noticeDetail.tiles1");
+		mav.setViewName("Notice/noticeDetail.tiles1");
 		
 		return mav;
 	}

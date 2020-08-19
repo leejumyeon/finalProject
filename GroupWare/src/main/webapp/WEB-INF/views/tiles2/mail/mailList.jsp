@@ -286,7 +286,7 @@
 	
 	<div id="searchArea">
 		<div style="position: relative; display: inline;">
-			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="" style="border: none;" autocomplete="off"/><span style="background-color: white; cursor: pointer;" class="icon">아이콘</span></div>
+			<div style="border:solid 1px gray; display: inline-block;"><input type="text" size="20" id="mailSearch" name="searchWord" value="" style="border: none;" autocomplete="off"/><span style="background-color: white; border: cursor: pointer;" class="icon">검색</span></div>
 			&nbsp;&nbsp;
 			<c:choose>
 				<c:when test="${not empty searchWord}">
