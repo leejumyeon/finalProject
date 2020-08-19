@@ -37,6 +37,8 @@ public interface InterHyeminDAO {
 
 	
 
+	void rejectRoom(String reservation_seq);
+
 	
 	
 }

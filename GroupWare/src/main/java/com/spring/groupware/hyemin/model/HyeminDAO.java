@@ -72,7 +72,7 @@ public class HyeminDAO implements InterHyeminDAO {
 		int n = sqlsession.insert("hyemin.managerNoticeInsert", paraMap);
 		return n;
 	}
-	
+
 	// === 게시글 관리(공지사항 리스트)글 작성 시 첨부파일 추가(관리자)(insert) ===
 	@Override
 	public int managerNoticeFileInsert(AttachFileVO attachFile) {
@@ -80,6 +80,10 @@ public class HyeminDAO implements InterHyeminDAO {
 		return result;
 	}
 
-
+	// === 예약 반려하기 (관리자) === //
+	@Override
+	public void rejectRoom(String reservation_seq) {
+		sqlsession.update("hyemin.rejectRoom", reservation_seq);
+	}
 		
 }

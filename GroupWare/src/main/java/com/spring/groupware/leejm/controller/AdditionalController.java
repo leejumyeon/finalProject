@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.FileManager;
 import com.spring.groupware.leejm.service.InterAdditionalService;
@@ -74,5 +75,11 @@ public class AdditionalController {
 		
 		writer.close();
 			
+	}
+	
+	@RequestMapping(value="/reservation/popup.top")
+	public ModelAndView popUp(ModelAndView mav) {
+		mav.setViewName("popup");
+		return mav;
 	}
 }
