@@ -66,7 +66,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="docuvo" items="${allComDocumentList}">
+			<c:forEach var="docuvo" items="${allDocumentList}">
 				<tr data-toggle="modal" data-target="#documentContent${docuvo.document_seq}" data-dismiss="modal" style="cursor: pointer;">
 					<td>${docuvo.groupno}</td>
 					<td>${docuvo.department_name}</td>
@@ -94,7 +94,7 @@
 </div>
 
 <%-- *** 문서 내용  modal1 *** --%>
-<c:forEach var="docuvo" items="${allComDocumentList}">
+<c:forEach var="docuvo" items="${allDocumentList}">
 <div class="modal fade" id="documentContent${docuvo.document_seq}" role="dialog">
 	<div class="modal-dialog" style="width: 900px;">
 	  

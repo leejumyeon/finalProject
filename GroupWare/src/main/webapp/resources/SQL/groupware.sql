@@ -702,6 +702,8 @@ insert into trip_category(category_num, category_name) values(7,'장기출장');
 insert into trip_category(category_num, category_name) values(8,'해외출장');
 commit;
 
+delete from document_category;
+
 insert into document_category(document_category_seq, category_name)values(1,'휴가신청');
 insert into document_category(document_category_seq, category_name)values(2,'출장신청');
 insert into document_category(document_category_seq, category_name)values(3,'매출');
@@ -803,3 +805,15 @@ begin
 end;
 
 commit;
+
+alter table project_table 
+add status number default 0;
+
+commit;
+
+select *
+from project_table;
+select extract(year from add_months(startDate, term)) as category, sum(nvl(downPayment,0))+sum(nvl(middlePayment,0))+sum(nvl(completionPayment,0)) as value
+from
+(select project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus
+from project_table where status != 0) P group by (extract(year from add_months(startDate, term))) order by category asc

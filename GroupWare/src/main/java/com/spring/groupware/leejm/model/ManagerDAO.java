@@ -103,20 +103,6 @@ public class ManagerDAO implements InterManagerDAO {
 		return saleChartList;
 	}
 
-	// 매출관리 - 인건비 조회
-	@Override
-	public List<ChartVO> laborCostChartList() {
-		List<ChartVO> laborConstChartList = sqlsession.selectList("manager.laborConstChartList");
-		return laborConstChartList;
-	}
-
-	// 매출관리 - 시설유지비 조회
-	@Override
-	public List<ChartVO> maintainChartList() {
-		List<ChartVO> maintainChartList = sqlsession.selectList("manager.maintainChartList");
-		return maintainChartList;
-	}
-
 	// 매출관리 - 순이익 조회
 	@Override
 	public List<ChartVO> profitChartList() {

@@ -318,24 +318,14 @@ public class ManagerController {
 	public String salesChart(HttpServletRequest request) {
 		System.out.println("매출차트 그리기");
 		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
-		List<ChartVO> laborCostChartList = service.laborCostChartList(); //인건비 금액 조회 
-		List<ChartVO> maintainChartList = service.maintainChartList(); // 시설유지비 금액 조회
 		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
 		
 		JSONArray projectChart = new JSONArray();
 		
 		System.out.println("매출개수:"+projectChartList.size());
 		
-		for(ChartVO chart: projectChartList) {
-			JSONObject jsonObj = new JSONObject();
-			jsonObj.put("category", chart.getCategory());
-			jsonObj.put("value", chart.getValue());
-			System.out.println(chart.getCategory()+"/"+chart.getValue());
-			projectChart.put(jsonObj);
-		}
-		
 		JSONObject json = new JSONObject();
-		json.put("projectChart", projectChart);
+		json.put("projectChartList", projectChartList);
 		
 		return json.toString();
 	}
