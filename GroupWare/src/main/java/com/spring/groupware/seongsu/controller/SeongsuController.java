@@ -51,25 +51,12 @@ public class SeongsuController {
 		return mav;
 	}
 	
-<<<<<<< HEAD
-	@RequestMapping(value="/board/write.top")
-	public ModelAndView requiredLogin_bdwrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
-		mav.setViewName("redirect:/list.top");
-		
-		return mav;
-	}	
-	
-	@RequestMapping(value="/list.top")
-	public ModelAndView requiredLogin_list(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-=======
 	@RequestMapping(value="/album/writeEnd.top", method = {RequestMethod.POST})
 	public ModelAndView writeEnd(ModelAndView mav, HttpServletRequest request) {
 		
 		String album_category = request.getParameter("album_category");
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
->>>>>>> 2b734dcadc82923839ea526ac96a81b718530fdf
 		
 		HttpSession session = request.getSession();
 		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
