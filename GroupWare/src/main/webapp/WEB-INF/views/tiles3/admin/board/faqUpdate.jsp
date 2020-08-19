@@ -177,20 +177,6 @@ $(document).ready(function(){
 					<td colspan="2"><input type="text" name="subject" id="subject" value="${board.subject}"/></td>
 				</tr>
 				<tr>
-					<td style="vertical-align: top;">첨부파일</td>
-					<td id="FileFrm">
-						<c:forEach var="file" items="${fileList}" varStatus="status">
-							<div id="attach${status.index}" style="margin:5px 0;">
-								<input type="file" name="attach" id="attachFile${status.index}" style="display: inline-block; width:80px;"/><input type="text" name="orgFileName" value="${file.orgFileName}" id="orgFileName${status.index}" style="border:none; width:185px;"/><span class="cancle" id="cancle${status.index}">X</span>
-								<input type="hidden" name="file_seq" value="${file.file_seq}"/>
-								<input type="hidden" name="fileName" value="${file.fileName}" />
-								<input type="hidden" name="fileSize" value="${file.fileSize}" />
-							</div>
-						</c:forEach>
-					</td>
-					<td style="vertical-align: top;"><div id="addFileFrm">추가 업로드</div></td>
-				</tr>
-				<tr>
 					<td colspan="3">
 						<textarea name="content" id="content" style="width: 800px;">${board.content}</textarea>
 					</td>
