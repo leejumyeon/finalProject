@@ -8,6 +8,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 
 public interface InterLeeehService {
@@ -138,6 +139,28 @@ public interface InterLeeehService {
 
 	int updatePosition(HashMap<String, String> paraMap);	// 사원 직위 변경하기
 
-	
+	List<TimeAndAttVO> getTAList();	// 인사고과 리스트 얻어오기
+
+	List<DocumentVO> allDocumentList();	// 결재 현황 모든 결재 리스트 얻어오기
+
+	List<DocumentVO> getAllComDocumentList();	// 결재 완료된 모든 결재 리스트 얻어오기
+
+	void updateDocumentTableStatus(String groupno);	// 문서함 휴지통으로 보내기
+
+	List<DocumentVO> delDocumentList();	// 휴지통에 있는 문서들 불러오기
+
+	void rollbackDocument(String groupno);	// 휴지통에 있는 문서 다시 복구하기
+
+	void shiftDelDocument(String groupno);	// 휴지통에 있는 문서 영구 삭제하기
+
+	List<HashMap<String, String>> allClubList();	// 모든 클럽 정보 가져오기
+
+	void updateClubManager(HashMap<String, Object> paraMap);	// 클럽 회장 업데이트 하기
+
+	int getCntOfPayment(String fk_employee_seq);	// 문서 결재 알람 받아오기
+
+	String getIsAttendance(HashMap<String, String> paraMap);	// 오늘 처음 로그인 한 건지 알아오기
+
+	int insertAttendanceTable(String fk_employee_seq);	// 출퇴 테이블에 출근 인서트 하기
 
 }

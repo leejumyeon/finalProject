@@ -22,6 +22,7 @@
 	.tbl_title{
 		width: 40%;
 		text-align: center;
+		cursor: pointer;
 	}
 </style>
 
@@ -66,7 +67,9 @@
 		
 				
 	}); // end of $(document).ready(function(){})
-
+function goDetail(val){
+	location.href="<%=ctxPath%>/manager/board/noticeDetail.top?board_seq="+val;
+}
 </script>
     
 <div>
@@ -102,7 +105,7 @@
 							<td><input type="checkbox" name="select" value="${board.board_seq}"/></td>
 							<td>${board.board_seq}</td>
 							<td>${board.employee_name }
-							<td class="tbl_title">${board.subject }</td>							
+							<td class="tbl_title" onclick = "goDetail('${board.board_seq}')">${board.subject }</td>							
 							<td>${board.regDate }</td>
 							<td>${board.readCnt }</td>
 							<td>삭제</td>

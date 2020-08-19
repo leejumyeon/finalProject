@@ -36,5 +36,25 @@ public class HyeminService implements InterHyeminService {
 	public void reserveRoomEnd(HashMap<String, String> paraMap) {
 		dao.reserveRoomEnd(paraMap);
 	}
+
+	// === 예약 신청 현황 조회(관리자)(Ajax) === //
+	@Override
+	public List<ReservationVO> waitingReservation(HashMap<String, String> paraMap) {
+		List<ReservationVO> rsvtvoList = dao.waitingReservation(paraMap);
+		return rsvtvoList;
+	}
+
+	// === 예약 결과 현황 조회(관리자)(Ajax) === //
+	@Override
+	public List<ReservationVO> resultReservation(HashMap<String, String> paraMap) {
+		List<ReservationVO> rsvtvoList = dao.resultReservation(paraMap);
+		return rsvtvoList;
+	}
+
+	// === 예약 승인하기(관리자)(update) === //
+	@Override
+	public void approveRoom(String reservation_seq) {
+		dao.approveRoom(reservation_seq);
+	}
 	
 }

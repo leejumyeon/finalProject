@@ -44,6 +44,19 @@
 			
 			window.resizeTo(1220,845);
 		}
+		console.log($("#mymessenger").prop("class"));
+		$.ajax({
+			url:"<%=request.getContextPath()%>/messenger/open.top",
+			data:{"messengerStatus":$("#mymessenger").prop("class")},
+			type:"get",
+			dataType:"JSON",
+			success:function(json){
+				console.log("세션업");
+			},
+			error:function(e){
+				
+			}
+		});
 	}
 </script>
 
@@ -88,9 +101,9 @@
 	</ul>
 	<ul class="mynav" style="float:right;">
 		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="#">마이페이지 <span class="caret"></span></a>
+			data-toggle="dropdown" href="">마이페이지 <span class="caret"></span></a>
 			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
+				<li><a href="<%=ctxPath%>/viewFullCalendar.top">제품목록</a></li>
 			</ul>
 		</li>	
 		<li class="dropdown">

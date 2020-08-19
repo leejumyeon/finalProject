@@ -13,6 +13,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 
 @Repository
@@ -518,6 +519,106 @@ public class LeeehDAO implements InterLeeehDAO {
 	public int updatePosition(HashMap<String, String> paraMap) {
 
 		int result = sqlsession.update("leeeh.updatePosition", paraMap);
+		
+		return result;
+	}
+
+	// === 인사고과 리스트 얻어오기 === //
+	@Override
+	public List<TimeAndAttVO> getTAList() {
+
+		List<TimeAndAttVO> TAList = sqlsession.selectList("leeeh.getTAList");
+		
+		return TAList;
+	}
+
+	// === 결재 현황 모든 결재 리스트 얻어오기 === //
+	@Override
+	public List<DocumentVO> allDocumentList() {
+
+		List<DocumentVO> allDocumentList = sqlsession.selectList("leeeh.allDocumentList");
+		
+		return allDocumentList;
+	}
+
+	// === 결재 완료된 모든 결재 리스트 얻어오기 === //
+	@Override
+	public List<DocumentVO> getAllComDocumentList() {
+
+		List<DocumentVO> allComDocumentList = sqlsession.selectList("leeeh.getAllComDocumentList");
+		
+		return allComDocumentList;
+	}
+
+	// === 문서함 휴지통으로 보내기 === //
+	@Override
+	public void updateDocumentTableStatus(String groupno) {
+
+		sqlsession.update("leeeh.updateDocumentTableStatus", groupno);
+	}
+
+	// === 휴지통에 있는 문서들 불러오기 === //
+	@Override
+	public List<DocumentVO> delDocumentList() {
+
+		List<DocumentVO> delDocumentList = sqlsession.selectList("leeeh.delDocumentList");
+		
+		return delDocumentList;
+	}
+
+	// === 휴지통에 있는 문서 복구하기 === //
+	@Override
+	public void rollbackDocument(String groupno) {
+
+		sqlsession.update("leeeh.rollbackDocument", groupno);
+	}
+
+	// === 휴지통에 있는 문서 영구 삭제하기 === //
+	@Override
+	public void shiftDelDocument(String groupno) {
+
+		sqlsession.delete("leeeh.shiftDelDocument", groupno);
+	}
+
+	// === 모든 클럽 정보 가져오기 === //
+	@Override
+	public List<HashMap<String, String>> allClubList() {
+
+		List<HashMap<String, String>> clubList = sqlsession.selectList("leeeh.allClubList");
+		
+		return clubList;
+	}
+
+	// === 클럽 회장 업데이트 하기 === //
+	@Override
+	public void updateClubManager(HashMap<String, Object> paraMap) {
+
+		sqlsession.update("leeeh.updateClubManager", paraMap);
+	}
+
+	// === 문서 결재 알람 받아오기 === //
+	@Override
+	public int getCntOfPayment(String fk_employee_seq) {
+
+		int result = sqlsession.selectOne("leeeh.getCntOfPayment", fk_employee_seq);
+		
+		return result;
+	}
+
+	// === 오늘 처음 로그인 한 건지 알아오기 === //
+	@Override
+	public String getIsAttendance(HashMap<String, String> paraMap) {
+
+		String fk_employee_seq = sqlsession.selectOne("leeeh.getIsAttendance", paraMap);
+		
+		return fk_employee_seq;
+	}
+
+	// === 출퇴 테이블에 출근 인서트 하기 === //
+	@Override
+	public int insertAttendanceTable(String fk_employee_seq) {
+
+		int result = sqlsession.insert("leeeh.insertAttendanceTable", fk_employee_seq);
 		
 		return result;
 	}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.CommentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MessengerVO;
 
@@ -130,9 +131,8 @@ public class ChoijhDAO implements InterChoijhDAO {
 
 	// 자유게시판 첨부파일 테이블 insert하기
 	@Override
-	public int addFile(AttachFileVO attachvo) {
-		int m = sqlsession.insert("freeboard.addFile", attachvo);
-		return m;
+	public void addFile(AttachFileVO attachvo) {
+		sqlsession.insert("freeboard.addFile", attachvo);
 	}
 
 	// 자유게시판 글 보여주기
@@ -142,14 +142,95 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return boardList;
 	}
 
-	// 자유게시판 상세 글 보여주기 
+	// 자유게시판 글1개를 조회를 해주는 것 
 	@Override
 	public BoardVO detailView(String board_seq) {
 		BoardVO bvo = sqlsession.selectOne("freeboard.detailView", board_seq);
 		return bvo;
 	}
+	
+	// 글 조회수 1증가 하기
+	@Override
+	public void setAddReadCount(String board_seq) {
+		sqlsession.update("freeboard.setAddReadCount", board_seq);
+	}
+	
+	// 해당게시글의 첨부파일 읽어오기
+	@Override
+	public List<AttachFileVO> getfileView(String board_seq) {
+		List<AttachFileVO> attachvoList = sqlsession.selectList("freeboard.getfileView", board_seq);
+		return attachvoList;
+	}
+	
+
+	// 자유게시판 글 삭제
+	@Override
+	public int del(String board_seq) {
+		int n = sqlsession.delete("freeboard.del", board_seq);
+		return n;
+	}
 
 	
+	// 자유게시판 글 수정 하기 
+	@Override
+	public int edit(BoardVO bvo) {
+		int n = sqlsession.update("freeboard.edit", bvo);
+		return n;
+	}
+
+	// 자유게시판 댓글쓰기
+	@Override
+	public int addComment(CommentVO cvo) {
+		int n = sqlsession.insert("freeboard.addComment", cvo);
+		return n;
+	}
+
+	// 해당 댓글의 게시물에 댓글 수 증가
+	@Override
+	public int updateCommentCnt(String fk_board_seq) {
+		int result = sqlsession.update("freeboard.updateCommentCnt", fk_board_seq);
+		return result;
+	}
+
+	// 댓글 내용(페이징처리 x) 보여주기
+	@Override
+	public List<CommentVO> goReadComment(String fk_board_seq) {
+		List<CommentVO> commentList = sqlsession.selectList("freeboard.goReadComment", fk_board_seq);
+		return commentList;
+	}
+
+	// 총 게시물 건수(totalCount)
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("freeboard.getTotalCount", paraMap);
+		return totalCount;
+	}
+
+	// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
+		List<BoardVO> boardList = sqlsession.selectList("freeboard.boardListSearchWithPaging", paraMap);
+		return boardList;
+	}
+
+	// 자유게시판 댓글의 답글 쓰기
+	@Override
+	public int addChildComment(CommentVO cvo) {
+		int n = sqlsession.insert("freeboard.addChildComment", cvo);
+		return n;
+	}
+
+	// 해당 댓글의 게시물에 댓글 수 +1 증가
+	@Override
+	public int updateChildCommentCnt(String fk_board_seq) {
+		int result = sqlsession.update("freeboard.updateChildCommentCnt", fk_board_seq);
+		return result;
+	}
+
+	
+
+	
+
 
 	
 

@@ -8,7 +8,7 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 #mysideinfo		{ background-color:#1187cf; float:left; display:inline-block; width:60px; min-height:800px; padding-top: 20px;}
 #mysidemail		{ background-color:#33c2f9; float:left; display:inline-block; width:200px; min-height:800px; padding-top: 20px;}
 #mycontent		{ background-color:white; display:inline-block; width:1030px; min-height:800px; padding-top: 40px;}
-#mymessenger	{ background-color: black; width:380px; margin-left:5px; min-height:870px;}
+#mymessenger	{ background-color: white; width:380px; margin-left:5px; min-height:870px;}
 #myheader a {text-decoration:none;}
 
 /* mouse over link */

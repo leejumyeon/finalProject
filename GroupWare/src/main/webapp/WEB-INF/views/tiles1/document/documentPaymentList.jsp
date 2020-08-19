@@ -205,6 +205,7 @@
 	  height: 100%;
 	  width: 100%;
 	}
+
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -239,8 +240,7 @@
 			
 			getComDocumentList();
 		});
-		
-		
+
 		$("#btnRejected").click(function() {
 
 			var documentSeqArr = new Array();

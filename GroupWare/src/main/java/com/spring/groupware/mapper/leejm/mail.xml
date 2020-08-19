@@ -52,7 +52,7 @@
 		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
 		from 
 		<choose>
-			<when test='searchWord==""'>
+			<when test='searchWord=="" or searchWord == null'>
 			(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
 				from mail_table where 
 				<choose>
@@ -119,7 +119,7 @@
                               join department_table D on E.fk_department = D.department_seq
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq} )
 						      )You
-						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=0 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
+						 on My.mail_groupno = You.mail_groupno where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (You.fk_employee_seq != #{loginSeq}))  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "send"'> <!-- 받은사람 검색 -->
 						and status in(0,2) and fk_employee_seq = #{loginSeq})My
@@ -130,7 +130,7 @@
                               join department_table D on E.fk_department = D.department_seq
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq} )
 						      )You
-						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=1 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
+						 on My.mail_groupno = You.mail_groupno where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (You.fk_employee_seq != #{loginSeq}))  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "content"'> <!-- 내용 검색 -->
 						and fk_employee_seq = #{loginSeq})My
@@ -142,7 +142,7 @@
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
 						      )You
 						 on My.mail_groupno = You.mail_groupno
-						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
+						  where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq}) ) and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
 					</when>
 					<when test='type == "all"'> <!-- 전체 검색 -->
 						and fk_employee_seq = #{loginSeq})My
@@ -154,7 +154,7 @@
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
 						      )You
 						 on My.mail_groupno = You.mail_groupno
-						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
+						  where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq}) ) and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
 					</when>
 				</choose> 
 				T where T.Ron between #{startRno} and #{endRno} 
@@ -171,7 +171,7 @@
 		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
 		from 
 		<choose>
-			<when test='searchWord==""'>
+			<when test='searchWord=="" or searchWord == null'>
 			(select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 
 				from mail_table where 
 				<choose>
@@ -238,7 +238,7 @@
                               join department_table D on E.fk_department = D.department_seq
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq} )
 						      )You
-						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=0 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
+						 on My.mail_groupno = You.mail_groupno where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (You.fk_employee_seq != #{loginSeq}))  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "send"'> <!-- 받은사람 검색 -->
 						and status in(0,2) and fk_employee_seq = #{loginSeq})My
@@ -249,7 +249,7 @@
                               join department_table D on E.fk_department = D.department_seq
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq} )
 						      )You
-						 on My.mail_groupno = You.mail_groupno where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status=1 and You.fk_employee_seq != #{loginSeq})  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
+						 on My.mail_groupno = You.mail_groupno where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (You.fk_employee_seq != #{loginSeq}))  and (You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%'))
 					</when>
 					<when test='type == "content"'> <!-- 내용 검색 -->
 						and fk_employee_seq = #{loginSeq})My
@@ -261,7 +261,7 @@
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
 						      )You
 						 on My.mail_groupno = You.mail_groupno
-						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
+						  where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq}))  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%') )
 					</when>
 					<when test='type == "all"'> <!-- 전체 검색 -->
 						and fk_employee_seq = #{loginSeq})My
@@ -273,7 +273,7 @@
                               where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq} )
 						      )You
 						 on My.mail_groupno = You.mail_groupno
-						  where (My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq})  and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
+						  where ((My.status=2 and You.fk_employee_seq = #{loginSeq}) or (My.status in(0,1) and You.fk_employee_seq != #{loginSeq}) ) and (My.content like '%'||#{searchWord}||'%' or My.subject like '%'||#{searchWord}||'%' or My.orgFileName1 like '%'||#{searchWord}||'%' or My.orgFileName2 like '%'||#{searchWord}||'%' or My.orgFileName3 like '%'||#{searchWord}||'%' or You.employee_name like '%'||#{searchWord}||'%' or You.email like '%'||#{searchWord}||'%' or You.department_name like '%'||#{searchWord}||'%' or You.position_name like '%'||#{searchWord}||'%') )
 					</when>
 				</choose> 
 				T
@@ -289,7 +289,7 @@
 	
 	<!-- 메일 건 수 -->
 	<select id="mailCount" resultType="int"  parameterType="HashMap">
-		<if test='searchWord == ""'>
+		<if test='searchWord=="" or searchWord == null'>
 		select count(*) from mail_table where
 			<choose>
 				<when test='type == "receive"'>
@@ -317,24 +317,24 @@
 		fk_employee_seq = #{loginSeq}
 		</if>
 			
-		<if test='searchWord != ""'>
+		<if test='searchWord != "" and searchWord != null'>
 			select count(*) from mail_table M 
 			join employees_table on fk_employee_seq = employee_seq 
 			join department_table on fk_department = department_seq
 			join position_table on fk_position = position_seq
 			where 
 				<choose>
-					<when test='type == "receive"'>
-						(status = 2 and fk_employee_seq = #{loginSeq})or(status = 0 and fk_employee_seq!=#{loginSeq}) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}) 
+					<when test='type == "receive"'> <!-- 보낸 사람 검색 -->
+						((status = 2 and fk_employee_seq = #{loginSeq})or(status = 0 and fk_employee_seq!=#{loginSeq})) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(1,2) and fk_employee_seq = #{loginSeq}) 
 					</when>
-					<when test='type == "send"'>
-						(status = 2 and fk_employee_seq = #{loginSeq})or(status = 1 and fk_employee_seq!=#{loginSeq}) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}) 
+					<when test='type == "send"'> <!-- 받은 사람 검색 -->
+						((status = 2 and fk_employee_seq = #{loginSeq})or(status = 1 and fk_employee_seq!=#{loginSeq})) and (employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and status in(0,2) and fk_employee_seq = #{loginSeq}) 
 					</when>
 					<when test='type == "content"'>
-						((status in(0,1) and fk_employee_seq != #{loginSeq}) or status = 2)and(content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+						((status in(0,1) and fk_employee_seq != #{loginSeq}) or (status = 2 and fk_employee_seq = #{loginSeq}))and(content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
 					</when>
 					<when test='type == "all"'>
-						((status in(0,1) and fk_employee_seq != #{loginSeq}) or status = 2)and (content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%' or employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
+						((status in(0,1) and fk_employee_seq != #{loginSeq}) or (status = 2 and fk_employee_seq = #{loginSeq}))and (content like '%'||#{searchWord}||'%' or subject like '%'||#{searchWord}||'%' or orgFileName1 like '%'||#{searchWord}||'%' or orgFileName2 like '%'||#{searchWord}||'%' or orgFileName3 like '%'||#{searchWord}||'%' or employee_name like '%'||#{searchWord}||'%' or email like '%'||#{searchWord}||'%' or department_name like '%'||#{searchWord}||'%' or position_name like '%'||#{searchWord}||'%')and mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = #{loginSeq}) 
 					</when>
 				</choose>	
 		</if>		
@@ -395,7 +395,21 @@
 		join employees_table on fk_employee_seq = employee_seq 
 		join position_table on fk_position = position_seq
 		join department_table on fk_department = department_seq
-		where mail_groupno = #{mail_groupno} and status = 1
+		where mail_groupno = #{mail_groupno} and status in (1,2)
 	</select>
 	
+	
+	<!-- 1개 메일 찾기 -->
+	<select id="findMail" parameterType="String" resultType="com.spring.groupware.commonVO.MailVO">
+		select mail_seq, mail_groupno, mailStatus, readStatus, status, subject, content, fileName1, fileName2, fileName3, orgFileName1, orgFileName2, orgFileName3, fileSize1, fileSize2, fileSize3, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate
+		from mail_table
+		join employees_table on fk_employee_seq = employee_seq 
+		join position_table on fk_position = position_seq
+		join department_table on fk_department = department_seq
+		where mail_seq = #{mail_seq}
+	</select>
+	
+	<delete id="drop" parameterType="String">
+		delete from mail_table where mailStatus = 0 and fk_employee_seq = #{loginSeq}
+	</delete>
 </mapper>

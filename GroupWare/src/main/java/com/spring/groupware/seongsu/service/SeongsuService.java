@@ -3,72 +3,43 @@ package com.spring.groupware.seongsu.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.groupware.commonVO.BoardVO;
-import com.spring.groupware.commonVO.CommentVO;
+import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.seongsu.model.InterSeongsuDAO;
 
 @Service
 public class SeongsuService implements InterSeongsuService {
 
+	@Autowired
+	private InterSeongsuDAO dao;
+
+	// === 앨범 카태고리 받아오기 === //
 	@Override
-	public void addBoard(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
+	public List<HashMap<String, String>> getAlbumCategory() {
+
+		List<HashMap<String, String>> albumCategory = dao.getAlbumCategory();
 		
+		return albumCategory;
 	}
 
+	// === 앨범 글쓰기 === //
 	@Override
-	public int getTotalCount(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void insertAlbumTable(HashMap<String, String> paraMap) {
+
+		dao.insertAlbumTable(paraMap);
 	}
 
+	// === 앨범 리스트 보기 === //
 	@Override
-	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<AlbumVO> getAlbumList(HashMap<String, String> paraMap) {
 
-	@Override
-	public int add(BoardVO boardvo) {
-		// TODO Auto-generated method stub
-		return 0;
+		List<AlbumVO> albumList = dao.getAlbumList(paraMap);
+		
+		return albumList;
 	}
-
-	@Override
-	public int add_withFile(BoardVO boardvo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public BoardVO getView(String seq, String userid) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BoardVO getViewWithNoAddCount(String seq) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int edit(BoardVO boardvo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int del(HashMap<String, String> paraMap) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int addComment(CommentVO commentvo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
+	
 
 }

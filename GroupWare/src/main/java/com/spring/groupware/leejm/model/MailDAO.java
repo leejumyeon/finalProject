@@ -122,4 +122,11 @@ public class MailDAO implements InterMailDAO{
 		return mail;
 	}
 
+	// 휴지통 비우기
+	@Override
+	public int mailDrop(String loginSeq) {
+		int result = sqlsession.delete("mail.drop",loginSeq);
+		return result;
+	}
+
 }

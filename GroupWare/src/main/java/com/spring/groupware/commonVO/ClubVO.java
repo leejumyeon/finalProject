@@ -7,6 +7,17 @@ public class ClubVO { // 동호회VO
 	private String club_info; // 동호회 설명
 	private String representative_img; // 동호회 대표 이미지
 	
+	
+	public ClubVO() {}
+	
+	public ClubVO(String club_seq, String club_name, String regDate, String club_info, String representative_img) {
+		super();
+		this.club_seq = club_seq;
+		this.club_name = club_name;
+		this.regDate = regDate;
+		this.club_info = club_info;
+		this.representative_img = representative_img;
+	}
 	public String getClub_seq() {
 		return club_seq;
 	}

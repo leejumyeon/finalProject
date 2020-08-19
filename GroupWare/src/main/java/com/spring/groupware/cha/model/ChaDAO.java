@@ -19,9 +19,9 @@ public class ChaDAO implements ChaInterDAO {
 	
 	// 마이페이지(개인 일정 캘린더 & 책검색) - 일정
 	@Override
-	public List<PersonalCalVO> fullCalendar() {
+	public List<PersonalCalVO> fullCalendar(String employee) {
 		
-		List<PersonalCalVO> perCalvo = sqlsession.selectList("cha.fullCalendar");
+		List<PersonalCalVO> perCalvo = sqlsession.selectList("cha.fullCalendar", employee);
 		
 		return perCalvo;
 	}
@@ -51,6 +51,34 @@ public class ChaDAO implements ChaInterDAO {
 		int n = sqlsession.delete("cha.deleteFullCalendar", paraMap);
 		
 		return n;
+	}
+	
+	// 마이페이지(동호회) - 뿌리기
+	@Override
+	public List<HashMap<String,String>> club(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = sqlsession.selectList("cha.club", paraMap);
+		return resultList;
+		
+	}
+	
+	// 마이페이지(동호회) - 팝업창에 해당 동호회 명단 뿌리기
+	@Override
+	public List<HashMap<String, String>> popup(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = sqlsession.selectList("cha.popup", paraMap);
+		
+		return resultList;
+	}
+	
+	// 마이페이지(예약) - 뿌리기
+	@Override
+	public List<HashMap<String, String>> reservation(HashMap<String, String> paraMap) {
+		
+		List<HashMap<String,String>> resultList = sqlsession.selectList("cha.reservation", paraMap);
+		
+		return resultList;
+		
 	}
 	
 	// 관리자 페이지 일정
@@ -90,6 +118,8 @@ public class ChaDAO implements ChaInterDAO {
 		
 		return n;
 	}
+	
+	
 
 	
 	

@@ -5,6 +5,14 @@
 
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/css/documentStyle.css" />
 
+<script type="text/javascript">
+
+	function showFile(filename) {
+		
+		window.open('<%= request.getContextPath()%>/resources/files/' + filename +'', '사진', 'width = 450, height= 450, top=200')
+	}
+</script>
+
 <div id="divCustomWrapper" style="font-family: &quot;맑은 고딕&quot;; font-size: 10pt; line-height: normal; margin-top: 0px; margin-bottom: 0px;">
 
 	<div class="titleSection">${documentContent.category_name} 기안서</div>
@@ -84,4 +92,12 @@
 	<div id="documentContents">
 		<img src="<%= request.getContextPath()%>/resources/files/${documentContent.content}" width="800px;" />
 	</div>
+	
+	<c:if test="${documentContent.fileName != null}">
+		<table style="width:800px; height:30px;">
+			<tbody>
+				<tr><td class="ACel">첨부파일</td><td class="BCel" onclick="showFile('${documentContent.fileName}')" style="cursor: pointer;">${documentContent.orgFileName}</td></tr>
+			</tbody>
+		</table>
+	</c:if>
 </div>

@@ -16,6 +16,15 @@ public interface InterHyeminService {
 	// 회의실 예약하기(insert)
 	void reserveRoomEnd(HashMap<String, String> paraMap);
 
+	// 예약 신청 현황 조회(관리자)(Ajax)
+	List<ReservationVO> waitingReservation(HashMap<String, String> paraMap);
+
+	// 예약 결과 현황 조회(관리자)(Ajax)
+	List<ReservationVO> resultReservation(HashMap<String, String> paraMap);
+
+	// 예약 승인하기(관리자)(update)
+	void approveRoom(String reservation_seq);
+
 	
 	
 }

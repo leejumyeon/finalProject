@@ -149,6 +149,18 @@
 			frm.submit();	 		
 		}); // end of $(".btnWrite").click() ------------------------------------------------------------
 		
+		var cnt = 0;
+		$("#addFileBtn").click(function(){
+			cnt++;
+			
+			if(cnt > 3){
+				return;
+			}
+			
+			$("#addDiv").append("<input type='file' name='attach' margin-left: 7px;' />");
+			
+		});
+		
 	});
 </script>
 	<div id="container">
@@ -182,7 +194,10 @@
 						</tr>
 						<tr>
 							<th style="text-align: center;">첨부파일</th>
-							<td><input type="file" name="attach" style="margin-left: 7px;" /></td>
+							<td>
+								<span id="addFileBtn" style="border: solid 1px gray; padding: 3px; cursor: pointer">추가하기</span>
+								<div id="addDiv"></div>
+							</td>
 						</tr>
 						<tr style="height: 400px;">
 							<th style="text-align: center;">내용</th>

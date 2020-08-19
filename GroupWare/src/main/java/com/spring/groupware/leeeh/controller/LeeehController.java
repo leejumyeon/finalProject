@@ -1,5 +1,6 @@
 package com.spring.groupware.leeeh.controller;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +34,7 @@ import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.service.InterLeeehService;
 
@@ -64,41 +67,49 @@ public class LeeehController {
 		
 		List<TripVO> tripEmployeeList = service.getTripList();
 		
-		for(TripVO tvo : tripEmployeeList) {
+		if(tripEmployeeList != null) {
 			
-			String employee_seq = tvo.getFk_employee_seq();
-			
-			if(sysdate.equals(tvo.getTrip_start())) {
-
-				if("1".equals(tvo.getTrip_category())
-				|| "2".equals(tvo.getTrip_category())
-				|| "3".equals(tvo.getTrip_category())
-				|| "4".equals(tvo.getTrip_category())
-				|| "5".equals(tvo.getTrip_category())) {
-
-					service.getUpdateEmployeeStatusVacation(employee_seq);
-				}
-				else {
-					
-					service.getUpdateEmployeeStatusBusiness(employee_seq);
-				}
-			}
-			else if(sysdate.equals(tvo.getTrip_end())) {
+			for(TripVO tvo : tripEmployeeList) {
 				
-				service.getUpdateEmployeeStatusDefault(employee_seq);
+				String employee_seq = tvo.getFk_employee_seq();
+				
+				if(sysdate.equals(tvo.getTrip_start())) {
+
+					if("1".equals(tvo.getTrip_category())
+					|| "2".equals(tvo.getTrip_category())
+					|| "3".equals(tvo.getTrip_category())
+					|| "4".equals(tvo.getTrip_category())
+					|| "5".equals(tvo.getTrip_category())) {
+
+						service.getUpdateEmployeeStatusVacation(employee_seq);
+					}
+					else {
+						
+						service.getUpdateEmployeeStatusBusiness(employee_seq);
+					}
+				}
+				else if(sysdate.equals(tvo.getTrip_end())) {
+					
+					service.getUpdateEmployeeStatusDefault(employee_seq);
+				}
 			}
+			
 		}
-		
+
 		List<EmployeesVO> fireEemployeeList = service.employeeList();
 		
-		for(EmployeesVO evo : fireEemployeeList) {
+		if(fireEemployeeList != null) {
 			
-			String employee_seq = evo.getEmployee_seq();
-			
-			if(sysdate.equals(evo.getFire_date())) {
+			for(EmployeesVO evo : fireEemployeeList) {
 				
-				service.getUpdateEmployeeStatusFire(employee_seq);
+				String employee_seq = evo.getEmployee_seq();
+				
+				if(sysdate.equals(evo.getFire_date())) {
+					
+					service.getUpdateEmployeeStatusFire(employee_seq);
+				}
 			}
+			
 		}
 
 		mav.setViewName("login.notiles");
@@ -279,6 +290,36 @@ public class LeeehController {
 		return mav;
 	}
 
+	@ResponseBody
+	@RequestMapping(value="/getIsAttendance.top", produces = "text/plain;charset=UTF-8")
+	public String getIsAttendance(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		Calendar currentDate = Calendar.getInstance();
+		int year = currentDate.get(Calendar.YEAR);
+		int month = (currentDate.get(Calendar.MONTH) + 1);
+		String strMonth = (month < 10) ? "0" + month : String.valueOf(month);
+
+		int day = currentDate.get(Calendar.DATE);
+		String strDay = day < 10 ? "0" + day : String.valueOf(day);
+
+		String onTime = String.valueOf(year) + ". " + strMonth + ". " + strDay;
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_employee_seq", fk_employee_seq);
+		paraMap.put("onTime", onTime);
+		
+		String employee_seq = service.getIsAttendance(paraMap);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("employee_seq", employee_seq);
+		
+		return jsObj.toString();
+	}
 	// === 문서 결재 페이지로 이동하기 === //
 	@RequestMapping(value = "/documentPayment.top")
 	public ModelAndView goDocumentPayment(ModelAndView mav, HttpServletRequest request) {
@@ -1071,7 +1112,6 @@ public class LeeehController {
 			
 			service.insertFireTable(paraMap);
 			
-			service.updateFireDate(paraMap);
 		}
 		else if("9".equals(documentCategory)) {
 			
@@ -1083,7 +1123,7 @@ public class LeeehController {
 			String attendance = request.getParameter("attendance");
 			String attitude = request.getParameter("attitude");
 			String performance = request.getParameter("performance");
-			String manager = loginEmployee.getPosition_name() + " " + loginEmployee.getEmployee_name();
+			String manager = loginEmployee.getEmployee_seq();
 			
 			paraMap.put("fk_employee_seq", fk_employee_seq);
 			paraMap.put("groupno", groupno);
@@ -1266,10 +1306,17 @@ public class LeeehController {
 				
 				System.out.println(paraMap.get("document_category"));
 				service.updateDocumentStatus(paraMap);
+				
+				if("10".equals(docuvo.getDocument_category())) {
+					
+					service.updateClubManager(paraMap);
+				}
 			}
 			
 			if("8".equals(docuvo.getDocument_category())) {
-				service.deleteClubTable(groupno);
+				
+				service.updateFireDate(paraMap);
+				
 			}
 		}
 		
@@ -1447,7 +1494,7 @@ public class LeeehController {
 		
 		return jsObj.toString();
 	}
-		
+
 	// === 사원 grade 변경하기 === //
 	@ResponseBody
 	@RequestMapping(value = "/updatePosition.top", method = {RequestMethod.POST})
@@ -1474,4 +1521,161 @@ public class LeeehController {
 		
 		return jsObj.toString();
 	}
+	
+	// === 관리자-인사 관리(인사고과)페이지 이동 === //
+	@RequestMapping(value="/manager/HR/review.top")
+	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
+		
+		List<TimeAndAttVO> TAList = service.getTAList();
+		
+		mav.addObject("TAList", TAList);
+		mav.setViewName("admin/HR/review.tiles3");
+		return mav;
+	}
+	
+	// 관리자-결재 관리(결재현황)페이지 이동
+	@RequestMapping(value="/manager/approval/approvalList.top")
+	public String managerDocumentList(HttpServletRequest request) {
+		
+		List<DocumentVO> allDocumentList = service.allDocumentList();
+		
+		request.setAttribute("allDocumentList", allDocumentList);
+		
+		return "admin/approval/approvalList.tiles3";
+		
+	}
+	
+	// === 관리자-결재관리(문서함) 페이지 이동 === //
+	@RequestMapping(value="/manager/approval/documentList.top")
+	public String managerApprovalList(HttpServletRequest request ) {
+		
+		List<DocumentVO> allComDocumentList = service.getAllComDocumentList();
+		
+		request.setAttribute("allComDocumentList", allComDocumentList);
+		
+		return "admin/approval/documentList.tiles3";
+	}
+	
+	// === 관리자 문서함에서 삭제하면 휴지통으로 이동 === //
+	@RequestMapping(value="/updateStatusDocumentDelete.top")
+	public ModelAndView updateStatusDocumentDelete(ModelAndView mav, HttpServletRequest request) {
+		
+		String groupno = request.getParameter("groupno");
+		String[] groupnoArr = groupno.split(",");
+
+		for(int i = 0; i < groupnoArr.length; i++) {
+			
+			service.updateDocumentTableStatus(groupnoArr[i]);
+			
+		}
+		
+		mav.setViewName("redirect:/manager/approval/garbage.top");
+		
+		return mav;
+	}
+	
+	// === 관리자-결재 관리(휴지통)페이지 이동 === //
+	@RequestMapping(value="/manager/approval/garbage.top")
+	public String managerGarbage(HttpServletRequest request) {
+		
+		List<DocumentVO> delDocumentList = service.delDocumentList();
+		
+		request.setAttribute("delDocumentList", delDocumentList);
+		
+		return "admin/approval/garbage.tiles3";
+	}
+	
+	// === 휴지통에서 문서 복구하기 === //
+	@RequestMapping(value="/rollbackDocument.top")
+	public ModelAndView rollbackDocument(ModelAndView mav, HttpServletRequest request) {
+		
+		String groupno = request.getParameter("groupno");
+		
+		String[] groupnoArr = groupno.split(",");
+		
+		for(int i = 0; i < groupnoArr.length; i++) {
+			
+			service.rollbackDocument(groupnoArr[i]);
+		}
+		
+		mav.setViewName("/manager/approval/documentList.top");
+		
+		return mav;
+	}
+
+	// === 휴지통에서 문서 영구삭제하기 === //
+	@RequestMapping(value="/shiftDelDocument.top")
+	public ModelAndView shiftDelDocument(ModelAndView mav, HttpServletRequest request) {
+		
+		String groupno = request.getParameter("groupno");
+		
+		String[] groupnoArr = groupno.split(",");
+		
+		for(int i = 0; i < groupnoArr.length; i++) {
+			
+			service.shiftDelDocument(groupnoArr[i]);
+		}
+		
+		mav.setViewName("/manager/approval/documentList.top");
+		
+		return mav;
+	}
+	
+	// === 동호회 신청 페이지 만들기 === //
+	@RequestMapping(value="/clubRequest.top")
+	public ModelAndView clubRequest(ModelAndView mav) {
+		
+		List<HashMap<String, String>> clubList = service.allClubList();
+		
+		mav.addObject("clubList", clubList);
+		mav.setViewName("clubRequest/clubRequest.tiles1");
+		
+		return mav;
+	}
+	
+	// === 문서 결재 알람을 위해 cnt 알아오기 === //
+	@ResponseBody
+	@RequestMapping(value="/document/newPaymentFind.top", produces="text/plain;charset=UTF-8")
+	public String newPaymentFind(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+				
+		int result = service.getCntOfPayment(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+	}
+	
+	// === 출근하기 팝업 띄우기 === //
+	@RequestMapping(value="/getOnTime.top")
+	public ModelAndView getOnTime(ModelAndView mav) {
+		
+		mav.setViewName("getOnTime.notiles");
+		return mav;
+	}
+	
+	// === 출근 확인 버튼을 누르면 출근 테이블에 집어넣기 === //
+	@ResponseBody
+	@RequestMapping(value="/insertAttendanceTable.top", produces="text/plain;charset=UTF-8")
+	public String insertAttendanceTable(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		EmployeesVO loginEmployee = (EmployeesVO) session.getAttribute("loginEmployee");
+		
+		String fk_employee_seq = loginEmployee.getEmployee_seq();
+		
+		int result = service.insertAttendanceTable(fk_employee_seq);
+		
+		JSONObject jsObj = new JSONObject();
+		jsObj.put("result", result);
+		
+		return jsObj.toString();
+		
+	}
+	
 }

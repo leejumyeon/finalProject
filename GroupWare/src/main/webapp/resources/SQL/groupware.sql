@@ -80,7 +80,6 @@ create table position_table
 ,constraint pk_position_seq primary key(position_seq)
 ); 
 
-
  -- 사원상태 테이블(employeeStatus_table) --
 create table employeeStatus_table
 (status_seq     number not null -- 사원 상태번호
@@ -157,12 +156,13 @@ create table album_table
 ,fk_employee_seq    number  -- 게시글 작성자 번호
 ,subject    varchar2(500) not null -- 게시글 제목
 ,content    varchar2(4000) not null -- 게시글 내용
+,regDate    date default sysdate -- 게시글 등록 날짜
 ,constraint pk_album_table primary key (album_seq)
 ,constraint fk_album_category foreign key (album_category) REFERENCES album_category(category_num)on delete set null
 ,constraint fk_album_employee foreign key (fk_employee_seq) references  employees_table(employee_seq) on delete set null
 );
 
-create sequence album_table_seq
+create sequence 
 start with 1 
 increment by 1
 nomaxvalue
@@ -278,7 +278,7 @@ create table grade_table
 ,grade_name     varchar2(50)
 ,constraint pk_grade_table primary key(grade_level)
 );
-
+select * from grade_table;
 -- 휴가/출장 항목 테이블(trip_category)--
 create table trip_category
 (category_num   number not null -- 휴가/출장 항목 번호
@@ -534,10 +534,13 @@ create table reservation_table
 ,memberCount    number default 1 not null -- 사용 인원
 ,reason varchar2(2000) not null -- 사유
 ,status number default 0 not null -- 승인 상태(0: 승인대기중, 1: 승인완료, 2: 반려)
+,regDate    date default sysdate not null
 ,constraint pk_reservation_table primary key(reservation_seq)
 ,constraint fk_reservation_employee foreign key(fk_employee_seq) references employees_table(employee_seq)on delete set null
 ,constraint fk_reservation_roomNumber foreign key(fk_roomNumber) references reservationRoom_table(roomNumber)
 );
+
+
 create SEQUENCE reservation_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -577,6 +580,35 @@ create table board_table
 ,constraint fk_board_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
 
+
+
+
+select * from board_table;
+select * from attachFile_table;
+select * from comment_table;
+
+select count(*)
+from board_table B join employees_table E 
+on  B.fk_employee_seq = E.employee_seq
+where fk_category_num = 3 
+and lower(employee_name) like '%' || lower('파이리') || '%';
+
+
+select board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt, employee_name
+from 
+(
+    select row_number() over(order by board_seq desc) AS rno, 
+           board_seq, fk_category_num, subject, content,  
+           readCnt, to_char(regDate, 'yyyy-mm-dd hh24:mi') as regDate,
+           fk_employee_seq, status, commentCnt, employee_name
+    from board_table B join employees_table E 
+    on  B.fk_employee_seq = E.employee_seq
+    where fk_category_num = 3 
+    and content like '%'|| '첨부' ||'%'
+) V
+where rno between 1 and 2;
+
+
 create SEQUENCE board_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -605,7 +637,7 @@ nocache;
 
 -- 댓글 테이블(comment_table) --
 create table comment_table
-(commnet_seq    number not null -- 댓글번호
+(comment_seq    number not null -- 댓글번호
 ,fk_board_seq   number not null -- 게시글 번호(그룹번호)
 ,fk_employee_seq    number -- 작성자 사원번호
 ,readCnt    number default 0 not null -- 조회수
@@ -618,6 +650,11 @@ create table comment_table
 ,constraint fk_commnet_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 ,constraint fk_comment_employee foreign key(fk_employee_seq) references employees_table(employee_seq) on delete set null
 );
+
+-- 댓글 테이블 컬럼 변경 -- 
+alter table comment_table
+rename column commnet_seq to comment_seq;
+
 create sequence comment_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -738,56 +775,44 @@ delete from mail_table;
 commit;
 
 
-select T.Ron, T.mail_seq, T.mail_groupno, T.subject, T.content, T.mailStatus, T.readStatus, T.status, T.regDate, T.fk_employee_seq, T.employee_name, T.email, T.position_name, T.department_name, T.fileName1, T.orgFileName1, T.fileSize1, T.fileName2, T.orgFileName2, T.fileSize2, T.fileName3, T.orgFileName3, T.fileSize3
-		from(select row_number() over(order by V.mail_seq desc, V.fk_employee_seq asc) as Ron, V.mail_seq, V.mail_groupno, V.subject, V.content, V.mailStatus, V.readStatus, V.status, V.regDate, V.fileName1, V.orgFileName1, V.fileSize1, V.fileName2, V.orgFileName2, V.fileSize2, V.fileName3, V.orgFileName3,V.fileSize3
-		       ,V.fk_employee_seq, V.employee_name, V.email, V.department_name, V.position_name
-        from(select distinct My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
-		       ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-		from ((select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3 from mail_table where mailStatus !=0 and fk_employee_seq = 5)My
-						join
-						(select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-						    from mail_table M 
-						    join employees_table E on M.fk_employee_seq = E.employee_seq 
-						    join position_table P on E.fk_position = P.position_seq 
-						    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))You
-						on My.mail_groupno = You.mail_groupno where (My.status = 2) or (My.status in (0,1) and You.fk_employee_seq != 5)
-                        )th
-                        join
-                        (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mail_groupno in())Origin
-                        on Origin.fk_employee_seq = th.fk_employee_seq
-                        )V
-                )T;
 
-select mail_seq, mail_groupno, subject, status, fk_employee_seq from mail_table order by mail_seq desc;
 
-select there.mail_seq, there.mail_groupno, Origin.fk_employee_seq, there.subject, there.employee_name, there.department_name, there.position_name
-from 
-    (select My.mail_seq, My.mail_groupno, My.subject, My.content, My.mailStatus, My.readStatus, My.status, My.regDate, My.fileName1, My.orgFileName1, My.fileSize1, My.fileName2, My.orgFileName2, My.fileSize2, My.fileName3, My.orgFileName3, My.fileSize3
-                   ,You.fk_employee_seq, You.employee_name, You.email, You.department_name, You.position_name
-    from
-        (select mail_seq, mail_groupno, subject, content, mailStatus, readStatus, status, to_char(regDate,'yyyy-mm-dd hh24:mi') as regDate, fileName1, orgFileName1, fileSize1, fileName2, orgFileName2, fileSize2, fileName3, orgFileName3, fileSize3
-        from mail_table where mailStatus != 0 and fk_employee_seq = 5) My
-        join 
-        (select mail_groupno, fk_employee_seq, employee_name, email, department_name, position_name 
-                                    from mail_table M 
-                                    join employees_table E on M.fk_employee_seq = E.employee_seq 
-                                    join position_table P on E.fk_position = P.position_seq 
-                                    join department_table D on E.fk_department = D.department_seq  where mail_groupno in (select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))You
-        on My.mail_groupno = You.mail_groupno where (My.status = 2) or (My.status in (0,1) and You.fk_employee_seq != 5)
-    )there
-    join (select mail_groupno, max(fk_employee_seq) as fk_employee_seq from mail_table where mail_groupno in(select mail_groupno from mail_table where mailStatus !=0 and fk_employee_seq = 5))Origin on Origin.fk_employee_seq = th.fk_employee_seq
-
-;
+-- 예약 신청 조회 (혜민)
+select R.reservation_seq
+     , E.employee_name
+     , D.department_name
+     , P.position_name
+     , V.roomName
+     , to_char(R.startDate, 'yyyy.mm.dd hh24:mi') as startDate
+     , to_char(R.endDate, 'yyyy.mm.dd hh24:mi') as endDate
+     , R.memberCount
+     , to_char(R.startDate, 'yyyy.mm.dd')
+     , case R.status when 0 then '승인대기중'
+                     when 1 then '승인완료'
+                     when 2 then '반려'
+       end AS status
+     , reason  
+     , to_char(R.regDate , 'yyyy.mm.dd hh24:mi:ss') as regDate
+from reservation_table R join employees_table E
+on R.fk_employee_seq = E.employee_seq
+join department_table D
+on E.fk_department = D.department_seq
+join position_table P
+on E.fk_position = P.position_seq
+join reservationRoom_table V
+on R.fk_roomNumber = V.roomNumber
+where R.status = 0
+order by R.reservation_seq desc;
 
 
 
 
-
-
-
-
-
-
-
+-- 자유게시판 페이징처리를 위한 데이터
+begin
+    for i in 1..100 loop 
+        insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+        values(board_table_seq.nextval, 3, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 1, default, default); 
+    end loop;
+end;
 
 
