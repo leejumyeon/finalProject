@@ -32,21 +32,17 @@
 <script type="text/javascript">
 	function click_messenger(){
 		
-		if($("#mymessenger").hasClass("messengerClose")){
-			
-			var sw=screen.width;  // 화면 가로길이
-			var sh=screen.height; // 화면 세로길이
-			var popw=500; 		  // 팝업창 가로길이 
-			var poph=800; 		  // 팝업창 세로길이
-			var xpos=(sw-popw)/2; 
-			var ypos=(sh-poph)/2; 
+		var sw=screen.width;  // 화면 가로길이
+		var sh=screen.height; // 화면 세로길이
+		var popw=500; 		  // 팝업창 가로길이 
+		var poph=800; 		  // 팝업창 세로길이
+		var xpos=(sw-popw)/2; 
+		var ypos=(sh-poph)/2; 
 
-			var popWin=window.open("<%=request.getContextPath()%>/messenger/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes");
-			console.log()
-			
-		}
+		var popWin=window.open("<%=request.getContextPath()%>/messenger/popup.top","print","width="+popw+",height="+poph+",top="+ypos+",left="+xpos+",status=yes,scrollbars=yes");
+		
+		
 	}
-
 </script>
 
 <div style="display: inline-block; width:150px; border:solid 0px red; float:left;">
@@ -57,7 +53,7 @@
 		<li class="dropdown"><a class="dropdown-toggle"
 			data-toggle="dropdown" href="#">사내공지<span class="caret"></span></a>
 			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/notice.top">공지사항</a></li>
+				<li><a href="<%=ctxPath%>/index.action">공지사항</a></li>
 				<li><a href="<%=ctxPath%>/deliciousStore.action">자주하는 질문</a></li>
 			</ul>
 		</li>
@@ -80,8 +76,12 @@
 		</li>
 		
 		
-		<li class="dropdown">
-			<a href="#">회사정보 <span class="caret"></span></a>
+		<li class="dropdown"><a class="dropdown-toggle"
+			data-toggle="dropdown" href="#">회사정보 <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="<%=ctxPath%>/emp/empList.action">직원목록</a></li>
+				<li><a href="<%=ctxPath%>/emp/chart.action">통계차트</a></li>
+			</ul>
 		</li>
 	</ul>
 	<ul class="mynav" style="float:right;">

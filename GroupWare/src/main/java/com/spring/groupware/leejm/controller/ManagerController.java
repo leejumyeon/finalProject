@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import org.springframework.stereotype.Controller;
@@ -311,22 +312,32 @@ public class ManagerController {
 		return mav;
 	}
 	
+	// 매출 차트 그리기
 	@ResponseBody
 	@RequestMapping(value="/manager/finance/salesChart.top",produces="text/plain;charset=UTF-8")
 	public String salesChart(HttpServletRequest request) {
+		System.out.println("매출차트 그리기");
 		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
 		List<ChartVO> laborCostChartList = service.laborCostChartList(); //인건비 금액 조회 
 		List<ChartVO> maintainChartList = service.maintainChartList(); // 시설유지비 금액 조회
 		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
 		
 		JSONArray projectChart = new JSONArray();
-		/*for()
 		
-		mav.addObject("projectChartList",projectChartList);
-		mav.addObject("laborCostChartList",laborCostChartList);
-		mav.addObject("maintainChartList",maintainChartList);
-		mav.addObject("profitChartList",profitChartList);*/
-		return "";
+		System.out.println("매출개수:"+projectChartList.size());
+		
+		for(ChartVO chart: projectChartList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("category", chart.getCategory());
+			jsonObj.put("value", chart.getValue());
+			System.out.println(chart.getCategory()+"/"+chart.getValue());
+			projectChart.put(jsonObj);
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("projectChart", projectChart);
+		
+		return json.toString();
 	}
 	
 }
