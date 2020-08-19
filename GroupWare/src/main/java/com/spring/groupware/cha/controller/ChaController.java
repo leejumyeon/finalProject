@@ -16,10 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.spring.common.MyUtil;
 import com.spring.groupware.cha.service.ChaInterService;
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.ClubMemberVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.EmployeesVO;
@@ -579,4 +582,130 @@ public class ChaController {
 	
 	// ------------------------------ 관리자 메인페이지(회사 일정 캘린더) - 끝 ----------------------------------------------
 
+	@RequestMapping(value="/notice.top")
+	public ModelAndView mainNoticePage(ModelAndView mav, HttpServletRequest request) {
+		
+		List<BoardVO> boardList = null;
+		
+		String searchType = request.getParameter("searchType");
+		String searchWord = request.getParameter("searchWord");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		if(searchWord == null || searchWord.trim().isEmpty()) {
+			searchWord = "";
+		}
+		
+		if(searchType == null) {
+			searchType = "";
+		}
+		
+		HashMap<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("searchWord", searchWord);
+		
+		int totalCount = 0;   		// 총 게시물 건수 
+		int sizePerPage = 10; 		// 한 페이지당 보여줄 게시물 건수 
+		int currentShowPageNo = 0;  // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정 
+		int totalPage = 0; 			// 총 페이지 수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
+		
+		int startRno = 0;			// 시작 행번호
+		int endRno = 0;				// 끝 행번호
+		
+		// 총 게시물 건수(totalCount)
+		totalCount = service.getTotalCount(paraMap);
+		
+		totalPage = (int) Math.ceil( (double)totalCount/sizePerPage );
+		
+		if(str_currentShowPageNo == null) {
+			// 게시판에 보여지는 초기화면
+			
+			currentShowPageNo = 1;
+			// 즉, 초기화면인 /freeboard/list.top 은 /freeboard/list.top?currentShowPageNo=1 로 하겠다는 말이다.
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo); 
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) { // user가 get방식으로 currentShowPageNo=asdfasdfasdf 로 장난 친 경우 
+					currentShowPageNo = 1;
+				}
+			} catch(NumberFormatException e) {
+				currentShowPageNo = 1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+		endRno = startRno + sizePerPage - 1; 
+
+		paraMap.put("startRno", String.valueOf(startRno));
+		paraMap.put("endRno", String.valueOf(endRno));
+		
+		boardList = service.boardListSearchWithPaging(paraMap);
+		// 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함한것)
+		
+		if(!"".equals(searchWord)) {
+			mav.addObject("paraMap", paraMap);
+		}
+		
+		// 페이지바 만들기  //
+		String pageBar = "<ul id='pageBarUl' style='list-style:none;'>";
+		
+		int blockSize = 10;
+		// blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
+		/*
+		  	  1  2  3  4  5  6  7  8  9 10  다음 	-- 1개블럭
+		   이전  11 12 13 14 15 16 17 18 19 20		-- 1개 블럭
+		   이전  21 22 23 24 25 26 27 28 29 30  
+		*/
+		
+		int loop = 1;
+		/*
+		  	loop는 1부터 증가하여 1개 블럭을 이루는 페이지번호의 개수[지금은 10개(== blockSize)] 까지만 증가하는 용도이다.
+		*/
+		
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+		
+		String url = request.getContextPath()+"/notice.top";
+		
+		// === [이전] 만들기 ===
+		if(pageNo != 1) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>&lt;&lt;</a></li>";
+		}
+		
+		while( !( loop > blockSize || pageNo > totalPage)) {
+			
+			if(pageNo == currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; border-radius: 5px; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+			}
+			
+			loop++;
+			pageNo ++;
+		}// end of while --------------------------------------
+		
+		
+		// === [다음] 만들기 ===
+		if( !(pageNo > totalPage) ) { // 맨 마지막으로 빠져나온것이 아니라면 [다음]을 보인다.
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>&gt;&gt;</a></li>";
+		}
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+		
+		String gobackURL = MyUtil.getCurrentURL(request);
+		
+	//	boardList = service.boardlistView(); // 페이징 처리 안한 게시판 글 보여주기
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes"); // 새로고침시 조회 수 증가 방지
+		
+		mav.addObject("gobackURL", gobackURL);
+		mav.addObject("boardList", boardList);
+		
+		mav.setViewName("notice/notice.tiles1");
+		return mav;
+	}
 }
