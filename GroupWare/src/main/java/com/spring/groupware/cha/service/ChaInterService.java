@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
@@ -55,8 +56,17 @@ public interface ChaInterService {
 	// 메인페이지(공지사항 페이징 처리 된 거)
 	int getTotalCount(HashMap<String, String> paraMap);
 
-	// 페이징 처리한 공지사항 글목록 얻어오기
+	// 메인페이지(페이징 처리한 공지사항 글목록 얻어오기)
 	List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap);
+
+	// 메인페이지(공지사항 상세보기 가져오기)
+	BoardVO detailNotice(String board_seq, String employee_seq);
+
+	// 조호수 증가 없이 읽어오기
+	BoardVO detailNoticeNoAddCount(String board_seq);
+
+	// 첨부파일 읽어오기
+	List<AttachFileVO> getfileView(String board_seq);
 
 	
 	

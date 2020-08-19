@@ -128,7 +128,7 @@
 		frm.board_seq.value = board_seq;
 		
 		frm.method = "GET";
-		frm.action = "<%= ctxPath%>detailNotice.top";
+		frm.action = "<%= ctxPath%>/detailNotice.top";
 		frm.submit();
 		
 	}
@@ -147,7 +147,7 @@
 	<div id="container">
 		<div id="in">
 		<div id="side">
-			<div class="comunity">커뮤니티</div>			
+			<div class="comunity">커뮤니티</div>
 			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">공지사항</div>
 			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자주묻는질문</div>
 		</div>						

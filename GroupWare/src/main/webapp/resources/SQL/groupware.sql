@@ -278,7 +278,7 @@ create table grade_table
 ,grade_name     varchar2(50)
 ,constraint pk_grade_table primary key(grade_level)
 );
-select * from grade_table;
+
 -- 휴가/출장 항목 테이블(trip_category)--
 create table trip_category
 (category_num   number not null -- 휴가/출장 항목 번호
@@ -740,9 +740,6 @@ commit;
 alter table mail_table drop constraint CK_mail_table;
 alter table mail_table add constraint CK_mail_table CHECK(status in(0, 1, 2)and mailStatus in(0,1) and readStatus in(0,1));
 
-select * from mail_table order by mail_seq desc;
-delete from mail_table;
-commit;
 
 
 

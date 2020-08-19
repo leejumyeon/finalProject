@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
@@ -57,6 +58,15 @@ public interface ChaInterDAO {
 
 	// 페이징 처리한 공지사항 글목록 얻어오기
 	List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap);
+
+	// 메인페이지(공지사항 상세보기 가져오기)
+	BoardVO detailNotice(String board_seq);
+
+	// 공지사항 조회수 올리기
+	void setAddReadCount(String board_seq);
+
+	// 첨부파일 받아오기
+	List<AttachFileVO> getfileView(String board_seq);
 
 	
 	

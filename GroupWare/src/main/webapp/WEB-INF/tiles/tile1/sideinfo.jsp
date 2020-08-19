@@ -121,28 +121,31 @@ function goPayment() {
 			<div style="position: relative;" onclick="goMail();">
 				<div style="position: absolute;" class="receiveCnt" align="center"></div>
 				<img src="<%=request.getContextPath()%>/resources/sideImg/받은메일.png" />
+				<span style="display: inline-block; font-size: 5px;">받은 메일함</span>
 			</div>
-		
+			
+			<div style="height: 20px;"></div>
+			
 			<div style="position: relative;" onclick="goMailSend()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/메일보내기.png" />
 				<div style="position: absolute;"></div>
+				<span style="display: inline-block; font-size: 5px;">메일 보내기</span>
 			</div>
-		
+			
+			<div style="height: 20px;"></div>
+			
 			<div style="position: relative;" onclick="goReservation()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/예약.png" />
 				<div style="position: absolute;"></div>
+				<span style="display: inline-block; font-size: 5px;">자원 예약</span>
 			</div>
-	
+			
+			<div style="height: 20px;"></div>
+			
 			<div style="position: relative;" onclick="goPayment()">
 				<img src="<%=request.getContextPath()%>/resources/sideImg/결재.png" />
 				<div style="position: absolute;" class="paymentCnt"></div>
+				<span style="display: inline-block; font-size: 5px;">문서 결재</span>
 			</div>
 		
 </div>
-
-
-
-
-
-
-
