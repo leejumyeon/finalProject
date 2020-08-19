@@ -112,4 +112,43 @@
 			(select project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus
 			from project_table where status != 0) P group by (extract(year from add_months(startDate, term))) order by category asc
 	</select>
+	
+	<!-- 매출관리 - 인건비조회 -->
+	<select id="laborConstChartList" resultType="com.spring.groupware.commonVO.ChartVO">
+		select extract(year from regDate) as category, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+			(select sales_seq, groupno, sales_title, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title'%'||'인건비'||'%') S
+			group by (extract(year from regDate))
+	</select>
+	
+	<!-- 매출관리 - 시설유지비 -->
+	<select id="maintainChartList" resultType="com.spring.groupware.commonVO.ChartVO">
+		select extract(year from regDate) as category, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+			(select sales_seq, groupno, sales_title, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title'%'||'시설'||'%' and sales_title'%'||'유지비'||'%') S
+			group by (extract(year from regDate))
+	</select>
+	
+	<!-- 매출관리 - 순이익 조회 -->
+	<select id="profitChartList" resultType="com.spring.groupware.commonVO.ChartVO">
+		
+		select P.category, P.value - (L.value+M.value) as value
+		(select extract(year from add_months(startDate, term)) as category, sum(nvl(downPayment,0))+sum(nvl(middlePayment,0))+sum(nvl(completionPayment,0)) as value
+		from
+			(select project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus
+			from project_table where status != 0) P group by (extract(year from add_months(startDate, term)))
+		) P 
+		join 
+		(select extract(year from regDate) as category, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+			(select sales_seq, groupno, sales_title, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title'%'||'인건비'||'%') S
+			group by (extract(year from regDate))
+		) L on P.category = L.category
+		join 
+		(select extract(year from regDate) as category, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+			(select sales_seq, groupno, sales_title, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title'%'||'시설'||'%' and sales_title'%'||'유지비'||'%') S
+			group by (extract(year from regDate))
+		) M on P.category = M.category
+	</select>
 </mapper>
