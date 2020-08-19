@@ -67,21 +67,21 @@
 
 	<div id="container">
 		<div style="float: left; margin-left: 30px;">
-			<div style="width: 300px; height: 150px; border: 0px solid red;"> 
+			<div style="width: 300px; height: 250px; border: 0px solid red;"> 
 			<h3>공지사항</h3>
 			
 			<div id="indication"></div>
 			
 			</div>
 			
-			<div class="mt" style="width: 300px; height: 150px; border: 0px solid red;">
+			<div class="mt" style="width: 300px; height: 250px; border: 0px solid red;">
 			<h3>자유게시판</h3>
 			
 			<div id="freedom"></div>
 			
 			</div>
 			
-			<div style="width: 300px; height: 150px; border: 0px solid red;">
+			<div style="width: 300px; height: 250px; border: 0px solid red;">
 				<h3>앨범게시판</h3>
 				<div id="album"></div>
 			</div>
@@ -89,7 +89,7 @@
 		</div> 
       
       
-		<div style="clear: both; display: inline-block; margin-left: 0px;">
+		<div style="clear: both; display: inline-block; margin-left: 0px; margin-top: 100px;">
 			<div style="width: 600px; height: 630px; border: 0px solid red;">
 	   
 				<div class="container" style=" width: 600px;" >				
@@ -256,7 +256,7 @@
 		<div style="float: right;">
 			
 			
-			<div class="mt" style=" width: 300px; height: 230px; border: 0px solid red; margin-top: 20px;">								
+			<div class="mt" style=" width: 300px; height: 300px; border: 0px solid red; margin-top: 50px;">								
 				<div id="myCarousel" class="carousel slide" data-ride="carousel">
 				  <!-- Indicators -->
 				  <ol class="carousel-indicators">
@@ -292,7 +292,7 @@
 				</div>				
 			</div>
 			
-			<div class="mt" style=" margin-bottom:30px; width: 300px; height: 230px; border: 0px solid red; margin-top: 20px;">				
+			<div class="mt" style=" margin-bottom:30px; width: 300px; height: 300px; border: 0px solid red; margin-top: 50px;">				
 				<div id="myCarousel2" class="carousel slide" data-ride="carousel">
 				  <!-- Indicators -->
 				  <ol class="carousel-indicators">
