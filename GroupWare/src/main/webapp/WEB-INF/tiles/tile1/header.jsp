@@ -100,14 +100,10 @@
 		</li>
 	</ul>
 	<ul class="mynav" style="float:right;">
-		<li class="dropdown"><a class="dropdown-toggle"
-			data-toggle="dropdown" href="">마이페이지 <span class="caret"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="<%=ctxPath%>/viewFullCalendar.top">제품목록</a></li>
-			</ul>
+		<li class="dropdown"><a href="<%= ctxPath%>/viewFullCalendar.top">마이페이지</a>
 		</li>	
 		<li class="dropdown">
-			<a href="#" onclick = "click_messenger()">메신저 아이콘 </a>
+			<a href="#" onclick = "click_messenger()">메신저 아이콘</a>
 		</li>
 	</ul>
 	

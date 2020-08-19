@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.groupware.cha.model.ChaInterDAO;
+import com.spring.groupware.commonVO.AlbumVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -115,7 +116,7 @@ public class ChaService implements ChaInterService {
 		return n;
 	}
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 공지사항
 	@Override
 	public List<HashMap<String, String>> indication(HashMap<String, String> paraMap) {
 		
@@ -125,13 +126,22 @@ public class ChaService implements ChaInterService {
 		
 	}
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 자유게시판
 	@Override
 	public List<HashMap<String, String>> freedom(HashMap<String, String> paraMap) {
 		
 		List<HashMap<String, String>> resultList = dao.freedom(paraMap);
 		
 		return resultList;
+	}
+	
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판
+	@Override
+	public List<AlbumVO> album() {
+		
+		List<AlbumVO> albumvoList = dao.album();
+		
+		return albumvoList;
 	}
 	
 	

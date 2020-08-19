@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.spring.groupware.cha.service.ChaInterService;
+import com.spring.groupware.commonVO.AlbumVO;
 import com.spring.groupware.commonVO.ClubMemberVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.EmployeesVO;
@@ -315,9 +316,9 @@ public class ChaController {
 			
 	// ------------------------------ 공지사항 및 자주묻는 질문 - 끝  -------------------------------------------------------
 	
-	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 시작  ----------------------------------------------
+	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 시작  ----------------------------------------------
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 공지사항
 	@ResponseBody
 	@RequestMapping(value="/indication.top", produces="text/plain;charset=UTF-8")
 	public String indication(HttpServletRequest request) {
@@ -360,7 +361,7 @@ public class ChaController {
 		return jsonObj.toString();
 	}
 				
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 자유게시판
 	@ResponseBody
 	@RequestMapping(value="/freedom.top", produces="text/plain;charset=UTF-8")
 	public String freedom(HttpServletRequest request) {
@@ -369,10 +370,7 @@ public class ChaController {
 		String employee_id = ((EmployeesVO)session.getAttribute("loginEmployee")).getEmployee_seq();
 		String employee_name = request.getParameter("employee_name");
 		String board_seq = request.getParameter("board_seq");	
-		String fk_category_num = request.getParameter("fk_category_num");
-		
-		System.out.println(fk_category_num);
-		
+		String fk_category_num = request.getParameter("fk_category_num");		
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
 		String readCnt = request.getParameter("readCnt");
@@ -403,8 +401,23 @@ public class ChaController {
 		return jsonObj.toString();
 	}
 	
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판
+	@ResponseBody
+	@RequestMapping(value="/album.top", produces="text/plain;charset=UTF-8")
+	public String album(HttpServletRequest request) {
+						
+		List<AlbumVO> albumvoList = service.album();
+		
+		JSONObject jsonObj = new JSONObject(); 
+		
+		jsonObj.put("albumvoList", albumvoList);
+		
+		return jsonObj.toString();
+		
+	}
 	
-	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 끝  ----------------------------------------------
+	
+	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 끝  ----------------------------------------------
 	
 	// ------------------------------ 관리자 메인페이지(회사 일정 캘린더) - 시작 ----------------------------------------------
 	
