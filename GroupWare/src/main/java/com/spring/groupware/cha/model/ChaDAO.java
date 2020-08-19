@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.groupware.commonVO.AlbumVO;
+import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -146,6 +147,23 @@ public class ChaDAO implements ChaInterDAO {
 		List<AlbumVO> albumvoList = sqlsession.selectList("cha.album");
 		
 		return albumvoList;
+	}
+
+	// 메인페이지(공지사항 페이징 처리 된 거)
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+
+		int totalCount = sqlsession.selectOne("cha.getTotalCount", paraMap);
+		
+		return totalCount;
+	}
+
+	@Override
+	public List<BoardVO> boardListSearchWithPaging(HashMap<String, String> paraMap) {
+		
+		List<BoardVO> boardList = sqlsession.selectList("cha.boardListSearchWithPaging", paraMap);
+		
+		return boardList;
 	}
 	
 	
