@@ -54,6 +54,9 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		$.ajax({
+			
+		});
 		Highcharts.chart('saleContainer', {
 
 			 chart: {
