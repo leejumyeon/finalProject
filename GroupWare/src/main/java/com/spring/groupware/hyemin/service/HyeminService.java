@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.ReservationVO;
 import com.spring.groupware.hyemin.model.InterHyeminDAO;
 
@@ -56,5 +57,28 @@ public class HyeminService implements InterHyeminService {
 	public void approveRoom(String reservation_seq) {
 		dao.approveRoom(reservation_seq);
 	}
+	
+	// === 글번호 채번하기 === 
+	@Override
+	public int getBoard_seq() {
+		int n = dao.getBoard_seq();
+		return n;
+	}
+	
+	// === 게시글 관리(공지사항 리스트)글 작성(관리자)(insert) === //
+	@Override
+	public int managerNoticeInsert(HashMap<String, Object> paraMap) {
+		int n = dao.managerNoticeInsert(paraMap);
+		return n;
+	}
+	
+	// === 게시글 관리(공지사항 리스트)글 작성 시 첨부파일 추가(관리자)(insert) === //
+	@Override
+	public int managerNoticeFileInsert(AttachFileVO attachFile) {
+		int m = dao.managerNoticeFileInsert(attachFile);
+		return m;
+	}
+
+
 	
 }
