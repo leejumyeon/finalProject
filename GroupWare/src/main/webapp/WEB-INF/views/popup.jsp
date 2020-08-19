@@ -11,10 +11,6 @@
 		<h3>&nbsp;반려 메일 전송</h3>
 		<table>
 		<tr>
-			 <th>&nbsp;받는 사람</th>
-			 <td><input type='text' id='receive' value=""/></td>
-		</tr>
-		<tr>
 			<th>&nbsp;제목</th>
 		<td><input type='text' id='subject'/></td>
 		</tr>
