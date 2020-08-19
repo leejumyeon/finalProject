@@ -127,7 +127,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="docuvo" items="delDocumentList">
+			<c:forEach var="docuvo" items="${delDocumentList}">
 				<tr>
 					<td><input type="checkbox" name="selectCheck" value="${docuvo.groupno}"/></td>
 					<td>${docuvo.groupno}</td>
@@ -149,9 +149,9 @@
 </div>
 
 <form name="garbageDocumentFrm">
-	<input type="text" name="groupno"/>
+	<input type="hidden" name="groupno"/>
 </form>
 
 <form name="shiftDelDocumentFrm">
-	<input type="text" name="groupno"/>
+	<input type="hidden" name="groupno"/>
 </form>

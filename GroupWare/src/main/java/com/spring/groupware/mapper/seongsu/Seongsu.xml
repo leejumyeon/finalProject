@@ -22,10 +22,128 @@
 	
 	<!-- === 앨범 리스트 보기 === -->
 	<select id="getAlbumList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.AlbumVO">
-		select AC.category_name, A.subject, E.employee_name, E.employee_id, to_char(A.regDAte, 'yyyy. mm. dd') AS regDate
-		from album_table A join album_category AC
-		on A.album_category = ac.category_num
-		join employees_table E
+		select V.album_seq, V.category_name, V.subject, V.employee_name, V.employee_id, V.regDate
+		from
+		(
+			select row_number() over(order by A.album_seq desc) AS RNO
+				 , A.album_seq, AC.category_name, A.subject, E.employee_name, E.employee_id
+				 , to_char(A.regDAte, 'yyyy. mm. dd') AS regDate
+			from album_table A join album_category AC
+			on A.album_category = ac.category_num
+			join employees_table E
+			on A.fk_employee_seq = E.employee_seq
+			<choose>
+				<when test="statusValue == 0">
+					<choose>
+						<when test="searchType == 'all'">
+							<choose>
+								<when test="searchWord == ''">
+									where 2 = 2
+								</when>
+								<otherwise>
+									where lower(A.subject) like '%' || lower(#{searchWord}) || '%' or lower(E.employee_name) like '%' || lower(#{searchWord}) || '%'
+										  or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
+								</otherwise>
+							</choose>
+						</when>
+						<otherwise>
+							<choose>
+								<when test="searchWord == ''">
+									where 2 = 2
+								</when>
+								<otherwise>
+									<if test="searchType == 'subject'">
+										where lower(A.subject) like '%' || lower(#{searchWord}) || '%'
+									</if>
+									<if test="searchType == 'employee_name'">
+										where lower(E.employee_name) like '%' || #{searchWord} || '%' or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
+									</if>
+								</otherwise>
+							</choose>
+						</otherwise>
+					</choose>
+				</when>
+				<otherwise>
+					where A.album_category = #{statusValue}
+					<choose>
+						<when test="searchType == 'all'">
+							<choose>
+								<when test="searchWord == ''">
+									and 2 = 2
+								</when>
+								<otherwise>
+									and lower(A.subject) like '%' || lower(#{searchWord}) || '%' or lower(E.employee_name) like '%' || lower(#{searchWord}) || '%'
+										  or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
+								</otherwise>
+							</choose>
+						</when>
+						<otherwise>
+							<choose>
+								<when test="searchWord == ''">
+									and 2 = 2
+								</when>
+								<otherwise>
+									<if test="searchType == 'subject'">
+										and lower(A.subject) like '%' || lower(#{searchWord}) || '%'
+									</if>
+									<if test="searchType == 'employee_name'">
+										and lower(E.employee_name) like '%' || #{searchWord} || '%' or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
+									</if>
+								</otherwise>
+							</choose>
+						</otherwise>
+					</choose>
+				</otherwise>
+			</choose>
+		) V
+		where V.RNO between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- === 앨범 내용 가져오기 === -->
+	<select id="getDetailAlbum" parameterType="String" resultType="com.spring.groupware.commonVO.AlbumVO">
+		select previousseq, previoussubject
+		     , album_seq, fk_employee_seq, E.employee_name, subject, content, album_category, regDate
+		     , nextseq, nextsubject
+		from
+		    (
+		    select previousseq, previoussubject
+		         , album_seq, fk_employee_seq, subject, content, album_category, regDate
+		         , nextseq, nextsubject
+		    from
+		    (    
+		        select lag(album_seq, 1) over(order by board_seq desc) AS previousseq  
+		             , lag(subject, 1) over(order by board_seq desc) AS previoussubject 
+		           
+		             , album_seq, fk_employee_seq, subject, content, album_category
+		             , to_char(regDate,'yyyy-mm-dd hh24:mi:ss') AS regDate
+		          
+		             , lead(album_seq, 1) over(order by board_seq desc) AS nextseq
+		             , lead(subject, 1) over(order by board_seq desc) AS nextsubject
+		        from album_table
+		    ) V
+		    where V.album_seq = #{album_seq}
+		    ) T join employees_table E
+		on T.fk_employee_seq = E.employee_seq
+	</select>
+	
+	<!-- === 앨범 수정 하기 === -->
+	<update id="updateEnd" parameterType="HashMap">
+		update album_table set album_category = #{album_category}
+							 , subject = #{subject}
+							 , content = #{content}
+		where album_seq = #{album_seq}
+	</update>
+	
+	<!-- === 앨범 삭제하기 === -->
+	<delete id="deleteAlbum" parameterType="String">
+		delete from album_table
+		where album_seq = #{album_seq}
+	</delete>
+	
+	<!-- === 총 게시물 수 알아오기 === -->
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from album_table A join employees_table E 
 		on A.fk_employee_seq = E.employee_seq
 		<choose>
 			<when test="statusValue == 0">
@@ -36,8 +154,8 @@
 								where 2 = 2
 							</when>
 							<otherwise>
-								where A.subject like '%' || #{searchWord} || '%' or E.employee_name like '%' || #{searchWord} || '%'
-									  or E.employee_id like '%' || #{searchWord} || '%'
+								where lower(A.subject) like '%' || lower(#{searchWord}) || '%' or lower(E.employee_name) like '%' || lower(#{searchWord}) || '%'
+									  or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
 							</otherwise>
 						</choose>
 					</when>
@@ -48,10 +166,10 @@
 							</when>
 							<otherwise>
 								<if test="searchType == 'subject'">
-									where A.subject like '%' || #{searchWord} || '%'
+									where lower(A.subject) like '%' || lower(#{searchWord}) || '%'
 								</if>
 								<if test="searchType == 'employee_name'">
-									where E.employee_name like '%' || #{searchWord} || '%' or E.employee_id like '%' || #{searchWord} || '%'
+									where lower(E.employee_name) like '%' || #{searchWord} || '%' or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
 								</if>
 							</otherwise>
 						</choose>
@@ -67,8 +185,8 @@
 								and 2 = 2
 							</when>
 							<otherwise>
-								and A.subject like '%' || #{searchWord} || '%' or E.employee_name like '%' || #{searchWord} || '%'
-									  or E.employee_id like '%' || #{searchWord} || '%'
+								and lower(A.subject) like '%' || lower(#{searchWord}) || '%' or lower(E.employee_name) like '%' || lower(#{searchWord}) || '%'
+									  or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
 							</otherwise>
 						</choose>
 					</when>
@@ -79,10 +197,10 @@
 							</when>
 							<otherwise>
 								<if test="searchType == 'subject'">
-									and A.subject like '%' || #{searchWord} || '%'
+									and lower(A.subject) like '%' || lower(#{searchWord}) || '%'
 								</if>
 								<if test="searchType == 'employee_name'">
-									and E.employee_name like '%' || #{searchWord} || '%' or E.employee_id like '%' || #{searchWord} || '%'
+									and lower(E.employee_name) like '%' || #{searchWord} || '%' or lower(E.employee_id) like '%' || lower(#{searchWord}) || '%'
 								</if>
 							</otherwise>
 						</choose>

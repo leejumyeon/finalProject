@@ -163,4 +163,8 @@ public interface InterLeeehService {
 
 	int insertAttendanceTable(String fk_employee_seq);	// 출퇴 테이블에 출근 인서트 하기
 
+	int updateAttendanceTable(String fk_employee_seq);	// 출퇴 테이블에 퇴근 업데이트 하기
+
+	TimeAndAttVO getDetailTA(HashMap<String, String> paraMap);	// 인사고과 저번달 고과와 이번달 고과, 사유 얻어오기
+
 }

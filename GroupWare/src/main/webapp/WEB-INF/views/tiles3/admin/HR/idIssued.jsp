@@ -19,6 +19,11 @@
 		font-size: 11pt;
 	}
 	
+	#divRegisterFrm {
+		width: 900px;
+		margin-left: 50px;
+	}
+	
 	.snip1535 {
 	  background-color: #0099ff;
 	  border: none;

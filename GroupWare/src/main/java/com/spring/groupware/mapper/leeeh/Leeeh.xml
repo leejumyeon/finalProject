@@ -604,10 +604,10 @@
 	
 	<!-- === 인사고과 리스트 얻어오기 === -->
 	<select id="getTAList" resultType="com.spring.groupware.commonVO.TimeAndAttVO">
-		select V.fk_employee_seq, V.employee_name, V.department_name, V.position_name, V.attitude, V.attendance, V.performance, V.regDate, E2.employee_name AS manager
+		select V.ta_seq, V.fk_employee_seq, V.employee_name, V.department_name, V.position_name, V.attitude, V.attendance, V.performance, V.regDate, E2.employee_name AS manager
 		from 
 		(
-		    select TA.fk_employee_seq, E.employee_name, D.department_name, P.position_name, TA.attitude, TA.attendance, TA.performance, TA.manager, to_char(TA.regDate, 'yyyy. mm. dd') AS regDate
+		    select TA.ta_seq, TA.fk_employee_seq, E.employee_name, D.department_name, P.position_name, TA.attitude, TA.attendance, TA.performance, TA.manager, to_char(TA.regDate, 'yyyy. mm. dd') AS regDate
 		    from TA_table TA join employees_table E
 		    on TA.fk_employee_seq = E.employee_seq
 		    join department_table D
@@ -748,4 +748,24 @@
 		insert into attendance_table(fk_employee_seq, onTime, offTime)
 		values(#{fk_employee_seq}, default, '')
 	</insert>
+	
+	<!-- === 출퇴 테이블에 퇴근 업데이트 하기 === -->
+	<update id="updateAttendanceTable" parameterType="String">
+		update attendance_table set offTime = sysdate
+		where fk_employee_seq = #{fk_employee_seq}
+			  and to_char(onTime, 'yyyymmdd') = to_char(sysdate, 'yyyymmdd')
+	</update>
+	
+	<select id="getDetailTA" parameterType="HashMap" resultType="com.spring.groupware.commonVO.TimeAndAttVO">
+		select nvl(lag(V.attitude, 1) over(order by V.ta_seq desc), 0) AS previousattitude
+			 , nvl(lag(V.attendance, 1) over(order by V.ta_seq desc), 0) AS previousattendance
+			 , nvl(lag(V.performance, 1) over(order by V.ta_seq desc), 0) AS previousperformance
+			 , V.attitude, V.attendance, V.performance, V.reason
+		from 
+		(
+		    select ta_seq, attitude, attendance, performance, reason
+		    from TA_table
+		    where fk_employee_seq = #{fk_employee_seq}
+		) V
+	</select>
 </mapper>

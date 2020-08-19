@@ -23,11 +23,16 @@
 </div>
 <div id="listArea">
 	<table class="table">
-		<tr>
-			<td>매출번호</td>
-			<td>매출내용</td>
-			<td>매출금액</td>
-			<td>매출날짜</td>
-		</tr>
+		<thead>
+			<tr>
+				<th>매출번호</th>
+				<th>매출내용</th>
+				<th>매출금액</th>
+				<th>매출날짜</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
 	</table>
 </div>
