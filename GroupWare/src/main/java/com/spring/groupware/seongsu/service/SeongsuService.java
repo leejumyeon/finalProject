@@ -39,6 +39,38 @@ public class SeongsuService implements InterSeongsuService {
 		
 		return albumList;
 	}
+
+	// === 앨범 내용 가져오기 === //
+	@Override
+	public AlbumVO getDetailAlbum(String album_seq) {
+
+		AlbumVO detailAlbum = dao.getDetailAlbum(album_seq);
+		
+		return detailAlbum;
+	}
+
+	// === 앨범 수정 하기 === //
+	@Override
+	public void updateEnd(HashMap<String, String> paraMap) {
+
+		dao.updateEnd(paraMap);
+	}
+
+	// === 앨범 삭제하기 === //
+	@Override
+	public void deleteAlbum(String album_seq) {
+
+		dao.deleteAlbum(album_seq);
+	}
+
+	// === 총 게시물 수 알아오기 === //
+	@Override
+	public int getTotalCount(HashMap<String, String> paraMap) {
+
+		int totalCount = dao.getTotalCount(paraMap);
+		
+		return totalCount;
+	}
 	
 	
 

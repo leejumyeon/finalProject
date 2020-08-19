@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.FileManager;
 import com.spring.groupware.leejm.service.InterAdditionalService;
@@ -74,5 +75,19 @@ public class AdditionalController {
 		
 		writer.close();
 			
+	}
+	
+	// 예약 반려 팝업 창
+	@RequestMapping(value="/reservation/popup.top")
+	public ModelAndView popUp(ModelAndView mav) {
+		mav.setViewName("popup");
+		return mav;
+	}
+	
+	// 메신저 팝업 창
+	@RequestMapping(value="/messenger/popup.top")
+	public ModelAndView messengerPopUp(ModelAndView mav) {
+		mav.setViewName("messengerPopup");
+		return mav;
 	}
 }

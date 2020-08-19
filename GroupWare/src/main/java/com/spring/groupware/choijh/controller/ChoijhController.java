@@ -288,81 +288,6 @@ public class ChoijhController {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 자유 게시판 //
 	
-	// 스마트에디터. 드래그앤드롭을 사용한 다중사진 파일업로드 ===
-    @RequestMapping(value="/image/multiplePhotoUpload.action", method= {RequestMethod.POST}) 
-    public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
-	   
-    /*
-	    1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
-	    >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 
-	        우리는 WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
-    */
-	   
-	    // WAS의 webapp 의 절대경로를 알아와야 한다.
-	    HttpSession session = request.getSession();
-	    String root = session.getServletContext().getRealPath("/");
-	    String path = root + "resources" + File.separator + "photo_upload";
-    /*  File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
-	        운영체제가 Windows 이라면  File.separator 는 "\" 이고, 
-	        운영체제가 UNIX, LINUX 이라면 File.separator 는 "/" 이다.
-    */
-	
-	    // path 가 첨부파일을 저장할 WAS(톰캣)의 폴더가 된다. 
-	    System.out.println("~~~~ 확인용 path => " + path);
-	    // ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload
-	
-	    File dir = new File(path);
-	    if(!dir.exists()) {
-		   dir.mkdirs();
-	    }
-	   
-	    String strURL = "";
-		
-	    try {
-		    if(!"OPTIONS".equals(request.getMethod().toUpperCase())) {
-			   	 String filename = request.getHeader("file-name"); //파일명을 받는다 - 일반 원본파일명
-		    		
-		         // System.out.println(">>>> 확인용 filename ==> " + filename); 
-		         // >>>> 확인용 filename ==> berkelekle%ED%8A%B8%EB%9E%9C%EB%94%9405.jpg
-		    		
-		    	 InputStream is = request.getInputStream();
-		    	 /*
-		          	 요청 헤더의 content-type이 application/json 이거나 multipart/form-data 형식일 때,
-		          	 혹은 이름 없이 값만 전달될 때 이 값은 요청 헤더가 아닌 바디를 통해 전달된다. 
-		          	 이러한 형태의 값을 'payload body'라고 하는데 요청 바디에 직접 쓰여진다 하여 'request body post data'라고도 한다.
-		
-		           	 서블릿에서 payload body는 Request.getParameter()가 아니라 
-		        	 Request.getInputStream() 혹은 Request.getReader()를 통해 body를 직접 읽는 방식으로 가져온다. 	
-		    	 */
-		    	 String newFilename = fileManager.doFileUpload(is, filename, path);
-		    	
-		    	 int width = fileManager.getImageWidth(path+File.separator+newFilename);
-				
-		    	 if(width > 600)
-		    		 width = 600;
-					
-		    	 // System.out.println(">>>> 확인용 width ==> " + width);
-		    	 // >>>> 확인용 width ==> 600
-		    	 // >>>> 확인용 width ==> 121
-		    	
-		    	 String CP = request.getContextPath(); // board
-				
-		    	 strURL += "&bNewLine=true&sFileName="; 
-		        	   	 strURL += newFilename;
-		        	   	 strURL += "&sWidth="+width;
-		        	   	 strURL += "&sFileURL="+CP+"/resources/photo_upload/"+newFilename;
-		     }
-			
-		     /// 웹브라우저상에 사진 이미지를 쓰기 ///
-			 PrintWriter out = response.getWriter();
-		 	 out.print(strURL);
-		 } catch(Exception e){
-		 		e.printStackTrace();
-		 }
-	
-    }// end of  public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response)-------------
-	
-	
 	// 자유 게시판 글 보여주기
 	@RequestMapping(value="/freeboard/list.top")
 	public ModelAndView list(ModelAndView mav, HttpServletRequest request) {
@@ -451,13 +376,13 @@ public class ChoijhController {
 		
 		// === [이전] 만들기 ===
 		if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>&lt;&lt;</a></li>";
 		}
 		
 		while( !( loop > blockSize || pageNo > totalPage)) {
 			
 			if(pageNo == currentShowPageNo) {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; border-radius: 5px; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
 			}
 			else {
 				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
@@ -470,7 +395,7 @@ public class ChoijhController {
 		
 		// === [다음] 만들기 ===
 		if( !(pageNo > totalPage) ) { // 맨 마지막으로 빠져나온것이 아니라면 [다음]을 보인다.
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>&gt;&gt;</a></li>";
 		}
 		
 		pageBar += "</ul>";
@@ -732,17 +657,14 @@ public class ChoijhController {
 			return "msg";
 		}
 		
-		List<AttachFileVO> attachvoList = service.getfileView(board_seq);
+		List<AttachFileVO> attachvoList = new ArrayList<>();
+		attachvoList = service.getfileView(board_seq);
 		
-		if(attachvoList.size() == 0) {
-			attachvoList = null;
-		}
-		else if(attachvoList.size() == 1 || attachvoList.size() == 2) {
-			request.setAttribute("attachvoListSize", attachvoList.size());
-		}
+		request.setAttribute("attachvoListSize", attachvoList.size());
 		
 		request.setAttribute("bvo", bvo);
 		request.setAttribute("attachvoList", attachvoList);
+		request.setAttribute("attachvoListSize", attachvoList.size());
 		
 		return "freeboard/edit.tiles1";
 	}
@@ -752,22 +674,142 @@ public class ChoijhController {
 	@RequestMapping(value="/freeboard/edit.top")
 	public String edit(HttpServletRequest request, BoardVO bvo, MultipartHttpServletRequest mrequest) {
 		
-		int n = service.edit(bvo); // 자유게시판 글 수정 하기 
+		String[] orgFileNameList = mrequest.getParameterValues("orgFileName"); 	// 기존 파일명
+		String[] file_seqArr = mrequest.getParameterValues("file_seq"); 		// 기존 파일 번호
+		String[] fileNameList = mrequest.getParameterValues("fileName"); 		// 기존 파일명(업로드 이름)
+		String[] fileSizeList = mrequest.getParameterValues("fileSize"); 		// 기존 파일크기
 		
-		if(n == 1) { // 글 수정이 완료 된 경우
-			String message = "글이 수정 되었습니다.";
-			String loc = request.getContextPath()+"/freeboard/list.top";
-			
-			request.setAttribute("message", message);
-			request.setAttribute("loc", loc);
+		List<MultipartFile> attachList = mrequest.getFiles("attach"); 			// 기존 파일 (업데이트)
+		List<MultipartFile> newAttachList = mrequest.getFiles("newAttach"); 	// 새롭게 추가하는 파일
+		
+	//	System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("board_seq", bvo.getBoard_seq());
+		paraMap.put("subject", bvo.getSubject());
+		paraMap.put("content", bvo.getContent());
+		paraMap.put("file_seqArr", file_seqArr);
+		
+		List<AttachFileVO> uploadFileList = new ArrayList<>(); // 업데이트 되는 또는 추가되는 파일 정보 저장용
+		
+		int result = 0; //DB에서 작업한 결과 저장용
+		
+		result = service.edit(bvo); // 자유게시판 글 수정 하기 
+		
+		// 기존파일 보존할 것들 조회(지운것 수정된것을 제외한 나머지)
+		if(attachList != null && !attachList.isEmpty()) { // 유지되거나 업데이트일 경우
+			List<String> maintainSeq = new ArrayList<>();
+			for(int i=0; i<attachList.size(); i++) {
+				if(attachList.get(i).isEmpty()) { // input[name=attach](게시글에 이미 첨부된 파일)태그가 있으면서 값이 null = 현재 상태 유지
+					maintainSeq.add(file_seqArr[i]);
+					System.out.println("보존할 파일:"+file_seqArr[i]);
+				}
+				else {
+					System.out.println("업데이트 파일:"+file_seqArr[i]);
+				}
+			}
+			paraMap.put("maintainSeq", maintainSeq);
 		}
-		else {
-			String message = "글 수정이 실패했습니다.";
-			String loc = "javascript:history.back()";
-			
-			request.setAttribute("message", message);
-			request.setAttribute("loc", loc);
+		
+		
+		List<AttachFileVO> deleteFileList = null;
+		deleteFileList = service.deleteFileList(paraMap); // 보존할 것들 이외 삭제할 첨부파일 번호 조회
+		for(AttachFileVO deleteFile : deleteFileList) { 
+			System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
 		}
+		
+		// 업로드 파일 삭제 및 DB삭제
+		HttpSession session = mrequest.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "freeboard";
+		
+		for(AttachFileVO deleteFile : deleteFileList) {
+			try {
+				fileManager.doFileDelete(deleteFile.getFileName(), path);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(deleteFileList != null && !deleteFileList.isEmpty()) {
+			paraMap.put("deleteFileList", deleteFileList);
+			result += service.deleteFile(paraMap); // DB에서 삭제
+		}
+		
+		
+		
+		// 업로드할 파일 업로드 및 ListVO에추가
+		if(attachList != null && !attachList.isEmpty()) {
+			for(int i=0; i<attachList.size(); i++) {
+				if(!attachList.get(i).isEmpty()) {// 업데이트 해야하는 첨부파일 업로드
+					AttachFileVO attachFile = new AttachFileVO();
+					byte[] bytes = null;
+					long fileSize = 0;
+					try {
+						bytes = attachList.get(i).getBytes();
+						
+						String newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
+						fileSize = attachList.get(i).getSize();
+						System.out.println("업데이트할 파일명:"+newFileName);
+						attachFile.setFk_board_seq(bvo.getBoard_seq());
+						attachFile.setFileName(newFileName);
+						attachFile.setFileSize(String.valueOf(fileSize));
+						attachFile.setOrgFileName(attachList.get(i).getOriginalFilename());
+						
+						uploadFileList.add(attachFile);	
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			} // end of for(attachList)
+		}
+		
+		if(newAttachList != null && !newAttachList.isEmpty()) {
+			// 추가할 파일 업로드 및 ListVO에 추가
+			for(int i=0; i<newAttachList.size(); i++) {
+				if(!newAttachList.get(i).isEmpty()) {
+					AttachFileVO attachFile = new AttachFileVO();
+					byte[] bytes = null;
+					long fileSize = 0;
+					try {
+						bytes = newAttachList.get(i).getBytes();
+						
+						String newFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
+						fileSize = newAttachList.get(i).getSize();
+						System.out.println("추가할 파일명:"+newFileName);
+						attachFile.setFk_board_seq(bvo.getBoard_seq());
+						attachFile.setFileName(newFileName);
+						attachFile.setFileSize(String.valueOf(fileSize));
+						attachFile.setOrgFileName(newAttachList.get(i).getOriginalFilename());
+						
+						uploadFileList.add(attachFile);	
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}// end of for(newAttachList)-----------------------------
+		}
+		
+		if(uploadFileList != null && !uploadFileList.isEmpty()) {
+			for(AttachFileVO uploadFile : uploadFileList) {
+				result += service.insertFile(uploadFile); // 첨부파일 추가
+			}
+		}
+		
+		String message = "게시글 수정에 실패했습니다.";
+		String loc = mrequest.getContextPath()+"/freeboard/detailView.top?board_seq="+bvo.getBoard_seq();
+		
+		if(result == (uploadFileList.size()+deleteFileList.size()+1)) {
+			message = "게시글 수정에 성공했습니다.";
+			loc = mrequest.getContextPath()+"/freeboard/detailView.top?board_seq="+bvo.getBoard_seq();
+		}
+
+		request.setAttribute("message", message);
+		request.setAttribute("loc", loc);
 		
 		return "msg";
 	}
@@ -811,9 +853,8 @@ public class ChoijhController {
 		    currentShowPageNo = "1";
 	    }
 	   
-	    int sizePerPage = 5;	// 한 페이지당 5개의 댓글을 보여줄 것임.
+	    int sizePerPage = 10;	// 한 페이지당 5개의 댓글을 보여줄 것임.
 			   
-		
 	    int startRno = ((Integer.parseInt(currentShowPageNo) - 1 ) * sizePerPage) + 1;
 	    int endRno = startRno + sizePerPage - 1;
 		

@@ -91,7 +91,6 @@
 				<ul class="secondCategory">
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">공지사항</li>
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/faqList.top'">FAQ</li>
-					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardOut.top'">신고글 확인</li>
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/boardWrite.top'">공지글 작성</li>
 					
 				</ul>

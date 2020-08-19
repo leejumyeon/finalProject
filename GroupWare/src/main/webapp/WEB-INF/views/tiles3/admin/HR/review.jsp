@@ -6,7 +6,7 @@
 <style type="text/css">
 	#listArea{
 		display: inline-block;
-		width: 600px;
+		width: 800px;
 		float:left;
 	}
 	
@@ -18,15 +18,133 @@
 	.hide{
 		display: none;
 	}
-</style>
 
+	#container {
+    	height: 400px;
+	}
+	
+	.highcharts-figure, .highcharts-data-table table {
+	    min-width: 310px;
+	    max-width: 800px;
+	    margin: 1em auto;
+	}
+	
+	#datatable {
+	    font-family: Verdana, sans-serif;
+	    border-collapse: collapse;
+	    border: 1px solid #EBEBEB;
+	    margin: 10px auto;
+	    text-align: center;
+	    width: 100%;
+	    max-width: 500px;
+	}
+	#datatable caption {
+	    padding: 1em 0;
+	    font-size: 1.2em;
+	    color: #555;
+	}
+	#datatable th {
+		font-weight: 600;
+	    padding: 0.5em;
+	}
+	#datatable td, #datatable th, #datatable caption {
+	    padding: 0.5em;
+	}
+	#datatable thead tr, #datatable tr:nth-child(even) {
+	    background: #f8f8f8;
+	}
+	#datatable tr:hover {
+	    background: #f1f7ff;
+	}
+	
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script type="text/javascript">
 
 	$(document).ready(function(){
 		
+		$("#datatable").hide();
+		$(".employee_seq").hide();
+		$(".ta_seq").hide();
+		
 		$(".pick").each(function(index, item){
 			$(item).click(function(){
 				$(".infoArea").toggleClass("hide");
+				
+				var employee_seq = $(this).find(".employee_seq").text();
+				var ta_seq = $(this).find(".ta_seq").text();
+				
+				$.ajax({
+					url:"<%= request.getContextPath()%>/detailTAList.top",
+					type:"GET",
+					data:{"fk_employee_seq":employee_seq
+						, "ta_seq":ta_seq},
+					dataType:"JSON",
+					success: function(json) {
+						
+						var html = "<thead>"
+								 + "<tr>"
+								 + "<th></th>"
+								 + "<th>한달전</th>"
+								 + "<th>현재</th>"
+								 + "</tr>"
+								 + "</thead>"
+								 + "<tbody>";
+								 
+			        
+						html += "<tr>"
+							 + "<th>출결</th>"
+							 + "<td>" + json.previousattitude + "</td>"
+							 + "<td>" + json.attitude + "</td>"
+							 + "</tr>"
+							 + "<tr>"
+							 + "<th>근무태도</th>"
+							 + "<td>" + json.previousattendance + "</td>"
+							 + "<td>" + json.attendance + "</td>"
+							 + "</tr>"
+							 + "<th>근무태도</th>"
+							 + "<td>" + json.previousperformance + "</td>"
+							 + "<td>" + json.performance + "</td>"
+							 + "</tr>";
+							
+						html += "</tbody>";
+						$("#datatable").html(html);
+						$("#reasonArea").html(json.reason);
+						
+						Highcharts.chart('container', {
+						    data: {
+						        table: 'datatable'
+						    },
+						    chart: {
+						        type: 'column'
+						    },
+						    title: {
+						        text: 'Data extracted from a HTML table in the page'
+						    },
+						    yAxis: {
+						        allowDecimals: false,
+						        title: {
+						            text: 'Units'
+						        }
+						    },
+						    tooltip: {
+						        formatter: function () {
+						            return '<b>' + this.series.name + '</b><br/>' +
+						                this.point.y + ' ' + this.point.name.toLowerCase();
+						        }
+						    }
+						});
+						
+					},
+					error: function(e) {
+						
+					}
+				});
 			});
 		});
 			
@@ -74,6 +192,8 @@
 	<table id="datatables" class="table">
 		<thead>
 			<tr>
+				<th class="ta_seq">고과번호</th>
+				<th class="employee_seq">사원번호</th>
 				<th>부서</th>
 				<th>사원</th>
 				<th>직책</th>
@@ -88,21 +208,23 @@
 		<tbody>
 			<c:forEach var="tavo" items="${TAList}">
 				<tr class="pick">
+					<td class="ta_seq">${tavo.ta_seq}</td>
+					<td class="employee_seq">${tavo.fk_employee_seq}</td>
 					<td>${tavo.department_name}</td>
 					<td>${tavo.employee_name}</td>
 					<td>${tavo.position_name}</td>
 					<td>
 						<c:choose>
-							<c:when test="${Number(tavo.attitude) > 90}">
+							<c:when test="${tavo.attitude > 90}">
 								A
 							</c:when>
-							<c:when test="${Number(tavo.attitude) > 80}">
+							<c:when test="${tavo.attitude > 80}">
 								B
 							</c:when>
-							<c:when test="${Number(tavo.attitude) > 70}">
+							<c:when test="${tavo.attitude > 70}">
 								C
 							</c:when>
-							<c:when test="${Number(tavo.attitude) > 60}">
+							<c:when test="${tavo.attitude > 60}">
 								D
 							</c:when>
 							<c:otherwise>
@@ -112,16 +234,16 @@
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="${Number(tavo.attendance) > 90}">
+							<c:when test="${tavo.attendance > 90}">
 								A
 							</c:when>
-							<c:when test="${Number(tavo.attendance) > 80}">
+							<c:when test="${tavo.attendance > 80}">
 								B
 							</c:when>
-							<c:when test="${Number(tavo.attendance) > 70}">
+							<c:when test="${tavo.attendance > 70}">
 								C
 							</c:when>
-							<c:when test="${Number(tavo.attendance) > 60}">
+							<c:when test="${tavo.attendance > 60}">
 								D
 							</c:when>
 							<c:otherwise>
@@ -131,16 +253,16 @@
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="${Number(tavo.performance) > 90}">
+							<c:when test="${tavo.performance > 90}">
 								A
 							</c:when>
-							<c:when test="${Number(tavo.performance) > 80}">
+							<c:when test="${tavo.performance > 80}">
 								B
 							</c:when>
-							<c:when test="${Number(tavo.performance) > 70}">
+							<c:when test="${tavo.performance > 70}">
 								C
 							</c:when>
-							<c:when test="${Number(tavo.performance) > 60}">
+							<c:when test="${tavo.performance > 60}">
 								D
 							</c:when>
 							<c:otherwise>
@@ -150,16 +272,16 @@
 					</td>
 					<td>
 						<c:choose>
-							<c:when test="${Number(tavo.attitude) + Number(tavo.attendance) + Number(tavo.performance) > 270}">
+							<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 270}">
 								A
 							</c:when>
-							<c:when test="${Number(tavo.attitude) + Number(tavo.attendance) + Number(tavo.performance) > 240}">
+							<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 240}">
 								B
 							</c:when>
-							<c:when test="${Number(tavo.attitude) + Number(tavo.attendance) + Number(tavo.performance) > 210}">
+							<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 210}">
 								C
 							</c:when>
-							<c:when test="${Number(tavo.attitude) + Number(tavo.attendance) + Number(tavo.performance) > 180}">
+							<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 180}">
 								D
 							</c:when>
 							<c:otherwise>
@@ -177,7 +299,11 @@
 
 <div class="infoArea hide">
 	<div id="chartArea">
-		과거기록 포함 차트 출력
+		<figure class="highcharts-figure">
+		    <div id="container"></div>
+		    <table id="datatable">
+		    </table>
+		</figure>
 	</div>
 	<div id="reasonArea">
 		클릭한 기록의 사유 출력

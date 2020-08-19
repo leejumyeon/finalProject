@@ -599,6 +599,7 @@ create table attachFile_table
 ,constraint pk_attachFile_table primary key(file_seq)
 ,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 );
+
 create SEQUENCE attachFile_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값
@@ -795,4 +796,14 @@ begin
 		values(comment_table_seq.nextval, 1, 1, default, '댓글 테스트 입니다.'||i, default, default, 0, default); 
     end loop;
 end;
+commit;
+
+
+begin
+    for i in 1..20 loop 
+        insert into board_table(board_seq, fk_category_num, subject, content, readCnt, regDate, fk_employee_seq, status, commentCnt)
+        values(board_table_seq.nextval, 2, '파이리가 쓴 글'||i, '파이리 입니다.'||i, default, default, 4, default, default); 
+    end loop;
+end;
+
 commit;

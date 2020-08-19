@@ -90,7 +90,11 @@
 		
 		$("input:radio[name=albumList]").hide();
 		
-		getAlbumList();
+		var statusValue = $("input:radio[name=albumList]:checked").val();
+		var searchType = $("#searchType").val();
+		var searchWord = $("#searchWord").val();
+		
+		getAlbumList(statusValue, searchType, searchWord, "");
 		
 		$("input:radio[name=albumList]").each(function() {
 			
@@ -108,49 +112,58 @@
 			
 			$(this).next().addClass("labelAlbumListActive");
 			
-			getAlbumList();
+			getAlbumList(statusValue, searchType, searchWord, "");
 		});
 		
 	});
 	
-	function getAlbumList() {
+	function getAlbumList(statusValue, searchType, searchWord, currentShowPageNo) {
 		
-		var statusValue = $("input:radio[name=albumList]:checked").val();
-		var searchType = $("#searchType").val();
-		var searchWord = $("#searchWord").val();
+		statusValue = $("input:radio[name=albumList]:checked").val();
+		searchType = $("#searchType").val();
+		searchWord = $("#searchWord").val();
 		
 		$.ajax({
 			url:"<%= request.getContextPath()%>/albumList.top",
 			type:"GET",
 			data:{"statusValue":statusValue
 				, "searchType":searchType
-				, "searchWord":searchWord},
+				, "searchWord":searchWord
+				, "currentShowPageNo":currentShowPageNo},
 			dataType:"JSON",
 			success:function(json) {
 				
 				var html = "";
 
-				if(json.length != 0) {
+				if(json.AlbumList.length != 0) {
 					
-					$.each(json, function(index, item) {
+					$.each(json.AlbumList, function(index, item) {
 
 						html += '<tr>'
-							 +  '<td>' + (json.length - index) + '</td>'
+							 +  '<td>' + (json.AlbumList.length - index) + '</td>'
 							 +  '<td>' + item.category_name + '</td>'
 							 +  '<td>' + item.employee_name + "(" + item.employee_id + ")" + '</td>'
-							 +  '<td>' + item.subject + '</td>'
+							 +  '<td onclick="goDetailAlbum(' + item.album_seq + ')">' + item.subject + '</td>'
 							 +  '<td>' + item.regDate + '</td>'
 							 +  '</tr>';
 
 					});
 					
 				}
-			
+				
+				var html2 = json.pageBar;
+				
 				$("#albumList").html(html);
+				$("#pagebar").html(html2);
 			}
 		});
 	}
 
+	function goDetailAlbum(seq) {
+		
+		location.href="<%= request.getContextPath()%>/detailAlbum.top?album_seq=" + seq;
+		
+	}
 </script>
 	<div id="container">
 		<div id="in">
@@ -168,7 +181,7 @@
 						<option value="employee_name">작성자</option>
 					</select>
 					<input type="text" name="searchWord" id="searchWord" size="30" autocomplete="off" />
-					<button style="color: white;" id="btnS" type="button" onclick="getAlbumList()">검색</button>
+					<button style="color: white;" id="btnS" type="button" onclick="getAlbumList('', '', '')">검색</button>
 					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
 				<input type="radio" id="allAlbumtList" name="albumList" value="0" checked/><label for="allAlbumtList" class="labelAlbumList">전체 앨범</label>
 				<input type="radio" id="comAlbumtList" name="albumList" value="1" /><label for="comAlbumtList" class="labelAlbumList">사내 앨범</label>

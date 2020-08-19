@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.spring.common.FileManager;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
+import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.leejm.service.InterManagerService;
@@ -303,6 +304,15 @@ public class ManagerController {
 	// 관리자-재무 관리(매출내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salesList.top")
 	public ModelAndView managerSalesList(ModelAndView mav, HttpServletRequest request) {
+		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
+		List<ChartVO> laborCostChartList = service.laborCostChartList(); //인건비 금액 조회 
+		List<ChartVO> maintainChartList = service.maintainChartList(); // 시설유지비 금액 조회
+		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
+		
+		mav.addObject("projectChartList",projectChartList);
+		mav.addObject("laborCostChartList",laborCostChartList);
+		mav.addObject("maintainChartList",maintainChartList);
+		mav.addObject("profitChartList",profitChartList);
 		mav.setViewName("admin/finance/salesList.tiles3");
 		return mav;
 	}
