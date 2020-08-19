@@ -71,7 +71,7 @@
 		    ) V
 		    where V.board_seq = #{board_seq}
 		    ) T join employees_table E
-		on T.fk_employee_seq = employee_seq 
+		on T.fk_employee_seq = employee_seq
 	</select>
 	
 	

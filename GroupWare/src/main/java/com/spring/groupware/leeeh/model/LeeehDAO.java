@@ -623,4 +623,22 @@ public class LeeehDAO implements InterLeeehDAO {
 		return result;
 	}
 
+	// === 출퇴 테이블에 퇴근 업데이트 하기 === //
+	@Override
+	public int updateAttendanceTable(String fk_employee_seq) {
+
+		int result = sqlsession.update("leeeh.updateAttendanceTable", fk_employee_seq);
+		
+		return result;
+	}
+
+	// === 인사고과 저번달 고과와 이번달 고과, 사유 얻어오기 === //
+	@Override
+	public TimeAndAttVO getDetailTA(HashMap<String, String> paraMap) {
+
+		TimeAndAttVO detailTA = sqlsession.selectOne("leeeh.getDetailTA", paraMap);
+		
+		return detailTA;
+	}
+
 }
