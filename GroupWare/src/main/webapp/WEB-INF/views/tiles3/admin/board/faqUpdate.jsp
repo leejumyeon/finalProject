@@ -168,7 +168,7 @@ $(document).ready(function(){
 	<h4 style="text-align: center;">-FAQ 수정-</h4>
 	</div>
 	
-	<div style="margin-top: 20px; border:solid 1px blue;">
+	<div style="margin-top: 20px; border:solid 0px blue;">
 		<form name="noticeFrm" enctype="multipart/form-data">
 			<input type="hidden" name="board_seq" value="${board.board_seq}" />
 			<table class="table noticeTable">

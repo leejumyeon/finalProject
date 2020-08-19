@@ -27,6 +27,7 @@ import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.MailVO;
 import com.spring.groupware.commonVO.ReservationVO;
 import com.spring.groupware.hyemin.service.InterHyeminService;
+import com.spring.groupware.leejm.service.InterManagerService;
 
 // === #30. 컨트롤러 선언 ===
 @Component
@@ -37,7 +38,8 @@ public class HyeminController {
 	@Autowired
 	private InterHyeminService service;
 	
-	
+	@Autowired
+	private InterManagerService mService;
 	
 	// === #150. 파일업로드 및 다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI: Dependency Injection) ===
 	@Autowired	// Type에 따라 알아서 Bean 을 주입해준다.
@@ -302,9 +304,7 @@ public class HyeminController {
 			if(!attachList.isEmpty()) {
 				String root = session.getServletContext().getRealPath("/");
 				String path = root + "resources" + File.separator + "freeboard";
-				String fileName = "";
-				
-				int cnt = 0;
+				String fileName = "";				
 				
 				for(int i=0; i<attachList.size(); i++) {
 					if(!attachList.get(i).isEmpty()) {
@@ -384,6 +384,230 @@ public class HyeminController {
 		service.rejectRoom(reservation_seq);
 		
 		mav.setViewName("redirect:/manager/reservation.top");
+		
+		return mav;
+	}
+	
+	// 관리자-게시글 관리(FAQ 상세보기)페이지 이동
+	@RequestMapping(value="/manager/board/faqDetail.top")
+	public ModelAndView managerFaqDetail(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = mService.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = mService.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
+		mav.setViewName("admin/board/faqDetail.tiles3");
+		return mav;
+	}
+	
+	// 관리자-게시글 관리(공지사항 수정하기)페이지 이동
+	@RequestMapping(value="/manager/board/faqUpdate.top", method= {RequestMethod.GET})
+	public ModelAndView managerNoticeUpdate(ModelAndView mav, HttpServletRequest request) {
+		String board_seq = request.getParameter("board_seq");
+		BoardVO board = mService.boardDetail(board_seq);
+		
+		if(board!=null) {
+			List<AttachFileVO> fileList = mService.boardFileList(board_seq);
+			mav.addObject("fileList",fileList);
+		}
+		
+		mav.addObject("board",board);
+		mav.setViewName("admin/board/faqUpdate.tiles3");
+		return mav;
+	}
+	
+	// 관리자-게시글 관리(공지사항 수정하기) 기능 수행
+	@RequestMapping(value="/manager/board/faqUpdate.top", method= {RequestMethod.POST})
+	public ModelAndView managerNoticeUpdateEnd(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+		String board_seq = mrequest.getParameter("board_seq");
+		String subject = mrequest.getParameter("subject");
+		String content = mrequest.getParameter("content");
+		
+		String[] orgFileNameList = mrequest.getParameterValues("orgFileName"); //기존 파일명
+		String[] file_seqArr = mrequest.getParameterValues("file_seq"); // 기존 파일 번호
+		String[] fileNameList = mrequest.getParameterValues("fileName"); // 기존 파일명(업로드 이름)
+		String[] fileSizeList = mrequest.getParameterValues("fileSize"); // 기존 파일크기
+		List<MultipartFile> attachList = mrequest.getFiles("attach"); //기존 파일 (업데이트)
+		List<MultipartFile> newAttachList = mrequest.getFiles("newAttach"); // 새롭게 추가하는 파일
+		
+		System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("board_seq", board_seq);
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		paraMap.put("file_seqArr", file_seqArr);
+		
+		List<AttachFileVO> uploadFileList = new ArrayList<>(); // 업데이트 되는 또는 추가되는 파일 정보 저장용
+		
+		int result = 0; //DB에서 작업한 결과 저장용
+		
+		//글 수정
+		result = mService.boardUpdate(paraMap); //글 수정
+		
+		
+		// 기존파일 보존할 것들 조회(지운것 수정된것을 제외한 나머지)
+		if(attachList != null && !attachList.isEmpty()) { // 유지되거나 업데이트일 경우
+			List<String> maintainSeq = new ArrayList<>();
+			for(int i=0; i<attachList.size(); i++) {
+				if(attachList.get(i).isEmpty()) { // input[name=attach](게시글에 이미 첨부된 파일)태그가 있으면서 값이 null = 현재 상태 유지
+					maintainSeq.add(file_seqArr[i]);
+					System.out.println("보존할 파일:"+file_seqArr[i]);
+				}
+				else {
+					System.out.println("업데이트 파일:"+file_seqArr[i]);
+				}
+			}
+			paraMap.put("maintainSeq", maintainSeq);
+		}
+		
+		
+		List<AttachFileVO> deleteFileList = null;
+		deleteFileList = mService.deleteFileList(paraMap); //보존할 것들 이외 삭제할 첨부파일 번호 조회
+		for(AttachFileVO deleteFile : deleteFileList) { 
+			System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
+		}
+		
+		// 업로드 파일 삭제 및 DB삭제
+		HttpSession session = mrequest.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "freeboard";
+		
+		for(AttachFileVO deleteFile : deleteFileList) {
+			try {
+				fileManager.doFileDelete(deleteFile.getFileName(), path);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(deleteFileList != null && !deleteFileList.isEmpty()) {
+			paraMap.put("deleteFileList", deleteFileList);
+			result += mService.deleteFile(paraMap); //DB에서 삭제
+		}
+		
+		
+		
+		// 업로드할 파일 업로드 및 ListVO에추가
+		if(attachList != null && !attachList.isEmpty()) {
+			for(int i=0; i<attachList.size(); i++) {
+				if(!attachList.get(i).isEmpty()) {// 업데이트 해야하는 첨부파일 업로드
+					AttachFileVO attachFile = new AttachFileVO();
+					byte[] bytes = null;
+					long fileSize = 0;
+					try {
+						bytes = attachList.get(i).getBytes();
+						
+						String newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
+						fileSize = attachList.get(i).getSize();
+						System.out.println("업데이트할 파일명:"+newFileName);
+						attachFile.setFk_board_seq(board_seq);
+						attachFile.setFileName(newFileName);
+						attachFile.setFileSize(String.valueOf(fileSize));
+						attachFile.setOrgFileName(attachList.get(i).getOriginalFilename());
+						
+						uploadFileList.add(attachFile);	
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+			} // end of for(attachList)
+		}
+		
+		if(newAttachList != null && !newAttachList.isEmpty()) {
+			// 추가할 파일 업로드 및 ListVO에 추가
+			for(int i=0; i<newAttachList.size(); i++) {
+				if(!newAttachList.get(i).isEmpty()) {
+					AttachFileVO attachFile = new AttachFileVO();
+					byte[] bytes = null;
+					long fileSize = 0;
+					try {
+						bytes = newAttachList.get(i).getBytes();
+						
+						String newFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
+						fileSize = newAttachList.get(i).getSize();
+						System.out.println("추가할 파일명:"+newFileName);
+						attachFile.setFk_board_seq(board_seq);
+						attachFile.setFileName(newFileName);
+						attachFile.setFileSize(String.valueOf(fileSize));
+						attachFile.setOrgFileName(newAttachList.get(i).getOriginalFilename());
+						
+						uploadFileList.add(attachFile);	
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}// end of for(newAttachList)-----------------------------
+		}
+		
+		if(uploadFileList != null && !uploadFileList.isEmpty()) {
+			for(AttachFileVO uploadFile : uploadFileList) {
+				result += mService.insertFile(uploadFile);
+			}
+		}
+		
+		
+		String msg = "게시글 수정에 실패했습니다.";
+		String loc = mrequest.getContextPath()+"/manager/board/faqUpdate.top?board_seq="+board_seq;
+		
+		if(result == (uploadFileList.size()+deleteFileList.size()+1)) {
+			msg = "게시글 수정에 성공했습니다.";
+			loc = mrequest.getContextPath()+"/manager/board/faqDetail.top?board_seq="+board_seq;
+		}
+		
+		mav.addObject("message", msg);
+		mav.addObject("loc",loc);
+		mav.setViewName("msg");
+		return mav;
+	}
+	
+	// 관리자-게시글 관리(FAQ 삭제)
+	@RequestMapping(value="/manager/board/faqDelete.top")
+	public ModelAndView managerNoticeDelete(ModelAndView mav, HttpServletRequest request) {
+		String[] board_seqArr = request.getParameterValues("board_seq");
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("board_seqArr", board_seqArr);
+		
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources" + File.separator + "freeboard";
+		// 삭제하기 전에 첨부파일 존재 유무 확인 및 삭제
+		for(String board_seq: board_seqArr) {
+			paraMap.put("board_seq", board_seq);
+			List<AttachFileVO> deleteFileList = mService.deleteFileList(paraMap);
+			if(!deleteFileList.isEmpty()) {
+				for(AttachFileVO deleteFile: deleteFileList) {
+					try {
+						fileManager.doFileDelete(deleteFile.getFileName(), path);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		int result = mService.boardDelete(paraMap);
+		
+		String msg = "게시글 삭제에 실패했습니다.";
+		String loc = "history.back()";
+		
+		if(result == board_seqArr.length) {
+			msg = "게시글 삭제에 성공했습니다.";
+			loc = request.getContextPath()+"/manager/board/faqList.top";
+		}
+		
+		mav.addObject("message", msg);
+		mav.addObject("loc",loc);
+		mav.setViewName("msg");
 		
 		return mav;
 	}

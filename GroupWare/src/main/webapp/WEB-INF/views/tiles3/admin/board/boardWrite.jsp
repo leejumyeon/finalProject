@@ -148,7 +148,7 @@ $(document).ready(function(){
 	<h4 style="text-align: center;">-공지글 작성-</h4>
 	</div>
 	
-	<div style="margin-top: 20px; border:solid 0px blue;">
+	<div style="margin-top: 20px; border-top:solid 0px gray;">
 		<form name="writeFrm" enctype="multipart/form-data">
 			<select name="fk_category_num" style="height: 25px;">
 				<option value="1">공지사항</option>

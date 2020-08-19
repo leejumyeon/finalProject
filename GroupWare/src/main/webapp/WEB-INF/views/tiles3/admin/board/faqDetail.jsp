@@ -45,18 +45,18 @@
 	}
 	
 	function goUpdate(){
-		location.href="<%=request.getContextPath()%>/manager/board/noticeUpdate.top?board_seq=${board.board_seq}";
+		location.href="<%=request.getContextPath()%>/manager/board/faqUpdate.top?board_seq=${board.board_seq}";
 	}
 	
 	function goDelete(){
-		location.href="<%=request.getContextPath()%>/manager/board/noticeDelete.top?board_seq=${board.board_seq}";
+		location.href="<%=request.getContextPath()%>/manager/board/faqDelete.top?board_seq=${board.board_seq}";
 	}
 </script>
     
 <div>
 	<div style="display: inline-block;">
 	<h3>게시글관리</h3>
-	<h4 style="text-align: center;">-공지사항 상세-</h4>
+	<h4 style="text-align: center;">-FAQ 상세-</h4>
 	</div>
 	
 	<div style="margin-top: 20px; border-top:solid 1px gray;">
@@ -89,7 +89,7 @@
 			</tr>
 		</table>
 		<div style="margin-top: 20px;">
-			<span class="managerBtn" style="float:left" onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/noticeList.top'">목록 돌아가기</span>
+			<span class="managerBtn" style="float:left" onclick="javascript:location.href='<%=request.getContextPath()%>/manager/board/faqList.top'">목록 돌아가기</span>
 			<span class="managerBtn" onclick="goDelete()">삭제</span>
 			<span class="managerBtn" onclick="goUpdate()">수정</span>
 		</div>
