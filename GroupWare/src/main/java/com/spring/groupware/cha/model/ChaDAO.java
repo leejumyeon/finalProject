@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.AlbumVO;
 import com.spring.groupware.commonVO.CompanyCalVO;
 import com.spring.groupware.commonVO.PersonalCalVO;
 
@@ -119,7 +120,7 @@ public class ChaDAO implements ChaInterDAO {
 		return n;
 	}
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 공지사항
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 공지사항
 	@Override
 	public List<HashMap<String, String>> indication(HashMap<String, String> paraMap) {
 		
@@ -128,7 +129,7 @@ public class ChaDAO implements ChaInterDAO {
 		return resultList;
 	}
 	
-	//메인페이지(공지사항 및 자주묻는 질문, 자유게시판) - 자유게시판
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 자유게시판
 	@Override
 	public List<HashMap<String, String>> freedom(HashMap<String, String> paraMap) {
 		
@@ -136,6 +137,15 @@ public class ChaDAO implements ChaInterDAO {
 		
 		return resultList;
 		
+	}
+	
+	// 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 앨범게시판
+	@Override
+	public List<AlbumVO> album() {
+		
+		List<AlbumVO> albumvoList = sqlsession.selectList("cha.album");
+		
+		return albumvoList;
 	}
 	
 	
