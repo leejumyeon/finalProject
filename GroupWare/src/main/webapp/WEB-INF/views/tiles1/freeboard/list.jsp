@@ -205,6 +205,7 @@
 		
 		<form name="detailViewFrm">
 			<input type="hidden" name="board_seq"/>
+			<input type="hidden" name="gobackURL" value="${gobackURL}" />
 		</form>
 		
 	</div>

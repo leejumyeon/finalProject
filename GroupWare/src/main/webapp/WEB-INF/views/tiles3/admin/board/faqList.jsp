@@ -21,6 +21,10 @@
 		width: 40%;
 		text-align: center;
 	}
+	
+	.hide{
+		display: none;
+	}
 </style>    
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" type="text/css"/>
@@ -60,11 +64,35 @@
 			
 		}); // end of $("#datatables").DataTable({})
 		
-		
+		$(".accodion").click(function(){
+			
+			var $targetNext = $(this).next();
+		//	var targetNextDisplayProperty = $targetNext.css('display');
+			
+			if($targetNext.hasClass('hide')) {
+				$(".pannel").each(function(index, item){
+					if(item != $targetNext){
+						if(!$(item).hasClass("hide")){
+							$(item).addClass("hide");
+						}
+					}
+				});
+				
+				$targetNext.removeClass("hide");
+			}		
+			else {
+				$targetNext.addClass("hide");
+			}
+			
+		});	
 		
 				
 	}); // end of $(document).ready(function(){})
 
+	function goUpdate(seq){
+		
+	}
+	
 </script>
 
 <div>
@@ -96,14 +124,23 @@
 				</thead>
 				<tbody>
 					<c:forEach var="board" items="${boardvoList}" varStatus="status">
-						<tr>
-							<td><input type="checkbox" name="select" value="${board.board_seq}"/></td>
+						<tr class="accodion">
+							<td><input type="checkbox" name="board_seq" value="${board.board_seq}"/></td>
 							<td>${status.count}</td>
 							<td>${board.employee_name}
 							<td class="tbl_title">${board.subject}</td>							
 							<td>${board.regDate}</td>
 							<td>${board.readCnt}</td>
 							<td>삭제</td>
+						</tr>
+						<tr class="pannel hide">
+							<td colspan="7">
+								${board.content}
+								<div align="right">
+									<span class="managerBtn" style="margin-rithg:10px">삭제</span>
+									<span class="managerBtn" style="margin-rithg:10px" onclick="goUpdate('${board.board_seq}')">수정</span>
+								</div>
+							</td>
 						</tr>
 					</c:forEach>	
 				</tbody>

@@ -152,8 +152,8 @@
 
 	$(document).ready(function(){
 		
-		// 댓글 내용(페이징처리 x) 보여주기
-		goReadComment();
+		// 댓글 내용(페이징처리 o) 보여주기
+		goReadComment("1");
 		
 	});
 
@@ -193,9 +193,13 @@
 			dataType:"JSON",
 			success:function(json) {
 				if(json.n == 1){
-					goReadComment(); // 댓글 내용(페이징처리 x) 보여주기
-					$("#commentContent").val("");
+					goReadComment("1"); // 댓글 내용(페이징처리 x) 보여주기
 				}
+				else {
+					alert("댓글쓰기 실패!!");
+				}
+				
+				$("#commentContent").val("");
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -205,13 +209,13 @@
 	}
 	
 	
-	// 댓글 내용(페이징처리 x) 보여주기
-	function goReadComment() {
+	// 댓글 내용(페이징처리 o) 보여주기
+	function goReadComment(currentShowPageNo) {
 		
 		$.ajax({
 			
 			url:"<%= ctxPath%>/freeboard/goReadComment.top",
-			data:{"fk_board_seq":"${bvo.board_seq}"},
+			data:{"fk_board_seq":"${bvo.board_seq}","currentShowPageNo":currentShowPageNo},
 			dataType:"JSON",
 			success:function(json) {
 				
@@ -248,12 +252,89 @@
 					html += "</tr>";
 				}
 					$("#commentView").html(html);
+					
+					// 페이지바 함수 호출
+					makeCommentPageBar(currentShowPageNo);
+					
 			},
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 			
 		}); 
+		
+	}
+	
+	
+	// 페이지바 함수
+	function makeCommentPageBar(currentShowPageNo) {
+		
+		$.ajax({
+			url:"<%= ctxPath%>/freeboard/getCommentTotalPage.top",
+			data:{"fk_board_seq":"${bvo.board_seq}",
+				  "sizePerPage":"5"},
+			type:"GET",
+			dataType:"JSON",
+			success:function(json){	
+				
+				if(json.totalPage > 0) {
+					// 댓글이 있는 경우
+					
+					var totalPage = json.totalPage;
+					
+					var pageBarHTML = "<ul style='list-style:none; padding:0px;'>";
+					
+					var blockSize = 10;
+					
+					var loop = 1;
+					
+					if(typeof currentShowPageNo == "string") {
+						currentShowPageNo = Number(currentShowPageNo);
+					}
+					
+					var pageNo = Math.floor( (currentShowPageNo - 1)/blockSize ) * blockSize + 1 
+					
+
+					// === [이전] 만들기 ===
+					if(pageNo != 1) {					
+						pageBarHTML += "<li style='display:inline-block; width:50px; font-size:11pt;'><a href='javascript:goReadComment(\""+(pageNo-1)+"\")'>[이전]</a></li>"; // goReadComment(\""+(pageNo-1)+"\") : controller에서 getParamter를 String타입으로 했으므로  String으로 넘겨주어야 한다.
+					}
+					
+					
+					while( !( loop > blockSize || pageNo > totalPage)) {
+						
+						if(pageNo == currentShowPageNo) {
+							pageBarHTML += "<li style='display:inline-block; width:30px; font-size:11pt; border:solid 1px gray; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
+						}
+						else {
+							pageBarHTML += "<li style='display:inline-block; width:30px; font-size:11pt;'><a href='javascript:goReadComment(\""+pageNo+"\")'>"+pageNo+"</a></li>";
+						}
+						
+						loop++;
+						pageNo ++;
+					}// end of while --------------------------------------
+					
+					
+					// === [다음] 만들기 ===
+					if( !(pageNo > totalPage) ) { // 맨 마지막으로 빠져나온것이 아니라면 [다음]을 보인다.
+						pageBarHTML += "<li style='display:inline-block; width:50px; font-size:11pt;'><a href='javascript:goReadComment(\""+(pageNo+1)+"\")'>[다음]</a></li>";
+					}
+					
+					pageBarHTML += "</ul>";
+					
+					$("#pageBar").html(pageBarHTML);
+					pageBarHTML = "";
+				}
+				else {
+					// 댓글이 없는 경우 
+					$("#pageBar").empty();
+				}
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
 		
 	}
 	
@@ -297,7 +378,7 @@
 			dataType:"JSON",
 			success:function(json) {
 				if(json.n == 1){
-					goReadComment(); // 댓글 내용(페이징처리 x) 보여주기
+					goReadComment("1"); // 댓글 내용(페이징처리 x) 보여주기
 				}
 			},
 			error: function(request, status, error){
@@ -360,7 +441,7 @@
 				<p><span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">다음글&nbsp;:&nbsp;${bvo.nextsubject}</span></p>
 			</div>
 			<div id="button" >
-				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href=''">목록보기</button>
+				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/editView.top?board_seq=${bvo.board_seq}'">수정</button>
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="goDelete();">삭제</button>
 			</div>
@@ -379,6 +460,9 @@
 				</thead> -->
 				<tbody id="commentView"></tbody>
 			</table>
+			
+			<%-- pageBar --%>
+			<div id="pageBar" style="border:solid 0px gray; margin: 10px auto; text-align: center;"></div>
 			
 			<%-- 댓글 쓰기  --%>
 			<div>

@@ -199,6 +199,20 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return commentList;
 	}
 
+	// 댓글 내용(페이징처리 o) 보여주기
+	@Override
+	public List<CommentVO> getCommentListPaging(HashMap<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("freeboard.getCommentListPaging", paraMap);
+		return commentList;
+	}
+	
+	// 원글 글번호에(parentSeq)에 해당하는 댓글의 총갯수를 알아오기
+	@Override
+	public int getCommentTotalPage(HashMap<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("freeboard.getCommentTotalPage", paraMap);
+		return totalCount;
+	}
+	
 	// 총 게시물 건수(totalCount)
 	@Override
 	public int getTotalCount(HashMap<String, String> paraMap) {
@@ -226,6 +240,10 @@ public class ChoijhDAO implements InterChoijhDAO {
 		int result = sqlsession.update("freeboard.updateChildCommentCnt", fk_board_seq);
 		return result;
 	}
+
+	
+
+	
 
 	
 
