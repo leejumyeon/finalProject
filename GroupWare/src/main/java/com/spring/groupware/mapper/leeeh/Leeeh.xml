@@ -538,7 +538,7 @@
 	
 	<!-- === 모든 회원 정보 가져오기 === -->
 	<select id="getAllEmployeeList" resultType="com.spring.groupware.commonVO.EmployeesVO">
-		select T.employee_seq, T.employee_name, T.employee_id, T.email, T.hire_date, T.fk_position, T.fk_department, T.position_salary
+		select T.employee_seq, T.employee_name, T.employee_id, T.email, T.phone, T.hire_date, T.fk_position, T.position_name, T.fk_department, T.department_name, T.position_salary
 		     , T.grade, ES.status_name
 		from
 		(

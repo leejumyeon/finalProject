@@ -113,7 +113,12 @@
 					}
 					else if(json.isLogin == '1') {
 						
-						window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+						if(json.grade == '1') {
+							window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+						}
+						else {
+							location.herf="<%= request.getContextPath()%>/twoChoice.top"
+						}
 					}
 				}
 				

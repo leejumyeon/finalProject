@@ -1729,4 +1729,50 @@ public class LeeehController {
 		
 		return jsObj.toString();
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/getAllEmployee.top", produces="text/plain;charset=UTF-8")
+	public String getAllEmployee(HttpServletRequest request) {
+		
+		String image = request.getParameter("image");
+		
+		List<EmployeesVO> allEmployeeList = service.getAllEmployeeList();
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(EmployeesVO evo : allEmployeeList) {
+			
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("id", evo.getFk_position());
+			
+			String phone = "";
+			
+			try {
+				aes = new AES256(key);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				phone = aes.decrypt(evo.getPhone());
+			} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+				e.printStackTrace();
+			}
+			
+			jsObj.put("title", phone);
+			jsObj.put("name", evo.getPosition_name() + evo.getEmployee_name());
+			jsObj.put("image", image);
+			
+			jsArr.put(jsObj);
+		}
+		
+		return jsArr.toString();
+	}
+	
+	@RequestMapping(value="/veiwCompany.top")
+	public ModelAndView veiwCompany(ModelAndView mav) {
+		
+		mav.setViewName("companyinfo/companyInfo.tiles1");
+		return mav;
+	}
 }
