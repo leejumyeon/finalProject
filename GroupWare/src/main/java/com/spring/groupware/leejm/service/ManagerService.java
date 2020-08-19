@@ -102,6 +102,27 @@ public class ManagerService implements InterManagerService {
 		List<ChartVO> saleChartList = dao.saleChartList();
 		return saleChartList;
 	}
+
+	// 매출관리 - 인건비 조회
+	@Override
+	public List<ChartVO> laborCostChartList() {
+		List<ChartVO> laborCostChartList = dao.laborCostChartList();
+		return laborCostChartList;
+	}
+
+	// 매출관리 - 시설유지비 조회
+	@Override
+	public List<ChartVO> maintainChartList() {
+		List<ChartVO> maintainChartList = dao.maintainChartList();
+		return maintainChartList;
+	}
+
+	// 매출관리 - 순이익조회
+	@Override
+	public List<ChartVO> profitChartList() {
+		List<ChartVO> profitChartList = dao.profitChartList();
+		return profitChartList;
+	}
 	
 
 }

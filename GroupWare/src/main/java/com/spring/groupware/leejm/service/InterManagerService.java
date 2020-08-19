@@ -45,4 +45,13 @@ public interface InterManagerService {
 	// 매출관리 - 프로젝트 매출금액 조회
 	List<ChartVO> saleCartList();
 
+	// 매출관리 - 인건비 조회
+	List<ChartVO> laborCostChartList();
+
+	// 매출관리 - 시설유지비 조회
+	List<ChartVO> maintainChartList();
+
+	// 매출관리 - 순이익 조회
+	List<ChartVO> profitChartList();
+
 }

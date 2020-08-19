@@ -43,4 +43,13 @@ public interface InterManagerDAO {
 	// 매출 관리 - 매출금액 조회
 	List<ChartVO> saleChartList();
 
+	// 매출 관리 - 인건비 조회
+	List<ChartVO> laborCostChartList();
+
+	// 매출 관리 - 시설유지비 조회
+	List<ChartVO> maintainChartList();
+
+	// 매출 관리 - 순이익 조회
+	List<ChartVO> profitChartList();
+
 }

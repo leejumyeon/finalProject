@@ -109,6 +109,7 @@
 			 }
 		});
 		
+		
 		if(${paraMap != null}) {
 			$("#searchType").val("${paraMap.searchType}");
 			$("#searchWord").val("${paraMap.searchWord}");
@@ -121,7 +122,7 @@
 	// 게시글 상세보기 페이지로 이동
 	function goDetailView(board_seq) {
 		
-		alert(board_seq);
+	//	alert(board_seq);
 		
 		var frm = document.detailViewFrm;
 		frm.board_seq.value = board_seq;

@@ -120,7 +120,7 @@
 	}
 	
 	#commentViewTbl{
-		width: 750px;
+		width: 730px;
 	}
 	    
 	#commentViewTbl, #commentViewTbl tr, #commentViewTbl td {
@@ -144,6 +144,18 @@
 		color: gray;
 		font-weight: bold;
 		font-size: 9pt;
+	}
+	
+	#scroll {
+		margin-top: 80px;
+		width: 750px;
+		max-height: 300px;
+		overflow-y: scroll;
+	}
+	
+	.move:hover {
+		color: blue;
+		font-weight: bold;
 	}
 	
 </style>
@@ -183,7 +195,7 @@
 			return;
 		}
 		
-		alert(commentContent);
+	//	alert(commentContent);
 		
 		$.ajax({
 			
@@ -272,7 +284,7 @@
 		$.ajax({
 			url:"<%= ctxPath%>/freeboard/getCommentTotalPage.top",
 			data:{"fk_board_seq":"${bvo.board_seq}",
-				  "sizePerPage":"5"},
+				  "sizePerPage":"10"},
 			type:"GET",
 			dataType:"JSON",
 			success:function(json){	
@@ -435,34 +447,46 @@
 			</form>	
 			<br/>
 			<div>
-				<p><span class="move" onclick="javascript:location.href='?board_seq=${bvo.previousseq}'" style="cursor: pointer;">이전글&nbsp;:&nbsp;${bvo.previoussubject}</span></p>
+				<p>이전글&nbsp;:&nbsp;<span class="move" onclick="javascript:location.href='?board_seq=${bvo.previousseq}'" style="cursor: pointer;">${bvo.previoussubject}</span></p>
 			</div>
 			<div>
-				<p><span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">다음글&nbsp;:&nbsp;${bvo.nextsubject}</span></p>
+				<p>다음글&nbsp;:&nbsp;<span class="move" onclick="javascript:location.href='?board_seq=${bvo.nextseq}'" style="cursor: pointer;">${bvo.nextsubject}</span></p>
 			</div>
 			<div id="button" >
-				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
+			
+				<c:if test="${not empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/${gobackURL}'">목록보기</button>
+				</c:if>
+				<c:if test="${empty gobackURL}">
+					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">목록보기</button>
+				</c:if>
+				
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= ctxPath%>/freeboard/editView.top?board_seq=${bvo.board_seq}'">수정</button>
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="goDelete();">삭제</button>
 			</div>
 			
 			<div style="clear: both;"></div>
 			
-			<%-- 댓글 보여지는 곳 --%>
-			<table id="commentViewTbl" style="margin-top: 80px;">
-		   <!-- <thead>
-				<tr>
-				    <th style="width: 10%; text-align: center;">번호</th>
-					<th style="width: 60%; text-align: center;">내용</th>
-					<th style="width: 10%; text-align: center;">작성자</th>
-					<th style="text-align: center;">작성일자</th>
-				</tr>
-				</thead> -->
-				<tbody id="commentView"></tbody>
-			</table>
 			
-			<%-- pageBar --%>
-			<div id="pageBar" style="border:solid 0px gray; margin: 10px auto; text-align: center;"></div>
+			<div id="scroll">
+				<%-- 댓글 보여지는 곳 --%>
+				<table id="commentViewTbl">
+				   <!-- <thead>
+						<tr>
+						    <th style="width: 10%; text-align: center;">번호</th>
+							<th style="width: 60%; text-align: center;">내용</th>
+							<th style="width: 10%; text-align: center;">작성자</th>
+							<th style="text-align: center;">작성일자</th>
+						</tr>
+						</thead> -->
+					<tbody id="commentView"></tbody>
+				</table>
+				
+				<%-- pageBar --%>
+				<div id="pageBar" style="border:solid 0px gray; margin: 10px auto; text-align: center;"></div>
+			</div>
+			
+			
 			
 			<%-- 댓글 쓰기  --%>
 			<div>

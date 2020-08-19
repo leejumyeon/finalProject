@@ -69,6 +69,12 @@ public interface InterChoijhService {
 
 	int addChildComment(CommentVO cvo); // 답글쓰기 및 원글게시물 댓글수 +1 증가
 
+	List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap); // 보존할 것들 이외 삭제할 첨부파일 번호 조회
+
+	int deleteFile(HashMap<String, Object> paraMap); // 게시글 수정 - 첨부파일 삭제
+
+	int insertFile(AttachFileVO uploadFile); // 게시글 수정 -첨부파일 추가
+
 	
 
 	

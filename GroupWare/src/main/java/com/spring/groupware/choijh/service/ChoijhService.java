@@ -264,6 +264,7 @@ public class ChoijhService implements InterChoijhService {
 		return boardList;
 	}
 
+	
 	// 답글쓰기 및 원글게시물 댓글수 +1 증가
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
@@ -279,6 +280,29 @@ public class ChoijhService implements InterChoijhService {
 		}
 		
 		return result;
+	}
+
+	
+	// 보존할 것들 이외 삭제할 첨부파일 번호 조회
+	@Override
+	public List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap) {
+		List<AttachFileVO> deleteFileList = dao.deleteFileList(paraMap);
+		return deleteFileList;
+	}
+
+
+	// 게시글 수정 - 첨부파일 삭제
+	@Override
+	public int deleteFile(HashMap<String, Object> paraMap) {
+		int n = dao.deleteFile(paraMap);
+		return n;
+	}
+
+	// 게시글 수정 - 첨부파일 추가
+	@Override
+	public int insertFile(AttachFileVO uploadFile) {
+		int n = dao.insertFile(uploadFile);
+		return n;
 	}
 
 	

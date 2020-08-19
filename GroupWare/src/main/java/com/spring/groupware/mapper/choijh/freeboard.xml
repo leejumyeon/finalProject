@@ -224,5 +224,32 @@
 	
 	
 	
+	<!-- 게시글 수정 - 삭제할 파일 조회 -->
+	<select id="deleteFileList" parameterType="HashMap" resultType="com.spring.groupware.commonVO.AttachFileVO">
+		select file_seq, fileName, orgFileName, fileSize, fk_board_seq 
+		from attachFile_table where fk_board_seq = #{board_seq} 
+		<if test="maintainSeq != null">
+			<foreach collection="maintainSeq" index="i" open="and not file_seq in(" separator="," close=")">
+				${maintainSeq[i]}
+			</foreach>
+		</if>
+	</select>
+	
+	
+	<!-- 게시글 수정 - 첨부파일 삭제 -->
+	<delete id="deleteFile" parameterType="HashMap">
+		delete from attachFile_table where file_seq in 
+		<foreach collection="deleteFileList" item="deleteFile" open="(" separator="," close=")">
+			${deleteFile.file_seq}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 게시글 수정 - 첨부파일 추가 -->
+	<insert id="insertFile" parameterType="com.spring.groupware.commonVO.AttachFileVO">
+		insert into attachFile_table(file_seq, fk_board_seq, fileName, orgFileName, fileSize)
+		values(attachFile_table_seq.nextval, #{fk_board_seq}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
 	
 </mapper>

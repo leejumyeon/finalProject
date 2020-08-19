@@ -557,7 +557,7 @@
 	
 	// 글을 쓰고 전송 버튼을 클릭했을 시
 	function goWriteMsg(roomNumber, sEmployee_seq, content) {
-		alert("전송:"+content);
+	//	alert("전송:"+content);
 		$.ajax({
 			url:"/groupware/goWriteMsg.top",
 			async: false,
@@ -628,7 +628,7 @@
 	
 	// 대화목록에서  대화방 클릭시 대화창으로 이동하기
 	function goMsgWriteView(roomNumber, sEmployee_seq) {
-		alert("roomNumber : " + roomNumber + " sEmployee_seq : " + sEmployee_seq);
+	//	alert("roomNumber : " + roomNumber + " sEmployee_seq : " + sEmployee_seq);
 		$("#roomNumber").val(roomNumber);
 		
 		// 1초마다 채팅방 내용 읽어오기
@@ -683,7 +683,7 @@
 			success:function(json){
 				
 				if(json.roomNumber != -1 ){
-					alert("방생성완료");
+				//	alert("방생성완료");
 					
 					var roomNumber = json.roomNumber;
 					

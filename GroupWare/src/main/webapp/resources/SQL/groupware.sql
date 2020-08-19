@@ -599,6 +599,7 @@ create table attachFile_table
 ,constraint pk_attachFile_table primary key(file_seq)
 ,constraint fk_attachFile_board foreign key(fk_board_seq) references board_table(board_seq) on delete cascade
 );
+
 create SEQUENCE attachFile_table_seq
 start with 1 -- 시작값
 increment by 1 -- 증가값

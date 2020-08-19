@@ -241,6 +241,27 @@ public class ChoijhDAO implements InterChoijhDAO {
 		return result;
 	}
 
+	// 보존할 것들 이외 삭제할 첨부파일 번호 조회
+	@Override
+	public List<AttachFileVO> deleteFileList(HashMap<String, Object> paraMap) {
+		List<AttachFileVO> deleteFileList = sqlsession.selectList("freeboard.deleteFileList", paraMap);
+		return deleteFileList;
+	}
+
+	// 게시글 수정 - 첨부파일 삭제
+	@Override
+	public int deleteFile(HashMap<String, Object> paraMap) {
+		int n = sqlsession.delete("freeboard.deleteFile", paraMap);
+		return n;
+	}
+
+	// 게시글 수정 - 첨부파일 추가
+	@Override
+	public int insertFile(AttachFileVO uploadFile) {
+		int n = sqlsession.insert("freeboard.insertFile", uploadFile);
+		return n;
+	}
+
 	
 
 	
