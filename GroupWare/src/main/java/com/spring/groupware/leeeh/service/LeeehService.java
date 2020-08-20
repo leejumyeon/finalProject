@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.groupware.commonVO.AttendanceVO;
 import com.spring.groupware.commonVO.ClubVO;
 import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
@@ -658,6 +659,15 @@ public class LeeehService implements InterLeeehService {
 		EmployeesVO employeeInfo = dao.getEmployeeSalary(employee_seq);
 		
 		return employeeInfo;
+	}
+
+	// === 출퇴근 테이블 가져오기 === //
+	@Override
+	public List<AttendanceVO> getAttendenceInfo(String employee_seq) {
+
+		List<AttendanceVO> attendanceList = dao.getAttendenceInfo(employee_seq);
+		
+		return attendanceList;
 	}
 
 }

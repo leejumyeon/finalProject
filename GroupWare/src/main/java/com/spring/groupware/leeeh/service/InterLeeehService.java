@@ -3,6 +3,7 @@ package com.spring.groupware.leeeh.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.groupware.commonVO.AttendanceVO;
 import com.spring.groupware.commonVO.ClubVO;
 import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
@@ -170,5 +171,7 @@ public interface InterLeeehService {
 	List<HashMap<String, String>> getDepartmentMenberCnt();	// 부서별 인원 수 % 얻어오기
 
 	EmployeesVO getEmployeeSalary(String employee_seq);	// 검색한 사원의 정보 급여정보 알아오기
+
+	List<AttendanceVO> getAttendenceInfo(String employee_seq);	// 검색한 사원의 출퇴근 정보 받아오기
 
 }
