@@ -525,41 +525,62 @@
 									</c:if>
 										<c:choose>
 											<c:when test="${mail.readStatus eq 0 }">
-											<div style="color:blue">${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
+											<div style="color:blue; cursor: pointer;" onclick="goRead('${mail.mail_seq}')">${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
 											</c:when>
 											<c:otherwise>
-											<div>${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
+											<div onclick="goRead('${mail.mail_seq}')" style="cursor: pointer;">${mail.employee_name}(${mail.email})<span style="float:right;">${mail.regDate}</span></div> 
 											</c:otherwise>
 										</c:choose>
 									</div>
 									
 									
 									<div style="clear:both;"></div>
-									<div>
-										<c:choose>
-											<c:when test="${mail.status eq 2}">
-												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[내게 쓴 메일]${mail.subject}</td>
+									<c:choose>
+											<c:when test="${mail.readStatus eq 0 }">
+											<div style="color:blue; cursor: pointer;">
+												<c:choose>
+													<c:when test="${mail.status eq 2}">
+														<div  onclick="goRead('${mail.mail_seq}')" >[내게 쓴 메일]${mail.subject}</div>
+													</c:when>
+													<c:when test="${mail.status eq 1}">
+														<div  onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</div>
+													</c:when>
+													<c:when test="${mail.status eq 0}">
+														<div  onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</div>
+													</c:when>
+												</c:choose>
+											</div>
 											</c:when>
-											<c:when test="${mail.status eq 1}">
-												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</td>
-											</c:when>
-											<c:when test="${mail.status eq 0}">
-												<td class='mailSubject' onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</td>
-											</c:when>
-										</c:choose>
-									</div>
+											<c:otherwise>
+											<div>
+												<c:choose>
+													<c:when test="${mail.status eq 2}">
+														<div  onclick="goRead('${mail.mail_seq}')">[내게 쓴 메일]${mail.subject}</div>
+													</c:when>
+													<c:when test="${mail.status eq 1}">
+														<div onclick="goRead('${mail.mail_seq}')">[받은 메일]${mail.subject}</div>
+													</c:when>
+													<c:when test="${mail.status eq 0}">
+														<div  onclick="goRead('${mail.mail_seq}')">[보낸 메일]${mail.subject}</div>
+													</c:when>
+												</c:choose>
+											</div>
+											</c:otherwise>
+									</c:choose>
+									
+									
 								</div>
 								<div align="left">
 									<c:if test="${not empty mail.fileName1}">
-										<div style="border:solid 1px black; cursor: pointer;" onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1} <span style="float:right">${mail.fileSize1}</span></div>
+										<div style="border:solid 0px black; cursor: pointer;" onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1} <span style="float:right">${mail.fileSize1}</span></div>
 										<div style="clear:both;"></div>
 									</c:if>
 									<c:if test="${not empty mail.fileName2}">
-										<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}<span style="float:right">${mail.fileSize2}</span></div>
+										<div style="border:solid 0px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}<span style="float:right">${mail.fileSize2}</span></div>
 										<div style="clear:both;"></div>
 									</c:if>
 									<c:if test="${not empty mail.fileName3}">
-										<div style="border:solid 1px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}<span style="float:right">${mail.fileSize3}</span></div>
+										<div style="border:solid 0px black; margin-top:3px; cursor: pointer;" onclick="func_download('${mail.fileName2}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}<span style="float:right">${mail.fileSize3}</span></div>
 										<div style="clear:both;"></div>
 									</c:if>
 								</div>

@@ -129,7 +129,7 @@
 		
 		<div class="subMailBtn">
 			<div style="border:solid 0px black; width: 50px; height: 50px;" class="attach">
-				<img src="<%=ctxPath%>/resources/sideImg/attach.jpg" width="100%;"/>
+				<img src="<%=ctxPath%>/resources/sideImg/attach.jpg" width="100%;" class="attach"/>
 			</div>
 			<div style="border:solid 0px green" class="attach">첨부</div>
 		</div>
