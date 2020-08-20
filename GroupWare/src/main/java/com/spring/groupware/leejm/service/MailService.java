@@ -33,7 +33,7 @@ public class MailService implements InterMailService{
 		int result = 0;
 		for(MailVO mail : mailList) {
 			
-			System.out.println("확인용 : " + mail.getFk_employee_seq());
+		//	System.out.println("확인용 : " + mail.getFk_employee_seq());
 			
 			result += dao.mailSend(mail);
 		}

@@ -127,7 +127,7 @@ public class FileManager {
 		파일을 다운로드하는 데이터 전송에 있어서 다운로드 될 파일의 정보는 response에 담아주게 된다.
     */
 		
-		System.out.println("path:"+path+"/ fileName"+saveFilename+"/ orgFileName:"+originalFilename);
+	//	System.out.println("path:"+path+"/ fileName"+saveFilename+"/ orgFileName:"+originalFilename);
 		
 		String pathname = path + File.separator + saveFilename;
 		// File.separator 은 운영체제에서 사용하는 파일경로의 구분자 이다.

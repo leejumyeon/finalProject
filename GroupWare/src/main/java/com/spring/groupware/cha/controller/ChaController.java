@@ -89,7 +89,7 @@ public class ChaController {
 		String backgroundColor = request.getParameter("backgroundColor");
 		String allDay = request.getParameter("allDay");
 		
-		System.out.println(employee_id+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor);
+	//	System.out.println(employee_id+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor);
 		
 		HashMap<String, String> paraMap = new HashMap<>();		
 		paraMap.put("employee_id", employee_id);
@@ -124,7 +124,7 @@ public class ChaController {
 		String backgroundColor = request.getParameter("backgroundColor");
 		String allDay = request.getParameter("allDay");
 		
-		System.out.println(employee_id+"/"+calendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor);
+	//	System.out.println(employee_id+"/"+calendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor);
 		
 		HashMap<String, String> paraMap = new HashMap<>();
 		paraMap.put("employee_id", employee_id);
@@ -328,7 +328,7 @@ public class ChaController {
 		String board_seq = request.getParameter("board_seq");	
 		String fk_category_num = request.getParameter("fk_category_num");
 		
-		System.out.println(fk_category_num);
+	//	System.out.println(fk_category_num);
 		
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
@@ -419,14 +419,6 @@ public class ChaController {
 	// ------------------------------ 메인페이지(공지사항 및 자주묻는 질문, 자유게시판, 앨범게시판) - 끝  ----------------------------------------------
 	
 	// ------------------------------ 관리자 메인페이지(회사 일정 캘린더) - 시작 ----------------------------------------------
-	
-	// 관리자 메인페이지(회사 일정 캘린더) - 뷰페이지	
-	@RequestMapping(value="/adminMain.top")
-	public String clup() {
-		
-		return "admin/adminMain.tiles3";
-		
-	}
 	
 	// 관리자 메인페이지(회사 일정 캘린더) -  일반 메인페이지 캘린더 DB값 얻어오기(뿌리기)
 	@ResponseBody
@@ -530,7 +522,7 @@ public class ChaController {
 		String fk_department_seq = request.getParameter("edit-username");
 		String calendar_category = request.getParameter("edit-type");
 		
-		System.out.println(employee_id+"/"+comCalendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor+"/"+fk_department_seq+"/"+calendar_category);
+	//	System.out.println(employee_id+"/"+comCalendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor+"/"+fk_department_seq+"/"+calendar_category);
 		
 		HashMap<String, String> paraMap = new HashMap<>();		
 		paraMap.put("employee_id", employee_id);

@@ -271,7 +271,7 @@ public class ChoijhController {
 			m = service.groupChattRoomCreate_Other(map); // 그룹채팅 방 생성하기(자신) 
 		}
 		
-		System.out.println("m : " + m + " n : " + n);
+	//	System.out.println("m : " + m + " n : " + n);
 		  
 		if(m*n == 0) { // 자신과 상대방 둘중 하나라도 방 생성이 안된경우
 			roomNumber = "-1";
@@ -702,10 +702,10 @@ public class ChoijhController {
 			for(int i=0; i<attachList.size(); i++) {
 				if(attachList.get(i).isEmpty()) { // input[name=attach](게시글에 이미 첨부된 파일)태그가 있으면서 값이 null = 현재 상태 유지
 					maintainSeq.add(file_seqArr[i]);
-					System.out.println("보존할 파일:"+file_seqArr[i]);
+				//	System.out.println("보존할 파일:"+file_seqArr[i]);
 				}
 				else {
-					System.out.println("업데이트 파일:"+file_seqArr[i]);
+				//	System.out.println("업데이트 파일:"+file_seqArr[i]);
 				}
 			}
 			paraMap.put("maintainSeq", maintainSeq);
@@ -715,7 +715,7 @@ public class ChoijhController {
 		List<AttachFileVO> deleteFileList = null;
 		deleteFileList = service.deleteFileList(paraMap); // 보존할 것들 이외 삭제할 첨부파일 번호 조회
 		for(AttachFileVO deleteFile : deleteFileList) { 
-			System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
+		//	System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
 		}
 		
 		// 업로드 파일 삭제 및 DB삭제
@@ -751,7 +751,7 @@ public class ChoijhController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
 						fileSize = attachList.get(i).getSize();
-						System.out.println("업데이트할 파일명:"+newFileName);
+					//	System.out.println("업데이트할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(bvo.getBoard_seq());
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));
@@ -779,7 +779,7 @@ public class ChoijhController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
 						fileSize = newAttachList.get(i).getSize();
-						System.out.println("추가할 파일명:"+newFileName);
+					//	System.out.println("추가할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(bvo.getBoard_seq());
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));

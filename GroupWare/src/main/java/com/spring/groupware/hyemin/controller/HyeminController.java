@@ -277,7 +277,7 @@ public class HyeminController {
 		String content = mrequest.getParameter("content");
 		List<MultipartFile> attachList = mrequest.getFiles("attach");
 		
-		System.out.println("attachList:"+attachList.size());
+	//	System.out.println("attachList:"+attachList.size());
 		
 		List<AttachFileVO> attachfileList = new ArrayList<AttachFileVO>(); //결과물 list
 		
@@ -308,7 +308,7 @@ public class HyeminController {
 				
 				for(int i=0; i<attachList.size(); i++) {
 					if(!attachList.get(i).isEmpty()) {
-						System.out.println("파일 업로드");
+					//	System.out.println("파일 업로드");
 						byte[] bytes = null;
 						long fileSize = 0;
 						
@@ -323,7 +323,7 @@ public class HyeminController {
 							// 위의 것이 파일 올리기를 해주는 것이다.
 							// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 							
-							System.out.println(">>>> 확인용 fileName ==> " + fileName);
+						//	System.out.println(">>>> 확인용 fileName ==> " + fileName);
 							
 						//	3. AttachFileVO attachfilevo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기
 							
@@ -434,7 +434,7 @@ public class HyeminController {
 		List<MultipartFile> attachList = mrequest.getFiles("attach"); //기존 파일 (업데이트)
 		List<MultipartFile> newAttachList = mrequest.getFiles("newAttach"); // 새롭게 추가하는 파일
 		
-		System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
+	//	System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
 		
 		HashMap<String, Object> paraMap = new HashMap<>();
 		paraMap.put("board_seq", board_seq);
@@ -456,10 +456,10 @@ public class HyeminController {
 			for(int i=0; i<attachList.size(); i++) {
 				if(attachList.get(i).isEmpty()) { // input[name=attach](게시글에 이미 첨부된 파일)태그가 있으면서 값이 null = 현재 상태 유지
 					maintainSeq.add(file_seqArr[i]);
-					System.out.println("보존할 파일:"+file_seqArr[i]);
+				//	System.out.println("보존할 파일:"+file_seqArr[i]);
 				}
 				else {
-					System.out.println("업데이트 파일:"+file_seqArr[i]);
+				//	System.out.println("업데이트 파일:"+file_seqArr[i]);
 				}
 			}
 			paraMap.put("maintainSeq", maintainSeq);
@@ -469,7 +469,7 @@ public class HyeminController {
 		List<AttachFileVO> deleteFileList = null;
 		deleteFileList = mService.deleteFileList(paraMap); //보존할 것들 이외 삭제할 첨부파일 번호 조회
 		for(AttachFileVO deleteFile : deleteFileList) { 
-			System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
+		//	System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
 		}
 		
 		// 업로드 파일 삭제 및 DB삭제
@@ -505,7 +505,7 @@ public class HyeminController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
 						fileSize = attachList.get(i).getSize();
-						System.out.println("업데이트할 파일명:"+newFileName);
+					//	System.out.println("업데이트할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(board_seq);
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));
@@ -533,7 +533,7 @@ public class HyeminController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
 						fileSize = newAttachList.get(i).getSize();
-						System.out.println("추가할 파일명:"+newFileName);
+					//	System.out.println("추가할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(board_seq);
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));

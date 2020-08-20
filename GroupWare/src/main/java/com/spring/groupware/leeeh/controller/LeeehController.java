@@ -1302,7 +1302,7 @@ public class LeeehController {
 			}
 			else {
 				
-				System.out.println(paraMap.get("document_category"));
+			//	System.out.println(paraMap.get("document_category"));
 				service.updateDocumentStatus(paraMap);
 				
 				if("10".equals(docuvo.getDocument_category())) {
@@ -1520,6 +1520,19 @@ public class LeeehController {
 		return jsObj.toString();
 	}
 	
+	// 관리자 메인페이지(회사 일정 캘린더) - 뷰페이지	
+	@RequestMapping(value="/adminMain.top")
+	public ModelAndView clup(ModelAndView mav) {
+		
+		List<TimeAndAttVO> TAList = service.getTAList();
+		
+		mav.addObject("TAList", TAList);
+		mav.setViewName("admin/adminMain.tiles3");
+		
+		return mav;
+		
+	}
+		
 	// === 관리자-인사 관리(인사고과)페이지 이동 === //
 	@RequestMapping(value="/manager/HR/review.top")
 	public ModelAndView managerHRreview(ModelAndView mav, HttpServletRequest request) {
