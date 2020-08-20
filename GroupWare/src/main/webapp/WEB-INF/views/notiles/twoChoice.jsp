@@ -140,12 +140,12 @@
 		
 		$("#btnGoaAdminHome").click(function() {
 
-			window.open('<%= request.getContextPath()%>/adminMain.top', '관리자', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+			window.open('<%= request.getContextPath()%>/adminMain.top', '관리자', 'width = 1550, height = 780, location = yes, left = 200, top = 100');
 		});
 		
 		$("#btnGoMainHome").click(function() {
 			
-			window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+			window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 850, location = yes, left = 200, top = 100');
 		})
 		
 	});

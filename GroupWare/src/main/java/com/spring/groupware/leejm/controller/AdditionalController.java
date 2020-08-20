@@ -31,7 +31,7 @@ public class AdditionalController {
 	@RequestMapping(value="/messenger/open.top", produces = "text/plain;charset=UTF-8")
 	public String messengerOpen(HttpServletRequest request) {
 		String messengerStatus = request.getParameter("messengerStatus");
-		System.out.println("메신저 클릭");
+	//	System.out.println("메신저 클릭");
 		HttpSession session = request.getSession();
 		if("messengerClose".equals(messengerStatus)) {
 			session.removeAttribute("messenger");

@@ -53,7 +53,7 @@ public class MailController {
 		
 		if(selectCheck != null) {
 			for(String select : selectCheck) {
-				System.out.println(select);
+		//		System.out.println(select);
 			}
 			mav.addObject("selectCheck",selectCheck);
 		}
@@ -73,7 +73,7 @@ public class MailController {
 			searchWord = "";
 		}
 		paraMap.put("searchWord", searchWord);
-		System.out.println(type+"/"+searchWord);
+	//	System.out.println(type+"/"+searchWord);
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다.
 		int totalCount = 0;        // 총게시물 건수
@@ -119,7 +119,7 @@ public class MailController {
 		*/
 		
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
-		System.out.println("총 게시글 수:"+totalCount+"/ pageNo:"+pageNo+"/ currentPage:"+currentShowPageNo);
+	//	System.out.println("총 게시글 수:"+totalCount+"/ pageNo:"+pageNo+"/ currentPage:"+currentShowPageNo);
 		
 		// 리스트 조회 //
 		List<MailVO> mailList = service.mailList(paraMap);
@@ -186,7 +186,7 @@ public class MailController {
 			mav.addObject("mailhamType","메일 검색");
 		}
 		
-		System.out.println("결과물 수 : "+mailList.size());
+	//	System.out.println("결과물 수 : "+mailList.size());
 		
 		if(request.getParameter("msg")!=null && !request.getParameter("msg").trim().isEmpty()) {
 			mav.addObject("msg",request.getParameter("msg"));
@@ -244,7 +244,7 @@ public class MailController {
 		}
 		
 		for(String receiveSeq : receiveArr) {
-			System.out.println("확인용 받는 메일번호:"+receiveSeq);
+		//	System.out.println("확인용 받는 메일번호:"+receiveSeq);
 		}
 		
 		String subject = mrequest.getParameter("subject");
@@ -298,7 +298,7 @@ public class MailController {
 			
 			for(int i=0; i<attachList.size(); i++) {
 				if(!attachList.get(i).isEmpty()) {
-					System.out.println("파일 업로드");
+				//	System.out.println("파일 업로드");
 					byte[] bytes = null;
 					long fileSize = 0;
 					
@@ -315,8 +315,8 @@ public class MailController {
 						// 위의 것이 파일 올리기를 해주는 것이다.
 						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
-						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
-						System.out.println(">>>> 확인용 newFileName ==> " + newReceiveFileName);
+					//	System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+					//	System.out.println(">>>> 확인용 newFileName ==> " + newReceiveFileName);
 				
 					/*
 					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
@@ -372,7 +372,7 @@ public class MailController {
 		mailList.add(sendMail);
 		
 		if(receiveMail!=null) {
-			System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
+		//	System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
 			mailList.add(receiveMail);
 			
 			if(receiveArr.size()>1) {
@@ -401,14 +401,14 @@ public class MailController {
 			}
 			
 			for(MailVO mvo:mailList) {
-				System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
+			//	System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
 			}
 		}
 		
 		
 		int count = mailList.size();
 		int n = 0;
-		System.out.println("입력할 행의 수:"+count);
+	//	System.out.println("입력할 행의 수:"+count);
 		try{
 			n = service.mailSend(mailList);
 			if(n == count) {
@@ -497,7 +497,7 @@ public class MailController {
 		int totalCount = service.getTotalCount(paraMap);
 		mav.addObject("total",totalCount);
 		
-		System.out.println("mail_seq:"+mail_seq+"/type:"+type+"/searchWord:"+searchWord+"/loginSeq:"+emp.getEmployee_seq());
+	//	System.out.println("mail_seq:"+mail_seq+"/type:"+type+"/searchWord:"+searchWord+"/loginSeq:"+emp.getEmployee_seq());
 		
 		MailVO mail = null;
 		try {
@@ -507,7 +507,7 @@ public class MailController {
 				List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno());
 				
 				for(MailVO rec : receiver) {
-					System.out.println("받는사람:"+rec.getEmployee_name());
+				//	System.out.println("받는사람:"+rec.getEmployee_name());
 				}
 				
 				mav.addObject("sender",sender);
@@ -546,7 +546,7 @@ public class MailController {
 		 */
 		
 		// path 가 첨부파일을 저장할 WAS(톰캣)의 폴더가 된다.
-		System.out.println("~~~~ 확인용 path => " + path);
+	//	System.out.println("~~~~ 확인용 path => " + path);
 		// ~~~~ 확인용 path => C:\springworkspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\photo_upload
 		
 		File dir = new File(path);
@@ -594,7 +594,7 @@ public class MailController {
 			/// 웹브라우저상에 사진 이미지를 쓰기 ///
 			PrintWriter out = response.getWriter();
 			out.print(strURL);
-			System.out.println(strURL);
+		//	System.out.println(strURL);
 			
 		} catch(Exception e){
 			e.printStackTrace();
@@ -651,7 +651,7 @@ public class MailController {
 		paraMap.put("selectCheck", selectCheck);
 		
 		for(String select : selectCheck) {
-			System.out.println(select);
+		//	System.out.println(select);
 		}
 		
 		
@@ -768,7 +768,7 @@ public class MailController {
 		paraMap.put("selectCheck", selectCheck);
 		
 		for(String check: selectCheck) {
-			System.out.println("확인용:"+check);
+		//	System.out.println("확인용:"+check);
 		}
 		
 		int n = service.mailRestore(paraMap);
@@ -792,11 +792,11 @@ public class MailController {
 		String mail_seq = request.getParameter("readSeq"); //메일 번호
 		String secendType = request.getParameter("secendType"); //메일 타입(전달 or 답장)
 		
-		System.out.println("mail_seq:"+mail_seq+"/ secendType:"+secendType);
+	//	System.out.println("mail_seq:"+mail_seq+"/ secendType:"+secendType);
 		
 		MailVO mail = service.findMail(mail_seq); // 1개 메일 찾기
 		
-		System.out.println("메일그룹번호"+mail.getMail_groupno());
+	//	System.out.println("메일그룹번호"+mail.getMail_groupno());
 		
 		MailVO sender = service.mailSenderFind(mail.getMail_groupno()); //발신자
 		List<MailVO> receiver = service.mailReceiverFind(mail.getMail_groupno()); // 수신자
@@ -846,7 +846,7 @@ public class MailController {
 		}
 		
 		for(String receiveSeq : receiveArr) {
-			System.out.println("확인용 받는 메일번호:"+receiveSeq);
+		//	System.out.println("확인용 받는 메일번호:"+receiveSeq);
 		}
 		
 		String subject = mrequest.getParameter("subject");
@@ -901,7 +901,7 @@ public class MailController {
 		
 		if(!attachList.isEmpty()) {
 			for(int i=0; i<attachList.size(); i++) {
-				System.out.println(attachList.get(i).getOriginalFilename());
+			//	System.out.println(attachList.get(i).getOriginalFilename());
 				if(!attachList.get(i).isEmpty()) {
 					byte[] bytes = null;
 					long fileSize = 0;
@@ -919,7 +919,7 @@ public class MailController {
 						// 위의 것이 파일 올리기를 해주는 것이다.
 						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
-						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+					//	System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
 				
 					/*
 					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
@@ -1000,7 +1000,7 @@ public class MailController {
 			
 			for(int i=0; i<newAttachList.size(); i++) {
 				if(!newAttachList.get(i).isEmpty()) {
-					System.out.println("파일 업로드");
+				//	System.out.println("파일 업로드");
 					byte[] bytes = null;
 					long fileSize = 0;
 					
@@ -1017,7 +1017,7 @@ public class MailController {
 						// 위의 것이 파일 올리기를 해주는 것이다.
 						// attach.getOriginalFilename() 은 첨부된 파일의 파일명(강아지.png)이다.
 						
-						System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
+					//	System.out.println(">>>> 확인용 newFileName ==> " + newSendFileName);
 				
 					/*
 					 	3. BoardVO boardvo 에 fileName 값과 orgFileName 값과 fileSize 값을 넣어주기	 	
@@ -1068,7 +1068,7 @@ public class MailController {
 		
 		mailList.add(sendMail);
 		if(receiveMail!=null) {
-			System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
+		//	System.out.println("확인용 receiveMail번호"+receiveMail.getFk_employee_seq());
 			mailList.add(receiveMail);
 			
 			if(receiveArr.size()>1) {
@@ -1097,14 +1097,14 @@ public class MailController {
 			}
 			
 			for(MailVO mvo:mailList) {
-				System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
+			//	System.out.println("확인용 메일VO 번호:"+mvo.getFk_employee_seq());
 			}
 		}
 		
 		
 		int count = mailList.size();
 		int n = 0;
-		System.out.println("입력할 행의 수:"+count);
+	//	System.out.println("입력할 행의 수:"+count);
 		try{
 			n = service.mailSend(mailList);
 			if(n == count) {
@@ -1159,7 +1159,7 @@ public class MailController {
 		int cnt = service.getTotalCount(paraMap);
 		int result = service.mailDrop(loginSeq);
 		
-		System.out.println("cnt:"+cnt+"/result:"+result);
+	//	System.out.println("cnt:"+cnt+"/result:"+result);
 		
 		String msg = "";
 		if(cnt == 0) {
@@ -1268,7 +1268,7 @@ public class MailController {
 		
 		int count = mailList.size();
 		int n = 0;
-		System.out.println("입력할 행의 수:"+count);
+	//	System.out.println("입력할 행의 수:"+count);
 		
 		boolean result = false;
 		

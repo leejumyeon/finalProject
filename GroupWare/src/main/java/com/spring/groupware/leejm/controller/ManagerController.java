@@ -112,7 +112,7 @@ public class ManagerController {
 		List<MultipartFile> attachList = mrequest.getFiles("attach"); //기존 파일 (업데이트)
 		List<MultipartFile> newAttachList = mrequest.getFiles("newAttach"); // 새롭게 추가하는 파일
 		
-		System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
+	//	System.out.println("attachList:"+attachList.size()+" / newAttachList:"+newAttachList.size());
 		
 		HashMap<String, Object> paraMap = new HashMap<>();
 		paraMap.put("board_seq", board_seq);
@@ -134,10 +134,10 @@ public class ManagerController {
 			for(int i=0; i<attachList.size(); i++) {
 				if(attachList.get(i).isEmpty()) { // input[name=attach](게시글에 이미 첨부된 파일)태그가 있으면서 값이 null = 현재 상태 유지
 					maintainSeq.add(file_seqArr[i]);
-					System.out.println("보존할 파일:"+file_seqArr[i]);
+				//	System.out.println("보존할 파일:"+file_seqArr[i]);
 				}
 				else {
-					System.out.println("업데이트 파일:"+file_seqArr[i]);
+				//	System.out.println("업데이트 파일:"+file_seqArr[i]);
 				}
 			}
 			paraMap.put("maintainSeq", maintainSeq);
@@ -147,7 +147,7 @@ public class ManagerController {
 		List<AttachFileVO> deleteFileList = null;
 		deleteFileList = service.deleteFileList(paraMap); //보존할 것들 이외 삭제할 첨부파일 번호 조회
 		for(AttachFileVO deleteFile : deleteFileList) { 
-			System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
+		//	System.out.println("삭제할 파일:"+deleteFile.getFile_seq());
 		}
 		
 		// 업로드 파일 삭제 및 DB삭제
@@ -183,7 +183,7 @@ public class ManagerController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, attachList.get(i).getOriginalFilename(), path);
 						fileSize = attachList.get(i).getSize();
-						System.out.println("업데이트할 파일명:"+newFileName);
+					//	System.out.println("업데이트할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(board_seq);
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));
@@ -211,7 +211,7 @@ public class ManagerController {
 						
 						String newFileName = fileManager.doFileUpload(bytes, newAttachList.get(i).getOriginalFilename(), path);
 						fileSize = newAttachList.get(i).getSize();
-						System.out.println("추가할 파일명:"+newFileName);
+					//	System.out.println("추가할 파일명:"+newFileName);
 						attachFile.setFk_board_seq(board_seq);
 						attachFile.setFileName(newFileName);
 						attachFile.setFileSize(String.valueOf(fileSize));
@@ -318,10 +318,10 @@ public class ManagerController {
 	@ResponseBody
 	@RequestMapping(value="/manager/finance/salesChart.top",produces="text/plain;charset=UTF-8")
 	public String salesChart(HttpServletRequest request) {
-		System.out.println("매출차트 그리기");
+	//	System.out.println("매출차트 그리기");
 		List<ChartVO> projectChartList = service.saleCartList(); //프로젝트 매출금액 조회
 		
-		System.out.println("매출개수:"+projectChartList.size());
+	//	System.out.println("매출개수:"+projectChartList.size());
 		
 		JSONObject json = new JSONObject();
 		json.put("projectChartList", projectChartList);
@@ -332,10 +332,10 @@ public class ManagerController {
 	@ResponseBody
 	@RequestMapping(value="/manager/finance/profitChart.top",produces="text/plain;charset=UTF-8")
 	public String profitChart(HttpServletRequest request) {
-		System.out.println("순이익차트 그리기");
+	//	System.out.println("순이익차트 그리기");
 		List<ChartVO> profitChartList = service.profitChartList(); // 순이익 조회
 		
-		System.out.println("매출개수:"+profitChartList.size());
+	//	System.out.println("매출개수:"+profitChartList.size());
 		
 		JSONObject json = new JSONObject();
 		json.put("profitChartList", profitChartList);

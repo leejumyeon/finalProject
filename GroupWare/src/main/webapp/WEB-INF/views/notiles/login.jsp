@@ -114,7 +114,7 @@
 					else if(json.isLogin == '1') {
 						
 						if(json.grade == '1') {
-							window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+							window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 850, location = yes, left = 200, top = 100');
 							
 							locationPage();
 						}

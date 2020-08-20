@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 
-<meta charset="UTF-8">
-<title>캘린더</title>
+<%@ taglib prefix="c"	uri="http://java.sun.com/jsp/jstl/core"%>
 
 	<link rel= "shortcut icon" href="./resources/admincalendar/images/favicon.ico">
 
@@ -17,8 +15,96 @@
 
     <link rel= "stylesheet" href="./resources/admincalendar/css/main.css">
     
-   
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/data.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+	
 
+   
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		func_salesChart();
+		
+	});
+	
+	function func_salesChart(){
+		$.ajax({
+			url:"<%=request.getContextPath()%>/manager/finance/salesChart.top",
+			dataType:"JSON",
+			success:function(json){
+
+				var project_value = new Array;
+				var maintain_value = new Array;
+				var laborCost_value = new Array;
+				var category_value = new Array;
+				$.each(json.projectChartList, function(index, item) {
+					var comma = (index > 0) ? "," : "";
+					project_value.push(Number(item.project_value));
+					maintain_value.push(Number(item.maintain_value));
+					laborCost_value.push(Number(item.laborCost_value));
+					category_value.push(item.category);
+				});
+				
+				console.log(project_value);
+				Highcharts.chart('saleContainer', {
+	
+					 chart: {
+					        type: 'column'
+					    },
+					    title: {
+					        text: 'Monthly Average Rainfall'
+					    },
+					    subtitle: {
+					        text: 'Source: WorldClimate.com'
+					    },
+					    xAxis: {
+					        categories:category_value,
+					        crosshair: true
+					    },
+					    yAxis: {
+					        min: 0,
+					        title: {
+					            text: 'Rainfall (mm)'
+					        }
+					    },
+					    tooltip: {
+					        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+					        footerFormat: '</table>',
+					        shared: true,
+					        useHTML: true
+					    },
+					    plotOptions: {
+					        column: {
+					            pointPadding: 0.2,
+					            borderWidth: 0
+					        }
+					    },
+					    series: [{
+					        name: 'project_value',
+					        data: project_value
+	
+					    }, {
+					        name: 'laborCost_value',
+					        data: laborCost_value
+	
+					    }, {
+					        name: 'maintain_value',
+					        data: maintain_value
+					        
+					    }]
+	
+				});
+			},error:function(e){
+				
+			}
+		});
+	}
+</script>
 	 <div class="container" style="width: 700px; display: inline-block; float: left;">
 				
 	        <!-- 일자 클릭시 메뉴오픈 -->
@@ -93,8 +179,8 @@
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">부서명</label>
 	                                <select class="inputModal" type="text" name="edit-username" id="edit-username">
-	                                    <option value="1">개발팀</option>
-	                                    <option value="2">디자인팀</option>
+	                                    <option value="1">디자인팀</option>
+	                                    <option value="2">개발팀</option>
 	                                    <option value="3">영업팀</option>
 	                                    <option value="4">인사팀</option>
 	                                    <option value="5">경영지원팀</option>
@@ -104,7 +190,7 @@
 	                        <div class="row">
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-color">색상</label>
-	                                <select class="inputModal" name="color" id="edit-color">
+	                                <select class="inputModal" name="backgroundColor" id="edit-color">
 	                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
 	                                    <option value="#9775fa" style="color:#9775fa;">보라색</option>
 	                                    <option value="#ffa94d" style="color:#ffa94d;">주황색</option>
@@ -184,12 +270,120 @@
     </div>
     
     <div style="float: left; border: solid 0px green; width: 300px; height: 300px; padding-top: 22px;" >
-    	<div style="border: solid 1px blue; width: 730px; height: 267px;">
+    	<div style="width: 730px; height: 267px;">
 	        <h3>매출통계</h3>
+	        <div id="saleContainer">
+			</div>
         </div>
         <br/>
-        <div style="border: solid 1px red; width: 730px; height: 267px;">
+        <div style="width: 730px; height: 267px; margin-top: 180px;">
         	<h3>인사고과</h3>
+        	<table id="datatables" class="table">
+				<thead>
+					<tr>
+						<th class="ta_seq">고과번호</th>
+						<th class="employee_seq">사원번호</th>
+						<th>부서</th>
+						<th>사원</th>
+						<th>직책</th>
+						<th>근무태도</th>
+						<th>출결</th>
+						<th>업무성과</th>
+						<th>총평</th>
+						<th>부서장</th>
+						<th>기록날짜</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="tavo" items="${TAList}">
+						<tr class="pick">
+							<td class="ta_seq">${tavo.ta_seq}</td>
+							<td class="employee_seq">${tavo.fk_employee_seq}</td>
+							<td>${tavo.department_name}</td>
+							<td>${tavo.employee_name}</td>
+							<td>${tavo.position_name}</td>
+							<td>
+								<c:choose>
+									<c:when test="${tavo.attitude > 90}">
+										A
+									</c:when>
+									<c:when test="${tavo.attitude > 80}">
+										B
+									</c:when>
+									<c:when test="${tavo.attitude > 70}">
+										C
+									</c:when>
+									<c:when test="${tavo.attitude > 60}">
+										D
+									</c:when>
+									<c:otherwise>
+										F
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td>
+								<c:choose>
+									<c:when test="${tavo.attendance > 90}">
+										A
+									</c:when>
+									<c:when test="${tavo.attendance > 80}">
+										B
+									</c:when>
+									<c:when test="${tavo.attendance > 70}">
+										C
+									</c:when>
+									<c:when test="${tavo.attendance > 60}">
+										D
+									</c:when>
+									<c:otherwise>
+										F
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td>
+								<c:choose>
+									<c:when test="${tavo.performance > 90}">
+										A
+									</c:when>
+									<c:when test="${tavo.performance > 80}">
+										B
+									</c:when>
+									<c:when test="${tavo.performance > 70}">
+										C
+									</c:when>
+									<c:when test="${tavo.performance > 60}">
+										D
+									</c:when>
+									<c:otherwise>
+										F
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td>
+								<c:choose>
+									<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 270}">
+										A
+									</c:when>
+									<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 240}">
+										B
+									</c:when>
+									<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 210}">
+										C
+									</c:when>
+									<c:when test="${tavo.attitude + tavo.attendance + tavo.performance > 180}">
+										D
+									</c:when>
+									<c:otherwise>
+										F
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td>${tavo.manager}</td>
+							<td>${tavo.regDate}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
         </div> 	                     
     </div>
 	<div style="clear: both;"></div> 

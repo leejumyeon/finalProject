@@ -99,7 +99,7 @@ public class ChaDAO implements ChaInterDAO {
 		
 		int n = sqlsession.insert("cha.insertAdminCalendar", paraMap);
 		
-		System.out.println(n);
+	//	System.out.println(n);
 		
 		return n;
 	}
