@@ -33,6 +33,10 @@
 		display:none;
 	}
 	
+	.mailSubject{
+		width:50%;
+	}
+	
 	.mailSubject:hover{
 		cursor: pointer;
 		text-decoration: underline;
@@ -305,7 +309,7 @@
 			<div id="searchTypetArea"></div>
 		</div>
 		
-		<div id="mailFunctionArea">
+		<div id="mailFunctionArea" style="margin-top:5px;">
 			<input type="checkbox" id="allCheck" style="margin-left:10px;"/>
 			<c:if test="${readStatus eq '1'}">
 				<button type="button" class="noread">안읽음</button>

@@ -33,6 +33,9 @@
 	.hide{
 		display:none;
 	}
+	.download:hover{
+		text-decoration: underline;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -218,7 +221,7 @@
 			<div id="searchTypetArea"></div>
 		</div>
 		
-		<div id="mailFunctionArea">
+		<div id="mailFunctionArea" style="margin-top:5px;">
 			<c:choose>
 				<c:when test="${type eq 'del'}">
 					<button type="button" onclick = "mailDeletion()">영구삭제</button>
@@ -235,7 +238,7 @@
 			
 		</div>
 	</div>
-		<div id="mailDetail">
+		<div id="mailDetail" style="border-top:solid 1px #e7e7e7; margin-top:15px;">
 			<div id="subject">
 				<h3>${mail.subject}</h3>
 			</div>
@@ -258,23 +261,23 @@
 			<input type="hidden" name="fileName" />
 			<input type="hidden" name="orgFileName" />
 			<input type="hidden" name="status" />
-			<div>
-				<div style="display: inline-block;">첨부파일</div>
+			<div style="border-bottom: solid 1px #e7e7e7;">
+				<div style="display: inline-block;">첨부파일 : </div>
 				<div style="display: inline-block;">
 					<c:if test="${not empty mail.fileName1}">
-						<div onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1}</div>
+						<div style="cursor: pointer;" class="download" onclick="func_download('${mail.fileName1}','${mail.orgFileName1}','${mail.status}')">${mail.orgFileName1}</div>
 					</c:if>	
 					<c:if test="${not empty mail.fileName2}">
-						<div onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}</div>
+						<div style="cursor:  pointer;" class="download" onclick="func_download('${mail.fileName2}','${mail.orgFileName2}','${mail.status}')">${mail.orgFileName2}</div>
 					</c:if>	
 					<c:if test="${not empty mail.fileName3}">
-						<div onclick="func_download('${mail.fileName3}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}</div>
+						<div style="cursor: pointer;" class="download" onclick="func_download('${mail.fileName3}','${mail.orgFileName3}','${mail.status}')">${mail.orgFileName3}</div>
 					</c:if>	
 				</div>
 			</div>
 			</form>
 			
-			<div id="content">
+			<div id="content" style="min-height: 300px;">
 				${mail.content}
 			</div>
 		</div>
@@ -284,13 +287,13 @@
 		<input type="hidden" value="" name="readSeq" />
 		<input type="hidden" value="" name="selectCheck" />
 		<input type="hidden" name="searchWord" value="${searchWord}" />
-		<div id="other">
-			<ul>
+		<div id="other" style="border-top:solid 1px #e7e7e7;">
+			<ul style="list-style: none; padding:0;">
 				<c:if test="${mail.next_seq != null}">
 					<li onclick="goRead('${mail.next_seq}')">다음글 | ${mail.next_subject}</li>
 				</c:if>
 				<c:if test="${mail.prev_seq != null}">
-					<li onclick="goRead('${mail.prev_seq}')">다음글 | ${mail.prev_subject}</li>
+					<li onclick="goRead('${mail.prev_seq}')">이전글 | ${mail.prev_subject}</li>
 				</c:if>
 			</ul>
 		</div>
