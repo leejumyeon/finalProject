@@ -113,7 +113,7 @@ function goReservation(){
 }
 
 function goPayment() {
-	location.href="<%=request.getContextPath()%>/reservation/doucmentPayment.top";
+	location.href="<%=request.getContextPath()%>/doucmentPayment.top";
 }
 </script>
 <div style="margin: 0 auto;" align="center" class="sideNavi">
