@@ -27,6 +27,7 @@ import com.spring.common.AES256;
 import com.spring.common.EncryptMyKey;
 import com.spring.common.FileManager;
 import com.spring.common.Sha256;
+import com.spring.groupware.commonVO.AttendanceVO;
 import com.spring.groupware.commonVO.ClubVO;
 import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
@@ -1835,5 +1836,36 @@ public class LeeehController {
 		mav.setViewName("noTextPage.notiles");
 		
 		return mav;
+	}
+	
+	@RequestMapping(value="/attendanceList.top")
+	public ModelAndView attendanceList(ModelAndView mav) {
+		
+		mav.setViewName("admin/HR/attendanceList.tiles3");
+		return mav;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/getAttendenceInfo.top", produces="text/plain;charset=UTF-8")
+	public String getAttendenceInfo(HttpServletRequest request) {
+		
+		String employee_seq = request.getParameter("employee_seq");
+		
+		List<AttendanceVO> attendanceList = service.getAttendenceInfo(employee_seq);
+		
+		JSONArray jsArr = new JSONArray();
+		
+		for(AttendanceVO avo : attendanceList) {
+			JSONObject jsObj = new JSONObject();
+			jsObj.put("department_name", avo.getDepartment_name());
+			jsObj.put("position_name", avo.getPosition_name());
+			jsObj.put("employee_name", avo.getEmployee_name());
+			jsObj.put("onTime", avo.getOnTime());
+			jsObj.put("offTime", avo.getOffTime());
+			
+			jsArr.put(jsObj);
+		}
+		
+		return jsArr.toString();
 	}
 }

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.groupware.commonVO.AttendanceVO;
 import com.spring.groupware.commonVO.ClubVO;
 import com.spring.groupware.commonVO.DepartmentVO;
 import com.spring.groupware.commonVO.DocumentCategoryVO;
@@ -657,6 +658,15 @@ public class LeeehDAO implements InterLeeehDAO {
 		EmployeesVO employeeInfo = sqlsession.selectOne("leeeh.getEmployeeSalary", employee_seq);
 		
 		return employeeInfo;
+	}
+
+	// === 출퇴근 테이블 가져오기 === //
+	@Override
+	public List<AttendanceVO> getAttendenceInfo(String employee_seq) {
+
+		List<AttendanceVO> attendanceList = sqlsession.selectList("leeeh.getAttendenceInfo", employee_seq);
+		
+		return attendanceList;
 	}
 
 }

@@ -56,6 +56,7 @@
 				<ul class="secondCategory">
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/list.top'">사원정보</li>
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/manager/HR/review.top'">인사고과</li>
+					<li onclick="javascript:location.href='<%=request.getContextPath()%>/attendanceList.top'">출퇴근</li>
 					<li onclick="javascript:location.href='<%=request.getContextPath()%>/idIssued.top'">계정발급</li>
 				</ul>
 			</td>
