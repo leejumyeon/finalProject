@@ -79,7 +79,7 @@
 			
 			<div class="mt" style="width: 300px; height: 250px; border: 0px solid red;">
 			<div>
-				<h3 style="display: inline-block;float:left;">자유게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;"/></h3>
+				<h3 style="display: inline-block;float:left;">자유게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/freeboard/list.top'"/></h3>
 			</div>
 			<div style="clear:both;"></div>
 			<div id="freedom"></div>
@@ -88,7 +88,7 @@
 			
 			<div style="width: 300px; height: 250px; border: 0px solid red;">
 			<div>
-				<h3 style="display: inline-block;float:left;">앨범게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;"/></h3>
+				<h3 style="display: inline-block;float:left;">앨범게시판</h3><h3 style="display: inline-block; float:right;"><img src="<%=request.getContextPath()%>/resources/sideImg/plus.png" width="30px;" height="30px;" style="cursor: pointer;" onclick="location.href='<%=request.getContextPath()%>/list.top'"/></h3>
 			</div>
 			<div style="clear:both;"></div>
 				<div id="album"></div>
@@ -361,25 +361,39 @@
 		
 	firstAttendance();
 		
-		function firstAttendance() {
-			
-			$.ajax({
-				url:"<%= request.getContextPath()%>/getIsAttendance.top",
-				type:"GET",
-				dataType:"JSON",
-				success: function(json) {
-					
-					if(json.employee_seq == null) {
-						
-						window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
-					}
-				},
-				error: function(e) {
-					
-				}
-			});
-		}
+	function firstAttendance() {
 		
+		$.ajax({
+			url:"<%= request.getContextPath()%>/getIsAttendance.top",
+			type:"GET",
+			dataType:"JSON",
+			success: function(json) {
+				
+				if(json.employee_seq == null) {
+					
+					window.open("<%= request.getContextPath()%>/getOnTime.top", "출근하기", "width = 450, height= 200, top=350, left=500")
+				}
+			},
+			error: function(e) {
+				
+			}
+		});
+	}
+	
+	function goNoticePage(seq) {
+		
+		location.href="<%= request.getContextPath()%>/detailNotice.top?board_seq=" + seq;
+	}
+	
+	function goFreeBoardPage(seq) {
+		
+		location.href="<%= request.getContextPath()%>/freeboard/detailView.top?board_seq=" + seq;
+	}
+	
+	function goAlbumPage(seq) {
+		
+		location.href="<%= request.getContextPath()%>/detailNotice.top?album_seq=" + seq;
+	}
 	</script>
 	
 	<script type="text/javascript">
@@ -415,7 +429,7 @@
   					  					
   					html += "<tr class='row100 tr_body'>";	 							
 						html += "<td class='cell100 column2'>"+item.category_name+"</td>"; 							
-						html += "<td class='cell100 column3'>"+item.subject+"</td>"; 
+						html += "<td class='cell100 column3' onclick='goNoticePage(" + item.board_seq + ")'>"+item.subject+"</td>"; 
 						html += "<td class='cell100 column5'>"+item.employee_name+"</td>";							  							  							
 					html += "</tr>";
   														
@@ -467,7 +481,7 @@
   					  					
   						html += "<tr class='row100 tr_body'>";	 							
   							html += "<td class='cell100 column2'>"+item.category_name+"</td>"; 							
-  							html += "<td class='cell100 column3'>"+item.subject+"</td>"; 
+  							html += "<td class='cell100 column3' onclick='goFreeBoardPage(" + item.board_seq + ")'>"+item.subject+"</td>"; 
   							html += "<td class='cell100 column5'>"+item.employee_name+"</td>";						  							  							
   						html += "</tr>";
   														
@@ -535,7 +549,7 @@
   							
   							}
   							
-  							html += "<td class='cell100 column3'>"+item.subject+"</td>";
+  							html += "<td class='cell100 column3' onclick='goAlbumPage(" + item.album_seq + ")'>"+item.subject+"</td>";
   							html += "<td class='cell100 column5'>"+item.employee_name+"</td>";
 							
   						html += "</tr>";

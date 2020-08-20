@@ -36,6 +36,8 @@
 <link rel="stylesheet" type="text/css" href="<%=ctxPath %>/resources/css/style1.css" />
 <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/datepicker/datepicker.css">
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 	<div id="mycontainer">
@@ -67,3 +69,4 @@
 	<div style="clear:both;"></div>
 </body>
 </html>
+

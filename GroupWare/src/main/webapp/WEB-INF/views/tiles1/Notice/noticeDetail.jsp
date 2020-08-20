@@ -165,7 +165,6 @@
 			<div id="side">
 				<div class="comunity">공지사항</div>			
 				<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/notice.top'">공지사항</div>
-				<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>">자누묻는질문</div>
 			</div>	
 		<div id="post">	
 			<h3>공지사항 게시판</h3>

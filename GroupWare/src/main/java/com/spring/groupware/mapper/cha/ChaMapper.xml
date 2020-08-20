@@ -81,7 +81,7 @@
 	
 	<resultMap type="HashMap" id="reservationMap">
 		<result property="reservation_seq" column="reservation_seq" javaType="String"/>
-		<result property="employee_name" column="employee_name" javaType="String"/>
+		<result property="employee_seq" column="employee_seq" javaType="String"/>
 		<result property="roomName" column="roomName" javaType="String"/>
 		<result property="startDate" column="startDate" javaType="String"/>
 		<result property="endDate" column="endDate" javaType="String"/>
@@ -109,7 +109,7 @@
 		     , A.status
 		     , A.regDate
 		from reservation_table A join employees_table B
-		ON A.head_seq = B.employee_seq
+		ON A.fk_employee_seq = B.employee_seq
 		join reservationRoom_table C
 		ON A.fk_roomNumber = C.roomNumber
 		) V

@@ -45,7 +45,7 @@
 						</tr>
 						<tr>
 							<td height="25" style="text-align: center; font-size: 8pt;">
-								${sessionScope.loginEmployee.position_name}&nbsp;${sessionScope.loginEmployee.employee_name}
+								${documentContent.position_name}&nbsp;${documentContent.employee_name}
 							</td>
 						</tr>
 						<tr>

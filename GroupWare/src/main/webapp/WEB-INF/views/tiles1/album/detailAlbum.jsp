@@ -108,8 +108,8 @@
 			<div id="side">
 				<div class="comunity">커뮤니티</div>			
 				<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/list.top'">앨범</div>
-				<div class="sidebar2" onclick="javascript:location.href=''">자유게시판</div>
-				<div class="sidebar2" onclick="javascript:location.href=''">동호회신청</div>
+				<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/freeboard/list.top'">자유게시판</div>
+				<div class="sidebar2" onclick="javascript:location.href='<%= request.getContextPath()%>/clubRequest.top'">동호회신청</div>
 			</div>	
 		<div id="post">	
 			<h3>앨범게시판</h3>

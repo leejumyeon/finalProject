@@ -366,7 +366,7 @@
 			var i = 0;
 			$(".groupChat").each(function(index,item){
 				if($(this).prop("checked") == true){
-					console.log($(this).val());
+				//	console.log($(this).val());
 					arr[i] = $(this).val();
 					i++;
 				}
@@ -419,6 +419,7 @@
 		
 		// 대화상대 클릭 시
 		$("#conversationPerson").click(function(){
+			
 			clearInterval(timerId);
 			$(".gCheck").addClass("hide"); // 체크박스 숨기기
 			$("#inviteBtn").hide(); // 초대하기 버튼 숨기기
@@ -434,7 +435,9 @@
 		});
 		
 		// 대화목록 클릭 시
-		$("#conversationList").click(function(){clearInterval(timerId);});
+		$("#conversationList").click(function(){
+			clearInterval(timerId);
+		});
 		
 	});// end of $(document).ready()----------------------
 
@@ -483,7 +486,7 @@
 	// 채팅 방 생성하기
 	function goChatting(rEmployee_seq) {
 		var sEmployee_seq = "${sessionScope.loginEmployee.employee_seq}";
-		alert("보내는이 : " + sEmployee_seq + " 받는이 : " + rEmployee_seq);
+	//	alert("보내는이 : " + sEmployee_seq + " 받는이 : " + rEmployee_seq);
 		
 		$.ajax({
 			url:"/groupware/goChatting.top",
@@ -507,7 +510,7 @@
 			}
 		
 		});
-			
+				
 	}
 	
 	
@@ -523,6 +526,7 @@
 			success:function(json){
 				$("#contentList").html("");
 				var html = "";
+		
 				if(json.length != 0){ // 채팅방이 이미 만들어져 있는 경우
 					
 					$.each(json,function(index, item){
@@ -549,8 +553,8 @@
 					$("#contentList").html(html);
 				}
 				else { // 채팅방을 새로 만든경우
-					alert("대화내용이 없습니다.");
-					clearInterval(timerId);
+				//	alert("대화내용이 없습니다.");
+				//	clearInterval(timerId);
 				}
 				
 				

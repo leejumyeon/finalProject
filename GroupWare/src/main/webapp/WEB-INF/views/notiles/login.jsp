@@ -115,6 +115,8 @@
 						
 						if(json.grade == '1') {
 							window.open('<%= request.getContextPath()%>/main.top', '그룹웨어', 'width = 1220, height = 780, location = yes, left = 200, top = 100');
+							
+							locationPage();
 						}
 						else {
 							location.href="<%= request.getContextPath()%>/twoChoice.top";
@@ -127,6 +129,11 @@
 		});
 		
 	});
+	
+	function locationPage() {
+		
+		location.href="<%= request.getContextPath()%>/noTextPage.top";
+	}
 </script>
 
 <body background="<%= request.getContextPath()%>/resources/images/backgroundImage.png">
