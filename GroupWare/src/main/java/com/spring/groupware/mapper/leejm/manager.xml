@@ -164,7 +164,7 @@
 	
 	<!-- 매출관리 - 매출내용 조회 -->
 	<select id="salesList" resultType="com.spring.groupware.commonVO.SalesVO">
-		select nvl(nvl(V.category, X.category), Y.category) AS regDate, V.fk_department_seq, D.department_name,  nvl(V.value, 0) - (nvl(X.value, 0) + nvl(Y.value, 0)) AS sales_total
+		select nvl(nvl(V.regDate, X.regDate), Y.regDate) AS regDate, nvl(nvl(V.fk_department_seq, X.fk_department_seq), Y.fk_department_seq) AS fk_department_seq, D.department_name,  nvl(V.value, 0) - (nvl(X.value, 0) + nvl(Y.value, 0)) AS sales_total
 		from 
 		(
 		select extract(year from regDate) as regDate, fk_department_seq, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
@@ -174,7 +174,7 @@
 		) V
 		full outer join
 		(
-		select extract(year from regDate) as regDate, fk_department_seq sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		select extract(year from regDate) as regDate, fk_department_seq, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
 		from
 		(select sales_seq, groupno, sales_title, fk_department_seq, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title like '%'||'인건비'||'%') S
 		group by (extract(year from regDate), fk_department_seq) order by regDate asc
