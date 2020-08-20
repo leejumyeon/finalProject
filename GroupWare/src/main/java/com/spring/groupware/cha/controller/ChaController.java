@@ -522,7 +522,22 @@ public class ChaController {
 		String fk_department_seq = request.getParameter("edit-username");
 		String calendar_category = request.getParameter("edit-type");
 		
-	//	System.out.println(employee_id+"/"+comCalendar_seq+"/"+title+"/"+content+"/"+endDate+"/"+startDate+"/"+backgroundColor+"/"+fk_department_seq+"/"+calendar_category);
+		if("경조사".equals(calendar_category)) {
+			
+			calendar_category = "1";
+		}
+		else if("워크샵".equals(calendar_category)) {
+			
+			calendar_category = "2";
+		}
+		else if("협력일정".equals(calendar_category)) {
+			
+			calendar_category = "3";
+		}
+		else if("채용일정".equals(calendar_category)) {
+			
+			calendar_category = "4";
+		}
 		
 		HashMap<String, String> paraMap = new HashMap<>();		
 		paraMap.put("employee_id", employee_id);

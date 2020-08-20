@@ -179,8 +179,8 @@
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-type">부서명</label>
 	                                <select class="inputModal" type="text" name="edit-username" id="edit-username">
-	                                    <option value="1">개발팀</option>
-	                                    <option value="2">디자인팀</option>
+	                                    <option value="1">디자인팀</option>
+	                                    <option value="2">개발팀</option>
 	                                    <option value="3">영업팀</option>
 	                                    <option value="4">인사팀</option>
 	                                    <option value="5">경영지원팀</option>
@@ -190,7 +190,7 @@
 	                        <div class="row">
 	                            <div class="col-xs-12">
 	                                <label class="col-xs-4" for="edit-color">색상</label>
-	                                <select class="inputModal" name="color" id="edit-color">
+	                                <select class="inputModal" name="backgroundColor" id="edit-color">
 	                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
 	                                    <option value="#9775fa" style="color:#9775fa;">보라색</option>
 	                                    <option value="#ffa94d" style="color:#ffa94d;">주황색</option>
