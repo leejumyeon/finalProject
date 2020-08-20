@@ -148,11 +148,10 @@
 		<div id="in">
 		<div id="side">
 			<div class="comunity">커뮤니티</div>
-			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/list.top'">공지사항</div>
-			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/freeboard/list.top'">자주묻는질문</div>
+			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/notice.top'">공지사항</div>
 		</div>						
 			<div id="post">	
-				<h3>자유게시판</h3>
+				<h3>공지사항</h3>
 				<form name="searchFrm">
 					<select name="searchType" id="searchType">
 						<option value="all">전체</option>

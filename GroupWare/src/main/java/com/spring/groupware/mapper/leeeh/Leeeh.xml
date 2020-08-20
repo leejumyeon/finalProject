@@ -269,6 +269,7 @@
 		<result property="content" column="content" javaType="String"/>
 		<result property="regDate" column="regDate" javaType="String"/>
 		<result property="department_name" column="department_name" javaType="String"/>
+		<result property="position_name" column="position_name" javaType="String"/>
 		<result property="employee_name" column="employee_name" javaType="String"/>
 		<result property="category_name" column="category_name" javaType="String"/>
 		<result property="fileName" column="fileName" javaType="String"/>
@@ -276,9 +277,11 @@
 		<result property="fileSize" column="fileSize" javaType="String"/>
 	</resultMap>
 	<select id="goDocumentContent" parameterType="String" resultMap="documentMap">
-		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, E.employee_name, DC.category_name, D.fileName, D.orgFileName, D.fileSize
+		select D.document_seq, D.groupno, D.content, to_char(D.regDate, 'yyyy. mm. dd') AS regDate, DE.department_name, P.position_name, E.employee_name, DC.category_name, D.fileName, D.orgFileName, D.fileSize
 		from department_table DE join employees_table E  
 		on DE.department_seq = E.fk_department
+		join position_table P
+		on P.position_seq = E.fk_position
 		join document_table D
 		on E.employee_seq = D.fk_employee_seq
 		join document_category DC

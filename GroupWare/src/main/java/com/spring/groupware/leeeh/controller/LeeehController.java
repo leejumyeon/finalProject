@@ -35,6 +35,7 @@ import com.spring.groupware.commonVO.EmployeesVO;
 import com.spring.groupware.commonVO.TimeAndAttVO;
 import com.spring.groupware.commonVO.TripVO;
 import com.spring.groupware.leeeh.service.InterLeeehService;
+import com.sun.media.sound.ModelAbstractOscillator;
 
 @Controller
 public class LeeehController {
@@ -347,7 +348,7 @@ public class LeeehController {
 		HashMap<String, String> documentContent = service.goDocumentContent(document_seq);
 		
 		String groupno = documentContent.get("groupno");
-		
+
 		List<DocumentVO> approverList = service.getApproverList(groupno);
 
 		mav.addObject("documentContent", documentContent);
@@ -966,7 +967,6 @@ public class LeeehController {
 			String groupno = request.getParameter("groupno");
 			String reason = request.getParameter("reason");
 			String fk_department_seq = request.getParameter("department_seq");
-			String sales_subject = request.getParameter("sales_subject");
 			
 			paraMap.put("groupno", groupno);
 			paraMap.put("reason", reason);
@@ -974,7 +974,7 @@ public class LeeehController {
 			
 			for(int i = 0; i < sales_titleArr.length; i++) {
 				
-				paraMap.put("sales_title", sales_subject + " : " + sales_titleArr[i]);
+				paraMap.put("sales_title", sales_titleArr[i]);
 				paraMap.put("sales_count", sales_countArr[i]);
 				paraMap.put("price", priceArr[i]);
 				
@@ -1816,4 +1816,11 @@ public class LeeehController {
 		return jsObj.toString();
 	}
 	
+	@RequestMapping(value="/noTextPage.top")
+	public ModelAndView noTextPage(ModelAndView mav) {
+		
+		mav.setViewName("noTextPage.notiles");
+		
+		return mav;
+	}
 }

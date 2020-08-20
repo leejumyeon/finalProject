@@ -83,3 +83,6 @@
 	
 </div>
 <div style="clear:both;"></div>
+
+<script src="./resources/calendar/vendor/js/jquery.min.js"></script>
+<script src="./resources/calendar/vendor/js/bootstrap.min.js"></script>

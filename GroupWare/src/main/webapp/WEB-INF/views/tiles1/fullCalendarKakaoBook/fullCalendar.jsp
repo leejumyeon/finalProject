@@ -26,95 +26,97 @@
 	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/resources/table_css/css/main.css">
 <style>
 
-		.snip1536 {
-			  background-color: #0099ff;
-			  border: none;
-			  color: #ffffff;
-			  cursor: pointer;
-			  display: inline-block;
-			  font-family: 'BenchNine', Arial, sans-serif;
-			  font-size: 1em;
-			  font-size: 10pt;
-			  line-height: 1em;
-			  margin: 8px 12px;
-			  outline: none;
-			  position: relative;
-			  text-transform: uppercase;
-			  font-weight: 700;
-			  width: 60px;
-			  height: 20px;
-			}
-			
-			.snip1536:before,
-			.snip1536:after {
-			  border-color: transparent;
-			  -webkit-transition: all 0.25s;
-			  transition: all 0.25s;
-			  border-style: solid;
-			  border-width: 0;
-			  content: "";
-			  height: 15px;
-			  position: absolute;
-			  width: 15px;
-			}
-			
-			.snip1536:before {
-			  border-color: #0099ff;
-			  border-right-width: 3px;
-			  border-top-width: 3px;
-			  right: -5px;
-			  top: -5px;
-			}
-			
-			.snip1536:after {
-			  border-bottom-width: 3px;
-			  border-color: #0099ff;
-			  border-left-width: 3px;
-			  bottom: -5px;
-			  left: -5px;
-			}
-			
-			.snip1536:hover {
-			  background-color: #0099ff;
-			}
-			
-			.snip1536:hover:before,
-			.snip1536:hover:after {
-			  height: 100%;
-			  width: 100%;
-			}
-			
-			table.type09 {
-			    border-collapse: collapse; 
-			    text-align: left;
-			    line-height: 1.5;
-			
-			}
-			table.type09 thead th {
-			    padding:10px;
-			    font-weight: bold;
-			    vertical-align: top; 
-			    color: #369;
-			    border-bottom: 1px solid #036; 
-			}
-			table.type09 tbody th {
-			    width: 100px;
-			    padding: 10px;
-			    font-weight: bold;
-			    vertical-align: top;
-			    border-bottom: 1px solid #ccc;
-			    background: #f3f6f7;
-			}
-			table.type09 td {  
-			    width: 280px;  
-			    padding: 10px;
-			    font-weight: bold; 
-			    vertical-align: top;
-			    border-bottom: 1px solid #ccc;
-			}			
+	.snip1536 {
+		  background-color: #0099ff;
+		  border: none;
+		  color: #ffffff;
+		  cursor: pointer;
+		  display: inline-block;
+		  font-family: 'BenchNine', Arial, sans-serif;
+		  font-size: 1em;
+		  font-size: 10pt;
+		  line-height: 1em;
+		  margin: 8px 12px;
+		  outline: none;
+		  position: relative;
+		  text-transform: uppercase;
+		  font-weight: 700;
+		  width: 60px;
+		  height: 20px;
+		}
+		
+		.snip1536:before,
+		.snip1536:after {
+		  border-color: transparent;
+		  -webkit-transition: all 0.25s;
+		  transition: all 0.25s;
+		  border-style: solid;
+		  border-width: 0;
+		  content: "";
+		  height: 15px;
+		  position: absolute;
+		  width: 15px;
+		}
+		
+		.snip1536:before {
+		  border-color: #0099ff;
+		  border-right-width: 3px;
+		  border-top-width: 3px;
+		  right: -5px;
+		  top: -5px;
+		}
+		
+		.snip1536:after {
+		  border-bottom-width: 3px;
+		  border-color: #0099ff;
+		  border-left-width: 3px;
+		  bottom: -5px;
+		  left: -5px;
+		}
+		
+		.snip1536:hover {
+		  background-color: #0099ff;
+		}
+		
+		.snip1536:hover:before,
+		.snip1536:hover:after {
+		  height: 100%;
+		  width: 100%;
+		}
+		
+		table.type09 {
+		    border-collapse: collapse; 
+		    text-align: left;
+		    line-height: 1.5;
+		
+		}
+		table.type09 thead th {
+		    padding:10px;
+		    font-weight: bold;
+		    vertical-align: top; 
+		    color: #369;
+		    border-bottom: 1px solid #036; 
+		}
+		table.type09 tbody th {
+		    width: 100px;
+		    padding: 10px;
+		    font-weight: bold;
+		    vertical-align: top;
+		    border-bottom: 1px solid #ccc;
+		    background: #f3f6f7;
+		}
+		table.type09 td {  
+		    width: 280px;  
+		    padding: 10px;
+		    font-weight: bold; 
+		    vertical-align: top;
+		    border-bottom: 1px solid #ccc;
+		}			
 		
 			
 </style>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 
@@ -534,7 +536,7 @@
 				
 			$.each(json.reList, function(index,item){
 				
-				if(item.head_seq == '${sessionScope.loginEmployee.employee_seq}') {
+				if(item.employee_seq == '${sessionScope.loginEmployee.employee_seq}') {
 				
 					html += "<tr>";						 
 						html += "<td class='cell100 column5'>"+item.roomName+"</td>";
@@ -585,4 +587,5 @@
   	<script type="text/javascript">
 		
   		$("#hideAll").hide();
+  		
 	</script>
