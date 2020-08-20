@@ -16,7 +16,7 @@ select *
 from employees_table;
 
 -- 테이블 삭제 --
-drop table companycalendar_category purge;
+drop table companyCalendar_category purge;
 drop table equipment_table purge;
 drop sequence equipment_table_seq;
 drop table comment_table purge;
@@ -701,8 +701,6 @@ insert into trip_category(category_num, category_name) values(6,'단기출장');
 insert into trip_category(category_num, category_name) values(7,'장기출장');
 insert into trip_category(category_num, category_name) values(8,'해외출장');
 commit;
-
-delete from document_category;
 
 insert into document_category(document_category_seq, category_name)values(1,'휴가신청');
 insert into document_category(document_category_seq, category_name)values(2,'출장신청');

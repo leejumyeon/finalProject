@@ -167,4 +167,8 @@ public interface InterLeeehService {
 
 	TimeAndAttVO getDetailTA(HashMap<String, String> paraMap);	// 인사고과 저번달 고과와 이번달 고과, 사유 얻어오기
 
+	List<HashMap<String, String>> getDepartmentMenberCnt();	// 부서별 인원 수 % 얻어오기
+
+	EmployeesVO getEmployeeSalary(String employee_seq);	// 검색한 사원의 정보 급여정보 알아오기
+
 }
