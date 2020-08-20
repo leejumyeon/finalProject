@@ -6,6 +6,7 @@ import java.util.List;
 import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.ChartVO;
+import com.spring.groupware.commonVO.SalesVO;
 
 
 public interface InterManagerDAO {
@@ -45,5 +46,8 @@ public interface InterManagerDAO {
 
 	// 매출 관리 - 순이익 조회
 	List<ChartVO> profitChartList();
+
+	// 매출관리 - 매출내용 조회
+	List<SalesVO> salesList();
 
 }

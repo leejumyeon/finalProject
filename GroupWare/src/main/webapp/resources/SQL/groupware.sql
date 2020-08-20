@@ -816,4 +816,35 @@ from project_table;
 select extract(year from add_months(startDate, term)) as category, sum(nvl(downPayment,0))+sum(nvl(middlePayment,0))+sum(nvl(completionPayment,0)) as value
 from
 (select project_seq, groupno, project_name, content, term, startDate, manager, memberCount, reason, status, downPayment, middlePayment, completionPayment, documentStatus
-from project_table where status != 0) P group by (extract(year from add_months(startDate, term))) order by category asc
+from project_table where status != 0) P group by (extract(year from add_months(startDate, term))) order by category asc;
+
+
+select * from project_table;
+
+select nvl(nvl(V.regDate, X.regDate), Y.regDate) AS regDate, nvl(nvl(V.fk_department_seq, X.fk_department_seq), Y.fk_department_seq) AS fk_department_seq, D.department_name,  nvl(V.value, 0) - (nvl(X.value, 0) + nvl(Y.value, 0)) AS sales_total
+		from 
+		(
+		select extract(year from regDate) as regDate, fk_department_seq, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+		(select sales_seq, groupno, sales_title, fk_department_seq, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title like '%'||'프로젝트'||'%') P
+		group by (extract(year from regDate), fk_department_seq) order by regDate asc
+		) V
+		full outer join
+		(
+		select extract(year from regDate) as regDate, fk_department_seq, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+		(select sales_seq, groupno, sales_title, fk_department_seq, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title like '%'||'인건비'||'%') S
+		group by (extract(year from regDate), fk_department_seq) order by regDate asc
+		) X
+		on V.regDate = X.regDate and V.fk_department_seq = X.fk_department_seq
+		full outer join
+		(
+		select extract(year from regDate) as regDate, fk_department_seq, sum(nvl(sales_price,0)*nvl(sales_count,0)) as value
+		from
+		(select sales_seq, groupno, fk_department_seq, sales_title, sales_price, sales_count, regDate, documentStatus from sales_table where documentStatus = 1 and sales_title like '%'||'시설'||'%' and sales_title like '%'||'유지비'||'%') S
+		group by (extract(year from regDate), fk_department_seq) order by regDate asc
+		) Y
+		on V.regDate = Y.regDate and V.fk_department_seq = Y.fk_department_seq
+		join department_table D on V.fk_department_seq = department_seq
+		order by regDate;
+        

@@ -26,6 +26,7 @@ import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
 import com.spring.groupware.commonVO.EmployeesVO;
+import com.spring.groupware.commonVO.SalesVO;
 import com.spring.groupware.leejm.service.InterManagerService;
 
 
@@ -307,7 +308,8 @@ public class ManagerController {
 	// 관리자-재무 관리(매출내역)페이지 이동
 	@RequestMapping(value="/manager/finance/salesList.top")
 	public ModelAndView managerSalesList(ModelAndView mav, HttpServletRequest request) {
-		
+		List<SalesVO> salesList = service.salesList();
+		mav.addObject("salesList",salesList);
 		mav.setViewName("admin/finance/salesList.tiles3");
 		return mav;
 	}

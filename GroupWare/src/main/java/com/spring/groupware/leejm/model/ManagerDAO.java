@@ -11,6 +11,7 @@ import com.spring.groupware.commonVO.AttachFileVO;
 import com.spring.groupware.commonVO.BoardVO;
 import com.spring.groupware.commonVO.ChartVO;
 import com.spring.groupware.commonVO.DocumentVO;
+import com.spring.groupware.commonVO.SalesVO;
 
 
 @Repository
@@ -108,6 +109,13 @@ public class ManagerDAO implements InterManagerDAO {
 	public List<ChartVO> profitChartList() {
 		List<ChartVO> profitChartList = sqlsession.selectList("manager.profitChartList");
 		return profitChartList;
+	}
+
+	// 매출관리 - 매출내용 조회
+	@Override
+	public List<SalesVO> salesList() {
+		List<SalesVO> salesList = sqlsession.selectList("manager.salesList");
+		return salesList;
 	}
 
 }

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style type="text/css">
 	.changeBtn{
 		cursor: pointer;
@@ -244,18 +246,23 @@ function func_profitChart(){
 		<div class="changeBtn">change</div>
 	</div>
 </div>
-<div id="listArea">
+<div id="listArea" style="height:300px; overflow: scroll;">
 	<table class="table">
 		<thead>
 			<tr>
-				<th>매출번호</th>
-				<th>매출내용</th>
+				<th>매출년도</th>
+				<th>매출부서</th>
 				<th>매출금액</th>
-				<th>매출날짜</th>
 			</tr>
 		</thead>
 		<tbody>
-			
+			<c:forEach var="sales" items="${salesList}">
+			<tr>
+				<td>${sales.regDate}</td>
+				<td>${sales.department_name}</td>
+				<td><fmt:formatNumber value="${sales.sales_total}" pattern="#,###" /></td>
+			</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 </div>
