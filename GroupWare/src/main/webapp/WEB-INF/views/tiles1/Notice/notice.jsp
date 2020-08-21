@@ -147,7 +147,7 @@
 	<div id="container">
 		<div id="in">
 		<div id="side">
-			<div class="comunity">커뮤니티</div>
+			<div class="comunity">사내공지</div>
 			<div class="sidebar2" onclick="javascript:location.href='<%= ctxPath%>/notice.top'">공지사항</div>
 		</div>						
 			<div id="post">	

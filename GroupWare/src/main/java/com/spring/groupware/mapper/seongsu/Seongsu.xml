@@ -111,14 +111,14 @@
 		         , nextseq, nextsubject
 		    from
 		    (    
-		        select lag(album_seq, 1) over(order by board_seq desc) AS previousseq  
-		             , lag(subject, 1) over(order by board_seq desc) AS previoussubject 
+		        select lag(album_seq, 1) over(order by album_seq desc) AS previousseq  
+		             , lag(subject, 1) over(order by album_seq desc) AS previoussubject 
 		           
 		             , album_seq, fk_employee_seq, subject, content, album_category
 		             , to_char(regDate,'yyyy-mm-dd hh24:mi:ss') AS regDate
 		          
-		             , lead(album_seq, 1) over(order by board_seq desc) AS nextseq
-		             , lead(subject, 1) over(order by board_seq desc) AS nextsubject
+		             , lead(album_seq, 1) over(order by album_seq desc) AS nextseq
+		             , lead(subject, 1) over(order by album_seq desc) AS nextsubject
 		        from album_table
 		    ) V
 		    where V.album_seq = #{album_seq}
