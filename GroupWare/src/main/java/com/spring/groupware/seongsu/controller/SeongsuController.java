@@ -31,7 +31,7 @@ public class SeongsuController {
 	public ModelAndView requiredLogin_detailboard(HttpServletRequest request, ModelAndView mav) {
 		
 		String album_seq = request.getParameter("album_seq");
-		System.out.println("album_seq:"+album_seq);
+
 		AlbumVO detailAlbum = service.getDetailAlbum(album_seq);
 		
 		mav.addObject("detailAlbum", detailAlbum);
