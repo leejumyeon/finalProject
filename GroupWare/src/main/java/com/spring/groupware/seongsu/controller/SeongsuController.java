@@ -31,7 +31,7 @@ public class SeongsuController {
 	public ModelAndView requiredLogin_detailboard(HttpServletRequest request, ModelAndView mav) {
 		
 		String album_seq = request.getParameter("album_seq");
-		
+
 		AlbumVO detailAlbum = service.getDetailAlbum(album_seq);
 		
 		mav.addObject("detailAlbum", detailAlbum);
@@ -180,6 +180,8 @@ public class SeongsuController {
 			jsObj.put("employee_name", avo.getEmployee_name());
 			jsObj.put("employee_id", avo.getEmployee_id());
 			jsObj.put("regDate", avo.getRegDate());
+			jsObj.put("album_seq", avo.getAlbum_seq());
+			jsObj.put("album_category", avo.getAlbum_category());
 			
 			jsArr.put(jsObj);
 		}

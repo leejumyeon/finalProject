@@ -392,7 +392,7 @@
 	
 	function goAlbumPage(seq) {
 		
-		location.href="<%= request.getContextPath()%>/detailNotice.top?album_seq=" + seq;
+		location.href="<%= request.getContextPath()%>/detailAlbum.top?album_seq=" + seq;
 	}
 	</script>
 	

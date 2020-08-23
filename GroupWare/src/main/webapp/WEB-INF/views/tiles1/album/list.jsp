@@ -132,7 +132,7 @@
 				, "currentShowPageNo":currentShowPageNo},
 			dataType:"JSON",
 			success:function(json) {
-				
+				console.log(json);
 				var html = "";
 
 				if(json.AlbumList.length != 0) {
@@ -202,7 +202,7 @@
 						 
 						 </tbody>							
 					</table>
-					<div id="pagebar">
+					<div id="pagebar" align="center">
 						<!-- 페이지바들어갈곳 -->
 					</div>
 					<div style="clear:both"></div>

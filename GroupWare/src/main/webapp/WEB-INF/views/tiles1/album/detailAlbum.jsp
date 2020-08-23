@@ -139,16 +139,16 @@
 			</form>	
 			<br/>
 			<div>
-				<p>이전글&nbsp;:&nbsp;</p>
+				이전글&nbsp;:&nbsp;
 				<span class="move" onclick="javascript:location.href='<%= request.getContextPath()%>/detailAlbum.top?album_seq=${detailAlbum.previousseq}'">${detailAlbum.previoussubject}</span>
 			</div>
 			<div>
-				<p>다음글&nbsp;:&nbsp;</p>
+				다음글&nbsp;:&nbsp;
 				<span class="move" onclick="javascript:location.href='<%= request.getContextPath()%>/detailAlbum.top?album_seq=${detailAlbum.nextseq}'">${detailAlbum.nextsubject}</span>
 			</div>
 			<div id="button" >
 				<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='history.back()'">목록보기</button>
-				<c:if test="${detailAlbum.fk_employee_seq = sessionScope.loginEmployee.employee_seq}">
+				<c:if test="${detailAlbum.fk_employee_seq == sessionScope.loginEmployee.employee_seq}">
 					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/updateAlbum.top?album_seq=${detailAlbum.album_seq}'">수정</button>
 					<button class="detailbtn3" style="color: white; margin-left: 10px; width: 70px;" type="button" onclick="deleteAlbum('${detailAlbum.album_seq}')">삭제</button>
 				</c:if>
