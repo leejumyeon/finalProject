@@ -174,6 +174,7 @@ public class SeongsuController {
 		for(AlbumVO avo : albumList) {
 			
 			JSONObject jsObj = new JSONObject();
+			jsObj.put("album_seq", avo.getAlbum_seq());
 			jsObj.put("category_name", avo.getCategory_name());
 			jsObj.put("subject", avo.getSubject());
 			jsObj.put("employee_name", avo.getEmployee_name());

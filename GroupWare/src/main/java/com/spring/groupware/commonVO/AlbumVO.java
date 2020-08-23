@@ -1,9 +1,10 @@
 package com.spring.groupware.commonVO;
 
-public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시에 사용)
+public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시에 사용)]
 	private String album_seq; // album게시글 번호
 	private String album_category; // album게시글 번호
 	private String category_name; // album게시글 항목 (album_category랑 join)
+	private String fk_employee_seq; // 작성자 사원 번호
 	private String employee_name; // 작성자명 (employees_table이랑 join)
 	private String employee_id; // 작성자ID (employees_table이랑 join)
 	private String subject; // 제목
@@ -39,6 +40,14 @@ public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시
 		this.category_name = category_name;
 	}
 	
+	public String getFk_employee_seq() {
+		return fk_employee_seq;
+	}
+
+	public void setFk_employee_seq(String fk_employee_seq) {
+		this.fk_employee_seq = fk_employee_seq;
+	}
+
 	public String getEmployee_name() {
 		return employee_name;
 	}

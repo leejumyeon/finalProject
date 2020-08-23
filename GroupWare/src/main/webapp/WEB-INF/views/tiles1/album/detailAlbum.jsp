@@ -92,7 +92,7 @@
 
 	function deleteAlbum(seq) {
 		
-		if(confirm("정말 작성을 완료하시겠습니까?") == true) {
+		if(confirm("정말 삭제을 완료하시겠습니까?") == true) {
 
 			location.herf="<%= request.getContextPath()%>/deleteAlbum.top?album_seq=" + seq;
 

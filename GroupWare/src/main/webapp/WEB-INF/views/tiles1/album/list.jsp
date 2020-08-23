@@ -181,7 +181,7 @@
 						<option value="employee_name">작성자</option>
 					</select>
 					<input type="text" name="searchWord" id="searchWord" size="30" autocomplete="off" />
-					<button style="color: white;" id="btnS" type="button" onclick="getAlbumList('', '', '')">검색</button>
+					<button style="color: white;" id="btnS" type="button" onclick="getAlbumList('', '', '', '')">검색</button>
 					<button style="color: white;" id="btnW" type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/write.top?seq=${board.seq}'">글쓰기</button>		
 				<input type="radio" id="allAlbumtList" name="albumList" value="0" checked/><label for="allAlbumtList" class="labelAlbumList">전체 앨범</label>
 				<input type="radio" id="comAlbumtList" name="albumList" value="1" /><label for="comAlbumtList" class="labelAlbumList">사내 앨범</label>
