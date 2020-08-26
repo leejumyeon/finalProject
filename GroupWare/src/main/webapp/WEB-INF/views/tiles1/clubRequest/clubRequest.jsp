@@ -217,7 +217,7 @@
 				dataType:"JSON",
 				success:function(json){
 					console.log(json.result);
-					if(json.result=="true"){
+					if(json.result==true){
 						alert("동호회 가입 신청 메일을 동호회 회장에게 보냈습니다.");
 					}
 					else{

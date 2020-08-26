@@ -10,7 +10,6 @@ public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시
 	private String subject; // 제목
 	private String content; // 내용(이미지 포함)
 	private String regDate; // 작성날짜
-	private String fk_employee_seq; //작성자 사원번호
 	
 	private String previousseq;      // 이전글번호
 	private String previoussubject;  // 이전글제목
@@ -121,13 +120,6 @@ public class AlbumVO {// album게시글 VO(리스트, 상세페이지, 수정시
 		this.nextsubject = nextsubject;
 	}
 
-	public String getFk_employee_seq() {
-		return fk_employee_seq;
-	}
-
-	public void setFk_employee_seq(String fk_employee_seq) {
-		this.fk_employee_seq = fk_employee_seq;
-	}
 	
 	
 	

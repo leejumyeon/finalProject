@@ -363,14 +363,14 @@
 								<c:choose>
 									<c:when test="${not empty mail.fileName1}">
 										<div>
-										<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName1}"/>
+										<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName1}" readonly="readonly"/>
 										<input type="hidden" name="fileName" value="${mail.fileName1}"/>
 										<input type="hidden" name="fileSize" value="${mail.fileSize1}" />
 										<span class='cancleFile'>X</span>
 										</div>
 										<c:if test="${not empty mail.fileName2}">
 										<div>
-											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName2}"/>
+											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName2}" readonly="readonly"/>
 											<input type="hidden" name="fileName" value="${mail.fileName2}"/>
 											<input type="hidden" name="fileSize" value="${mail.fileSize2}" />
 											<span class='cancleFile'>X</span>
@@ -378,7 +378,7 @@
 										</c:if>
 										<c:if test="${not empty mail.fileName3}">
 										<div>
-											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName3}"/>
+											<input type="file" name="file" style='display:inline-block; width:80px;'/><input style="border:none;" type="text" name="orgFileName" value="${mail.orgFileName3}" readonly="readonly"/>
 											<input type="hidden" name="fileName" value="${mail.fileName3}"/>
 											<input type="hidden" name="fileSize" value="${mail.fileSize3}" />
 											<span class='cancleFile'>X</span>
@@ -386,7 +386,7 @@
 										</c:if>
 									</c:when>
 									<c:otherwise>
-										<input type="file" name="newFileName" style='display:inline-block;'/><input type="text" name="newOrgFileName" value=""/><span class='cancleFile'>X</span>
+										<input type="file" name="newFileName" style='display:inline-block; '/><span class='cancleFile'>X</span>
 									</c:otherwise>
 								</c:choose>
 							</div>

@@ -845,4 +845,7 @@ select nvl(nvl(V.regDate, X.regDate), Y.regDate) AS regDate, nvl(nvl(V.fk_depart
 		on V.regDate = Y.regDate and V.fk_department_seq = Y.fk_department_seq
 		join department_table D on V.fk_department_seq = department_seq
 		order by regDate;
+
+
+
         

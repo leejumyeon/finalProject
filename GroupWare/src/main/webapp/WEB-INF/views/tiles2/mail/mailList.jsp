@@ -41,6 +41,7 @@
 		cursor: pointer;
 		text-decoration: underline;
 	}
+	
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -338,7 +339,7 @@
 	<input type="hidden" name="searchWord" value="${searchWord}" />
 	
 		<!-- 첨부파일 강조가 아닌 메일 리스트 -->
-		<div id="mailList">
+		<div id="mailList" style="margin-top: 15px;">
 			<c:set var="temp" value="0" />
 			<c:set var="cnt" value="0" />
 			<c:if test="${mailhamType != '첨부파일 있는 메일' }">

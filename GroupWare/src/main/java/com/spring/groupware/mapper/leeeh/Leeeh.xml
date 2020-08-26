@@ -192,13 +192,13 @@
 	
 	<!-- === 프로젝트 중단 정보를 프로젝트 테이블에 업데이트 하기 === -->
 	<update id="updateProjectTable" parameterType="HashMap">
-		update project_table set term = #{term}, reason = #{reason}, middlePayment = #{middlePayment}
+		update project_table set term = #{term}, reason = #{reason}, middlePayment = #{middlePayment}, status=1
 		where project_name = #{project_name}
 	</update>
 	
 	<!-- === 프로젝트 중단 정보를 프로젝트 테이블에 업데이트 하기 === -->
 	<update id="updateProjectTableEnd" parameterType="HashMap">
-		update project_table set term = #{term}, content = #{content}, completionPayment = #{completionPayment}
+		update project_table set term = #{term}, content = #{content}, completionPayment = #{completionPayment}, status=2
 		where project_name = #{project_name}
 	</update>
 	
