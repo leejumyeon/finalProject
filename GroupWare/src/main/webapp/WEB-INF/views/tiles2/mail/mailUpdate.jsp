@@ -137,7 +137,7 @@
 					$(this).val("");
 				}
 				else{ // 실제 선택한 부분
-					var html = "<li id='receive"+cnt+"'><div style='background-color:orange; margin:5px;'>"+$(".select").html().trim()+" <span class='cancle'>X</span></div><input type='hidden' name='receiveSeq' value='"+$(".select .hiddenValue").text().trim()+"' /> </li>";
+					var html = "<li id='receive"+cnt+"'><div style='background-color:#ffce9d; margin:5px;'>"+$(".select").html().trim()+" <span class='cancle'>X</span></div><input type='hidden' name='receiveSeq' value='"+$(".select .hiddenValue").text().trim()+"' /> </li>";
 					$("#inputArea").append(html);
 					cnt++;
 					$(this).val("");

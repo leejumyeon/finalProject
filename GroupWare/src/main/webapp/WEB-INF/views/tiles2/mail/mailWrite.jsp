@@ -214,7 +214,7 @@
 		});
 		
 		$(document).on("click","#resultEmail > li",function(event){
-			var html = "<li id='receive"+cnt+"'><div style='background-color:orange; margin:5px;'>"+$(this).html().trim()+" <span class='cancle'>X</span></div><input type='hidden' name='receiveSeq' value='"+$(".select .hiddenValue").text().trim()+"' /> </li>";
+			var html = "<li id='receive"+cnt+"'><div style='background-color:#ffce9d; margin:5px;'>"+$(this).html().trim()+" <span class='cancle'>X</span></div><input type='hidden' name='receiveSeq' value='"+$(".select .hiddenValue").text().trim()+"' /> </li>";
 			$("#inputArea").append(html);
 			$(".searchEmail").val("");
 			$("#findEmail").addClass("hide");	
@@ -326,7 +326,7 @@
 					
 					<c:if test="${not empty(receive) && sessionScope.loginEmployee.employee_seq == receive.employee_seq}">
 						<tr>
-							<td colspan="3">내게쓰기<input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
+							<td colspan="3"><span style="font-size: 14pt; font-weight: bold;">내게쓰기</span><input type="hidden" name="receiveSeq" value="${receive.employee_seq}"/><input type="hidden" name="sendType" value="mine"/></td>
 						</tr>
 						<tr>
 							<th>제목</th>

@@ -277,7 +277,7 @@
 			</div>
 			</form>
 			
-			<div id="content" style="min-height: 300px;">
+			<div id="content" style="height: 530px; overflow: auto;">
 				${mail.content}
 			</div>
 		</div>
@@ -290,10 +290,10 @@
 		<div id="other" style="border-top:solid 1px #e7e7e7;">
 			<ul style="list-style: none; padding:0;">
 				<c:if test="${mail.next_seq != null}">
-					<li onclick="goRead('${mail.next_seq}')">다음글 | ${mail.next_subject}</li>
+					<li onclick="goRead('${mail.next_seq}')"><span style="cursor: pointer;">다음메일</span> | <span style="cursor: pointer;">${mail.next_subject}</span></li>
 				</c:if>
 				<c:if test="${mail.prev_seq != null}">
-					<li onclick="goRead('${mail.prev_seq}')">이전글 | ${mail.prev_subject}</li>
+					<li onclick="goRead('${mail.prev_seq}')"><span style="cursor: pointer;">이전메일</span> | <span style="cursor: pointer;">${mail.prev_subject}</span></li>
 				</c:if>
 			</ul>
 		</div>
