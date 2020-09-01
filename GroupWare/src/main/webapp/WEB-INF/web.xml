@@ -52,4 +52,14 @@
 	<welcome-file-list>
     	<welcome-file>login.top</welcome-file>
   	</welcome-file-list>
+  	
+  	<!-- 오류 발생시 이동하는 오류 페이지 등록 -->
+    <error-page>
+  		<error-code>500</error-code>
+  		<location>/500error.top</location>
+  	</error-page>
+  	 <error-page>
+  		<error-code>404</error-code>
+  		<location>/404error.top</location>
+  	</error-page>
 </web-app>

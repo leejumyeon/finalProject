@@ -90,4 +90,18 @@ public class AdditionalController {
 		mav.setViewName("messengerPopup");
 		return mav;
 	}
+	
+	// 500에러 페이지 이동
+	@RequestMapping(value="/500error.top")
+	public ModelAndView error500(ModelAndView mav) {
+		mav.setViewName("error/500error");
+		return mav;
+	}
+	
+	// 500에러 페이지 이동
+	@RequestMapping(value="/404error.top")
+	public ModelAndView error404(ModelAndView mav) {
+		mav.setViewName("error/404error");
+		return mav;
+	}
 }
